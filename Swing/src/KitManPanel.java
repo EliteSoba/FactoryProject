@@ -23,7 +23,7 @@ import java.awt.event.KeyEvent;
 
 public class KitManPanel extends JFrame {
 	/**
-	 * 
+	 * DON'T MIND ME I'M TESTING
 	 */
 	private static final long serialVersionUID = 1L;
 	JButton wageWar = new JButton ("Wage War");
