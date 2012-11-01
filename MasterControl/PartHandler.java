@@ -4,6 +4,10 @@
 // 	Prof. Crowley
 // Another test
 
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 public class PartHandler {
 	
 	Socket mySocket;
@@ -14,5 +18,13 @@ public class PartHandler {
 		//check
 
 	}
+
+    public boolean send(String cmd) {
+        boolean result = false;
+
+
+        return result;
+
+    }
 
 }
