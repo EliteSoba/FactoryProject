@@ -3,7 +3,7 @@ package factory;
 import factory.interfaces.*;
 import agent.Agent;
 
-public class KitRobotAgent extends Agent implements KitRobot {
+public class StandAgent extends Agent implements Stand {
 	////Data
 
 	////Messages
