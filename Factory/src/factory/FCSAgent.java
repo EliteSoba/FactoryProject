@@ -1,6 +1,10 @@
 package factory;
 
 import java.util.ArrayList;
+import agent.Agent;
+import java.util.*;
+import factory.interfaces.*;
+
 
 public class FCSAgent {
 	 ArrayList<MyKitConfig> myKitConfigs = new ArrayList<MyKitConfig>();
@@ -35,18 +39,32 @@ public class FCSAgent {
 	   
 	   
 	// *** SCHEDULER ***
-	   
-	   if (this.passBinConfigurationToGantry == true){
-		   changeGantryBinConfig();
-	   }
-	   
-	   for(MyKitConfig mkc: myKitConfigs){
-		   if (mkc.state == MyKitConfigState.PENDING){
-			   sendKitConfigToPartRobot(mkc);
+	   public boolean pickAndExecuteAnAction() {
+		   if (this.passBinConfigurationToGantry == true){
+			   changeGantryBinConfig();
+		   }
+		   for(MyKitConfig mkc: myKitConfigs){
+			   if (mkc.state == MyKitConfigState.PENDING){
+				   sendKitConfigToPartRobot(mkc);
+			   }
 		   }
 	   }
-	   
+
 	// *** ACTIONS ***
-	   
+	   /**
+	    * Passes down the new configuration to the Gantry
+	    */
+	   private void changeGantryBinConfig(){
+	      gantry.msgChangeGantryBinConfig(this.binConfig);
+	      this.passBinConfigurationToGantry = false;
+	   }
+
+	   /**
+	    * Passes down the new Kit Configuration to the PartsRobot Agent
+	    */
+	   private void sendKitConfigToPartRobot(MyKitConfig mkc) { 
+	      this.partsRobot.msgMakeKit(mkc.kitConfig);
+	      mkc.state = MyKitConfigState.PRODUCING;
+	   }
 	   
 }
