@@ -1,6 +1,8 @@
 package factory;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import agent.Agent;
 import factory.interfaces.Feeder;
@@ -21,11 +23,13 @@ public class FeederAgent extends Agent implements Feeder {
 		   Part currentPart;
 		   Bin dispenserBin;
 		   FeederState state;
+		   Timer feederEmptyTimer = new Timer();
+		   Timer partResettleTimer = new Timer();
 
 		   enum FeederState { EMPTY, WAITING_FOR_PARTS, CONTAINS_PARTS, OK_TO_PURGE, SHOULD_START_FEEDING }
 		   enum DiverterState { FEEDING_TOP, FEEDING_BOTTOM }
 
-		      enum MyPartRequestState { NEEDED, ASKED_GANTRY, DELIVERED }
+		      enum MyPartRequestState { NEEDED, ASKED_GANTRY, DELIVERED, DELETED }
 		      
 		   class MyPartRequest {
 		      Part pt;
@@ -51,6 +55,7 @@ public class FeederAgent extends Agent implements Feeder {
 		      MyLaneState state; 
 		      JamState jamState;
 		      Part part;
+			protected boolean readyForPicture;
 
 		      public MyLane(Lane lane){
 		            this.state = MyLaneState.EMPTY;
@@ -115,6 +120,7 @@ public class FeederAgent extends Agent implements Feeder {
 				if (p.state == MyPartRequestState.NEEDED)
 				{
 				      askGantryForPart(p);
+				      return true;
 				}
 			}
 		}
@@ -124,9 +130,9 @@ public class FeederAgent extends Agent implements Feeder {
 			if (p.state == MyPartRequestState.DELIVERED)
 			{
 				processFeederParts();
+				return true;
 			}
 		}
-		
 		
 		
 		if (state == FeederState.SHOULD_START_FEEDING) 
@@ -135,29 +141,172 @@ public class FeederAgent extends Agent implements Feeder {
 			if (topLane.part == currentPart && topLane.state == MyLaneState.EMPTY)
 			{
 				StartFeeding();
+				return true;
 			}
-			else if (bottomLane.part == currentPart && bottomLame.state = MyLaneState.EMPTY)
+			else if (bottomLane.part == currentPart && bottomLane.state == MyLaneState.EMPTY)
 			{
 				StartFeeding();
+				return true;
 			}
 		}
 
 		if (topLane.state == MyLaneState.BAD_NEST) 
+		{
 			dumpNest(topLane);
-
+			return true;
+		}
+		
 		if (bottomLane.state == MyLaneState.BAD_NEST)
+		{
 			dumpNest(bottomLane);
+			return true;
+		}
 
 		if (topLane.state == MyLaneState.NEST_SUCCESSFULLY_DUMPED)
+		{
 			backToNormalAfterNestDump(topLane);
+			return true;
+		}
 
 		if (bottomLane.state == MyLaneState.NEST_SUCCESSFULLY_DUMPED)
+		{
 			backToNormalAfterNestDump(bottomLane);
+			return true;
+		}
 		
+		
+		// If nothing else has been called, then return false!
 		return false;
 	}
 
 	
+	
+	
+	/** ACTIONS **/
+	private void backToNormalAfterNestDump(MyLane la) {
+			la.state = MyLaneState.CONTAINS_PARTS;
+			DoStartFeeding();
+	}
+	
+	private void dumpNest(MyLane la) {
+		DoStopFeeding();
+		la.state = MyLaneState.TOLD_NEST_TO_DUMP;
+		la.lane.msgDumpNest();
+	}
+
+	private void askGantryForPart(MyPartRequest partRequested) { 
+		this.purgeIfNecessary(partRequested);
+		gantry.msgFeederNeeds(partRequested.pt, this);
+		state = FeederState.WAITING_FOR_PARTS;
+		partRequested.state = MyPartRequestState.ASKED_GANTRY;
+	}
+
+	private void purgeIfNecessary(MyPartRequest partRequested) { 
+		
+		// Check if Feeder needs to be purged
+		if (this.currentPart != partRequested.pt && state != FeederState.EMPTY)
+				purgeFeeder();
+		
+		// Check if lane needs to be purged
+		if (topLane.lane == partRequested.lane && topLane.part != null)
+			purgeLane(topLane);
+
+		if (bottomLane.lane == partRequested.lane && bottomLane.part != null)
+			purgeLane(bottomLane);
+
+	}
+
+	private void purgeFeeder(){
+		DoStopFeeding();
+		DoPurgeFeeder();
+		currentPart = null;
+	}
+
+	private void purgeLane(MyLane myLane){
+		myLane.lane.msgPurge();
+		myLane.state = MyLaneState.PURGING;
+	}
+
+	private void processFeederParts(){
+		MyPartRequest rq = null;
+		for (MyPartRequest p : requestedParts) {
+			if( p.state == MyPartRequestState.DELETED){ 
+				rq = p;
+				break;
+			}
+		}
+
+		requestedParts.remove(rq);
+		currentPart = rq.pt;
+
+		if (bottomLane.lane == rq.lane){
+			bottomLane.part = rq.pt;
+		}
+		else {
+			topLane.part = rq.pt;
+		}
+		state = FeederState.SHOULD_START_FEEDING;
+	}
+
+	private void StartFeeding(){
+		final MyLane currentLane;
+		if(currentPart == topLane.part)
+			currentLane = topLane;
+		else 
+			currentLane = bottomLane;
+		// Switch Diverter
+		if (currentLane == topLane && diverter == DiverterState.FEEDING_BOTTOM) {
+			DoSwitchLane();   // Animation to switch lane
+			diverter = DiverterState.FEEDING_TOP;
+		}
+		else if (currentLane == bottomLane && diverter == DiverterState.FEEDING_TOP) {
+			DoSwitchLane();   // Animation to switch lane
+			diverter = DiverterState.FEEDING_BOTTOM;
+		}
+
+
+		feederEmptyTimer.schedule(new TimerTask(){
+			public void run(){		    
+				state = FeederState.OK_TO_PURGE;
+				partResettleTimer.schedule(new TimerTask() {
+					public void run() {
+						
+						currentLane.readyForPicture = true;
+						
+						if (bottomLane.readyForPicture == true && topLane.readyForPicture == true)
+							vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
+					
+					}
+				}, 3000); // 3 seconds to resettle in the nest
+ 			}
+		}, (long) currentPart.averageDelayTime); // time it takes the part to move down the lane
+		
+	//	Timer.new(30000, { state = FeederState.OK_TO_PURGE; });
+//		Timer.new(currentPart.averageDelayTime,{vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this) });
+
+		DoStartFeeding();
+		
+	}
+
+	
+	/** ANIMATIONS **/
+	private void DoStartFeeding() {
+		print("started feeding.");
+	}
+
+	private void DoStopFeeding() {
+		print("stopped feeding.");
+	}
+	
+
+	private void DoPurgeFeeder() {
+		print("purging feeder.");
+	}
+
+	private void DoSwitchLane() {
+		print("switching lane");
+	}
+
 }
 
 

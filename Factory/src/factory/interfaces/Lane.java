@@ -6,4 +6,8 @@ public Nest getNest(); //returns this lane's nest
 
 public void msgIncreaseAmplitude();
 
+public void msgDumpNest();
+
+public void msgPurge();
+
 }
