@@ -6,5 +6,5 @@ import java.util.*;
 import factory.interfaces.*;
 
 public class GantryAgent {
-
+	
 }
