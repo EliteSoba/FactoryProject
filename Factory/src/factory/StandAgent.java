@@ -28,9 +28,9 @@ public class StandAgent extends Agent implements Stand {
 	public MySlot inspectionSlot;
 
 	public class MySlot {
-		String name;
-		Kit kit;
-		MySlotState state;
+		public String name;
+		public Kit kit;
+		public MySlotState state;
 	
 		public MySlot(String name){
 			this.state = MySlotState.EMPTY;
@@ -40,8 +40,8 @@ public class StandAgent extends Agent implements Stand {
 	}
 	
 	public class MyConveyor {
-		Conveyor conveyor;
-		MyConveyorState state;
+		public Conveyor conveyor;
+		public MyConveyorState state;
 
 		public MyConveyor(Conveyor conveyor){
 			this.state = MyConveyorState.EMPTY;
