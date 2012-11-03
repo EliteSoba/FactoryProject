@@ -7,7 +7,7 @@ import java.util.*;
 
 import factory.interfaces.*;
 
-public class VisionAgent {
+public class VisionAgent extends Agent implements Vision {
 	
 	enum KitPicRequestState { NEED_TO_INSPECT, INSPECTED }
 	enum InspectionResults { PASSED, FAILED }
