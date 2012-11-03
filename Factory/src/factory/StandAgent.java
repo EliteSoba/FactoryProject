@@ -143,7 +143,7 @@ public class StandAgent extends Agent implements Stand {
 	}
 	
 	/** SCHEDULER **/
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		
 		synchronized(state) {
 
