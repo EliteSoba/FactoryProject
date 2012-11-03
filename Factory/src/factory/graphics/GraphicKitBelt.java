@@ -1,8 +1,6 @@
 package factory.graphics;
-
-import java.awt.Color;
-import java.awt.Graphics;
-
+import java.awt.*;
+import javax.swing.*;
 
 public class GraphicKitBelt {
 	
@@ -64,12 +62,10 @@ public class GraphicKitBelt {
 		g.fillRect(x+100, y+110, 20, 100);
 		
 		//Draws the kit moving into the factory
-		if (kitin())
-			drawKitIn(g);
+		drawKitIn(g);
 		
 		//Draws the kit moving out of the factory
-		if (kitout())
-			drawKitOut(g);
+		drawKitOut(g);
 	}
 	
 	public void inKit() {
@@ -78,19 +74,22 @@ public class GraphicKitBelt {
 		pickUp = false;
 	}
 	
-	public void outKit() {
+	public void outKit(GraphicKit kit) {
 		//Has a kit exit the factory
-		kitOut = new GraphicKit(x+150, y+300);
+		kitOut = kit;
+		kitOut.move(x+150, y+300);
 	}
 	
 	public void drawKitIn(Graphics g) {
 		//Draws the kit that's entering the factory
-		kitIn.paint(g);
+		if (kitin())
+			kitIn.paint(g);
 	}
 	
 	public void drawKitOut(Graphics g) {
 		//Draws the kit that's exiting the factory
-		kitOut.paint(g);
+		if (kitout())
+			kitOut.paint(g);
 	}
 	
 	public void moveBelt(int v) {
@@ -132,6 +131,14 @@ public class GraphicKitBelt {
 			if (kitOut.getY() >= y+600)
 				kitOut = null;
 		}
+	}
+	
+	public GraphicKit unKitIn() {
+		//Removes kitIn
+		GraphicKit temp = kitIn;
+		kitIn = null;
+		pickUp = false;
+		return temp;
 	}
 	
 	public boolean kitin() {

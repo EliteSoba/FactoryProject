@@ -1,9 +1,7 @@
 package factory.graphics;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-
 
 public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	
@@ -11,12 +9,38 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	 * This is the graphical display of the Kit Assembly Manager
 	 * Currently, this displays a conveyer belt and its kits, and a kitting station
 	 * and animates the two.
+	 * 
+	 * TODO: (ã)
+	 * 		[ã] Rework GraphicKittingStation to hold ArrayList of GraphicKits 
+	 * 			>Give them positions<, or have them slide down to the bottom?
+	 * 				Second option is easier, but no way of confirming that bottom-most kit will be filled first. If Robot needs to target completed kits, then first option is just as viable
+	 * 		[ã] Update GraphicKittingRobot movement to add kit to GraphicKittingStation
+	 * 		[ã] Add functionality of GraphicKittingRobot to move from kitting station back to belt
+	 * 		[ ] Create GraphicItems class to display rudimentary items
+	 * 		[ ] Rework GraphicKit to be able to hold GraphicItems
+	 * 		[ ] Rework GraphicKittingRobot to actually hold kits rather than using an image with a blank kit
+	 * 		[ ] Create buttons for each potential command in ControlPanel
+	 * 		[ ] Add functionality of GraphicKittingStation to randomly add items to a kit
+	 * 		[ ] Update GraphicKittingStation so that the positions of the kits are not as autistic
+	 * 				GraphicKittingRobot must be able to pick which kit it removes
+	 * 		{ } (Potentially) have GraphicKittingRobot know where to move to put items where they belong on GraphicKittingStation, instead of moving to a fixed spot
+	 * 		{ } (Perhaps) Create a generic moveTo(int x, int y) function for GraphicKittingRobot to move to a location
+	 * 
+	 * CURRENT ISSUES:
+	 * 		[ ] Hierarchy of commands: Robot will prioritize getting new kit from belt above all else
+	 * 			- HARDFIXED FOR NOW. FIX LATER
+	 * 			- HANDLE WHAT TO DO WHEN TOO MANY KITS ARE CIRCULATING (4TH KIT FROM BELT TRANSFERRING TO STATION)
 	 */
 	
 	//int x; //This was just for testing purposes, uncomment the x-related lines to watch a square move along a sin path
 	FrameKitAssemblyManager am; //The JFrame that holds this. Will be removed when gets integrated with the rest of the project
 	GraphicKitBelt belt; //The conveyer belt
 	GraphicKittingStation station; //The kitting station
+	GraphicKittingRobot robot;
+	boolean fromBelt;
+	boolean toStation;
+	boolean fromStation;
+	boolean toBelt;
 	
 	public GraphicKitAssemblyManager(FrameKitAssemblyManager FKAM) {
 		//Constructor
@@ -24,22 +48,34 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		am = FKAM;
 		belt = new GraphicKitBelt(0, 0);
 		station = new GraphicKittingStation(400, 130);
+		robot = new GraphicKittingRobot(this, 250, 150);
+		fromBelt = false;
+		toStation = false;
+		fromStation = false;
+		toBelt = false;
 		(new Timer(50, this)).start();
 		this.setPreferredSize(new Dimension(600, 600));
 	}
 	
 	public void addInKit() {
 		//Adds a kit into the factory via conveyer belt
-		if (belt.kitin() && !belt.pickUp())
+		if (belt.kitin())
 			return;
 		belt.inKit();
 	}
 	
 	public void addOutKit() {
 		//Sends a kit out of the factory via conveyer belt
-		if (belt.kitout())
+		/*if (belt.kitout())
 			return;
-		belt.outKit();
+		belt.outKit(new GraphicKit(150, 300));*/
+		if (station.hasKits())
+			fromStation = true;
+	}
+	
+	public void robotFromBelt() {
+		if (belt.pickUp() && !robot.kitted())
+			fromBelt = true;
 	}
 	
 	public void paint(Graphics g) {
@@ -51,6 +87,38 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		belt.paint(g);
 		belt.moveBelt(5);
 		station.paint(g);
+		robot.paint(g);
+		
+		robotFromBelt();
+		
+		if (fromBelt) {
+			if (robot.moveFromBelt(5)) {
+				fromBelt = false;
+				robot.setKit(belt.unKitIn());
+				toStation = true;
+			}
+		}
+		else if (toStation) {
+			if (robot.moveToStation(5)) {
+				toStation = false;
+				station.addKit(robot.unkit());
+			}
+		}
+		else if (fromStation) {
+			if (robot.moveFromStation(5)) {
+				fromStation = false;
+				robot.setKit(station.popKit(0));
+				toBelt = true;
+			}
+		}
+		else if (toBelt) {
+			if (robot.moveToBelt(5)) {
+				toBelt = false;
+				belt.outKit(robot.unkit());
+			}
+		}
+		else
+			robot.moveToStartX(5);
 		//x += 1;
 	}
 	

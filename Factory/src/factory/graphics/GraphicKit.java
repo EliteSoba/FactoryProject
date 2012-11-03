@@ -1,5 +1,4 @@
 package factory.graphics;
-
 import java.awt.*;
 import javax.swing.*;
 

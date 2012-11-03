@@ -1,8 +1,6 @@
 package factory.graphics;
-
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 
 public class ControlPanel extends JPanel implements ActionListener{
