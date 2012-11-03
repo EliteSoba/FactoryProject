@@ -172,11 +172,11 @@ public class StandAgent extends Agent implements Stand {
 			/**
 			 * If there is a completed kit and the stand is not being used
 			 */
-			if (state == StandAgentState.FREE && topSlot.kit.state == KitState.COMPLETE && topSlot.state == MySlotState.BUILDING_KIT) {
+			if (state == StandAgentState.FREE && topSlot.kit != null && topSlot.kit.state == KitState.COMPLETE && topSlot.state == MySlotState.BUILDING_KIT) {
 			   DoTellKitRobotToMoveKitToInspectionSlot(topSlot);
 			   return true;
 			}
-			if (state == StandAgentState.FREE && bottomSlot.kit.state == KitState.COMPLETE && bottomSlot.state == MySlotState.BUILDING_KIT) {
+			if (state == StandAgentState.FREE && bottomSlot.kit != null && bottomSlot.kit.state == KitState.COMPLETE && bottomSlot.state == MySlotState.BUILDING_KIT) {
 			   DoTellKitRobotToMoveKitToInspectionSlot(bottomSlot);
 			   return true;
 			}
