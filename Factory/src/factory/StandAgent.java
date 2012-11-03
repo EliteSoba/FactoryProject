@@ -193,7 +193,7 @@ public class StandAgent extends Agent implements Stand {
 			/**
 			 * If the stand is free and the partRobot wants to deliver parts
 			 */
-			if (state == StandAgentState.FREE && partsRobotWantsToDeliverParts == true) {
+			if (state == StandAgentState.FREE && partsRobotWantsToDeliverParts == true && (topSlot.kit != null || bottomSlot.kit != null)) {
 			   DoTellPartsRobotToDeliverParts();
 			   return true;
 			}
