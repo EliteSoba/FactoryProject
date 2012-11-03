@@ -15,10 +15,10 @@ public class StandAgent extends Agent implements Stand {
 	private StandAgentState state;
 	
 	private MyConveyor conveyor;
-	private PartsRobotAgent partsRobot;
+	private PartsRobot partsRobot;
 	private Boolean partsRobotWantsToDeliverParts = false;
-	private KitRobotAgent kitRobot;
-	private VisionAgent vision;
+	private KitRobot kitRobot;
+	private Vision vision;
 	  
 	private Kit temporaryEmptyKitHolder = null;
 	private TemporaryEmptyKitHolderState temporaryEmptyKitHolderState = TemporaryEmptyKitHolderState.EMPTY;
@@ -40,10 +40,10 @@ public class StandAgent extends Agent implements Stand {
 	}
 	
 	private class MyConveyor {
-		ConveyorAgent conveyor;
+		Conveyor conveyor;
 		MyConveyorState state;
 
-		public MyConveyor(ConveyorAgent conveyor){
+		public MyConveyor(Conveyor conveyor){
 			this.state = MyConveyorState.EMPTY;
 			this.conveyor = conveyor;
 		}
@@ -57,7 +57,7 @@ public class StandAgent extends Agent implements Stand {
 	 * @param kitRobot
 	 * @param partsRobot
 	 */
-	public StandAgent(ConveyorAgent conveyor, VisionAgent vision, KitRobotAgent kitRobot, PartsRobotAgent partsRobot){
+	public StandAgent(Conveyor conveyor, Vision vision, KitRobot kitRobot, PartsRobot partsRobot){
 
 		this.conveyor = new MyConveyor(conveyor);
 		this.vision = vision;
