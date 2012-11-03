@@ -7,21 +7,21 @@ import factory.Kit;
 public class StandAgent extends Agent implements Stand {
 	
 	/** DATA **/
-	private enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
-	private enum TemporaryEmptyKitHolderState { EMPTY, EMPTY_KIT }
-	private enum MyConveyorState { EMPTY, HAS_EMPTY_KIT, FETCHING_EMPTY_KIT }
+	public enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
+	public enum TemporaryEmptyKitHolderState { EMPTY, EMPTY_KIT }
+	public enum MyConveyorState { EMPTY, HAS_EMPTY_KIT, FETCHING_EMPTY_KIT }
 	public enum MySlotState { EMPTY, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION, KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT}
 
-	private StandAgentState state;
+	public StandAgentState state;
 	
-	private MyConveyor conveyor;
-	private PartsRobot partsRobot;
-	private Boolean partsRobotWantsToDeliverParts = false;
-	private KitRobot kitRobot;
-	private Vision vision;
+	public MyConveyor conveyor;
+	public PartsRobot partsRobot;
+	public Boolean partsRobotWantsToDeliverParts = false;
+	public KitRobot kitRobot;
+	public Vision vision;
 	  
-	private Kit temporaryEmptyKitHolder = null;
-	private TemporaryEmptyKitHolderState temporaryEmptyKitHolderState = TemporaryEmptyKitHolderState.EMPTY;
+	public Kit temporaryEmptyKitHolder = null;
+	public TemporaryEmptyKitHolderState temporaryEmptyKitHolderState = TemporaryEmptyKitHolderState.EMPTY;
 		
 	public MySlot topSlot;
 	public MySlot bottomSlot;
@@ -39,7 +39,7 @@ public class StandAgent extends Agent implements Stand {
 		}
 	}
 	
-	private class MyConveyor {
+	public class MyConveyor {
 		Conveyor conveyor;
 		MyConveyorState state;
 
