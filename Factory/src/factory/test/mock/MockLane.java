@@ -1,5 +1,6 @@
 package factory.test.mock;
 
+import factory.Part;
 import factory.test.mock.LoggedEvent;
 import factory.test.mock.EventLog;
 import factory.interfaces.Lane;
@@ -43,6 +44,11 @@ public class MockLane extends MockAgent implements Lane {
 	@Override
 	public void msgNestWasDumped() {
 		log.add(new LoggedEvent("msgNestWasDumped()"));
+	}
+
+	@Override
+	public void msgNestNeedsPart(Part pt) {
+		log.add(new LoggedEvent("msgNestNeedsPart()"));
 	}
 
 }
