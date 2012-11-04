@@ -1,6 +1,7 @@
 package factory.interfaces;
 
 import factory.Part;
+import factory.FeederAgent.MyPartRequest;
 
 public interface Feeder {
 
@@ -15,4 +16,6 @@ public interface Feeder {
 	public void msgBadNest(Nest n);
 	
 	public void setGantry(Gantry g);
+	
+	
 }

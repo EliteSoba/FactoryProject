@@ -19,9 +19,9 @@ public class FeederAgent extends Agent implements Feeder {
 	public MyLane topLane;
 	public MyLane bottomLane;
 	Vision vision;
-	DiverterState diverter; 
+	public DiverterState diverter; 
 	public Gantry gantry;
-	Part currentPart;
+	public Part currentPart;
 	Bin dispenserBin;
 	public FeederState state = FeederState.EMPTY;
 	Timer okayToPurgeTimer = new Timer();
@@ -29,19 +29,28 @@ public class FeederAgent extends Agent implements Feeder {
 	Timer partResettleTimer = new Timer();
 
 	public enum FeederState { EMPTY, WAITING_FOR_PARTS, CONTAINS_PARTS, OK_TO_PURGE, SHOULD_START_FEEDING }
-	enum DiverterState { FEEDING_TOP, FEEDING_BOTTOM }
+	public enum DiverterState { FEEDING_TOP, FEEDING_BOTTOM }
 
-	enum MyPartRequestState { NEEDED, ASKED_GANTRY, DELIVERED, DELETED }
+	public enum MyPartRequestState { NEEDED, ASKED_GANTRY, DELIVERED, DELETED }
 
-	class MyPartRequest {
-		Part pt;
-		MyPartRequestState state;
-		Lane lane;
+	public class MyPartRequest {
+		public Part pt;
+		public MyPartRequestState state;
+		public Lane lane;
 
+		// alternative constructor #1
 		public MyPartRequest(Part part, Lane lane){
 			this.state = MyPartRequestState.NEEDED;
 			this.lane = lane;
 			this.pt = part;
+		}
+		
+		
+		// alternative constructor #2
+		public MyPartRequest(Part p, Lane l, MyPartRequestState s) {
+			this.pt = p;
+			this.lane = l;
+			this.state = s;
 		}
 	}
 
@@ -138,7 +147,7 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			if (p.state == MyPartRequestState.DELIVERED)
 			{
-				processFeederParts();
+				processFeederParts(p);
 				return true;
 			}
 		}
@@ -196,7 +205,7 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			// only if the feeder is actually feeding
 			la.state = MyLaneState.CONTAINS_PARTS;
-			DoStartFeeding();
+			DoContinueFeeding();
 		}
 		else // the nestWasDumped from within a purge cycle
 		{
@@ -212,7 +221,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	private void askGantryForPart(MyPartRequest partRequested) { 
 		
-		if (purgeIfNecessary(partRequested))
+		if (purgeIfNecessary(partRequested) || this.state == FeederState.EMPTY) 
 		{
 			gantry.msgFeederNeeds(partRequested.pt, this);
 			state = FeederState.WAITING_FOR_PARTS;
@@ -242,7 +251,7 @@ public class FeederAgent extends Agent implements Feeder {
 			purging = true;
 			purgeLane(bottomLane);
 		}
-		
+				
 		return purging;
 	}
 
@@ -257,7 +266,8 @@ public class FeederAgent extends Agent implements Feeder {
 		myLane.state = MyLaneState.PURGING;
 	}
 
-	private void processFeederParts(){
+	// Old way was using a DELETED state, and was looking at all the requestedParts
+	/*private void processFeederParts(){
 		MyPartRequest rq = null;
 		for (MyPartRequest p : requestedParts) {
 			if( p.state == MyPartRequestState.DELETED){ 
@@ -275,6 +285,21 @@ public class FeederAgent extends Agent implements Feeder {
 		else {
 			topLane.part = rq.pt;
 		}
+		state = FeederState.SHOULD_START_FEEDING;
+	}
+	*/
+	
+	private void processFeederParts(MyPartRequest mpr){
+		requestedParts.remove(mpr);
+		currentPart = mpr.pt;
+
+		if (bottomLane.lane == mpr.lane){
+			bottomLane.part = mpr.pt;
+		}
+		else {
+			topLane.part = mpr.pt;
+		}
+		
 		state = FeederState.SHOULD_START_FEEDING;
 	}
 
@@ -343,6 +368,13 @@ public class FeederAgent extends Agent implements Feeder {
 	{
 		this.gantry = g;
 	}
+	
+	/** This method adds a MyPartRequest to the requestedParts list. 
+	 *  It is used for testing purposes only.
+	 */
+	public void addMyPartRequest(Part p, Lane l, MyPartRequestState s) {
+		requestedParts.add(new MyPartRequest(p,l,s));
+	}
 
 	/** ANIMATIONS **/
 	private void DoStartFeeding() {
@@ -361,6 +393,11 @@ public class FeederAgent extends Agent implements Feeder {
 	private void DoSwitchLane() {
 		print("switching lane");
 	}
+	
+	private void DoContinueFeeding() {
+		print("continued feeding.");
+	}
+
 
 }
 

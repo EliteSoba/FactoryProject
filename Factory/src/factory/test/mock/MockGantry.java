@@ -7,6 +7,8 @@ import factory.interfaces.Gantry;
 
 public class MockGantry extends MockAgent implements Gantry {
 
+	public EventLog log = new EventLog();
+	
 	public MockGantry(String name) {
 		super(name);
 		// TODO Auto-generated constructor stub
@@ -21,6 +23,6 @@ public class MockGantry extends MockAgent implements Gantry {
 
 	@Override
 	public void msgFeederNeeds(Part pt, Feeder feeder) {
-		
+		log.add(new LoggedEvent("msgFeederNeeds(...)")); 
 	}
 }

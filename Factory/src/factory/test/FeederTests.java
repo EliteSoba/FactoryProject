@@ -1,7 +1,11 @@
 package factory.test;
 
 import factory.FeederAgent;
+import factory.FeederAgent.DiverterState;
+import factory.FeederAgent.FeederState;
 import factory.FeederAgent.MyLaneState;
+import factory.FeederAgent.MyPartRequest;
+import factory.FeederAgent.MyPartRequestState;
 import factory.Part;
 import factory.interfaces.Lane;
 import factory.test.mock.MockGantry;
@@ -11,9 +15,11 @@ import junit.framework.TestCase;
 
 public class FeederTests extends TestCase{
 	
+	MyPartRequest mpr;
 	FeederAgent feeder;
 	MockLane top, bottom;
 	MockGantry gantry;
+	Part p1;
 	/**
 	 * Sets up the standard configuration for easy testing.
 	 */
@@ -24,6 +30,7 @@ public class FeederTests extends TestCase{
 		top = new MockLane("top");
 		bottom = new MockLane("bottom");
 		gantry = new MockGantry("gantry");
+		p1 = new Part();
 		
 		feeder.setGantry(gantry);
 		feeder.setUpLanes(top, bottom);
@@ -49,6 +56,10 @@ public class FeederTests extends TestCase{
 		// These lanes were set up in the preconditions test
 		assertEquals(feeder.topLane.lane.getName(),"top");
 		assertEquals(feeder.bottomLane.lane.getName(),"bottom");
+		
+		// make sure topLane's state is initialized correctly
+		assertEquals(feeder.topLane.state,FeederAgent.MyLaneState.EMPTY); 
+
 		//assertEquals(feeder.gantry.getName(),"gantry");
 
 	}
@@ -118,15 +129,131 @@ public class FeederTests extends TestCase{
 	
 	
 	public void testMsgLaneNeedsPart() {
-		
+		// some initial setup
 		feeder.state = FeederAgent.FeederState.EMPTY;
 		
-		// send the message
-		feeder.msgLaneNeedsPart(new Part(), top);
 		
-		// Make sure scheduler works
+		// SCENARIO #1: The Feeder is initially empty and receives a request for parts.
+		// send the message
+		feeder.msgLaneNeedsPart(p1, top);
+		
+		// Initial Parts Request State
+		for(FeederAgent.MyPartRequest pr : feeder.requestedParts)
+		{
+			if (pr.pt == p1)
+			{
+				assertEquals(pr.state,FeederAgent.MyPartRequestState.NEEDED);
+			}
+		}
+		
+		
+		// Now make sure scheduler works
 		feeder.pickAndExecuteAnAction();
-		assertEquals(feeder.topLane.state,FeederAgent.MyLaneState.PURGING); 
+		
+		// Check to see if gantry receives appropriate message
+    	assertTrue("Gantry should have been told msgFeederNeeds(...). Event log: "
+    			+ gantry.log.toString(), 
+    			gantry.log.containsString("msgFeederNeeds(...)"));
+    	
+    	// Check to see if the feeder's state gets set correctly
+    	assertEquals(feeder.state,FeederAgent.FeederState.WAITING_FOR_PARTS);
+		
+    	// Parts Request State after scheduler
+    			for(FeederAgent.MyPartRequest pr : feeder.requestedParts)
+    			{
+    				if (pr.pt == p1)
+    				{
+    					assertEquals(pr.state,FeederAgent.MyPartRequestState.ASKED_GANTRY);
+    				}
+    			}
+    	
+    			
+    			
+
+    			
+    			
+		// SCENARIO #2: The feeder is IMMEDIATELY sent a new request for parts, which happens often, as the feeder has 2 lanes.
+    	Part p2 = new Part();
+		feeder.msgLaneNeedsPart(p2, top);
+
+		// Initial Parts Request State
+		for(FeederAgent.MyPartRequest pr : feeder.requestedParts)
+		{
+			if (pr.pt == p2)
+			{
+				assertEquals(pr.state,FeederAgent.MyPartRequestState.NEEDED);
+			}
+		}
+
+		// Now make sure scheduler works
+		feeder.pickAndExecuteAnAction();
+
+		assertTrue("The gantry should not have received another message.",gantry.log.size() == 1);
+		
+		// Parts Request State after scheduler- basically this should not change 
+		// from NEEDED b/c the feeder isn't ready to purge, and is thus not ready to ask the gantry for this part
+		for(FeederAgent.MyPartRequest pr : feeder.requestedParts)
+		{
+			if (pr.pt == p2)
+			{
+				assertEquals(pr.state,FeederAgent.MyPartRequestState.NEEDED);
+			}
+		}
+		
+		
+		
+		// SCENARIO #3: The feeder has been feeding parts for at least 10 seconds, 
+		// which is the min length of time before it is OK to purge.
+		
+		// This needs to be tested in conjunction with the msgHereAreParts test.
+		
+
+	}
+	
+	
+	public void testMsgHereAreParts() {
+		// some initial setup
+		feeder.state = FeederAgent.FeederState.WAITING_FOR_PARTS;
+		feeder.addMyPartRequest(p1,top,FeederAgent.MyPartRequestState.ASKED_GANTRY);
+		
+		// PART #1: The feeder receives the parts he asked for from the gantry.
+		feeder.msgHereAreParts(p1);
+		
+		// The gantry has DELIVERED the part
+		for(FeederAgent.MyPartRequest pr : feeder.requestedParts)
+		{
+			if (pr.pt == p1)
+			{
+				mpr = pr; // set a reference to the MyPartRequest
+				assertEquals(pr.state,FeederAgent.MyPartRequestState.DELIVERED);
+			}
+		}
+		
+		// make sure the scheduler works
+		feeder.pickAndExecuteAnAction();
+		
+		// should remove the request from the list
+		assertFalse(feeder.requestedParts.contains(mpr));
+		
+		// the current part that is being fed into the lane
+		assertEquals(feeder.currentPart,mpr.pt);
+		
+		if (feeder.bottomLane.lane == mpr.lane){
+			assertEquals(feeder.bottomLane.part,mpr.pt);
+		}
+		else {
+			assertEquals(feeder.topLane.part,mpr.pt);
+		}
+		
+		// make sure the feeder's state is updating correctly
+		assertEquals(feeder.state,FeederAgent.FeederState.SHOULD_START_FEEDING);
+		
+		
+		
+		
+		// PART #2: The feeder receives the parts he asked for from the gantry.
+		feeder.diverter = DiverterState.FEEDING_BOTTOM; // to test the switching of the lane diverter
+		
 		
 		
 	}
