@@ -1,3 +1,4 @@
+package factory.swing;
 
 public class KitAssManPanel {
 //hey
