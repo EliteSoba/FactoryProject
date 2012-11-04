@@ -2,7 +2,9 @@ package factory.test;
 
 import factory.FeederAgent;
 import factory.FeederAgent.MyLaneState;
+import factory.Part;
 import factory.interfaces.Lane;
+import factory.test.mock.MockGantry;
 import factory.test.mock.MockLane;
 import factory.test.mock.MockNest;
 import junit.framework.TestCase;
@@ -11,6 +13,7 @@ public class FeederTests extends TestCase{
 	
 	FeederAgent feeder;
 	MockLane top, bottom;
+	MockGantry gantry;
 	/**
 	 * Sets up the standard configuration for easy testing.
 	 */
@@ -20,7 +23,9 @@ public class FeederTests extends TestCase{
 		
 		top = new MockLane("top");
 		bottom = new MockLane("bottom");
+		gantry = new MockGantry("gantry");
 		
+		feeder.setGantry(gantry);
 		feeder.setUpLanes(top, bottom);
 	}
 	
@@ -29,7 +34,6 @@ public class FeederTests extends TestCase{
 	 * 
 	 */
 	public void testPreconditions() {
-		
 		// Makes sure there aren't any parts in the feeder initially.
 		assertEquals(feeder.requestedParts.size(),0);
 		System.out.println("feeder name = " + feeder.getName());
@@ -41,10 +45,12 @@ public class FeederTests extends TestCase{
 	/** 
 	 * This test makes sure that the Feeder's lanes are getting set up properly.
 	 */
-	public void testSetUpLanes() {
+	public void testSetUpLanesAndGantry() {
 		// These lanes were set up in the preconditions test
 		assertEquals(feeder.topLane.lane.getName(),"top");
 		assertEquals(feeder.bottomLane.lane.getName(),"bottom");
+		//assertEquals(feeder.gantry.getName(),"gantry");
+
 	}
 	
 	
@@ -77,6 +83,7 @@ public class FeederTests extends TestCase{
 	}
 	
 	public void testMsgNestWasDumped() {
+		
 		// scenario #1: the feeder dumps a nest because
 		// the nest didn't have any good parts
 		feeder.state = FeederAgent.FeederState.CONTAINS_PARTS; 
@@ -106,8 +113,25 @@ public class FeederTests extends TestCase{
 		// Make sure that the Feeder's scheduler is working correctly
 		feeder.pickAndExecuteAnAction();
 		assertEquals(feeder.topLane.state,FeederAgent.MyLaneState.PURGING);
-				
+					
 	}
+	
+	
+	public void testMsgLaneNeedsPart() {
+		
+		feeder.state = FeederAgent.FeederState.EMPTY;
+		
+		// send the message
+		feeder.msgLaneNeedsPart(new Part(), top);
+		
+		// Make sure scheduler works
+		feeder.pickAndExecuteAnAction();
+		assertEquals(feeder.topLane.state,FeederAgent.MyLaneState.PURGING); 
+		
+		
+	}
+	
+	
 }
 
 

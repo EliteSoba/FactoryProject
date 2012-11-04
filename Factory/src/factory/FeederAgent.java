@@ -20,10 +20,11 @@ public class FeederAgent extends Agent implements Feeder {
 	public MyLane bottomLane;
 	Vision vision;
 	DiverterState diverter; 
-	Gantry gantry;
+	public Gantry gantry;
 	Part currentPart;
 	Bin dispenserBin;
 	public FeederState state = FeederState.EMPTY;
+	Timer okayToPurgeTimer = new Timer();
 	Timer feederEmptyTimer = new Timer();
 	Timer partResettleTimer = new Timer();
 
@@ -210,24 +211,39 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	private void askGantryForPart(MyPartRequest partRequested) { 
-		this.purgeIfNecessary(partRequested);
-		gantry.msgFeederNeeds(partRequested.pt, this);
-		state = FeederState.WAITING_FOR_PARTS;
-		partRequested.state = MyPartRequestState.ASKED_GANTRY;
+		
+		if (purgeIfNecessary(partRequested))
+		{
+			gantry.msgFeederNeeds(partRequested.pt, this);
+			state = FeederState.WAITING_FOR_PARTS;
+			partRequested.state = MyPartRequestState.ASKED_GANTRY;
+		}
 	}
-
-	private void purgeIfNecessary(MyPartRequest partRequested) { 
-
+	
+	private boolean purgeIfNecessary(MyPartRequest partRequested) { 
+		boolean purging = false;
+		
 		// Check if Feeder needs to be purged
-		if (this.currentPart != partRequested.pt && state != FeederState.EMPTY)
-			purgeFeeder();
+		if (this.currentPart != partRequested.pt && state == FeederState.OK_TO_PURGE)
+		{
+			purging = true;
+			purgeFeeder();	
+		}
 
 		// Check if lane needs to be purged
-		if (topLane.lane == partRequested.lane && topLane.part != null)
+		if (topLane.lane == partRequested.lane && topLane.part != null && state == FeederState.OK_TO_PURGE)
+		{
+			purging = true;
 			purgeLane(topLane);
+		}
 
-		if (bottomLane.lane == partRequested.lane && bottomLane.part != null)
+		if (bottomLane.lane == partRequested.lane && bottomLane.part != null && state == FeederState.OK_TO_PURGE)
+		{
+			purging = true;
 			purgeLane(bottomLane);
+		}
+		
+		return purging;
 	}
 
 	private void purgeFeeder(){
@@ -278,6 +294,11 @@ public class FeederAgent extends Agent implements Feeder {
 			diverter = DiverterState.FEEDING_BOTTOM;
 		}
 
+		okayToPurgeTimer.schedule(new TimerTask(){
+			public void run() {
+				state = FeederState.OK_TO_PURGE;
+			}
+		},10000); // okay to purge after 10 seconds of feeding
 
 		feederEmptyTimer.schedule(new TimerTask(){
 			public void run(){		    
@@ -316,7 +337,12 @@ public class FeederAgent extends Agent implements Feeder {
 		topLane = new MyLane(top);
 		bottomLane = new MyLane(bottom);
 	}
-
+	
+	/** This method connects the feeder to the gantry. **/
+	public void setGantry(Gantry g)
+	{
+		this.gantry = g;
+	}
 
 	/** ANIMATIONS **/
 	private void DoStartFeeding() {

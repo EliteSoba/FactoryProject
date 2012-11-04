@@ -14,4 +14,5 @@ public interface Feeder {
 
 	public void msgBadNest(Nest n);
 	
+	public void setGantry(Gantry g);
 }
