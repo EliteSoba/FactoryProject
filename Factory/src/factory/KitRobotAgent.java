@@ -6,11 +6,11 @@ import agent.Agent;
 public class KitRobotAgent extends Agent implements KitRobot {
 
 	/** DATA **/
+	public enum KitRobotAgentState { DOING_NOTHING }
 	
 	/** MESSAGES **/
 	@Override
-	public void msgGrabAndBringEmptyKitFromConveyor() {
-		// TODO Auto-generated method stub
+	public void msgGrabAndBringEmptyKitFromConveyorToSlot(String slot) {
 		
 	}
 
