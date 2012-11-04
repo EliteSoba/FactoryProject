@@ -3,7 +3,7 @@ package factory.swing;
 import java.awt.*;
 import javax.swing.*;
 
-public class LaneManPanel extends JFrame {
+public class LaneManPanel extends JPanel {
 	/**
 	 * 
 	 */
@@ -40,7 +40,7 @@ public class LaneManPanel extends JFrame {
 	}
 	 //main method used for testing
 	//do not delete just comment out
-
+	/*
 	public static void main (String[] args){
 		LaneManPanel l = new LaneManPanel();
 		l.repaint();
@@ -48,6 +48,6 @@ public class LaneManPanel extends JFrame {
 		l.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		l.setSize(400,450);
 		l.repaint(); 
-	}
+	}*/
 		
 }
