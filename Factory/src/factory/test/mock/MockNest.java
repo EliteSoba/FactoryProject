@@ -9,6 +9,11 @@ public class MockNest extends MockAgent implements Nest {
 	}
 
 	public EventLog log = new EventLog();
+
+	@Override
+	public void msgDump() {
+		log.add(new LoggedEvent("msgDump()")); 
+	}
 	
 	
 

@@ -8,20 +8,22 @@ import factory.interfaces.Lane;
 import factory.interfaces.Nest;
 
 public class LaneAgent extends Agent implements Lane {
+	/** DATA **/
+	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
+	public Feeder myFeeder;
+//	public enum LaneState { NORMAL, NEEDS_TO_PURGE, PURGING };  // not sure about this, need to update wiki still
+//	public LaneState state = LaneState.NORMAL; 
+	public Nest myNest;
+	public int amplitude = 5;
+	public static int kMAX_AMPLITUDE = 20;
+	public enum NestState { NORMAL, NEEDS_TO_DUMP, WAITING_FOR_DUMP_CONFIRMATION, NEST_WAS_DUMPED, NEEDS_TO_INCREASE_AMPLITUDE }
+	public NestState nestState;
 
-	ArrayList<MyPart> myParts = new ArrayList<MyPart>();
-	Feeder myFeeder;
-	Nest myNest;
-	int amplitude = 5;
-	int kMAX_AMPLITUDE = 20;
-	enum NestState { NORMAL, NEEDS_TO_DUMP, WAITING_FOR_DUMP_CONFIRMATION, NEST_WAS_DUMPED, NEEDS_TO_INCREASE_AMPLITUDE }
-	NestState nestState;
+	public enum MyPartState {  NEEDED, REQUESTED }
 
-	enum MyPartState {  NEEDED, REQUESTED }
-
-	class MyPart {
-		Part pt;
-		MyPartState state;
+	public class MyPart {
+		public Part pt;
+		public MyPartState state;
 
 		public MyPart(Part part){
 			this.state = MyPartState.NEEDED;
@@ -29,34 +31,99 @@ public class LaneAgent extends Agent implements Lane {
 		}
 	}
 
-	@Override
-	public Nest getNest() {
-		return myNest;
-	}
 
-	@Override
+	/** MESSAGES **/
 	public void msgIncreaseAmplitude() {
-		// TODO Auto-generated method stub
-		
+		nestState = NestState.NEEDS_TO_INCREASE_AMPLITUDE;
 	}
 
-	@Override
+	public void msgNestNeedsPart(Part part) {
+		myParts.add(new MyPart(part));
+	}
+
 	public void msgDumpNest() {
-		// TODO Auto-generated method stub
-		
+		nestState = NestState.NEEDS_TO_DUMP;
 	}
 
-	@Override
+	public void msgNestWasDumped() {
+		nestState = NestState.NEST_WAS_DUMPED;
+	}
+
 	public void msgPurge() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	@Override
-	protected boolean pickAndExecuteAnAction() {
-		// TODO Auto-generated method stub
+	/** SCHEDULER **/
+	public boolean pickAndExecuteAnAction() {
+		if (nestState == NestState.NEEDS_TO_DUMP)
+		{
+			dumpNest();
+			return true;
+		}
+		if (nestState == NestState.NEST_WAS_DUMPED)
+		{
+			tellFeederNestWasDumped();
+			return true;
+		}
+		if (nestState == NestState.NEEDS_TO_INCREASE_AMPLITUDE)
+		{
+			increaseAmplitude();
+			return true;
+		}
+
+		for(MyPart p : myParts)
+		{
+			if (p.state == MyPartState.NEEDED) 
+			{
+				askFeederToSendParts(p);
+				return true;
+			}
+		}
+
+
 		return false;
 	}
+
+
+	/** ACTIONS **/
+	
+	public void tellFeederNestWasDumped() {
+		//if (nestState != NestState.NEEDS_TO_INCREASE_AMPLITUDE) // unnecessary, will never happen
+			nestState = NestState.NORMAL;
+		myFeeder.msgNestWasDumped(this);
+	}
+	
+	public void increaseAmplitude() {
+		if (amplitude+5 <= kMAX_AMPLITUDE)
+		{
+			amplitude += 5;
+			DoIncreaseAmplitude(amplitude);
+			nestState = NestState.NORMAL;
+		}
+	}
+	
+	public void askFeederToSendParts(MyPart part) { 
+		myFeeder.msgLaneNeedsPart(part.pt, this);
+		part.state = MyPartState.REQUESTED;
+	}
+
+	public void dumpNest() { 
+		nestState = NestState.WAITING_FOR_DUMP_CONFIRMATION;
+		myNest.msgDump();
+	}
+
+	
+	
+	/** ANIMATIONS **/
+	private void DoIncreaseAmplitude(int amp) 
+	{
+		print("amplitude increased to " + amp + ".");
+	}
+
+
+
+	/** OTHER **/
 
 	/** This method sets the nest of this lane.  
 	 * NOTE: Used for testing purposes only. 
@@ -65,5 +132,13 @@ public class LaneAgent extends Agent implements Lane {
 		myNest = n;
 	}
 
+	public Nest getNest() {
+		return myNest;
+	}
+	
+	public void setFeeder(Feeder f) {
+		myFeeder = f;
+	}
+	
 
 }

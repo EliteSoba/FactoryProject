@@ -40,4 +40,9 @@ public class MockLane extends MockAgent implements Lane {
 		myNest = n;
 	}
 
+	@Override
+	public void msgNestWasDumped() {
+		log.add(new LoggedEvent("msgNestWasDumped()"));
+	}
+
 }
