@@ -32,6 +32,11 @@ public class FrameKitAssemblyManager extends JFrame{
 		GKAM.addOutKit();
 	}
 	
+	public void fromBelt() {
+		//Receive a Kit from the belt
+		GKAM.robotFromBelt();
+	}
+	
 	public static void main(String args[]) {
 		//Implements this JFrame
 		FrameKitAssemblyManager FKAM = new FrameKitAssemblyManager();
