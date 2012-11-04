@@ -27,14 +27,12 @@ public class MockLane extends MockAgent implements Lane {
 
 	@Override
 	public void msgDumpNest() {
-		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("msgDumpNest()"));
 	}
 
 	@Override
 	public void msgPurge() {
-		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("msgPurge()"));
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import factory.FeederAgent.MyPartRequest;
 import factory.FeederAgent.MyPartRequestState;
 import factory.Part;
 import factory.interfaces.Lane;
+import factory.interfaces.Nest;
 import factory.test.mock.MockGantry;
 import factory.test.mock.MockLane;
 import factory.test.mock.MockNest;
@@ -80,7 +81,7 @@ public class FeederTests extends TestCase{
 		// Check to see if lane receives appropriate message
     	assertTrue("Lane should have been told msgIncreaseAmplitude(). Event log: "
     			+ top.log.toString(), 
-    			top.log.containsString("msgIncreaseAmplitude"));
+    			top.log.containsString("msgIncreaseAmplitude()"));
     	
     	// Check to see if lane's jamstate gets set correctly
     	assertEquals(feeder.topLane.jamState,FeederAgent.JamState.MIGHT_BE_JAMMED);
@@ -89,7 +90,7 @@ public class FeederTests extends TestCase{
     	
     	// Now check to make sure that the feeder's scheduler is working properly
     	feeder.pickAndExecuteAnAction();  
-    	// FURTHER TESTING HERE FOR NON-NORMATIVE CASE
+    	// FURTHER TESTING HERE FOR THE NON-NORMATIVE CASE OF A PART BEING STUCK
     	
 	}
 	
@@ -111,8 +112,7 @@ public class FeederTests extends TestCase{
 		
 		
 		
-		// scenario #2: the feeder dumps a nest because
-		// it is trying to purge the lane
+		// scenario #2: the feeder dumps a nest because it is trying to purge the lane
 		feeder.state = FeederAgent.FeederState.OK_TO_PURGE; 
 
 		// send the message
@@ -124,6 +124,7 @@ public class FeederTests extends TestCase{
 		// Make sure that the Feeder's scheduler is working correctly
 		feeder.pickAndExecuteAnAction();
 		assertEquals(feeder.topLane.state,FeederAgent.MyLaneState.PURGING);
+
 					
 	}
 	
@@ -163,6 +164,7 @@ public class FeederTests extends TestCase{
     			{
     				if (pr.pt == p1)
     				{
+    					mpr = pr;
     					assertEquals(pr.state,FeederAgent.MyPartRequestState.ASKED_GANTRY);
     				}
     			}
@@ -196,18 +198,36 @@ public class FeederTests extends TestCase{
 		{
 			if (pr.pt == p2)
 			{
+				mpr = pr;
 				assertEquals(pr.state,FeederAgent.MyPartRequestState.NEEDED);
 			}
 		}
 		
 		
 		
-		// SCENARIO #3: The feeder has been feeding parts for at least 10 seconds, 
-		// which is the min length of time before it is OK to purge.
+		// SCENARIO #3: The feeder is ready to purge now
+		// some initial setup:
+		feeder.state = FeederAgent.FeederState.OK_TO_PURGE;
+		mpr.state = FeederAgent.MyPartRequestState.NEEDED;
+		feeder.topLane.part = mpr.pt;
 		
-		// This needs to be tested in conjunction with the msgHereAreParts test.
 		
+		assertEquals(feeder.topLane.lane,mpr.lane);
+		assertTrue(feeder.topLane.part != null);
+		assertEquals(top,feeder.topLane.lane);
 
+		// call the scheduler
+		feeder.pickAndExecuteAnAction();
+		
+		// Check to see if the lane receives appropriate message
+    	assertTrue("Lane should have been told msgPurge(). Event log: "
+    			+ top.log.toString(), 
+    			top.log.containsString("msgPurge()"));
+    	
+    	// and check the lane's state
+    	assertEquals(feeder.topLane.state,FeederAgent.MyLaneState.PURGING);
+		
+		
 	}
 	
 	
@@ -254,7 +274,39 @@ public class FeederTests extends TestCase{
 		// PART #2: The feeder receives the parts he asked for from the gantry.
 		feeder.diverter = DiverterState.FEEDING_BOTTOM; // to test the switching of the lane diverter
 		
+		feeder.pickAndExecuteAnAction();
 		
+		assertEquals(feeder.diverter,DiverterState.FEEDING_TOP); // switches to feed the top because that is the lane we are feeding
+		
+		
+		// NEED TO FIGURE OUT HOW TO TEST THE TIMERS...
+		
+	//	assertEquals(feeder.state,FeederState.OK_TO_PURGE); // not sure how to test timers..
+		
+		//assertTrue(feeder.topLane.readyForPicture);
+		
+		
+		
+	}
+	
+	
+	public void testMsgBadNest() {
+		
+		feeder.msgBadNest(top.getNest()); // send the msg
+		
+		assertEquals(feeder.topLane.state,MyLaneState.BAD_NEST); // check to see if initial state assignment works
+		
+		// check to see if the scheduler works
+		feeder.pickAndExecuteAnAction();
+		
+		// make sure the topLane receives the right message
+    	assertTrue("Lane should have been told msgDumpNest(). Event log: "
+    			+ top.log.toString(), 
+    			top.log.containsString("msgDumpNest()"));
+		
+    	// and that the lane's state changes properly
+		assertEquals(feeder.topLane.state,MyLaneState.TOLD_NEST_TO_DUMP); 
+				
 		
 	}
 	

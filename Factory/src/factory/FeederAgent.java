@@ -24,14 +24,14 @@ public class FeederAgent extends Agent implements Feeder {
 	public Part currentPart;
 	Bin dispenserBin;
 	public FeederState state = FeederState.EMPTY;
-	Timer okayToPurgeTimer = new Timer();
-	Timer feederEmptyTimer = new Timer();
-	Timer partResettleTimer = new Timer();
+	public Timer okayToPurgeTimer = new Timer();
+	public Timer feederEmptyTimer = new Timer();
+	public Timer partResettleTimer = new Timer();
 
 	public enum FeederState { EMPTY, WAITING_FOR_PARTS, CONTAINS_PARTS, OK_TO_PURGE, SHOULD_START_FEEDING }
 	public enum DiverterState { FEEDING_TOP, FEEDING_BOTTOM }
 
-	public enum MyPartRequestState { NEEDED, ASKED_GANTRY, DELIVERED, DELETED }
+	public enum MyPartRequestState { NEEDED, ASKED_GANTRY, DELIVERED }
 
 	public class MyPartRequest {
 		public Part pt;
@@ -223,9 +223,9 @@ public class FeederAgent extends Agent implements Feeder {
 		
 		if (purgeIfNecessary(partRequested) || this.state == FeederState.EMPTY) 
 		{
-			gantry.msgFeederNeeds(partRequested.pt, this);
 			state = FeederState.WAITING_FOR_PARTS;
 			partRequested.state = MyPartRequestState.ASKED_GANTRY;
+			gantry.msgFeederNeeds(partRequested.pt, this);
 		}
 	}
 	
@@ -319,6 +319,7 @@ public class FeederAgent extends Agent implements Feeder {
 			diverter = DiverterState.FEEDING_BOTTOM;
 		}
 
+		
 		okayToPurgeTimer.schedule(new TimerTask(){
 			public void run() {
 				state = FeederState.OK_TO_PURGE;
