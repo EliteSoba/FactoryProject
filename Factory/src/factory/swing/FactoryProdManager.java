@@ -1,4 +1,6 @@
 // to test FactoryProdManPanel.java
+package factory.swing;
+
 import java.util.*;
 import java.awt.*;
 
