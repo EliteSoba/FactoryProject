@@ -14,6 +14,7 @@ import java.util.Arrays;
 
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.Timer;
 
 /*Abstract class used by each client
@@ -30,15 +31,15 @@ public abstract class Client extends JFrame implements ActionListener {
 		KITASSEMBLYMANAGER, LANEMANAGER,
 		GANTRYROBOTMANAGER
 	}
-	Socket server; //connection to server
-	JFrame graphics; //possibly null graphics frame (graphics team)
-	JFrame UI; //user interface (swing team)
-	Type type; //type of client
-	PrintWriter output; //output stream to server
-	BufferedReader input; //input stream from server
-	String currentCommand; //current command string from server
-	ArrayList<String> parsedCommand; //current command parsed into strings
-	Timer updater; //repaints graphics
+	protected Socket server; //connection to server
+	protected JPanel graphics; //possibly null graphics frame (graphics team)
+	protected JPanel UI; //user interface (swing team)
+	public Type type; //type of client
+	public PrintWriter output; //output stream to server
+	public BufferedReader input; //input stream from server
+	public String currentCommand; //current command string from server
+	public ArrayList<String> parsedCommand; //current command parsed into strings
+	protected Timer updater; //repaints graphics
 	
 	Runnable independentInput = new Runnable(){
 		public void run(){
@@ -53,8 +54,9 @@ public abstract class Client extends JFrame implements ActionListener {
 		}//end run
 	}; //end independentInput
 	
-	public Client(Type t){
+	public Client(Type t, JPanel buttons){
 		type = t;
+		UI = buttons;
 		connect(); //connects to server
 		updater = new Timer(1000/30, this); //sets timer to update graphics
 		setInterface(); //to be implemented...set size, layout, add UI etc...
@@ -92,6 +94,6 @@ public abstract class Client extends JFrame implements ActionListener {
 				graphics.repaint();
 	}
 	
-	abstract void setInterface();//to be implemented by child class	
+	public abstract void setInterface();//to be implemented by child class	
 }
 
