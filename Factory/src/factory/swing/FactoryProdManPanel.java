@@ -7,23 +7,23 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-//import javax.swing.Timer;
 
 
 public class FactoryProdManPanel extends JPanel implements ActionListener {
 	JComboBox kitNameBox;
-	String[] kitNameList;
 	JSpinner spinner;
 	JButton submitButton;
 	JTextArea messageBox;
 	
 	public FactoryProdManPanel(ArrayList<String> kitList) { // manager has arraylist of kitnames available
-		kitNameList = kitList.toArray(new String[kitList.size()]);
-		kitNameBox = new JComboBox(kitNameList);
+		kitNameBox = new JComboBox();
+		for (int i = 0; i < kitList.size(); i++)
+			kitNameBox.addItem(kitList.get(i));
 		kitNameBox.setPreferredSize(new Dimension(225,25));
 		
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+	//	c.anchor = GridBagConstraints.PAGE_START;
 		c.gridy = 1;
 		c.gridx = 1;
 		c.gridwidth = 4;
@@ -72,8 +72,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	}
 	
 	public FactoryProdManPanel() { 
-		kitNameList = new String[0];
-		kitNameBox = new JComboBox(kitNameList);
+		kitNameBox = new JComboBox();
 		kitNameBox.setPreferredSize(new Dimension(225,25));
 		
 		setLayout(new GridBagLayout());
@@ -128,9 +127,14 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			else
 			messageBox.append("Order Submitted.\n     Details: " + spinner.getValue() + " units of " + (String)kitNameBox.getSelectedItem() + "\n" );
 		}
-		else {
-		//	messageBox.append("error\n");
-		}	
+	}
+	
+
+	public void addKit(String kitName) {	
+		kitNameBox.addItem(kitName);	
+	}
+	
+	public void removeKit(String kitName) {
+		kitNameBox.removeItem(kitName);
 	}
 }
-

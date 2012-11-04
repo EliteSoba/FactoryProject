@@ -31,7 +31,19 @@ public class FactoryProdManager extends JFrame {
 	public static void main(String[] args) {
 		
 		FactoryProdManager FPM = new FactoryProdManager();
+		// String kitName = "testkit";
+		//FPM.addBox(testkit);
+		//FPM.removeBox(testkit);
 
+	}
+	
+	public void removeBox (String kitName) {	
+		myPanel.removeKit(kitName);
+	}
+	
+	public void addBox(String kitName) {
+		kitNameList.add(kitName);
+		myPanel.addKit(kitName);
 	}
 
 }
