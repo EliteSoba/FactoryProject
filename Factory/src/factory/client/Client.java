@@ -57,7 +57,7 @@ public abstract class Client extends JFrame implements ActionListener {
 	public Client(Type t, JPanel buttons){
 		type = t;
 		UI = buttons;
-	//	connect(); //connects to server
+		connect(); //connects to server
 		updater = new Timer(1000/30, this); //sets timer to update graphics
 		setInterface(); //to be implemented...set size, layout, add UI etc...
 		Thread inputThread = new Thread(independentInput);
