@@ -19,10 +19,7 @@ public class StandAgent extends Agent implements Stand {
 	public Boolean partsRobotWantsToDeliverParts = false;
 	public KitRobot kitRobot;
 	public Vision vision;
-	  
-	public Kit temporaryEmptyKitHolder = null;
-	public TemporaryEmptyKitHolderState temporaryEmptyKitHolderState = TemporaryEmptyKitHolderState.EMPTY;
-		
+	
 	public MySlot topSlot;
 	public MySlot bottomSlot;
 	public MySlot inspectionSlot;
@@ -80,23 +77,6 @@ public class StandAgent extends Agent implements Stand {
 	public void msgEmptyKitIsHere() {
 	   conveyor.state = MyConveyorState.HAS_EMPTY_KIT;
 	   stateChanged();
-	}
-	
-	/**
-	 * Message that receives an empty kit from the KitRobot
-	 * By design, the temporaryEmptyKitHolder should always be empty when this is called   
-	 * We do not access the slots here because the KitRobot doesn't know where it goes and logic shouldn't be in messages
-	 */
-	public void msgHereIsAnEmptyKit(Kit kit) {
-	   if(temporaryEmptyKitHolderState == TemporaryEmptyKitHolderState.EMPTY){    
-	      temporaryEmptyKitHolder = kit;       
-	      temporaryEmptyKitHolderState = TemporaryEmptyKitHolderState.EMPTY_KIT;
-	      conveyor.state = MyConveyorState.EMPTY;
-	      stateChanged();
-	   }
-	   else {
-	      // Throw Exception
-	   }
 	}
 	
 	/**
@@ -208,10 +188,18 @@ public class StandAgent extends Agent implements Stand {
 	 * Method that tells the KitRobot to fetch the empty Kit
 	 */
 	private void DoFetchEmptyKitFromConveyor() {
-	   kitRobot.msgGrabAndBringEmptyKitFromConveyor();
-	   state = StandAgentState.KIT_ROBOT;
-	   conveyor.state = MyConveyorState.FETCHING_EMPTY_KIT;
-	}    
+		if (topSlot.state == MySlotState.EMPTY) {
+			kitRobot.msgGrabAndBringEmptyKitFromConveyorToSlot(topSlot.name);
+		}
+		else if (bottomSlot.state == MySlotState.EMPTY) {
+			kitRobot.msgGrabAndBringEmptyKitFromConveyorToSlot(bottomSlot.name);
+		}
+		else {
+			// Throw exception
+		}
+		state = StandAgentState.KIT_ROBOT;
+		conveyor.state = MyConveyorState.FETCHING_EMPTY_KIT;
+	}   
 	/**
 	 * Method that places the empty bin in the right slot
 	 */
