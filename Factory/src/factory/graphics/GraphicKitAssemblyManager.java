@@ -40,14 +40,14 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	 */
 	
 	//int x; //This was just for testing purposes, uncomment the x-related lines to watch a square move along a sin path
-	FrameKitAssemblyManager am; //The JFrame that holds this. Will be removed when gets integrated with the rest of the project
-	GraphicKitBelt belt; //The conveyer belt
-	GraphicKittingStation station; //The kitting station
-	GraphicKittingRobot robot;
-	boolean fromBelt;
-	boolean toStation;
-	boolean fromStation;
-	boolean toBelt;
+	private FrameKitAssemblyManager am; //The JFrame that holds this. Will be removed when gets integrated with the rest of the project
+	private GraphicKitBelt belt; //The conveyer belt
+	private GraphicKittingStation station; //The kitting station
+	private GraphicKittingRobot robot;
+	private boolean fromBelt;
+	private boolean toStation;
+	private boolean fromStation;
+	private boolean toBelt;
 	
 	public GraphicKitAssemblyManager(FrameKitAssemblyManager FKAM) {
 		//Constructor
@@ -82,7 +82,7 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	
 	public void robotFromBelt() {
 		//Sends robot to pick up kit from belt
-		if (belt.pickUp() && !robot.kitted())
+		if (belt.pickUp() && !robot.kitted() && !station.maxed())
 			fromBelt = true;
 	}
 	
@@ -104,8 +104,7 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	public void moveRobot() {
 		//Moving path control into separate method
 		
-		if (!station.maxed())
-			robotFromBelt();
+		//robotFromBelt();
 		
 		if (fromBelt) {
 			if (robot.moveFromBelt(5)) {
