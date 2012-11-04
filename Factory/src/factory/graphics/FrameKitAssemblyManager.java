@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class FrameKitAssemblyManager extends JFrame{
 	
-	/*FrameKitAssemblyManager.java (800x600)
+	/*FrameKitAssemblyManager.java (800x600) - Tobias Lee
 	 * This integrates the GraphicKitAssemblyManager with a small Control Panel to demonstrate commands
 	 * This will be removed when the project gets integrated
 	 */

@@ -4,17 +4,19 @@ import javax.swing.*;
 
 public class GraphicKit {
 	
-	/*GraphicKit.java (40x80)
+	/*GraphicKit.java (40x80) - Tobias Lee
 	 * This class paints a graphical representation of a kit
 	 */
 	
 	private int x, y; //coordinates at which it's painted
+	private int direction; //2,4,6,8 direction of kit
 	public static int width = 40, height = 80; //Static size of a Kit
 	
 	public GraphicKit(int m, int n) {
 		//Constructor
 		x = m;
 		y = n;
+		direction = 4;
 	}
 	
 	public void paint(Graphics g) {
@@ -30,7 +32,7 @@ public class GraphicKit {
 		g.drawLine(x+width/2, y, x+width/2, y+height);
 	}
 	
-	public void move(int v) {
+	public void moveY(int v) {
 		//Moves down v units
 		y += v;
 	}
@@ -51,9 +53,19 @@ public class GraphicKit {
 		return x;
 	}
 	
+	public void setX(int x) {
+		//Sets x
+		this.x = x;
+	}
+	
 	public int getY() {
 		//Returns y
 		return y;
+	}
+	
+	public void setY(int y) {
+		//Sets y
+		this.y = y;
 	}
 	
 }

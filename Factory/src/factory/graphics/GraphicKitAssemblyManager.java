@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	
-	/*GraphicKitAssemblyManager.java (600x600)
+	/*GraphicKitAssemblyManager.java (600x600) - Tobias Lee
 	 * This is the graphical display of the Kit Assembly Manager
 	 * Currently, this displays a conveyer belt and its kits, and a kitting station
 	 * and animates the two.
@@ -18,18 +18,25 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	 * 		[Å„] Add functionality of GraphicKittingRobot to move from kitting station back to belt
 	 * 		[ ] Create GraphicItems class to display rudimentary items
 	 * 		[ ] Rework GraphicKit to be able to hold GraphicItems
+	 * 		[ ] Rotation of GraphicKit
 	 * 		[ ] Rework GraphicKittingRobot to actually hold kits rather than using an image with a blank kit
-	 * 		[ ] Create buttons for each potential command in ControlPanel
 	 * 		[ ] Add functionality of GraphicKittingStation to randomly add items to a kit
+	 * 		[ ] Create buttons for each potential command in ControlPanel
 	 * 		[ ] Update GraphicKittingStation so that the positions of the kits are not as autistic
 	 * 				GraphicKittingRobot must be able to pick which kit it removes
+	 * 		[ ] ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS
+	 * 				It can take 3 kits from the station at once...
+	 * 				TOO MANY BRUTE FORCE SOLUTIONS. NEED ELEGANCE
+	 * 				Queue of Command Strings would be kinda cool
 	 * 		{ } (Potentially) have GraphicKittingRobot know where to move to put items where they belong on GraphicKittingStation, instead of moving to a fixed spot
 	 * 		{ } (Perhaps) Create a generic moveTo(int x, int y) function for GraphicKittingRobot to move to a location
 	 * 
-	 * CURRENT ISSUES:
-	 * 		[ ] Hierarchy of commands: Robot will prioritize getting new kit from belt above all else
+	 * C
+	 * URRENT ISSUES:
+	 * 		[?] Hierarchy of commands: Robot will prioritize getting new kit from belt above all else
 	 * 			- HARDFIXED FOR NOW. FIX LATER
 	 * 			- HANDLE WHAT TO DO WHEN TOO MANY KITS ARE CIRCULATING (4TH KIT FROM BELT TRANSFERRING TO STATION)
+	 * 			Are hardfixes really a bad thing?
 	 */
 	
 	//int x; //This was just for testing purposes, uncomment the x-related lines to watch a square move along a sin path
@@ -69,11 +76,12 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		/*if (belt.kitout())
 			return;
 		belt.outKit(new GraphicKit(150, 300));*/
-		if (station.hasKits())
+		if (station.hasKits() && !robot.kitted())
 			fromStation = true;
 	}
 	
 	public void robotFromBelt() {
+		//Sends robot to pick up kit from belt
 		if (belt.pickUp() && !robot.kitted())
 			fromBelt = true;
 	}
@@ -85,11 +93,19 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		//g.setColor(Color.black);
 		//g.fillRect(x, (int)(20*Math.sin(x/90.0*3.1415))+100, 5, 5);
 		belt.paint(g);
-		belt.moveBelt(5);
 		station.paint(g);
 		robot.paint(g);
 		
-		robotFromBelt();
+		belt.moveBelt(5);
+		moveRobot();
+		//x += 1;
+	}
+	
+	public void moveRobot() {
+		//Moving path control into separate method
+		
+		if (!station.maxed())
+			robotFromBelt();
 		
 		if (fromBelt) {
 			if (robot.moveFromBelt(5)) {
@@ -119,7 +135,6 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		}
 		else
 			robot.moveToStartX(5);
-		//x += 1;
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {

@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class GraphicKitBelt {
 	
-	/*GraphicKitBelt.java (220x600)
+	/*GraphicKitBelt.java (220x600) - Tobias Lee
 	 * This displays and animates the conveyer belts,
 	 * as well as any kits entering/exiting the factory (1 of each)
 	 */
@@ -102,7 +102,7 @@ public class GraphicKitBelt {
 		//Moves the incoming kit along a path
 		if (kitin()) {
 			if (kitIn.getY() <= y+115)
-			kitIn.move(v);
+			kitIn.moveY(v);
 			if (kitIn.getY() >= y+40 && kitIn.getX() <= x+100)
 				kitIn.moveX(v);
 			if (kitIn.getX() >= x+105 && kitIn.getY() >= y+115)
@@ -114,19 +114,19 @@ public class GraphicKitBelt {
 		//Moves the outgoing kit along a path
 		if (kitout()) {
 			if (kitOut.getY() <= y+370)
-				kitOut.move(v);
+				kitOut.moveY(v);
 			else if (kitOut.getY() <= y+400){
 				kitOut.moveX(-v);
-				kitOut.move(v);
+				kitOut.moveY(v);
 			}
 			else if (kitOut.getX() > x+80)
 				kitOut.moveX(-v);
 			else if (kitOut.getX() > x+25) {
 				kitOut.moveX(-v);
-				kitOut.move(v);
+				kitOut.moveY(v);
 			}
 			else
-				kitOut.move(v);
+				kitOut.moveY(v);
 			
 			if (kitOut.getY() >= y+600)
 				kitOut = null;
