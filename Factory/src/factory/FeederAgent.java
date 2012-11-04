@@ -14,20 +14,20 @@ import factory.interfaces.Vision;
 public class FeederAgent extends Agent implements Feeder {
 
 	/** DATA **/
+	private String name;
 	public ArrayList<MyPartRequest> requestedParts = new ArrayList<MyPartRequest>();   
-	MyLane topLane;
-	MyLane bottomLane;
+	public MyLane topLane;
+	public MyLane bottomLane;
 	Vision vision;
 	DiverterState diverter; 
 	Gantry gantry;
 	Part currentPart;
 	Bin dispenserBin;
-	FeederState state;
+	public FeederState state = FeederState.EMPTY;
 	Timer feederEmptyTimer = new Timer();
 	Timer partResettleTimer = new Timer();
-	private String name;
 
-	enum FeederState { EMPTY, WAITING_FOR_PARTS, CONTAINS_PARTS, OK_TO_PURGE, SHOULD_START_FEEDING }
+	public enum FeederState { EMPTY, WAITING_FOR_PARTS, CONTAINS_PARTS, OK_TO_PURGE, SHOULD_START_FEEDING }
 	enum DiverterState { FEEDING_TOP, FEEDING_BOTTOM }
 
 	enum MyPartRequestState { NEEDED, ASKED_GANTRY, DELIVERED, DELETED }
@@ -45,22 +45,23 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 
-	enum MyLaneState {EMPTY, PURGING, CONTAINS_PARTS, BAD_NEST, 
+	public enum MyLaneState {EMPTY, PURGING, CONTAINS_PARTS, BAD_NEST, 
 		TOLD_NEST_TO_DUMP, NEST_SUCCESSFULLY_DUMPED}
-	enum JamState {MIGHT_BE_JAMMED, TOLD_TO_INCREASE_AMPLITUDE, 
-		AMPLITUDE_WAS_INCREASED, IS_NO_LONGER_JAMMED }
+	public enum JamState {MIGHT_BE_JAMMED, TOLD_TO_INCREASE_AMPLITUDE, 
+		AMPLITUDE_WAS_INCREASED, NOT_JAMMED }
 
-	class MyLane {
+	public class MyLane {
 
-		Lane lane;
-		MyLaneState state; 
-		JamState jamState;
-		Part part;
-		protected boolean readyForPicture = false;
+		public Lane lane;
+		public MyLaneState state; 
+		public JamState jamState;
+		public Part part;
+		public boolean readyForPicture = false;
 
 		public MyLane(Lane lane){
 			this.state = MyLaneState.EMPTY;
 			this.lane = lane;
+			this.jamState = JamState.NOT_JAMMED;
 		}
 	}
 
@@ -118,7 +119,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** SCHEDULER **/
 	@Override
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
 		{
@@ -170,13 +171,13 @@ public class FeederAgent extends Agent implements Feeder {
 
 		if (topLane.state == MyLaneState.NEST_SUCCESSFULLY_DUMPED)
 		{
-			backToNormalAfterNestDump(topLane);
+			nestWasDumped(topLane);
 			return true;
 		}
 
 		if (bottomLane.state == MyLaneState.NEST_SUCCESSFULLY_DUMPED)
 		{
-			backToNormalAfterNestDump(bottomLane);
+			nestWasDumped(bottomLane);
 			return true;
 		}
 
@@ -189,9 +190,17 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** ACTIONS **/
-	private void backToNormalAfterNestDump(MyLane la) {
-		la.state = MyLaneState.CONTAINS_PARTS;
-		DoStartFeeding();
+	private void nestWasDumped(MyLane la) {
+		if (this.state == FeederState.CONTAINS_PARTS)
+		{
+			// only if the feeder is actually feeding
+			la.state = MyLaneState.CONTAINS_PARTS;
+			DoStartFeeding();
+		}
+		else // the nestWasDumped from within a purge cycle
+		{
+			la.state = MyLaneState.PURGING;
+		}
 	}
 
 	private void dumpNest(MyLane la) {
@@ -294,6 +303,18 @@ public class FeederAgent extends Agent implements Feeder {
 
 		DoStartFeeding();
 
+	}
+	
+	/** This method returns the name of the FeederAgent **/
+	public String getName() {
+		return name;
+	}
+	
+	/** This method sets up the pointers to this Feeder's Lanes. **/
+	public void setUpLanes(Lane top,Lane bottom) 
+	{
+		topLane = new MyLane(top);
+		bottomLane = new MyLane(bottom);
 	}
 
 

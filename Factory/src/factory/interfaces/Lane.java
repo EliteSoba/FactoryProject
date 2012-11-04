@@ -10,4 +10,8 @@ public void msgDumpNest();
 
 public void msgPurge();
 
+public String getName();
+
+public void setNest(Nest n); // used for testing purposes only
+
 }
