@@ -24,19 +24,20 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	 * 		[ ] Create buttons for each potential command in ControlPanel
 	 * 		[ ] Update GraphicKittingStation so that the positions of the kits are not as autistic
 	 * 				GraphicKittingRobot must be able to pick which kit it removes
-	 * 		[ ] ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS
+	 * 		[X] ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS ROBOT COMMANDS
 	 * 				It can take 3 kits from the station at once...
 	 * 				TOO MANY BRUTE FORCE SOLUTIONS. NEED ELEGANCE
 	 * 				Queue of Command Strings would be kinda cool
+	 * 				!- HANDLED BY 201 TEAM
 	 * 		{ } (Potentially) have GraphicKittingRobot know where to move to put items where they belong on GraphicKittingStation, instead of moving to a fixed spot
 	 * 		{ } (Perhaps) Create a generic moveTo(int x, int y) function for GraphicKittingRobot to move to a location
 	 * 
-	 * C
-	 * URRENT ISSUES:
-	 * 		[?] Hierarchy of commands: Robot will prioritize getting new kit from belt above all else
+	 * CURRENT ISSUES:
+	 * 		[X] Hierarchy of commands: Robot will prioritize getting new kit from belt above all else
 	 * 			- HARDFIXED FOR NOW. FIX LATER
 	 * 			- HANDLE WHAT TO DO WHEN TOO MANY KITS ARE CIRCULATING (4TH KIT FROM BELT TRANSFERRING TO STATION)
 	 * 			Are hardfixes really a bad thing?
+	 * 			!- HANDLED BY 201 TEAM
 	 */
 	
 	//int x; //This was just for testing purposes, uncomment the x-related lines to watch a square move along a sin path
@@ -117,6 +118,7 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 			if (robot.moveToStation(5)) {
 				toStation = false;
 				station.addKit(robot.unkit());
+				am.fromBeltDone();
 			}
 		}
 		else if (fromStation) {
@@ -130,6 +132,7 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 			if (robot.moveToBelt(5)) {
 				toBelt = false;
 				belt.outKit(robot.unkit());
+				am.outKitDone();
 			}
 		}
 		else
@@ -139,6 +142,22 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		//etc.
 		repaint();
+	}
+	
+	public boolean getFromBelt() {
+		return fromBelt;
+	}
+	
+	public boolean getToStation() {
+		return toStation;
+	}
+	
+	public boolean getFromStation() {
+		return fromStation;
+	}
+	
+	public boolean getToBelt() {
+		return toBelt;
 	}
 
 }
