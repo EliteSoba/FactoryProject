@@ -1,4 +1,4 @@
-//Ben and Stephanie
+//Ben Mayeux and Stephanie Reagle
 //CS 200
 
 package factory.managers;
@@ -18,7 +18,7 @@ public class KitAssemblyManager extends Client {
 		}
 		public static void main(String[] args){
 		    KitAssManPanel buttons = new KitAssManPanel();
-			//KitAssemblyManager k = new KitAssemblyManager(buttons);
+			KitAssemblyManager k = new KitAssemblyManager(buttons);
 		}
 
 		@Override

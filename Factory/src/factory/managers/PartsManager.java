@@ -5,6 +5,7 @@
 package factory.managers;
 
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import factory.client.Client;
 import factory.swing.PartsManPanel;
@@ -18,7 +19,7 @@ public class PartsManager extends Client {
 	
 	public static void main(String[] args){
 	    PartsManPanel buttons = new PartsManPanel();
-		//PartsManager l = new PartsManager(buttons);
+		PartsManager l = new PartsManager(buttons);
 	}
 	
 	@Override
