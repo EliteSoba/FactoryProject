@@ -15,7 +15,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	
 	/** Public Constructor **/
 	public ConveyorAgent() {
-		
+		super();
 	}
 	
 	////Messages

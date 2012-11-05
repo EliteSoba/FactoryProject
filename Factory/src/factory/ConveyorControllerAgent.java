@@ -14,7 +14,7 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	Timer timer = new Timer();
 	
 	public ConveyorControllerAgent() {
-		
+		super();
 	}
 	////Messages
 	public void msgConveyorWantsEmptyKit(Conveyor c) {
@@ -47,7 +47,8 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		
 		timer.schedule(new TimerTask(){
 		    public void run(){
-		    	//After this timer, the graphics need to play the new kit animation and then after tell the ConveyorAgent about the new empty kit
+		    	//After this timer, the graphics needs to play the new kit animation and then after tell the ConveyorAgent about the new empty kit
+		    	//The message to tell the Conveyor about the new kit is Conveyor.msgHeresEmptyKit(new Kit());
 		    	conveyor_state = Conveyor_State.NO_ACTION;
 		    }
 		}, delivery_time);
