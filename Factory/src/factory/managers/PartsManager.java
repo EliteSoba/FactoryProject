@@ -10,6 +10,7 @@ import factory.client.Client;
 import factory.swing.PartsManPanel;
 
 public class PartsManager extends Client {
+	private static final long serialVersionUID = -205350261062308096L;
 
 	public PartsManager(JPanel buttons) {
 		super(Client.Type.PARTSMANAGER, buttons, null);

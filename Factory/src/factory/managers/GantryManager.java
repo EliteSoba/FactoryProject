@@ -7,6 +7,7 @@ import factory.client.Client;
 import factory.swing.GantryManPanel;
 
 public class GantryManager extends Client {
+	static final long serialVersionUID = 8492299864169935860L;
 
 	public GantryManager(JPanel buttons) {
 		super(Client.Type.GANTRYROBOTMANAGER, buttons, null);

@@ -9,9 +9,6 @@ import factory.client.Client;
 import factory.swing.LaneManPanel;
 
 public class LaneManager extends Client {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public LaneManager(JPanel buttons) {

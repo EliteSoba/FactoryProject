@@ -8,6 +8,7 @@ import factory.client.Client;
 import factory.swing.KitManPanel;
 
 public class KitManager extends Client {
+	private static final long serialVersionUID = -3161852324870948654L;
 
 	public KitManager(JPanel buttons) {
 		super(Client.Type.KITMANAGER, buttons, null);
