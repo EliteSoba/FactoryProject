@@ -13,7 +13,7 @@ public class GantryManager extends Client {
 	}
 	public static void main(String[] args){
 	    GantryManPanel buttons = new GantryManPanel();
-		KitManager k = new KitManager(buttons);
+		GantryManager k = new GantryManager(buttons);
 	}
 
 	@Override
