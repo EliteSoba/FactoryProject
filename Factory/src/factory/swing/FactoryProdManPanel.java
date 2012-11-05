@@ -1,5 +1,8 @@
-// Assume factory production manager has arraylist<string> kitList that is used to initialize tihs class
+/*
 
+author: Joey Huang
+Last edited: 11/4/12 5:24pm
+*/
 package factory.swing;
 import java.util.*;
 import java.awt.*;
@@ -15,9 +18,8 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	
 	public FactoryProdManPanel() { // manager has arraylist of kitnames available
 		kitNameBox = new JComboBox();
-		Component kitList;
-		for (int i = 0; i < kitList.size(); i++)
-			kitNameBox.addItem(kitList.get(i));
+		//for (int i = 0; i < kitList.size(); i++)
+		//	kitNameBox.addItem(kitList.get(i));
 		kitNameBox.setPreferredSize(new Dimension(225,25));
 		
 		setLayout(new GridBagLayout());
@@ -37,10 +39,10 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		
 		c.gridy = 3;
 		c.anchor = GridBagConstraints.CENTER;
-		for(int i = 0; i < kitList.size();i++) {
+		/*for(int i = 0; i < kitList.size();i++) {
 			kitNameBox.setSelectedIndex(i);
 			kitNameBox.addActionListener(this);
-		}
+		}*/
 		kitNameBox.setSelectedIndex(0);
 		add(kitNameBox,c);
 
@@ -81,6 +83,8 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	
 	public void addKit(String kitName) {	
 		kitNameBox.addItem(kitName);	
+		kitNameBox.getSelectedItem(kitNameBox.getItemCount()-1).addActionListener(this);
+		kitNameBox.setSelectedIndex(0);
 	}
 	
 	public void removeKit(String kitName) {
