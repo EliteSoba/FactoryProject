@@ -2,6 +2,9 @@
 
 
 //  This component was coded by Devon Meyer
+//  As a part of the Server-Socket subteam, this is my work for Submission 1.
+//  Not really related to this submission,
+//  but nonetheless required for the final project.
 
 
 //	CSCI-200 Factory Project Team 2
