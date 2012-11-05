@@ -8,15 +8,17 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	////Data	
 	Conveyor conveyor;
 	List<Kit> exported_kits = new ArrayList<Kit>();
-	enum Conveyor_State { WANTS_EMPTY_KIT, EMPTY_KIT_SENT, NO_ACTION };
+	enum Conveyor_State { WANTS_EMPTY_KIT, EMPTY_KIT_SENDING, NO_ACTION };
 	Conveyor_State conveyor_state = Conveyor_State.NO_ACTION;
+	
+	Timer timer = new Timer();
 	
 	public ConveyorControllerAgent() {
 		
 	}
 	////Messages
 	public void msgConveyorWantsEmptyKit(Conveyor c) {
-		if (!conveyor_state.equals(Conveyor_State.WANTS_EMPTY_KIT) && !conveyor_state.equals(Conveyor_State.EMPTY_KIT_SENT)) {
+		if (!conveyor_state.equals(Conveyor_State.WANTS_EMPTY_KIT) && !conveyor_state.equals(Conveyor_State.EMPTY_KIT_SENDING)) {
 			conveyor_state = Conveyor_State.WANTS_EMPTY_KIT;
 			stateChanged();
 		}
@@ -27,10 +29,11 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		stateChanged();
 	}
 	
+	
 	////Scheduler
 	protected boolean pickAndExecuteAnAction() {
 		if (conveyor_state.equals(Conveyor_State.WANTS_EMPTY_KIT)) {
-			conveyor_state = Conveyor_State.EMPTY_KIT_SENT;
+			conveyor_state = Conveyor_State.EMPTY_KIT_SENDING;
 			sendEmptyKit();
 		}
 		return false;
@@ -40,7 +43,14 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	private void sendEmptyKit() {
 		//Creates a random time that it will take for the empty kit to make it to the kitting cell
 		
-		conveyor_state = Conveyor_State.NO_ACTION;
+		int delivery_time = (int) (1000 + (Math.random()*9000)); //Random time it will take for the empty kit to make it to the cell
+		
+		timer.schedule(new TimerTask(){
+		    public void run(){
+		    	//After this timer, the graphics need to play the new kit animation and then after tell the ConveyorAgent about the new empty kit
+		    	conveyor_state = Conveyor_State.NO_ACTION;
+		    }
+		}, delivery_time);
 	}
 
 }

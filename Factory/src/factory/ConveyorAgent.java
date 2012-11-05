@@ -19,7 +19,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	}
 	
 	////Messages
-	public void msgHeresEmptyKit(ConveyorController cc, Kit k) {
+	public void msgHeresEmptyKit(Kit k) {
 	   on_conveyor = k;
 	   stateChanged();
 	}
@@ -59,17 +59,18 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	
 	////Actions
 	private void tellKitRobotAboutEmptyKit() {
-		   kit_robot.msgEmptyKitHere();
+		   kit_robot.msgEmptyKitIsHere();
 		   kr_state = KitRobot_State.NO_ACTION;
 		}
 
 		private void requestEmptyKit() {
-		   conveyor_controller.msgSendEmptyKit();
+		   conveyor_controller.msgConveyorWantsEmptyKit(this);
 		   kr_state = KitRobot_State.NO_ACTION;
 		}
 
 		private void exportKit() {
-		   //should call conveyor_controller to tell it to take away kit
+		   //should call the kit exporting animation, afterwards COULD call msgKitExported if you want to keep a list of all the finished kits
+			conveyor_controller.msgKitExported(this, on_conveyor);
 		}
 
 		private void giveKit() {
