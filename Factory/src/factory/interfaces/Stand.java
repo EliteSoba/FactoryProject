@@ -1,8 +1,10 @@
 package factory.interfaces;
 
+import factory.Kit.KitState;
+
 
 public interface Stand {
 	
-	void msgInspectionResults(factory.VisionAgent.InspectionResults inspectionResults);
+	void msgResultsOfKitAtInspection(KitState results);
 
 }
