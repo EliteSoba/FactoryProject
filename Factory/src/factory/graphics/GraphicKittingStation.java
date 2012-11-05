@@ -14,11 +14,13 @@ public class GraphicKittingStation {
 	public static final int MAX_KITS = 2; //Max number of kits this station can hold
 	private GraphicKit[] kits; //The kits it is holding
 	private GraphicKit check; //The kit in the inspection area
+	private int timer;
 	
 	public GraphicKittingStation(int x, int y) {
 		//Constructor
 		this.x = x;
 		this.y = y;
+		timer = -1;
 		kits = new GraphicKit[MAX_KITS];
 		for (int i = 0; i < MAX_KITS; i++)
 			kits[i] = null;
@@ -35,6 +37,15 @@ public class GraphicKittingStation {
 		g.setColor(Color.white);
 		g.drawString("TRASH", x+5, y+365);
 		drawKits(g);
+		
+		//timer = 0;
+		if (timer != -1) {
+			timer++;
+			g.setColor(Color.white);
+			g.fillOval(x-5*timer+25, y+250-5*timer, 10*timer, 10*timer);
+			if (timer == 5)
+				timer = -1;
+		}
 	}
 	
 	public void revalidateKits() {
@@ -128,5 +139,10 @@ public class GraphicKittingStation {
 	public void dropCheck() {
 		//Rather unnecessary, but kind of nice for readability
 		check = null;
+	}
+	
+	public void checkKit() {
+		//Camera flashing
+		timer = 0;
 	}
 }

@@ -125,6 +125,11 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		//x += 1;
 	}
 	
+	public void inspectKit() {
+		//Triggers the camera flash
+		station.checkKit();
+	}
+	
 	public void moveRobot() {
 		//Moving path control into separate method
 		
