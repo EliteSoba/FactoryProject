@@ -1,3 +1,5 @@
+package factory.graphics;
+
 import java.awt.Toolkit;
 
 class Item extends AnimatedObject

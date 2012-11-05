@@ -1,3 +1,5 @@
+package factory.graphics;
+
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
@@ -76,18 +78,18 @@ class PartsRobot extends AnimatedObject
 	}
 	public void move()
 	{
-		System.out.println(fx + " " + fy);
+		//System.out.println(fx + " " + fy);
 		if(y == fy && x == fx)	// robot has arrived at destination
 		{
 			if(state == 0)
 			{
 				state = 1;
-				System.out.println("Arrived at nest, waiting for item pickup.");
+				//System.out.println("Arrived at nest, waiting for item pickup.");
 			}
 			else if(state == 3)
 			{
 				state = 4;
-				System.out.println("Arrived at kitting station, waiting for item dropoff.");
+				//System.out.println("Arrived at kitting station, waiting for item dropoff.");
 			}
 		}
 		else if(y > fy)
@@ -128,6 +130,6 @@ class PartsRobot extends AnimatedObject
 		}
 		if(theta < 0) theta = 360;
 		else if(theta > 360) theta = 0;
-		System.out.println(theta);
+	//	System.out.println(theta);
 	}
 }
