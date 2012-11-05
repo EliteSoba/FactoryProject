@@ -132,7 +132,8 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		//singlePartRequest(); // TEST CASE #1
 		//twoDifferentPartRequestsForDifferentLanes(); // TEST CASE #2
 		//twoDifferentPartRequestsForSameLane(); // TEST CASE #3
-		twoSamePartRequestsForDifferentLanes(); // TEST CASE #4
+		//twoSamePartRequestsForDifferentLanes(); // TEST CASE #4
+		twoSamePartRequestsForSameLanes(); // TEST CASE #5
 	}
 
 	public void singlePartRequest() {
@@ -179,6 +180,14 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		
 		// Second Part:
 		n1.msgYouNeedPart(p0); 
+	}
+	
+	public void twoSamePartRequestsForSameLanes() {
+		// First Part:
+		n0.msgYouNeedPart(p0);
+		
+		// Second Part:
+		n0.msgYouNeedPart(p0); 
 	}
 
 	public void actionPerformed(ActionEvent ae){
