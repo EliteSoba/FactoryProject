@@ -14,7 +14,6 @@ enum KitRobotAgentState { DOING_NOTHING, NEEDS_TO_GRAB_EMPTY_KIT_AND_PLACE_IN_SL
 public class KitRobotAgent extends Agent implements KitRobot {
 
 	/** DATA **/
-
 	
 	StandAgent stand;
 	FrameKitAssemblyManager server;
@@ -34,7 +33,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	 * Message sent from the StandAgent when we need to grab an empty kit and place it in a slot
 	 */
 	public void msgGrabAndBringEmptyKitFromConveyorToSlot(String slot) {
-		debug(getName() + ": received msgGrabAndBringEmptyKitFromConveyorToSlot("+slot+")");
+		debug(getName() + ": received msgGrabAndBringEmptyKitFromConveyorToSlot("+slot+") from server");
 		if(slot == "topSlot"){
 			state = KitRobotAgentState.NEEDS_TO_GRAB_EMPTY_KIT_AND_PLACE_IN_SLOT_ONE;
 		}
@@ -48,6 +47,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	 * Message from the server when the animation is done
 	 */
 	public void msgAnimationDone(){
+		debug(getName() + ": received msgAnimationDone() from server");
 		animation.release();
 	}
 	
@@ -112,6 +112,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		
 		// Put an empty kit in the topSlot of the stand
 		stand.topSlot.kit = new Kit();
+		
 		// Update the state of the topSlot of the stand
 		stand.topSlot.state = MySlotState.EMPTY_KIT_JUST_PLACED;
 	}
