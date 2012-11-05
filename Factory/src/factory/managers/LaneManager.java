@@ -1,4 +1,5 @@
-
+//Ben and Stephanie
+//CS 200
 
 package factory.managers;
 
@@ -14,7 +15,7 @@ public class LaneManager extends Client {
 	private static final long serialVersionUID = 1L;
 
 	public LaneManager(JPanel buttons) {
-		super(Client.Type.KITMANAGER, buttons);
+		super(Client.Type.LANEMANAGER, buttons, null);
 		setInterface();
 	}
 	

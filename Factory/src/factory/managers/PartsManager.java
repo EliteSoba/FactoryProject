@@ -1,4 +1,6 @@
 //NOT FUNCTIONAL YET
+//Ben and Stephanie
+//CS 200
 
 package factory.managers;
 
@@ -10,7 +12,7 @@ import factory.swing.PartsManPanel;
 public class PartsManager extends Client {
 
 	public PartsManager(JPanel buttons) {
-		super(Client.Type.KITMANAGER, buttons);
+		super(Client.Type.PARTSMANAGER, buttons, null);
 		setInterface();
 	}
 	
