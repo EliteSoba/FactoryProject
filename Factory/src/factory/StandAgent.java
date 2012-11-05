@@ -4,12 +4,13 @@ import factory.interfaces.*;
 import agent.Agent;
 import factory.Kit;
 
+enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
+enum MyConveyorState { EMPTY, HAS_EMPTY_KIT, FETCHING_EMPTY_KIT }
+enum MySlotState { EMPTY, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION, KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT}
+
 public class StandAgent extends Agent implements Stand {
 	
 	/** DATA **/
-	public enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
-	public enum MyConveyorState { EMPTY, HAS_EMPTY_KIT, FETCHING_EMPTY_KIT }
-	public enum MySlotState { EMPTY, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION, KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT}
 
 	public StandAgentState state;
 	
@@ -145,6 +146,7 @@ public class StandAgent extends Agent implements Stand {
 			 */
 			if(topSlot.state  == MySlotState.EMPTY_KIT_JUST_PLACED || bottomSlot.state  == MySlotState.EMPTY_KIT_JUST_PLACED) {
 				DoProcessEmptyBinFromConveyor();
+				return true;
 			}
 			/**
 			 * If there is a completed kit and the stand is not being used
