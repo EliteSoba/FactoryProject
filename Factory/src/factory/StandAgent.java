@@ -120,9 +120,11 @@ public class StandAgent extends Agent implements Stand {
 	 * Message that is received when the Vision has analyzed the results
 	 */
 	public void msgResultsOfKitAtInspection(KitState results) {   
-	   inspectionSlot.kit.state = results;
-	   inspectionSlot.state = MySlotState.KIT_ANALYZED;
-	   stateChanged();
+		debug("Received msgResultsOfKitAtInspection()"); 
+		
+		inspectionSlot.kit.state = results;
+		inspectionSlot.state = MySlotState.KIT_ANALYZED;
+		stateChanged();
 	}
 	
 	/** SCHEDULER **/
@@ -251,10 +253,6 @@ public class StandAgent extends Agent implements Stand {
 		debug("Executing DoAskVisionToInspectKit()");
 		vision.msgAnalyzeKitAtInspection(inspectionSlot.kit);
 	   	inspectionSlot.state = MySlotState.ANALYZING_KIT; 
-	   	
-		debug("Kit passed the inspection");
-	   	inspectionSlot.kit.state = KitState.PASSED_INSPECTION;
-	   	inspectionSlot.state = MySlotState.KIT_ANALYZED;      
 	   	stateChanged();
 	}   
 	/**
@@ -270,5 +268,3 @@ public class StandAgent extends Agent implements Stand {
  
 
 }
-
-

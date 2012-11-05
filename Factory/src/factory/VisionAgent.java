@@ -5,8 +5,11 @@ import java.util.TimerTask;
 
 import agent.Agent;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 
+import factory.Kit.KitState;
+import factory.graphics.FrameKitAssemblyManager;
 import factory.interfaces.*;
 
 public class VisionAgent extends Agent implements Vision {
@@ -17,22 +20,26 @@ public class VisionAgent extends Agent implements Vision {
 	
 	ArrayList<PictureRequest> picRequests = new ArrayList<PictureRequest>(); 
 	ArrayList<KitPicRequest> kitPicRequests = new ArrayList<KitPicRequest>();     
-	KitRobot kitRobot;
 	PartsRobot partsRobot;
 	Stand stand;
 	Random r = new Random();
+	FrameKitAssemblyManager server;
 	
-	public VisionAgent(KitRobot kitRobot, PartsRobot partsRobot, Stand stand){
-		this.kitRobot = kitRobot;
+
+	Semaphore pictureAllowed = new Semaphore(1);
+	Semaphore animation = new Semaphore(0);
+	
+	public VisionAgent(PartsRobot partsRobot, Stand stand, FrameKitAssemblyManager server){
 		this.partsRobot = partsRobot;
 		this.stand = stand;
+		this.server = server;
 	}
 	
 	class KitPicRequest {
 	      
 	      KitPicRequestState state;
 	      InspectionResults inspectionResults;
-
+	      
 	      public KitPicRequest(KitPicRequestState kprs) { 
 	    	  state = kprs;
 	    	}
@@ -62,6 +69,7 @@ public class VisionAgent extends Agent implements Vision {
 	public void inspectKitStand() {
 		kitPicRequests.add(new KitPicRequest(KitPicRequestState.NEED_TO_INSPECT));
 	}
+	
 	public void msgMyNestsReadyForPicture(Nest nestOne, Nest nestTwo, Feeder feeder) {
 		picRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
 	}
@@ -83,30 +91,42 @@ public class VisionAgent extends Agent implements Vision {
 		
 	}
 	
-	//this message was not in the wiki, but existed in the interface.  comes from stand agent
-	@Override
+	
 	public void msgAnalyzeKitAtInspection(Kit kit) {
-		// TODO Auto-generated method stub
-		
+		debug("Received msgAnalyzeKitAtInspection() from the kit robot.");
+		kitPicRequests.add(new KitPicRequest(KitPicRequestState.NEED_TO_INSPECT));
+		stateChanged();
 	}
+	
+	/**
+	 * Message from the server when the animation is done
+	 */
+	public void msgAnimationDone(){
+		debug("Received msgAnimationDone() from server");
+		animation.release();
+	}
+	
 	// *** SCHEDULER ***
 	public boolean pickAndExecuteAnAction() {
 		
 		for(PictureRequest pr: picRequests){
 			if(pr.state == PictureRequestState.PARTS_ROBOT_CLEAR){
 				takePicture(pr);
+				return true;
 			}
 		}
 		
 		for(PictureRequest pr: picRequests){
 			if(pr.state == PictureRequestState.NESTS_READY){
 				checkLineOfSight(pr);
+				return true;
 			}
 		}
 		
 		for(KitPicRequest k: kitPicRequests){
 			if(k.state == KitPicRequestState.NEED_TO_INSPECT){
 				inspectKit(k);
+				return true;
 			}
 		}
 
@@ -115,17 +135,37 @@ public class VisionAgent extends Agent implements Vision {
 		
 	// *** ACTIONS ***
 	private void inspectKit(KitPicRequest k) {
-		   int randomNum = r.nextInt(11); //Random.new(0,10);
-		   if (randomNum == 0) {
-		      k.inspectionResults = InspectionResults.FAILED;
-		   }
-		   else {
-		      k.inspectionResults = InspectionResults.PASSED;
-		   }
-		   k.state = KitPicRequestState.INSPECTED;
-		   stand.msgInspectionResults(k.inspectionResults); //can't pass enum.  change to a string?
+
+		try{
+			pictureAllowed.acquire();
 		}
+		catch(Exception ex){
+			
+		}
+
+		server.takePicture();
+		
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	   int randomNum = r.nextInt(11);
+	   if(randomNum < 4)
+		   stand.msgResultsOfKitAtInspection(KitState.FAILED_INSPECTION);
+	   else
+		   stand.msgResultsOfKitAtInspection(KitState.PASSED_INSPECTION);
+		   
+	   pictureAllowed.release();
+	   
+	   k.state = KitPicRequestState.INSPECTED;
+	}
+	
 		private void takePicture(PictureRequest pr){
+			try{
+				pictureAllowed.acquire();
 		   int randomNumberOne = r.nextInt(3);
 		   int randomNumberTwo = r.nextInt(3);
 		   DoTakePicture();
@@ -152,6 +192,10 @@ public class VisionAgent extends Agent implements Vision {
 		      pr.feeder.msgEmptyNest(pr.nestTwo);
 		   }
 		   picRequests.remove(pr);
+		   pictureAllowed.release();
+		   stateChanged();
+			}
+			catch(Exception ex){}
 		}
 
 		private void DoTakePicture() {
@@ -168,6 +212,3 @@ public class VisionAgent extends Agent implements Vision {
 	
 	
 }
-
-
-
