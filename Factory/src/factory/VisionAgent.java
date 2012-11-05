@@ -22,6 +22,12 @@ public class VisionAgent extends Agent implements Vision {
 	Stand stand;
 	Random r = new Random();
 	
+	VisionAgent(KitRobot kitRobot, PartsRobot partsRobot, Stand stand){
+		this.kitRobot = kitRobot;
+		this.partsRobot = partsRobot;
+		this.stand = stand;
+	}
+	
 	class KitPicRequest {
 	      
 	      KitPicRequestState state;
@@ -149,7 +155,8 @@ public class VisionAgent extends Agent implements Vision {
 		}
 
 		private void DoTakePicture() {
-			// TODO Auto-generated method stub
+			debug("Taking Picture");
+			
 			
 		}
 		private void checkLineOfSight(PictureRequest pr){
