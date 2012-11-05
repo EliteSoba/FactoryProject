@@ -1,4 +1,3 @@
-//NOT FUNCTIONAL YET
 //Ben Mayeux and Stephanie Reagle
 //CS 200
 

@@ -1,3 +1,5 @@
+//Ben Mayeux
+
 package factory.managers;
 
 import javax.swing.JPanel;

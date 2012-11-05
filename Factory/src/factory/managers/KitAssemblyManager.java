@@ -13,7 +13,7 @@ public class KitAssemblyManager extends Client {
 	private static final long serialVersionUID = -4230607892468748490L;
 
 		public KitAssemblyManager(JPanel buttons) {
-			super(Client.Type.GANTRYROBOTMANAGER, buttons, null);
+			super(Client.Type.KITASSEMBLYMANAGER, buttons, null);
 			setInterface();
 		}
 		public static void main(String[] args){
