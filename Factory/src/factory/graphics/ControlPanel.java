@@ -45,10 +45,10 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.add(blank[3]);
 		this.add(inspect2);
 		this.add(blank[4]);
-		this.add(outKit);
+		/*this.add(outKit);
 		this.add(blank[5]);
 		this.add(dumpKit);
-		this.add(blank[6]);
+		this.add(blank[6]);*/
 		this.add(test);
 		this.setPreferredSize(new Dimension(200, 600));
 		sendKit.addActionListener(this);
