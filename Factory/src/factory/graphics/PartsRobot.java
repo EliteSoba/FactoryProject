@@ -19,6 +19,7 @@ class PartsRobot extends AnimatedObject
 		items = new ArrayList<Item>();
 		arrived = false;
 		state = -1;		// 0 = moving to nest, 1 = waiting at nest, 2 = waiting for next action, 3 = moving to kitting station, 4 = waiting at kitting station
+						// 5 = moving to center, 6 = arrived at center
 		x = init_x;
 		y = init_y;
 		fx = init_x;
@@ -78,18 +79,23 @@ class PartsRobot extends AnimatedObject
 	}
 	public void move()
 	{
-		//System.out.println(fx + " " + fy);
+		System.out.println(fx + " " + fy);
 		if(y == fy && x == fx)	// robot has arrived at destination
 		{
 			if(state == 0)
 			{
 				state = 1;
-				//System.out.println("Arrived at nest, waiting for item pickup.");
+				System.out.println("Arrived at nest, waiting for item pickup.");
 			}
 			else if(state == 3)
 			{
 				state = 4;
-				//System.out.println("Arrived at kitting station, waiting for item dropoff.");
+				System.out.println("Arrived at kitting station, waiting for item dropoff.");
+			}
+			else if(state == 5)		// going towards station
+			{
+				state = 6;
+				System.out.println("Arrived at center.");
 			}
 		}
 		else if(y > fy)
@@ -130,6 +136,6 @@ class PartsRobot extends AnimatedObject
 		}
 		if(theta < 0) theta = 360;
 		else if(theta > 360) theta = 0;
-	//	System.out.println(theta);
+		System.out.println(theta);
 	}
 }

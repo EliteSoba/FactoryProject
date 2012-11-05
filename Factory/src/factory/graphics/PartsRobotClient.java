@@ -24,16 +24,16 @@ class PartsRobotClient extends JPanel implements ActionListener
 		// Initialize array
 		nests = new ArrayList<Nest>();
 		// Add the kitting station
-		station = new Station(10,75,0,0,0,0,150,300,"kittingStation.png");
+		station = new Station(10,75,0,0,0,0,150,300,"Images/kittingStation.png");
 		// Add the parts robot
-		robot = new PartsRobot(frameWidth/2,frameHeight/2,0,5,5,10,100,100,"robot1.png");
+		robot = new PartsRobot(frameWidth/2,frameHeight/2,0,5,5,10,100,100,"Images/robot1.png");
 		// Add 8 nests
 		for(int i = 0; i < 8; i++)
 		{
-			Nest newNest = new Nest(frameWidth-100,i*85+75,0,0,0,0,75,75,"nest3x3.png");
+			Nest newNest = new Nest(frameWidth-100,i*85+75,0,0,0,0,75,75,"Images/nest3x3.png");
 			Random randomGen = new Random();
 			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
-				newNest.addItem(new Item(20,20,"CircleItem.png"));
+				newNest.addItem(new Item(20,20,"Images/CircleItem.png"));
 			nests.add(newNest);
 		}
 		// Initialize flash
@@ -135,6 +135,26 @@ class PartsRobotClient extends JPanel implements ActionListener
 		}
 	}
 	
+	public void robotArrivedAtNest()
+	{
+		System.out.println("Debug:ARRIVED AT NEST");
+	}
+	
+	public void robotArrivedAtStation()
+	{
+		System.out.println("DEBUG: ARRIVED AT STATION");
+	}
+	
+	public void robotArrivedAtCenter()
+	{
+		System.out.println("DEBUG: ARRIVED AT CENTER");
+	}
+	
+	public void createFlash(int lifespan)
+	{
+		flashCount = 10;
+	}
+	
 	public void actionPerformed(ActionEvent e)
 	{
 		// Has robot arrived at its destination?
@@ -143,11 +163,17 @@ class PartsRobotClient extends JPanel implements ActionListener
 			// Give item to robot
 			robot.addItem(nests.get(destinationNest-1).popItem());
 			robot.setState(2);
+			robotArrivedAtNest();
 		}
 		else if(robot.getState() == 4)	// robot has arrived at kitting station
 		{
 			for(int i = 0; i < robot.getSize(); i++)
 				station.addItem(robot.popItem());
+			robotArrivedAtStation();
+		}
+		else if(robot.getState() == 6)
+		{
+			robotArrivedAtCenter();
 		}
 		robot.move();							// Update position and angle of robot
 		if(flashCount > 0) flashCount -= 1;		// Deduct flash lifespan
@@ -163,7 +189,7 @@ class PartsRobotClient extends JPanel implements ActionListener
 		}
 		else if(e.getSource() == btnGotoCenter)
 		{
-			robot.setState(2);
+			robot.setState(5);
 			moveRobotTo(-1);
 		}
 		else if(e.getSource() == btnGotoStation)
