@@ -133,16 +133,16 @@ public class StandAgent extends Agent implements Stand {
 			/**
 			 * If there is a Kit in the Inspection Slot that hasn't been analyzed, then ask Vision to do so 
 			 */
-			if (inspectionSlot.state == MySlotState.KIT_ANALYZED) {
-			   DoProcessAnalyzedKit();
-			   return true;
+			if (inspectionSlot.state == MySlotState.KIT_JUST_PLACED_AT_INSPECTION) {
+				DoAskVisionToInspectKit();
+				return true;
 			}
 			/**
 			 * If there is a Kit in the Inspection Slot that has been analyzed, then ask KitRobot to process it 
 			 */
-			if (inspectionSlot.state == MySlotState.KIT_JUST_PLACED_AT_INSPECTION) {
-			   DoAskVisionToInspectKit();
-			   return true;
+			if (inspectionSlot.state == MySlotState.KIT_ANALYZED) {
+				DoProcessAnalyzedKit();
+				return true;
 			}
 			/**
 			 * If there an empty kit was just placed in a slot, tell the partsRobot to build it
@@ -250,15 +250,22 @@ public class StandAgent extends Agent implements Stand {
 	private void DoAskVisionToInspectKit() {
 		debug("Executing DoAskVisionToInspectKit()");
 		vision.msgAnalyzeKitAtInspection(inspectionSlot.kit);
-	   	inspectionSlot.state = MySlotState.ANALYZING_KIT;                   
+	   	inspectionSlot.state = MySlotState.ANALYZING_KIT; 
+	   	
+		debug("Kit passed the inspection");
+	   	inspectionSlot.kit.state = KitState.PASSED_INSPECTION;
+	   	inspectionSlot.state = MySlotState.KIT_ANALYZED;      
+	   	stateChanged();
 	}   
 	/**
+	 * 
 	 * Method that tells the KitRobot to process the Kit
 	 */
 	private void DoProcessAnalyzedKit() {
-	   kitRobot.msgComeProcessAnalyzedKitAtInspectionSlot();
-	   state = StandAgentState.KIT_ROBOT;
-	   inspectionSlot.state = MySlotState.PROCESSING_ANALYZED_KIT;                    
+		debug("Executing DoProcessAnalyzedKit()");
+		kitRobot.msgComeProcessAnalyzedKitAtInspectionSlot();
+		state = StandAgentState.KIT_ROBOT;
+		inspectionSlot.state = MySlotState.PROCESSING_ANALYZED_KIT;                    
 	}
  
 

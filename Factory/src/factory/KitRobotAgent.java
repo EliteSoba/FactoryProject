@@ -7,6 +7,7 @@ import agent.Agent;
 
 import factory.graphics.FrameKitAssemblyManager;
 
+import factory.Kit.KitState;
 import factory.StandAgent;
 import factory.StandAgent.MySlotState;
 
@@ -69,9 +70,10 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stateChanged();
 	}
 
-	@Override
 	public void msgComeProcessAnalyzedKitAtInspectionSlot() {
+		debug("Received msgComeProcessAnalyzedKitAtInspectionSlot() from stand");
 		state = KitRobotAgentState.NEEDS_TO_PROCESS_KIT_AT_INSPECTION_SLOT;
+		stateChanged();
 	}
 	
 
@@ -104,6 +106,10 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				return true;
 			}
 			
+			if(state == KitRobotAgentState.NEEDS_TO_PROCESS_KIT_AT_INSPECTION_SLOT){
+				DoProcessKitAtInspection();
+				return true;
+			}
 			
 		}
 		return false;
@@ -167,18 +173,61 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			stand.inspectionSlot.kit = stand.topSlot.kit;
 			stand.topSlot.kit = null;
 			stand.inspectionSlot.state = MySlotState.KIT_JUST_PLACED_AT_INSPECTION;
+			stand.topSlot.state = MySlotState.EMPTY;
 		}
 		else {
 			// Put an empty kit in the bottomSlot of the stand
 			stand.inspectionSlot.kit = stand.bottomSlot.kit;
 			stand.bottomSlot.kit = null;
 			stand.inspectionSlot.state = MySlotState.KIT_JUST_PLACED_AT_INSPECTION;
+			stand.bottomSlot.state = MySlotState.EMPTY;
 		}
 
 		// Update the state of the Kit Robot
 		this.state = KitRobotAgentState.DOING_NOTHING;
 		
 		stand.msgKitRobotNoLongerUsingStand();
+	}
+	
+	public void DoProcessKitAtInspection(){
+		debug("Executing DoProcessKitAtInspection()");
+		
+		if(stand.inspectionSlot.kit.state == KitState.PASSED_INSPECTION){
+			server.outKit();
+			
+			// Wait until the animation is done
+			try {
+				debug("Waiting on the server to finish the animation outKit()");
+				animation.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			debug("Animation outKit() was completed");
+		}
+		else {
+			server.dumpKit();
+
+			// Wait until the animation is done
+			try {
+				debug("Waiting on the server to finish the animation dumpKit()");
+				animation.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			debug("Animation dumpKit() was completed");
+		}
+	
+		
+		stand.inspectionSlot.kit = null;
+		stand.inspectionSlot.state = MySlotState.EMPTY;
+
+		// Update the state of the Kit Robot
+		this.state = KitRobotAgentState.DOING_NOTHING;
+		
+		stand.msgKitRobotNoLongerUsingStand();
+
 	}
 
 	/** ANIMATIONS **/

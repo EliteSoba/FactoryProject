@@ -19,7 +19,7 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	// These are for v.0
 	ConveyorAgent conveyor = new ConveyorAgent();
-	VisionAgent vision = new VisionAgent(null, null, null, this);
+	VisionAgent vision = new VisionAgent(null, null, null);
 	PartsRobotAgent partsRobot = new PartsRobotAgent();
 	StandAgent stand = new StandAgent(conveyor, vision, null, partsRobot);
 	KitRobotAgent kitRobot = new KitRobotAgent(stand, this);
@@ -53,6 +53,10 @@ public class FrameKitAssemblyManager extends JFrame{
 		//Adds a Kit into the factory
 		GKAM.addInKit();
 		System.out.println("New Empty Kit Requested!");
+	}
+	
+	public void takePicture(){
+		GKAM.inspectKit();
 	}
 	
 	public void outKit() {
@@ -97,12 +101,18 @@ public class FrameKitAssemblyManager extends JFrame{
 		kitRobot.msgAnimationDone();
 	}
 	
+	public void pictureDone() {
+		System.out.println("Picture taken!");
+	}
+	
 	public void dumpDone() {
 		System.out.println("Kit has been dumped!");
+		kitRobot.msgAnimationDone();
 	}
 	
 	public void outKitDone() {
 		System.out.println("Kit has left the building!");
+		kitRobot.msgAnimationDone();
 	}
 	
 	public static void main(String args[]) {

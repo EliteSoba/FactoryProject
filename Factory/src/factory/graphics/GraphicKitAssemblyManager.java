@@ -62,7 +62,7 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		//x = 0;
 		am = FKAM;
 		belt = new GraphicKitBelt(0, 0, this);
-		station = new GraphicKittingStation(400, 131);
+		station = new GraphicKittingStation(400, 131, this);
 		robot = new GraphicKittingRobot(this, 250, 150);
 		fromBelt = false;
 		toStation = false;
@@ -123,6 +123,15 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		belt.moveBelt(5);
 		moveRobot();
 		//x += 1;
+	}
+	
+	public void inspectKit() {
+		//Triggers the camera flash
+		station.checkKit();
+	}
+	
+	public void pictureDone() {
+		am.pictureDone();
 	}
 	
 	public void moveRobot() {
