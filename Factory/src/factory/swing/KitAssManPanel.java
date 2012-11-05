@@ -8,7 +8,9 @@ import javax.swing.*;
 * This class is the GUI for the Kit Assembly Manaager. This will be
 * instantiated in the general KitAssManager class (which extends JFrame).
 * Written by : Marc Mendiola
+* Last edited : 11/4/12 11:03 PM
 */
+
 
 public class KitAssManPanel extends JPanel{
 	private static final long serialVersionUID = -528843836963262949L;

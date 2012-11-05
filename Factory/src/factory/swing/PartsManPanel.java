@@ -4,11 +4,14 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+
 /*
 * This class is the GUI for the Parts Manaager. This will be
 * instantiated in the general PartsManager class (which extends JFrame).
 * Written by : Marc Mendiola
+* Last edited : 11/4/12 11:03 PM
 */
+
 
 
 public class PartsManPanel extends JPanel{
