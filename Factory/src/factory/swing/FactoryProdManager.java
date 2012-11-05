@@ -1,3 +1,5 @@
+package factory.swing;
+
 // includes factory production manager panel
 import java.util.*;
 import java.awt.*;
