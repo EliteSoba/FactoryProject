@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class GraphicKittingRobot {
 	
-	/*GraphicKittingRobot.java (113x115)
+	/*GraphicKittingRobot.java (113x115) - Tobias Lee
 	 * The graphical representation of the kitting robot.
 	 * Currently has functionality to move from conveyer belt to kitting station
 	 */
@@ -38,14 +38,23 @@ public class GraphicKittingRobot {
 	
 	public void paint(Graphics g) {
 		//Paints the robot
-		robot[direction-(kitted()?1:0)].paintIcon(GKAM, g, x, y);
-		drawKit(g);
+		//robot[direction-(kitted()?1:0)].paintIcon(GKAM, g, x, y);
+		int index = direction - (kitted()?1:0);
+		g.drawImage(robot[index].getImage(), x, y, null);
+		//robot[direction].paintIcon(GKAM, g, x, y);
+		//drawKit(g);
 	}
 	
 	public void drawKit(Graphics g) {
 		//Unused for now. Later, will paint the kit in the robot's hands
 		//if (kitted())
 			//kit.paint(g);
+		if (!kitted())
+			return;
+		if (direction == 4 || direction == 6)
+			kit.setY(y+18);
+		else
+			kit.setX(x+18);
 	}
 	
 	public boolean kitted() {

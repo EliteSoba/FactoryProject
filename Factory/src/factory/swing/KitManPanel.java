@@ -1,9 +1,11 @@
+//Stephanie Reagle
+//CS 200
 package factory.swing;
 
 import java.awt.*;
 import javax.swing.*;
 
-public class KitManPanel extends JFrame {
+public class KitManPanel extends JPanel {
 	/**
 	 * 
 	 */
@@ -289,7 +291,7 @@ public class KitManPanel extends JFrame {
 	}
 	 //main method used for testing
 	//do not delete just comment out
-
+	/*
 	public static void main (String[] args){
 		KitManPanel k = new KitManPanel();
 		k.repaint();
@@ -297,6 +299,6 @@ public class KitManPanel extends JFrame {
 		k.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		k.setSize(400,450);
 		k.repaint(); 
-	}
+	}*/
 		
 }

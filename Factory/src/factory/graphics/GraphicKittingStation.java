@@ -5,7 +5,7 @@ import java.util.*;
 
 public class GraphicKittingStation {
 	
-	/*GraphicKittingStation.java (50x300)
+	/*GraphicKittingStation.java (50x300) - Tobias Lee
 	 * This does nothing right now.
 	 * Eventually, it will be something like a graphical representation of the Kitting Station
 	 */
@@ -65,6 +65,11 @@ public class GraphicKittingStation {
 	public boolean hasKits() {
 		//Returns if the station has any kits
 		return kits.size() != 0;
+	}
+	
+	public boolean maxed() {
+		//Returns if the station is at maximum capacity or not
+		return kits.size() == MAX_KITS;
 	}
 	
 }
