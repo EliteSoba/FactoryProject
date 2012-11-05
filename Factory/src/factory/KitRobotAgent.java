@@ -33,7 +33,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	 * Message sent from the StandAgent when we need to grab an empty kit and place it in a slot
 	 */
 	public void msgGrabAndBringEmptyKitFromConveyorToSlot(String slot) {
-		debug(getName() + ": received msgGrabAndBringEmptyKitFromConveyorToSlot("+slot+") from server");
+		debug(" received msgGrabAndBringEmptyKitFromConveyorToSlot("+slot+") from server");
 		if(slot == "topSlot"){
 			state = KitRobotAgentState.NEEDS_TO_GRAB_EMPTY_KIT_AND_PLACE_IN_SLOT_ONE;
 		}
@@ -47,7 +47,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	 * Message from the server when the animation is done
 	 */
 	public void msgAnimationDone(){
-		debug(getName() + ": received msgAnimationDone() from server");
+		debug(" received msgAnimationDone() from server");
 		animation.release();
 	}
 	
@@ -97,9 +97,11 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	/** ACTIONS **/
 
 	public void DoGrabEmptyKitAndPlaceInSlotOne(){
+		debug(" executing DoGrabEmptyKitAndPlaceInSlotOne()");
+		
 		// Tell server to do animation of moving empty kit from conveyor to the topSlot of the stand
 		server.moveEmptyKitToSlot(1);
-		
+
 		// Update the state of the Kit Robot
 		this.state = KitRobotAgentState.GRABING_EMPTY_KIT_AND_PLACING_IN_SLOT_ONE;
 		
