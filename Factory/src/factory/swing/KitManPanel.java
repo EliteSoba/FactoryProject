@@ -1,3 +1,5 @@
+//Stephanie Reagle
+//CS 200
 package factory.swing;
 
 import java.awt.*;
