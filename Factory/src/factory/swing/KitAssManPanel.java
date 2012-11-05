@@ -1,6 +1,6 @@
 package factory.swing;
-
 import java.awt.*;
+import java.awt.event.*;
 
 import javax.swing.*;
 
@@ -12,7 +12,7 @@ import javax.swing.*;
 */
 
 
-public class KitAssManPanel extends JPanel{
+public class KitAssManPanel extends JPanel implements ActionListener{
 	private static final long serialVersionUID = -528843836963262949L;
 	JLabel title;
 	JLabel subtitle;
@@ -45,6 +45,16 @@ public class KitAssManPanel extends JPanel{
 		c.gridx = 1;
 		c.gridy = 2;
 		this.add(kitRobotFreeze, c);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent ae) {
+		// TODO Auto-generated method stub
+		if(ae.getSource() == incorrectKits){
+			System.out.println("Initiating non-normative case : Incorrect Kits");
+		}else if (ae.getSource() == kitRobotFreeze){
+			System.out.println("Initiating non-normative case : Kit Robot Freeze");
+		}
 	}
 
 }

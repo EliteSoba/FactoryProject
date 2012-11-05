@@ -118,6 +118,9 @@ public class PartsManPanel extends JPanel{
 			 JComboBox cb = (JComboBox)ae.getSource();
 		     String petName = (String)cb.getSelectedItem();
 		     updatePicture(petName);
+		     if(ae.getSource() == addItem){
+		    	 System.out.println("Item has been added.");
+		     }
 
 		}
 
@@ -140,6 +143,7 @@ public class PartsManPanel extends JPanel{
 						
 					
 					title = new JLabel ("Parts Manager");
+					title.setFont(new Font("Serif", Font.BOLD, 16));
 					label1 = new JLabel ("Item : ");
 					imageSelection = new JComboBox();
 					imageSelection.addItem("Item1");
@@ -189,6 +193,10 @@ public class PartsManPanel extends JPanel{
 					 JComboBox cb = (JComboBox)ae.getSource();
 				     String petName = (String)cb.getSelectedItem();
 				     updatePicture(petName);
+				     
+				     if(ae.getSource() == removeItem){
+				    	 System.out.println("Item has been removed.");
+				     }
 
 				}
 
