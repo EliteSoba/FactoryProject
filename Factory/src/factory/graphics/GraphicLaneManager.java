@@ -9,26 +9,26 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-import factory.FeederAgent;
+import factory.Part;
 
 //Parts dumped into bins and fed down the lanes
 
 public class GraphicLaneManager extends JFrame implements ActionListener{
-	
+
 	//Panels
 	GraphicLaneGraphicPanel graphicPanel;
 	GraphicLaneMenuPanel menuPanel;
-	
+
 	//Image Icons
 	ImageIcon lane1, lane2;
 	ImageIcon divergeLane;
 	ImageIcon nest1, nest2;
 	ImageIcon feeder;
 	GraphicBin bin;
-	
+
 	//Bin coordinates
 	int feederX,feederY;
-	
+
 	//Items
 	ArrayList <GraphicItem> lane1Items;
 	ArrayList <GraphicItem> lane2Items;
@@ -36,7 +36,7 @@ public class GraphicLaneManager extends JFrame implements ActionListener{
 	ArrayList <GraphicItem> nest2Items;
 	ArrayList <Boolean> lane1QueueTaken;			//The queue
 	ArrayList <Boolean> lane2QueueTaken;			//The queue
-	
+
 	//variables
 	int vX, vY;		//velocities
 	int lane_xPos, lane_yPos;	//lane relative position
@@ -48,9 +48,11 @@ public class GraphicLaneManager extends JFrame implements ActionListener{
 	boolean placedBin;			//true is bin is added to feeder
 	boolean feederOn;			//Feeder on/off
 	boolean binExist;			
-	
+	boolean lane1PurgeOn;
+	boolean lane2PurgeOn;
+
 	public GraphicLaneManager(){
-		bin = new GraphicBin();
+		bin = new GraphicBin(new Part("tmp"));
 		//declaration of variables
 		lane1Items = new ArrayList<GraphicItem>();
 		lane2Items = new ArrayList<GraphicItem>();
@@ -64,11 +66,13 @@ public class GraphicLaneManager extends JFrame implements ActionListener{
 		divergeUp = false;
 		feederOn = false;
 		binExist = true;
+		lane1PurgeOn = false;		//Nest purge is off unless turned on
+		lane2PurgeOn = false;		//Nest purge is off unless turned on
 		timerCount = 1; currentItemCount = 0; binItemCount = 0;
-		
+
 		//Location of bin to appear. x is fixed
 		feederX = lane_yPos + 335; feederY = lane_yPos + 30;
-		
+
 		/*
 		//Declaration of items in bin's location
 		for(int i = 0;i < bin.getBinItems().size() ;i = i + 2){
@@ -77,7 +81,7 @@ public class GraphicLaneManager extends JFrame implements ActionListener{
 				bin.getBinItems()[i + j].setY(feederY + 10 + (i/2) * 20);
 			}
 		}
-		*/
+		 */
 		//Declaration of variables
 		lane1 = new ImageIcon("Images/lane.png");
 		lane2 = new ImageIcon("Images/lane.png");
@@ -96,25 +100,23 @@ public class GraphicLaneManager extends JFrame implements ActionListener{
 		//Inserting Panels
 		graphicPanel = new GraphicLaneGraphicPanel(this,bin);
 		menuPanel = new GraphicLaneMenuPanel(this,bin);
-		
+
 		this.add(graphicPanel,BorderLayout.NORTH);
 		this.add(menuPanel,BorderLayout.SOUTH);
-		
+
 		repaint();
 		new javax.swing.Timer(50,this).start();
 	}	
-	
-	
 
 
 	public void actionPerformed(ActionEvent ae){
 		repaint();
 	}
-	
+
 	public void setBin(GraphicBin bin){
 		this.bin = bin;
 	}
-	
+
 	public GraphicBin getBin(){
 		return bin;
 	}

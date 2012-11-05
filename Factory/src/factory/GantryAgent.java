@@ -61,15 +61,15 @@ public class GantryAgent extends Agent implements Gantry {
 	private void goFetchTheRequestedBin(MyBin b) {
 		DoPickupPurgeBin(); //animation message
 		DoRefillPurgeBin(binConfig.binList.get(b.pt));
-		DoBringRequestedBin(binConfig.binList.get(b.pt),b.fdr);
+		DoBringRequestedBin(binConfig.binList.get(b.pt),b.fdr,b.pt);
 		b.fdr.msgHereAreParts(b.pt);
 		b.state = MyBinState.DELIVERED;
 		stateChanged();
 	}
 
-	private void DoBringRequestedBin(Integer integer,Feeder f) {
+	private void DoBringRequestedBin(Integer integer,Feeder f,Part p) {
 		print("Bringing requested bin");
-		glmp.doBringRequestedBin(integer,f);
+		glmp.doBringRequestedBin(integer,f,p);
 	}
 
 	private void DoRefillPurgeBin(Integer integer) {
