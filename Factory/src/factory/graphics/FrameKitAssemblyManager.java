@@ -103,6 +103,7 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	public void pictureDone() {
 		System.out.println("Picture taken!");
+		vision.msgAnimationDone();
 	}
 	
 	public void dumpDone() {
