@@ -5,9 +5,9 @@ package factory.managers;
 import javax.swing.JPanel;
 
 import factory.client.Client;
-import factory.swing.KitManPanel;
+import factory.swing.LaneManPanel;
 
-public class LaneManager  extends Client {
+public class LaneManager extends Client {
 	/**
 	 * 
 	 */
@@ -19,8 +19,8 @@ public class LaneManager  extends Client {
 	}
 	
 	public static void main(String[] args){
-	    KitManPanel buttons = new KitManPanel();
-		KitManager k = new KitManager(buttons);
+	    LaneManPanel buttons = new LaneManPanel();
+		LaneManager l = new LaneManager(buttons);
 	}
 	
 	@Override
