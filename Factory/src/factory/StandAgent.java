@@ -8,7 +8,6 @@ public class StandAgent extends Agent implements Stand {
 	
 	/** DATA **/
 	public enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
-	public enum TemporaryEmptyKitHolderState { EMPTY, EMPTY_KIT }
 	public enum MyConveyorState { EMPTY, HAS_EMPTY_KIT, FETCHING_EMPTY_KIT }
 	public enum MySlotState { EMPTY, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION, KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT}
 
@@ -142,12 +141,10 @@ public class StandAgent extends Agent implements Stand {
 			   return true;
 			}
 			/**
-			 * If empty kit was delivered, place in appropiate bin and notify the PartsRobot to start building   
-			 * No need to check for state to be free because it will not call the robots to move to the stand 
+			 * If there an empty kit was just placed in a slot, tell the partsRobot to build it
 			 */
-			if (state == StandAgentState.FREE && temporaryEmptyKitHolderState == TemporaryEmptyKitHolderState.EMPTY_KIT) {
-			   DoProcessEmptyBinFromConveyor();
-			   return true;
+			if(topSlot.state  == MySlotState.EMPTY_KIT_JUST_PLACED || bottomSlot.state  == MySlotState.EMPTY_KIT_JUST_PLACED) {
+				DoProcessEmptyBinFromConveyor();
 			}
 			/**
 			 * If there is a completed kit and the stand is not being used
@@ -165,8 +162,7 @@ public class StandAgent extends Agent implements Stand {
 			 * as long as the stand is not being used.
 			 */
 			if (state == StandAgentState.FREE && conveyor.state == MyConveyorState.HAS_EMPTY_KIT 
-					&& (topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY) 
-					&& temporaryEmptyKitHolderState == TemporaryEmptyKitHolderState.EMPTY) {
+					&& (topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY)) {
 			   DoFetchEmptyKitFromConveyor();
 			   return true;
 			}       
@@ -204,25 +200,16 @@ public class StandAgent extends Agent implements Stand {
 	 * Method that places the empty bin in the right slot
 	 */
 	private void DoProcessEmptyBinFromConveyor() {
-	   if(temporaryEmptyKitHolderState == TemporaryEmptyKitHolderState.EMPTY_KIT) {
-	      if (topSlot.state == MySlotState.EMPTY) {
-	         topSlot.kit = temporaryEmptyKitHolder;
-	         topSlot.state = MySlotState.EMPTY_KIT_JUST_PLACED;
-	         DoTellPartsRobotToBuildKitAtSlot(topSlot);
-	         //server.DoAnimationAddEmptyKitToSlot(topSlot.name); // Animation to add Empty Kit to slot
-	      }
-	      else if (bottomSlot.state == MySlotState.EMPTY) {
-	         bottomSlot.kit = temporaryEmptyKitHolder;
-	         bottomSlot.state = MySlotState.EMPTY_KIT_JUST_PLACED;
-	         DoTellPartsRobotToBuildKitAtSlot(bottomSlot);
-	         //server.DoAnimationAddEmptyKitToSlot(bottomSlot.name); // Animation to add Empty Kit to slot
-	      }   
-	      temporaryEmptyKitHolder = null;
-	      temporaryEmptyKitHolderState = TemporaryEmptyKitHolderState.EMPTY;
+	   if(topSlot.state  == MySlotState.EMPTY_KIT_JUST_PLACED) {
+		   DoTellPartsRobotToBuildKitAtSlot(topSlot);
+	   }
+	   else if(bottomSlot.state  == MySlotState.EMPTY_KIT_JUST_PLACED) {
+		   DoTellPartsRobotToBuildKitAtSlot(bottomSlot);
 	   }
 	   else {
 	      // Throw Exception
 	   }
+	   
 	}
 	/**
 	 * Method that tells the PartsRobot to build Kit
