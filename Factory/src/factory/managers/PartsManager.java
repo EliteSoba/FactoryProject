@@ -1,5 +1,5 @@
 //NOT FUNCTIONAL YET
-//Ben and Stephanie
+//Ben Mayeux and Stephanie Reagle
 //CS 200
 
 package factory.managers;
