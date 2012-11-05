@@ -6,7 +6,8 @@ import agent.Agent;
 public class KitRobotAgent extends Agent implements KitRobot {
 
 	/** DATA **/
-	public enum KitRobotAgentState { DOING_NOTHING }
+	public enum KitRobotAgentState { DOING_NOTHING, NEEDS_TO_GRAB_EMPTY_KIT }
+	
 	
 	/** MESSAGES **/
 	@Override

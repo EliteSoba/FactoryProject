@@ -3,17 +3,17 @@ package factory.managers;
 import javax.swing.JPanel;
 
 import factory.client.Client;
-import factory.swing.KitManPanel;
+import factory.swing.GantryManPanel;
 
-public class KitManager extends Client {
+public class GantryManager extends Client {
 
-	public KitManager(JPanel buttons) {
-		super(Client.Type.KITMANAGER, buttons, null);
+	public GantryManager(JPanel buttons) {
+		super(Client.Type.GANTRYROBOTMANAGER, buttons, null);
 		setInterface();
 	}
 	public static void main(String[] args){
-	    KitManPanel buttons = new KitManPanel();
-		KitManager k = new KitManager(buttons);
+	    GantryManPanel buttons = new GantryManPanel();
+		GantryManager k = new GantryManager(buttons);
 	}
 
 	@Override

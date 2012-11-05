@@ -37,7 +37,7 @@ public class NestTests extends TestCase {
 
 	}
 
-	public void msgYouNeedPart() {
+	public void testMsgYouNeedPart() {
 		nest.msgYouNeedPart(p1);
 
 		// was the part added to the myParts list:
