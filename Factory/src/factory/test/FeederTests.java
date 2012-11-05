@@ -26,7 +26,7 @@ public class FeederTests extends TestCase{
 	 */
 	@Override
 	protected void setUp() throws Exception {
-		feeder = new FeederAgent("Feeder1");
+		feeder = new FeederAgent("Feeder1",0);
 		
 		top = new MockLane("top");
 		bottom = new MockLane("bottom");
@@ -44,6 +44,7 @@ public class FeederTests extends TestCase{
 	public void testPreconditions() {
 		// Makes sure there aren't any parts in the feeder initially.
 		assertEquals(feeder.requestedParts.size(),0);
+		assertEquals(feeder.feederSlot,0);
 		System.out.println("feeder name = " + feeder.getName());
 
 		assertEquals(feeder.getName(),"Feeder1");
@@ -279,13 +280,8 @@ public class FeederTests extends TestCase{
 		assertEquals(feeder.diverter,DiverterState.FEEDING_TOP); // switches to feed the top because that is the lane we are feeding
 		
 		
-		// NEED TO FIGURE OUT HOW TO TEST THE TIMERS...
-		
-	//	assertEquals(feeder.state,FeederState.OK_TO_PURGE); // not sure how to test timers..
-		
-		//assertTrue(feeder.topLane.readyForPicture);
-		
-		
+		// PART #3: After the okayToPurgeTimer goes off, the feeder receives a request for new parts.
+		feeder.state = FeederState.OK_TO_PURGE; // this gets called when the okayToPurgeTimer goes off
 		
 	}
 	

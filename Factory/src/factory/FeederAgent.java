@@ -14,7 +14,9 @@ import factory.interfaces.Vision;
 public class FeederAgent extends Agent implements Feeder {
 
 	/** DATA **/
+	private GraphicLaneManagerClient graphicLaneManagerClient;
 	private String name;
+	public int feederSlot;
 	public ArrayList<MyPartRequest> requestedParts = new ArrayList<MyPartRequest>();   
 	public MyLane topLane;
 	public MyLane bottomLane;
@@ -22,7 +24,7 @@ public class FeederAgent extends Agent implements Feeder {
 	public DiverterState diverter; 
 	public Gantry gantry;
 	public Part currentPart;
-	Bin dispenserBin;
+	Bin dispenserBin; // need to use this
 	public FeederState state = FeederState.EMPTY;
 	public Timer okayToPurgeTimer = new Timer();
 	public Timer feederEmptyTimer = new Timer();
@@ -76,9 +78,10 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 
-	public FeederAgent(String nameStr) {
+	public FeederAgent(String nameStr,int slot) {
 		super();
 		this.name = nameStr;
+		this.feederSlot = slot;
 	}
 
 
@@ -205,7 +208,7 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			// only if the feeder is actually feeding
 			la.state = MyLaneState.CONTAINS_PARTS;
-			DoContinueFeeding();
+			DoContinueFeeding(currentPart);
 		}
 		else // the nestWasDumped from within a purge cycle
 		{
@@ -348,7 +351,7 @@ public class FeederAgent extends Agent implements Feeder {
 		//	Timer.new(30000, { state = FeederState.OK_TO_PURGE; });
 		//		Timer.new(currentPart.averageDelayTime,{vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this) });
 
-		DoStartFeeding();
+		DoStartFeeding(currentPart);
 
 	}
 	
@@ -370,6 +373,11 @@ public class FeederAgent extends Agent implements Feeder {
 		this.gantry = g;
 	}
 	
+	/** Set the connection the graphic lane manager client. **/
+	public void setGraphicLaneManagerClient(GraphicLaneManagerClient glmc) {
+		this.graphicLaneManagerClient = glmc;
+	}
+	
 	/** This method adds a MyPartRequest to the requestedParts list. 
 	 *  It is used for testing purposes only.
 	 */
@@ -378,25 +386,29 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	/** ANIMATIONS **/
-	private void DoStartFeeding() {
-		print("started feeding.");
+	private void DoStartFeeding(Part part) {
+		print("Feeder " + feederSlot + " started feeding.");
+		graphicLaneManagerClient.doStartFeeding(feederSlot,part);
 	}
 
 	private void DoStopFeeding() {
 		print("stopped feeding.");
+		graphicLaneManagerClient.doStopFeeding(feederSlot);
 	}
-
-
+	
 	private void DoPurgeFeeder() {
 		print("purging feeder.");
+		graphicLaneManagerClient.doPurgeFeeder(feederSlot);
 	}
 
 	private void DoSwitchLane() {
 		print("switching lane");
+		graphicLaneManagerClient.doSwitchLane(feederSlot);
 	}
 	
-	private void DoContinueFeeding() {
+	private void DoContinueFeeding(Part part) {
 		print("continued feeding.");
+		// worry about this later
 	}
 
 
