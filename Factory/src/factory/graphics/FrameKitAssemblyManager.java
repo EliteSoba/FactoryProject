@@ -21,6 +21,7 @@ public class FrameKitAssemblyManager extends JFrame{
 	ConveyorAgent conveyor = new ConveyorAgent();
 	PartsRobotAgent partsRobot = new PartsRobotAgent();
 	StandAgent stand = new StandAgent(conveyor, null, null, partsRobot);
+	ConveyorControllerAgent conveyorController = new ConveyorControllerAgent(conveyor, this);
 	VisionAgent vision = new VisionAgent(null, stand, this);
 	KitRobotAgent kitRobot = new KitRobotAgent(stand, this);
 	
@@ -51,9 +52,11 @@ public class FrameKitAssemblyManager extends JFrame{
 	 * Method to send a new empty kit in the conveyor
 	 */
 	public void sendNewEmptyKit() {
+		System.out.println("New Empty Kit Requested!");
 		//Adds a Kit into the factory
 		GKAM.addInKit();
-		System.out.println("New Empty Kit Requested!");
+		//Should call conveyorController.msgAnimationDone() when animation is complete
+		conveyorController.msgAnimationDone();
 	}
 	
 	public void takePicture(){
@@ -89,7 +92,6 @@ public class FrameKitAssemblyManager extends JFrame{
 	public void newEmptyKitAtConveyor(){
 		System.out.println("New Empty Kit Arrived!");
 		stand.msgEmptyKitIsHere();
-		
 	}
 	
 	public void fromBeltDone() {

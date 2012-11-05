@@ -69,7 +69,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 		}
 
 		private void exportKit() {
-		   //should call the kit exporting animation, afterwards COULD call msgKitExported if you want to keep a list of all the finished kits
+		   //with the new design this is optional, but if we want ConveyorController to keep track of all exported kits, we can via this message;
 			conveyor_controller.msgKitExported(this, on_conveyor);
 		}
 
