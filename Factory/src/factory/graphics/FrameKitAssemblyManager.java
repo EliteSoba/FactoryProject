@@ -19,9 +19,9 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	// These are for v.0
 	ConveyorAgent conveyor = new ConveyorAgent();
-	VisionAgent vision = new VisionAgent(null, null, null);
 	PartsRobotAgent partsRobot = new PartsRobotAgent();
-	StandAgent stand = new StandAgent(conveyor, vision, null, partsRobot);
+	StandAgent stand = new StandAgent(conveyor, null, null, partsRobot);
+	VisionAgent vision = new VisionAgent(null, stand, this);
 	KitRobotAgent kitRobot = new KitRobotAgent(stand, this);
 	
 	public FrameKitAssemblyManager() {
@@ -34,6 +34,7 @@ public class FrameKitAssemblyManager extends JFrame{
 		this.add(CP, BorderLayout.LINE_END);
 		
 		// v.0 stuff
+		stand.vision = vision;
 		stand.kitRobot = kitRobot;
 		conveyor.startThread();
 		vision.startThread();
