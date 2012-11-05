@@ -1,16 +1,15 @@
-import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
-class Nest extends AnimatedObject
+class Station extends AnimatedObject
 {
 	ArrayList<Item> items;
 	
-	public Nest()
+	public Station()
 	{
 		
 	}
-	public Nest(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
+	public Station(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
 		items = new ArrayList<Item>();
 		x = init_x;
