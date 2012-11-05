@@ -246,4 +246,4 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 			lane.nest1Items.clear();
 		}
 	}
-
+}
