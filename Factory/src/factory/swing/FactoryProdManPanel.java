@@ -83,7 +83,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	
 	public void addKit(String kitName) {	
 		kitNameBox.addItem(kitName);	
-		kitNameBox.getSelectedItem(kitNameBox.getItemCount()-1).addActionListener(this);
+		((JComboBox) kitNameBox.getItemAt(kitNameBox.getItemCount()-1)).addActionListener(this);
 		kitNameBox.setSelectedIndex(0);
 	}
 	
