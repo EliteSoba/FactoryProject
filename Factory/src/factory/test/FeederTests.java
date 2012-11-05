@@ -153,9 +153,9 @@ public class FeederTests extends TestCase{
 		feeder.pickAndExecuteAnAction();
 		
 		// Check to see if gantry receives appropriate message
-    	assertTrue("Gantry should have been told msgFeederNeeds(...). Event log: "
+    	assertTrue("Gantry should have been told msgFeederNeedsPart(...). Event log: "
     			+ gantry.log.toString(), 
-    			gantry.log.containsString("msgFeederNeeds(...)"));
+    			gantry.log.containsString("msgFeederNeedsPart(...)"));
     	
     	// Check to see if the feeder's state gets set correctly
     	assertEquals(feeder.state,FeederAgent.FeederState.WAITING_FOR_PARTS);

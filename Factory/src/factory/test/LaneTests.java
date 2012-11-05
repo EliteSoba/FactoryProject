@@ -23,7 +23,7 @@ public class LaneTests extends TestCase {
 		lane.setFeeder(feeder);
 		lane.setNest(nest);
 		
-		p1 = new Part();
+		p1 = new Part("p1");
 	}
 
 	public void testPreconditions() {
