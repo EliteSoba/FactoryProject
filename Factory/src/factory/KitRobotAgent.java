@@ -100,13 +100,14 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		debug(" executing DoGrabEmptyKitAndPlaceInSlotOne()");
 		
 		// Tell server to do animation of moving empty kit from conveyor to the topSlot of the stand
-		server.moveEmptyKitToSlot(1);
+		server.moveEmptyKitToSlot(0);
 
 		// Update the state of the Kit Robot
 		this.state = KitRobotAgentState.GRABING_EMPTY_KIT_AND_PLACING_IN_SLOT_ONE;
 		
 		// Wait until the animation is done
 		try {
+			debug("Waiting on the server to finish the animation moveEmptyKitToSlot()");
 			animation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
