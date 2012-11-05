@@ -228,7 +228,7 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			state = FeederState.WAITING_FOR_PARTS;
 			partRequested.state = MyPartRequestState.ASKED_GANTRY;
-			gantry.msgFeederNeeds(partRequested.pt, this);
+			gantry.msgFeederNeedsPart(partRequested.pt, this);
 		}
 	}
 	

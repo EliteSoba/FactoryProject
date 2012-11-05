@@ -60,11 +60,6 @@ public class GantryAgent extends Agent implements Gantry {
 		b.state = MyBinState.DELIVERED;
 	}
 
-	@Override
-	public void msgFeederNeeds(Part pt, Feeder feeder) {
-		// TODO Auto-generated method stub
-
-	}
 
 
 }

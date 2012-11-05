@@ -63,7 +63,7 @@ public class FeederManagementTests extends TestCase {
 		feeder.pickAndExecuteAnAction(); // feeder should msgFeederNeeds -> gantry 
     	assertEquals(feeder.state,FeederAgent.FeederState.WAITING_FOR_PARTS);
 
-
+//msgFeederNeedsPart
 		gantry.pickAndExecuteAnAction(); // gantry should msgHereAreParts -> feeder 
 		assertEquals(gantry.myBins.size(),1); // was the mybin (request for a part) added to the gantry's list
 
