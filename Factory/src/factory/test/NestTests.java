@@ -16,7 +16,7 @@ public class NestTests extends TestCase {
 	protected void setUp() throws Exception {
 		nest = new NestAgent();
 		nest.setLane(lane);
-		p1 = new Part();
+		p1 = new Part("p1");
 	}
 
 	public void testPreconditions() {
@@ -37,7 +37,7 @@ public class NestTests extends TestCase {
 
 	}
 
-	public void msgYouNeedPart() {
+	public void testMsgYouNeedPart() {
 		nest.msgYouNeedPart(p1);
 
 		// was the part added to the myParts list:

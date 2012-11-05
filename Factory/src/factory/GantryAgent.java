@@ -5,8 +5,8 @@ import agent.Agent;
 import java.util.*;
 import factory.interfaces.*;
 
-public class GantryAgent {
-	   ArrayList<MyBin> myBins = new ArrayList<MyBin>();   
+public class GantryAgent extends Agent implements Gantry {
+	   public ArrayList<MyBin> myBins = new ArrayList<MyBin>();   
 	   BinConfig binConfig;
 	   
 	   enum MyBinState { NEEDED, DELIVERED}
@@ -58,4 +58,10 @@ public class GantryAgent {
 		   b.fdr.msgHereIsPart(b.pt);
 		   b.state = MyBinState.DELIVERED;
 		}
+
+	@Override
+	public void msgFeederNeeds(Part pt, Feeder feeder) {
+		// TODO Auto-generated method stub
+		
+	}
 }
