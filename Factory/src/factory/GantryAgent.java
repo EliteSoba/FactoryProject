@@ -45,6 +45,7 @@ public class GantryAgent extends Agent implements Gantry {
 		for(MyBin b: myBins){
 			if(b.state == MyBinState.NEEDED){
 				goFetchTheRequestedBin(b);
+				return true;
 			}
 		}
 		return false;
@@ -54,10 +55,25 @@ public class GantryAgent extends Agent implements Gantry {
 	// *** ACTIONS ***
 	private void goFetchTheRequestedBin(MyBin b) {
 		DoPickupPurgeBin(); //animation message
-		DoRefillPurgeBin(binConfig.get(b.pt));
-		DoBringRequestedBin(binConfig.get(b.pt, b.fdr));
+		DoRefillPurgeBin(binConfig.binList.get(b.pt));
+		DoBringRequestedBin(binConfig.binList.get(b.pt /*b.fdr; not sure why this parameter is here.  leaving it for now*/));
 		b.fdr.msgHereIsPart(b.pt);
 		b.state = MyBinState.DELIVERED;
+	}
+
+	private void DoBringRequestedBin(Integer integer) {
+		print("Bringing requested bin");
+		
+	}
+
+	private void DoRefillPurgeBin(Integer integer) {
+		print("Refilling Purge Bin");
+		
+	}
+
+	private void DoPickupPurgeBin() {
+		print("Picking up Purge Bin");
+		
 	}
 
 
