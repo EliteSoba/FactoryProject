@@ -7,6 +7,8 @@ import agent.Agent;
 import java.util.*;
 
 
+import factory.Kit.KitState;
+import factory.graphics.FrameKitAssemblyManager;
 import factory.interfaces.*;
 
 public class VisionAgent extends Agent implements Vision {
@@ -21,11 +23,13 @@ public class VisionAgent extends Agent implements Vision {
 	PartsRobot partsRobot;
 	Stand stand;
 	Random r = new Random();
+	FrameKitAssemblyManager server;
 	
-	VisionAgent(KitRobot kitRobot, PartsRobot partsRobot, Stand stand){
+	public VisionAgent(KitRobot kitRobot, PartsRobot partsRobot, Stand stand, FrameKitAssemblyManager server){
 		this.kitRobot = kitRobot;
 		this.partsRobot = partsRobot;
 		this.stand = stand;
+		this.server = server;
 	}
 	
 	class KitPicRequest {
@@ -62,6 +66,7 @@ public class VisionAgent extends Agent implements Vision {
 	public void inspectKitStand() {
 		kitPicRequests.add(new KitPicRequest(KitPicRequestState.NEED_TO_INSPECT));
 	}
+	
 	public void msgMyNestsReadyForPicture(Nest nestOne, Nest nestTwo, Feeder feeder) {
 		picRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
 	}
@@ -83,9 +88,9 @@ public class VisionAgent extends Agent implements Vision {
 		
 	}
 	
-	//this message was not in the wiki, but existed in the interface.  comes from stand agent
-	@Override
+	
 	public void msgAnalyzeKitAtInspection(Kit kit) {
+		debug("Received msgAnalyzeKitAtInspection() from the kit robot.");
 		// TODO Auto-generated method stub
 		
 	}
@@ -123,7 +128,7 @@ public class VisionAgent extends Agent implements Vision {
 		      k.inspectionResults = InspectionResults.PASSED;
 		   }
 		   k.state = KitPicRequestState.INSPECTED;
-		   stand.msgInspectionResults(k.inspectionResults); //can't pass enum.  change to a string?
+		   stand.msgResultsOfKitAtInspection(KitState.PASSED_INSPECTION);
 		}
 		private void takePicture(PictureRequest pr){
 		   int randomNumberOne = r.nextInt(3);
