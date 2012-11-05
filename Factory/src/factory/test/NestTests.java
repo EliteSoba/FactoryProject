@@ -16,7 +16,7 @@ public class NestTests extends TestCase {
 	protected void setUp() throws Exception {
 		nest = new NestAgent();
 		nest.setLane(lane);
-		p1 = new Part();
+		p1 = new Part("p1");
 	}
 
 	public void testPreconditions() {

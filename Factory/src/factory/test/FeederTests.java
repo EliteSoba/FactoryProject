@@ -31,7 +31,7 @@ public class FeederTests extends TestCase{
 		top = new MockLane("top");
 		bottom = new MockLane("bottom");
 		gantry = new MockGantry("gantry");
-		p1 = new Part();
+		p1 = new Part("p1");
 		
 		feeder.setGantry(gantry);
 		feeder.setUpLanes(top, bottom);
@@ -176,7 +176,7 @@ public class FeederTests extends TestCase{
     			
     			
 		// SCENARIO #2: The feeder is IMMEDIATELY sent a new request for parts, which happens often, as the feeder has 2 lanes.
-    	Part p2 = new Part();
+    	Part p2 = new Part("p2");
 		feeder.msgLaneNeedsPart(p2, top);
 
 		// Initial Parts Request State

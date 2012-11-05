@@ -14,7 +14,7 @@ import factory.interfaces.Vision;
 public class FeederAgent extends Agent implements Feeder {
 
 	/** DATA **/
-	private GraphicLaneManagerClient graphicLaneManagerClient;
+	//private GraphicLaneManagerClient graphicLaneManagerClient;
 	private String name;
 	public int feederSlot;
 	public ArrayList<MyPartRequest> requestedParts = new ArrayList<MyPartRequest>();   
@@ -374,10 +374,10 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 	
 	/** Set the connection the graphic lane manager client. **/
-	public void setGraphicLaneManagerClient(GraphicLaneManagerClient glmc) {
-		this.graphicLaneManagerClient = glmc;
-	}
-	
+//	public void setGraphicLaneManagerClient(GraphicLaneManagerClient glmc) {
+//		this.graphicLaneManagerClient = glmc;
+//	}
+
 	/** This method adds a MyPartRequest to the requestedParts list. 
 	 *  It is used for testing purposes only.
 	 */
@@ -388,22 +388,22 @@ public class FeederAgent extends Agent implements Feeder {
 	/** ANIMATIONS **/
 	private void DoStartFeeding(Part part) {
 		print("Feeder " + feederSlot + " started feeding.");
-		graphicLaneManagerClient.doStartFeeding(feederSlot,part);
+//		graphicLaneManagerClient.doStartFeeding(feederSlot,part);
 	}
 
 	private void DoStopFeeding() {
 		print("stopped feeding.");
-		graphicLaneManagerClient.doStopFeeding(feederSlot);
+//		graphicLaneManagerClient.doStopFeeding(feederSlot);
 	}
 	
 	private void DoPurgeFeeder() {
 		print("purging feeder.");
-		graphicLaneManagerClient.doPurgeFeeder(feederSlot);
+//		graphicLaneManagerClient.doPurgeFeeder(feederSlot);
 	}
 
 	private void DoSwitchLane() {
 		print("switching lane");
-		graphicLaneManagerClient.doSwitchLane(feederSlot);
+//		graphicLaneManagerClient.doSwitchLane(feederSlot);
 	}
 	
 	private void DoContinueFeeding(Part part) {
