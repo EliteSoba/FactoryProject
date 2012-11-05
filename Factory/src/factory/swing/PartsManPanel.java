@@ -5,14 +5,15 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /*
-* This class is the GUI for the Parts Manager. This will be
+* This class is the GUI for the Parts Manaager. This will be
 * instantiated in the general PartsManager class (which extends JFrame).
 */
 
 
-public class PartsManPanel extends JTabbedPane{
+public class PartsManPanel extends JPanel{
 
 	// Data
+	JTabbedPane tabbedPane;
 	AddPanel addPanel;
 	RemovePanel removePanel;
 
@@ -21,8 +22,10 @@ public class PartsManPanel extends JTabbedPane{
 	public PartsManPanel(){
 		addPanel = new AddPanel();
 		removePanel = new RemovePanel();
-		this.addTab("addPanel", addPanel);
-		this.addTab("removePanel", removePanel);
+		tabbedPane = new JTabbedPane();
+		tabbedPane.addTab("addPanel", addPanel);
+		tabbedPane.addTab("removePanel", removePanel);
+		this.add(tabbedPane);
 	}
 
 
@@ -48,6 +51,7 @@ public class PartsManPanel extends JTabbedPane{
 				
 			
 			title = new JLabel ("Parts Manager");
+			title.setFont(new Font("Serif", Font.BOLD, 16));
 			label1 = new JLabel ("New Item : ");
 			itemName = new JTextField(8);
 			label2 = new JLabel ("Image : ");
@@ -63,12 +67,13 @@ public class PartsManPanel extends JTabbedPane{
 	
 			c.gridx = 0;
 			c.gridy = 0;
+			c.gridwidth = 2;
 			c.fill = GridBagConstraints.VERTICAL;
-			c.fill = GridBagConstraints.HORIZONTAL;
-			c.insets = new Insets(0,0,10,0);
+			c.insets = new Insets(0,0,20,0);
 			this.add(title, c);
 			c.fill = GridBagConstraints.VERTICAL;
 			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridwidth = 1;
 			c.gridx = 0;
 			c.gridy = 1;
 			this.add(label1, c);
