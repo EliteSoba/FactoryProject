@@ -43,7 +43,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			kitNameBox.setSelectedIndex(i);
 			kitNameBox.addActionListener(this);
 		}*/
-		kitNameBox.setSelectedIndex(0);
+		//kitNameBox.setSelectedIndex(0);
 		add(kitNameBox,c);
 
 		c.anchor = GridBagConstraints.LINE_END;
