@@ -15,13 +15,15 @@ public class GraphicKittingStation {
 	private GraphicKit[] kits; //The kits it is holding
 	private GraphicKit check; //The kit in the inspection area
 	private int timer;
+	GraphicKitAssemblyManager GKAM;
 	
-	public GraphicKittingStation(int x, int y) {
+	public GraphicKittingStation(int x, int y, GraphicKitAssemblyManager GKAM) {
 		//Constructor
 		this.x = x;
 		this.y = y;
 		timer = -1;
 		kits = new GraphicKit[MAX_KITS];
+		this.GKAM = GKAM;
 		for (int i = 0; i < MAX_KITS; i++)
 			kits[i] = null;
 		check = null;
@@ -43,8 +45,10 @@ public class GraphicKittingStation {
 			timer++;
 			g.setColor(Color.white);
 			g.fillOval(x-5*timer+25, y+250-5*timer, 10*timer, 10*timer);
-			if (timer == 5)
+			if (timer == 5) {
 				timer = -1;
+				GKAM.pictureDone();
+			}
 		}
 	}
 	

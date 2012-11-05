@@ -19,7 +19,7 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	// These are for v.0
 	ConveyorAgent conveyor = new ConveyorAgent();
-	VisionAgent vision = new VisionAgent(null, null, null, this);
+	VisionAgent vision = new VisionAgent(null, null, null);
 	PartsRobotAgent partsRobot = new PartsRobotAgent();
 	StandAgent stand = new StandAgent(conveyor, vision, null, partsRobot);
 	KitRobotAgent kitRobot = new KitRobotAgent(stand, this);
@@ -99,6 +99,10 @@ public class FrameKitAssemblyManager extends JFrame{
 	public void toCheckDone() {
 		System.out.println("Kit sent to Inspection Station!");
 		kitRobot.msgAnimationDone();
+	}
+	
+	public void pictureDone() {
+		System.out.println("Picture taken!");
 	}
 	
 	public void dumpDone() {
