@@ -11,14 +11,20 @@ public class GraphicKittingStation {
 	 */
 	
 	private int x, y; //Coordinates
-	public static final int MAX_KITS = 3; //Max number of kits this station can hold
-	private ArrayList<GraphicKit> kits; //The kits it is holding
+	public static final int MAX_KITS = 2; //Max number of kits this station can hold
+	//private ArrayList<GraphicKit> kits; //The kits it is holding
+	private GraphicKit[] kits;
+	private GraphicKit check;
 	
 	public GraphicKittingStation(int x, int y) {
 		//Constructor
 		this.x = x;
 		this.y = y;
-		kits = new ArrayList<GraphicKit>();
+		//kits = new ArrayList<GraphicKit>();
+		kits = new GraphicKit[MAX_KITS];
+		for (int i = 0; i < MAX_KITS; i++)
+			kits[i] = null;
+		check = null;
 	}
 	
 	public void paint(Graphics g) {
@@ -26,50 +32,120 @@ public class GraphicKittingStation {
 		g.setColor(new Color(100, 50, 0));
 		g.fillRoundRect(x, y, 50, 300, 20, 20);
 		
+		g.setColor(Color.black);
+		g.fillOval(x-15, y+320, 80, 80);
+		g.setColor(Color.white);
+		g.drawString("TRASH", x+5, y+365);
 		drawKits(g);
 	}
 	
 	public void revalidateKits() {
 		//Repositions kits to set positions
-		for (int i = 0; i < kits.size(); i++) {
+		/*for (int i = 0; i < kits.size(); i++) {
 			kits.get(i).move(x+5, y+100*i+10);
-		}
+		}*/
+		for (int i = 0; i < MAX_KITS; i++)
+			if (kits[i] != null)
+				kits[i].move(x+5, y+100*i+10);
+		if (check != null)
+			check.move(x+5, y+210);
 	}
 	
 	public void drawKits(Graphics g) {
 		//Draws the kits
 		revalidateKits();
-		for (int i = 0; i < kits.size(); i++) {
+		/*for (int i = 0; i < kits.size(); i++) {
 			kits.get(i).paint(g);
-		}
+		}*/
+		for (int i = 0; i < MAX_KITS; i++)
+			if (kits[i] != null)
+				kits[i].paint(g);
+		if (check != null)
+			check.paint(g);
 	}
 	
-	public void addKit(GraphicKit kit) {
+	/*public void addKit(GraphicKit kit) {
 		//Adds a kit to the station
 		if (kits.size() >= MAX_KITS)
 			return;
 		//kit.move(x+10, y+100*kits.size()+10);
 		kits.add(kit);
+	}*/
+	
+	/**DO NOT USE*/
+	public boolean addKit(GraphicKit kit) {
+		//Generically adds kit to slot 1 if available, slot 2 if 1 is open and 2 isn't, and returns false if both are full
+		if (kits[0] == null)
+			kits[0] = kit;
+		else if (kits[1] == null)
+			kits[1] = kit;
+		else
+			return false;
+		return true;
+	}
+	
+	public boolean addKit(GraphicKit kit, int index) {
+		//Adds kit to index (0 or 1). Returns true if index is occupied, false otherwise
+		if (index != 0 && index != 1) //!(index == 0 || index == 1)
+			return addKit(kit);
+		if (kits[index] == null)
+			kits[index] = kit;
+		else
+			return false;
+		return true;
+	}
+	
+	public boolean addCheck(GraphicKit kit) {
+		if (check != null)
+			return false;
+		check = kit;
+		return true;
 	}
 	
 	public GraphicKit getKit(int index) {
 		//Gets the kit at the index
-		return kits.get(index);
+		//return kits.get(index);
+		return kits[index];
+	}
+	
+	public GraphicKit getCheck() {
+		return check;
 	}
 	
 	public GraphicKit popKit(int index) {
 		//Removes the kit at the index for transfer
-		return kits.remove(index);
+		GraphicKit temp = kits[index];
+		kits[index] = null;
+		//return kits.remove(index);
+		return temp;
+	}
+	
+	public GraphicKit popCheck() {
+		//Removes the kit at the checking station for transfer
+		GraphicKit temp = check;
+		check = null;
+		return temp;
 	}
 	
 	public boolean hasKits() {
 		//Returns if the station has any kits
-		return kits.size() != 0;
+		//return kits.size() != 0;
+		return kits[0] != null || kits[1] != null;
 	}
 	
 	public boolean maxed() {
 		//Returns if the station is at maximum capacity or not
-		return kits.size() == MAX_KITS;
+		//return kits.size() == MAX_KITS;
+		return kits[0] != null && kits[1] != null;
 	}
 	
+	public boolean hasCheck() {
+		//If the station has a kit in the checking location
+		return check != null;
+	}
+	
+	public void dropCheck() {
+		//Rather unnecessary, but kinda nice for readability
+		check = null;
+	}
 }

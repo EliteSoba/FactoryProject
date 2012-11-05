@@ -98,7 +98,7 @@ public class GraphicKittingRobot {
 		return false;
 	}
 	
-	public boolean moveToStation(int v) {
+	/*public boolean moveToStation(int v) {
 		//Moves to Kitting Station to place empty kit. Returns true when task is complete
 		if (x != startX && y != stationY+30)
 			moveToStartX(v);
@@ -116,6 +116,74 @@ public class GraphicKittingRobot {
 	public boolean moveFromStation(int v) {
 		//Same thing as moveToStation, actually.
 		return moveToStation(v);
+	}*/
+	
+	public boolean moveFromStation(int v, int target) {
+		return moveToStation(v, target);
+	}
+	
+	public boolean moveToStation(int v, int target) {
+		if (target != 0 && target != 1)
+			return true;
+		if (target == 0)
+			return moveToStation1(v);
+		return moveToStation2(v);
+	}
+	
+	public boolean moveToStation1(int v) {
+		if (x != startX && y != stationY-5)
+			moveToStartX(v);
+		else if (y > stationY-5)
+			moveY(-v);
+		else if (y < stationY-5)
+			moveY(v);
+		else if (x < stationX-70)
+			moveX(v);
+		else
+			return true;
+		return false;
+	}
+	
+	public boolean moveToStation2(int v) {
+		if (x != startX && y != stationY+95)
+			moveToStartX(v);
+		else if (y > stationY+95)
+			moveY(-v);
+		else if (y < stationY+95)
+			moveY(v);
+		else if (x < stationX-70)
+			moveX(v);
+		else
+			return true;
+		return false;
+	}
+	
+	public boolean moveToCheck(int v) {
+		if (x != startX && y != stationY+195)
+			moveToStartX(v);
+		else if (y > stationY+195)
+			moveY(-v);
+		else if (y < stationY+195)
+			moveY(v);
+		else if (x < stationX-70)
+			moveX(v);
+		else
+			return true;
+		return false;
+	}
+	
+	public boolean moveToTrash(int v) {
+		if (x != startX && y != stationY+305)
+			moveToStartX(v);
+		else if (y > stationY+305)
+			moveY(-v);
+		else if (y < stationY+305)
+			moveY(v);
+		else if (x < stationX-70)
+			moveX(v);
+		else
+			return true;
+		return false;
 	}
 	
 	public boolean moveToBelt(int v) {

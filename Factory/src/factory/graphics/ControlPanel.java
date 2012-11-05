@@ -16,12 +16,18 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton test;
 	JButton outKit;
 	JButton fromBelt;
+	JButton inspect1;
+	JButton inspect2;
+	JButton dumpKit;
 	
 	public ControlPanel(FrameKitAssemblyManager FKAM) {
 		//Constructor
 		am = FKAM;
-		sendKit = new JButton("Send Kit In");
+		sendKit = new JButton("Send New Kit");
+		inspect1 = new JButton("Send Kit 1 to Inspection");
+		inspect2 = new JButton("Send Kit 2 to Inspection");
 		outKit = new JButton("Send Kit Out");
+		dumpKit = new JButton("Dump Kit");
 		fromBelt = new JButton("Get Kit from Belt");
 		test = new JButton("Quit");
 		blank = new JLabel[10];
@@ -35,30 +41,49 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.add(blank[1]);
 		this.add(fromBelt);
 		this.add(blank[2]);
-		this.add(outKit);
+		this.add(inspect1);
 		this.add(blank[3]);
+		this.add(inspect2);
+		this.add(blank[4]);
+		this.add(outKit);
+		this.add(blank[5]);
+		this.add(dumpKit);
+		this.add(blank[6]);
 		this.add(test);
 		this.setPreferredSize(new Dimension(200, 600));
 		sendKit.addActionListener(this);
-		sendKit.setPreferredSize(new Dimension(150, 50));
+		sendKit.setPreferredSize(new Dimension(170, 50));
 		outKit.addActionListener(this);
-		outKit.setPreferredSize(new Dimension(150, 50));
+		outKit.setPreferredSize(new Dimension(170, 50));
 		fromBelt.addActionListener(this);
-		fromBelt.setPreferredSize(new Dimension(150, 50));
-		test.setPreferredSize(new Dimension(150, 50));
+		fromBelt.setPreferredSize(new Dimension(170, 50));
+		inspect1.addActionListener(this);
+		inspect1.setPreferredSize(new Dimension(170, 50));
+		inspect2.addActionListener(this);
+		inspect2.setPreferredSize(new Dimension(170, 50));
+		dumpKit.addActionListener(this);
+		dumpKit.setPreferredSize(new Dimension(170, 50));
 		test.addActionListener(this);
+		test.setPreferredSize(new Dimension(170, 50));
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
 		//Button presses
-		if (arg0.getSource() == test)
+		Object source = arg0.getSource();
+		if (source == test)
 			System.exit(0);
-		else if (arg0.getSource() == sendKit)
+		else if (source == sendKit)
 			am.sendNewEmptyKit();
-		else if (arg0.getSource() == outKit)
-			am.addOutKit();
-		else if (arg0.getSource() == fromBelt)
+		else if (source == outKit)
+			am.outKit();
+		else if (source == fromBelt)
 			am.fromBelt();
+		else if (source == inspect1)
+			am.kitToCheck(0);
+		else if (source == inspect2)
+			am.kitToCheck(1);
+		else if (source == dumpKit)
+			am.dumpKit();
 	}
 
 }
