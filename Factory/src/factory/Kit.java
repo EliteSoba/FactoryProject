@@ -7,10 +7,14 @@ import java.util.List;
 
 import factory.Part;
 
-enum KitState { INCOMPLETE, COMPLETE, PASSED_INSPECTION, FAILED_INSPECTION }
 
 public class Kit {
-   public KitState state;
+   public enum KitState { EMPTY, INCOMPLETE, COMPLETE, PASSED_INSPECTION, FAILED_INSPECTION }
+   KitState state;
    public List<Part> parts = Collections.synchronizedList(new ArrayList<Part>());
 
+   public Kit(){
+	   this.state = KitState.EMPTY;
+	   this.parts = null;
+   }
 }
