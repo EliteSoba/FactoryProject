@@ -49,7 +49,6 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	private GraphicKittingRobot robot;
 	private boolean fromBelt;
 	private boolean toStation;
-	private boolean fromStation;
 	private boolean toBelt;
 	private boolean toCheck;
 	private boolean checkKit;
@@ -62,12 +61,11 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		//Constructor
 		//x = 0;
 		am = FKAM;
-		belt = new GraphicKitBelt(0, 0);
+		belt = new GraphicKitBelt(0, 0, this);
 		station = new GraphicKittingStation(400, 131);
 		robot = new GraphicKittingRobot(this, 250, 150);
 		fromBelt = false;
 		toStation = false;
-		fromStation = false;
 		toBelt = false;
 		toCheck = false;
 		checkKit = false;
@@ -146,7 +144,7 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		}
 		else if (checkKit) {
 			if (robot.moveFromStation(5, stationTarget)) {
-				fromStation = false;
+				checkKit = false;
 				robot.setKit(station.popKit(stationTarget));
 				toCheck = true;
 			}
@@ -203,12 +201,12 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		return toStation;
 	}
 	
-	public boolean getFromStation() {
-		return fromStation;
-	}
-	
 	public boolean getToBelt() {
 		return toBelt;
+	}
+	
+	public void newEmptyKit() {
+		am.newEmptyKitAtConveyor();
 	}
 
 }

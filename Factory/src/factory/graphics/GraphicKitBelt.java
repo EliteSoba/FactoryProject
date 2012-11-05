@@ -14,8 +14,9 @@ public class GraphicKitBelt {
 	private GraphicKit kitIn; //The Kit entering the factory
 	private GraphicKit kitOut; //The Kit exiting the factory
 	private boolean pickUp; //When a Kit has arrived
+	private GraphicKitAssemblyManager GKAM;
 	
-	public GraphicKitBelt(int m, int n) {
+	public GraphicKitBelt(int m, int n, GraphicKitAssemblyManager GKAM) {
 		//Constructor
 		x = m;
 		y = n;
@@ -23,6 +24,7 @@ public class GraphicKitBelt {
 		pickUp = false;
 		kitIn = null;
 		kitOut = null;
+		this.GKAM = GKAM;
 	}
 	
 	public void paint(Graphics g) {
@@ -105,8 +107,12 @@ public class GraphicKitBelt {
 			kitIn.moveY(v);
 			if (kitIn.getY() >= y+40 && kitIn.getX() <= x+100)
 				kitIn.moveX(v);
-			if (kitIn.getX() >= x+105 && kitIn.getY() >= y+115)
-				pickUp = true; //Kit in completion
+			if (kitIn.getX() >= x+105 && kitIn.getY() >= y+115) {
+				//Kit in completion
+				if (!pickUp)
+					GKAM.newEmptyKit();
+				pickUp = true;
+			}
 			if (kitIn.getY() >= y+600)
 				kitIn = null;
 		}
