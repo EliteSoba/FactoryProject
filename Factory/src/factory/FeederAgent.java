@@ -80,7 +80,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	public FeederAgent(String nameStr,int slot) {
 		super();
-		this.name = nameStr;
+		this.name = nameStr+slot;
 		this.feederSlot = slot;
 	}
 
@@ -147,10 +147,8 @@ public class FeederAgent extends Agent implements Feeder {
 
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
 		{
-			debug("---");
 			for (MyPartRequest p : requestedParts)
 			{
-				debug("+++");
 				if (p.state == MyPartRequestState.NEEDED)
 				{
 					askGantryForPart(p);
@@ -244,7 +242,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	private void askGantryForPart(MyPartRequest partRequested) { 
 		debug("asking gantry for part " + partRequested.pt.name + ".");
-		if (purgeIfNecessary(partRequested) || this.state == FeederState.EMPTY) 
+		if (purgeIfNecessary(partRequested) || this.state == FeederState.EMPTY || this.currentPart == partRequested.pt)
 		{
 			state = FeederState.WAITING_FOR_PARTS;
 			partRequested.state = MyPartRequestState.ASKED_GANTRY;
@@ -277,7 +275,7 @@ public class FeederAgent extends Agent implements Feeder {
 			purging = true;
 			purgeLane(bottomLane);
 		}
-				
+						
 		return purging;
 	}
 
@@ -288,8 +286,19 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	private void purgeLane(MyLane myLane){
+		if (myLane == topLane)
+		{
+			DoPurgeTopLane();
+			
+		}
+		else if (myLane == bottomLane)
+		{
+			DoPurgeBottomLane();
+		}
+		//myLane.state = MyLaneState.PURGING; // for future versions
+		myLane.state = MyLaneState.EMPTY; // for v.0, we will simply purge it "instantly"
+		
 		myLane.lane.msgPurge();
-		myLane.state = MyLaneState.PURGING;
 	}
 
 	// Old way was using a DELETED state, and was looking at all the requestedParts
@@ -315,6 +324,7 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 	*/
 	
+
 	private void processFeederParts(MyPartRequest mpr){
 		debug("processing feeder parts of type "+mpr.pt.name);
 		requestedParts.remove(mpr);
@@ -441,6 +451,16 @@ public class FeederAgent extends Agent implements Feeder {
 		// worry about this later
 	}
 
+	private void DoPurgeTopLane() {
+//		graphicLaneManagerClient.doPurgeTopLane(feederSlot);
+	}
+
+	private void DoPurgeBottomLane() {
+//		graphicLaneManagerClient.doPurgeBottomLane(feederSlot);
+	}
+
+
+	
 
 
 }
