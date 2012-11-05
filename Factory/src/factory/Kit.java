@@ -10,7 +10,7 @@ import factory.Part;
 
 public class Kit {
    public enum KitState { EMPTY, INCOMPLETE, COMPLETE, PASSED_INSPECTION, FAILED_INSPECTION }
-   KitState state;
+   public KitState state;
    public List<Part> parts = Collections.synchronizedList(new ArrayList<Part>());
 
    public Kit(){

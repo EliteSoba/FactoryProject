@@ -5,13 +5,13 @@ import agent.Agent;
 import factory.Kit;
 import factory.Kit.KitState;
 
-enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
-enum MyConveyorState { EMPTY, HAS_EMPTY_KIT, FETCHING_EMPTY_KIT }
-enum MySlotState { EMPTY, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION, KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT}
-
 public class StandAgent extends Agent implements Stand {
 	
 	/** DATA **/
+
+	public enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
+	public enum MyConveyorState { EMPTY, HAS_EMPTY_KIT, FETCHING_EMPTY_KIT }
+	public enum MySlotState { EMPTY, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION, KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT}
 
 	public StandAgentState state;
 	
@@ -56,7 +56,7 @@ public class StandAgent extends Agent implements Stand {
 	 * @param partsRobot
 	 */
 	public StandAgent(Conveyor conveyor, Vision vision, KitRobot kitRobot, PartsRobot partsRobot){
-
+		super();
 		this.conveyor = new MyConveyor(conveyor);
 		this.vision = vision;
 		this.partsRobot = partsRobot;
@@ -76,21 +76,23 @@ public class StandAgent extends Agent implements Stand {
 	 * Message that is Received from the conveyor when it brought an empty kit
 	 */
 	public void msgEmptyKitIsHere() {
-	   conveyor.state = MyConveyorState.HAS_EMPTY_KIT;
-	   stateChanged();
+		debug("Received msgEmptyKitIsHere() from the server.");
+		conveyor.state = MyConveyorState.HAS_EMPTY_KIT;
+		stateChanged();
 	}
 	
 	/**
 	 * Message that is received from the KitRobot when it has moved out of the way
 	 */
 	public void msgKitRobotNoLongerUsingStand() {
-	   if(state == StandAgentState.KIT_ROBOT){
-	      state = StandAgentState.FREE;
-	      stateChanged();
-	   }
-	   else {
-	      // Throw Exception
-	   }
+		if(state == StandAgentState.KIT_ROBOT){
+			debug("Received msgKitRobotNoLongerUsingStand() from the kit robot.");
+			state = StandAgentState.FREE;
+			stateChanged();
+		}
+		else {
+			// Throw Exception
+		}
 	}
 	
 	/**
@@ -187,6 +189,8 @@ public class StandAgent extends Agent implements Stand {
 	 * Method that tells the KitRobot to fetch the empty Kit
 	 */
 	private void DoFetchEmptyKitFromConveyor() {
+		debug("Executing DoFetchEmptyKitFromConveyor()");
+
 		if (topSlot.state == MySlotState.EMPTY) {
 			kitRobot.msgGrabAndBringEmptyKitFromConveyorToSlot(topSlot.name);
 		}
@@ -203,23 +207,26 @@ public class StandAgent extends Agent implements Stand {
 	 * Method that places the empty bin in the right slot
 	 */
 	private void DoProcessEmptyBinFromConveyor() {
-	   if(topSlot.state  == MySlotState.EMPTY_KIT_JUST_PLACED) {
-		   DoTellPartsRobotToBuildKitAtSlot(topSlot);
-	   }
-	   else if(bottomSlot.state  == MySlotState.EMPTY_KIT_JUST_PLACED) {
-		   DoTellPartsRobotToBuildKitAtSlot(bottomSlot);
-	   }
-	   else {
-	      // Throw Exception
-	   }
+		debug("Executing DoFetchEmptyKitFromConveyor()");
+
+		if(topSlot.state  == MySlotState.EMPTY_KIT_JUST_PLACED) {
+			DoTellPartsRobotToBuildKitAtSlot(topSlot);
+		}
+		else if(bottomSlot.state  == MySlotState.EMPTY_KIT_JUST_PLACED) {
+			DoTellPartsRobotToBuildKitAtSlot(bottomSlot);
+		}
+		else {
+			// Throw Exception
+		}
 	   
 	}
 	/**
 	 * Method that tells the PartsRobot to build Kit
 	 */
 	private void DoTellPartsRobotToBuildKitAtSlot(MySlot slot) {
-	   partsRobot.msgBuildKitAtSlot(slot.name);
-	   slot.state = MySlotState.BUILDING_KIT;
+		debug("Executing DoTellPartsRobotToBuildKitAtSlot("+slot.name+")");
+		partsRobot.msgBuildKitAtSlot(slot.name);
+		slot.state = MySlotState.BUILDING_KIT;
 	} 
 	/**
 	 * Method that tells the PartsRobot to deliver parts
@@ -232,16 +239,18 @@ public class StandAgent extends Agent implements Stand {
 	 * Method that tells the KitRobot to move a Kit to the inspection slot
 	 */
 	private void DoTellKitRobotToMoveKitToInspectionSlot(MySlot slot) {
-	   kitRobot.msgComeMoveKitToInspectionSlot(slot.name);
-	   state = StandAgentState.KIT_ROBOT;
-	   slot.state = MySlotState.MOVING_KIT_TO_INSPECTION;                   
+		debug("Executing DoTellKitRobotToMoveKitToInspectionSlot("+slot.name+")");
+		kitRobot.msgComeMoveKitToInspectionSlot(slot.name);
+		state = StandAgentState.KIT_ROBOT;
+		slot.state = MySlotState.MOVING_KIT_TO_INSPECTION;                   
 	}
 	/**
 	 * Method that tells the Vision to take picture of the kit
 	 */
 	private void DoAskVisionToInspectKit() {
-	   vision.msgAnalyzeKitAtInspection(inspectionSlot.kit);
-	   inspectionSlot.state = MySlotState.ANALYZING_KIT;                   
+		debug("Executing DoAskVisionToInspectKit()");
+		vision.msgAnalyzeKitAtInspection(inspectionSlot.kit);
+	   	inspectionSlot.state = MySlotState.ANALYZING_KIT;                   
 	}   
 	/**
 	 * Method that tells the KitRobot to process the Kit

@@ -22,7 +22,7 @@ public class VisionAgent extends Agent implements Vision {
 	Stand stand;
 	Random r = new Random();
 	
-	public VisionAgent(KitRobot kitRobot, PartsRobot partsRobot, Stand stand){
+	VisionAgent(KitRobot kitRobot, PartsRobot partsRobot, Stand stand){
 		this.kitRobot = kitRobot;
 		this.partsRobot = partsRobot;
 		this.stand = stand;

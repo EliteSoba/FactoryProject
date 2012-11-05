@@ -2,11 +2,9 @@ package factory.graphics;
 import java.awt.*;
 import javax.swing.*;
 
-import factory.ConveyorAgent;
-import factory.KitRobotAgent;
-import factory.PartsRobotAgent;
-import factory.StandAgent;
-import factory.VisionAgent;
+import factory.*;
+import factory.Kit.KitState;
+import factory.StandAgent.MySlotState;
 
 public class FrameKitAssemblyManager extends JFrame{
 	
@@ -21,7 +19,7 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	// These are for v.0
 	ConveyorAgent conveyor = new ConveyorAgent();
-	VisionAgent vision = new VisionAgent();
+	VisionAgent vision = new VisionAgent(null, null, null, this);
 	PartsRobotAgent partsRobot = new PartsRobotAgent();
 	StandAgent stand = new StandAgent(conveyor, vision, null, partsRobot);
 	KitRobotAgent kitRobot = new KitRobotAgent(stand, this);
@@ -63,27 +61,40 @@ public class FrameKitAssemblyManager extends JFrame{
 	}
 	
 	public void kitToCheck(int slot) {
-		GKAM.checkKit(slot);
+		if(slot == 0){
+			System.out.println("Kit at topSlot is compete!");
+			stand.topSlot.kit.state = KitState.COMPLETE;
+			stand.stateChanged();
+		}
+		else {
+			System.out.println("Kit at bottomSlot is compete!");
+			stand.bottomSlot.kit.state = KitState.COMPLETE;
+			
+		}
+		//GKAM.checkKit(slot);
 	}
 	
+	public void moveKitFromSlotToInspection(int slot){
+		GKAM.checkKit(slot);
+	}
 	public void dumpKit() {
 		GKAM.purgeKit();
 	}
 	
-	public void fromBelt() {
-		kitRobot.msgGrabAndBringEmptyKitFromConveyorToSlot("topSlot");
-	}
-	
 	public void newEmptyKitAtConveyor(){
 		System.out.println("New Empty Kit Arrived!");
+		stand.msgEmptyKitIsHere();
+		
 	}
 	
 	public void fromBeltDone() {
 		System.out.println("Kit sent to Kitting Station!");
+		kitRobot.msgAnimationDone();
 	}
 	
 	public void toCheckDone() {
 		System.out.println("Kit sent to Inspection Station!");
+		kitRobot.msgAnimationDone();
 	}
 	
 	public void dumpDone() {
