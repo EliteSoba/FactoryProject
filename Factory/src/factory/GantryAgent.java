@@ -31,10 +31,12 @@ public class GantryAgent extends Agent implements Gantry {
 
 	public void msgFeederNeedsPart(Part part, Feeder feeder) {
 		myBins.add(new MyBin(part, feeder));
+		stateChanged();
 	}
 
 	public void msgChangeGantryBinConfig(BinConfig binConfig) {
 		this.binConfig = binConfig;
+		stateChanged();
 	}
 
 
@@ -59,6 +61,7 @@ public class GantryAgent extends Agent implements Gantry {
 		DoBringRequestedBin(binConfig.binList.get(b.pt /*b.fdr; not sure why this parameter is here.  leaving it for now*/));
 		b.fdr.msgHereIsPart(b.pt);
 		b.state = MyBinState.DELIVERED;
+		stateChanged();
 	}
 
 	private void DoBringRequestedBin(Integer integer) {
