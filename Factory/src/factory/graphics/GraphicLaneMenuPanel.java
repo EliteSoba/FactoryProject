@@ -23,6 +23,11 @@ import factory.test.mock.MockGantry;
 
 
 public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
+	// Minh's Code:
+	JButton startLaneButton, switchLaneButton, placeBinButton,stopLaneButton,dumpNestButton, feederOnButton,feederOffButton, purgeFeederButton;
+	
+	
+	// Ryan Cleary's Code
 	FeederAgent feeder;
 	LaneAgent top, bottom;
 	NestAgent n0,n1,n2,n3;
@@ -93,28 +98,38 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 	GraphicLaneManager lane;
 	GraphicBin bin;
 
-	//Image Icon buttons
-	JButton startLane1Button, startLane2Button, placeBinButton,dumpNestButton;
-
 	public GraphicLaneMenuPanel(GraphicLaneManager lane, GraphicBin bin){
 		this.lane = lane;
 		this.bin = bin;
 
-		startLane1Button = new JButton("Start Lane 1");
-		startLane1Button.addActionListener(this);
-		startLane2Button = new JButton("Start Lane 2");
-		startLane2Button.addActionListener(this);
+		
+		startLaneButton = new JButton("Start Lane");
+		startLaneButton.addActionListener(this);
+		switchLaneButton = new JButton("Switch Lane");
+		switchLaneButton.addActionListener(this);
+		stopLaneButton = new JButton("Stop Lane");
+		stopLaneButton.addActionListener(this);
 		placeBinButton = new JButton("Place Bin");
 		placeBinButton.addActionListener(this);
+		feederOnButton = new JButton("Feeder On");
+		feederOnButton.addActionListener(this);
+		feederOffButton = new JButton("Feeder Off");
+		feederOffButton.addActionListener(this);
+		purgeFeederButton = new JButton("Purge Feeder");
+		purgeFeederButton.addActionListener(this);
 		dumpNestButton = new JButton("Dump Nest");
 		dumpNestButton.addActionListener(this);
-
+		
 		this.setPreferredSize(new Dimension(700,50));
 		this.setVisible(true);
 		this.add(placeBinButton);
-		this.add(startLane1Button);
-		this.add(startLane2Button);
-		//this.add(dumpNestButton);
+		this.add(startLaneButton);
+		this.add(stopLaneButton);
+		this.add(switchLaneButton);
+		this.add(feederOnButton);
+		this.add(feederOffButton);
+		this.add(purgeFeederButton);
+
 
 		/* CASES TO TEST:
 		 * 1) Single request.
@@ -197,26 +212,38 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 				lane.bin = b;
 				lane.currentItemCount = 0;
 				lane.placedBin = true;
+				lane.binExist = true;
 			}
 		}
-		else if(ae.getSource() == startLane1Button){
-			//if(!lane.laneStart){
-			lane.laneStart = true;
-			lane.divergeUp = true;
-			lane.vY = -8;
-			//}
+		else if(ae.getSource() == startLaneButton){
+			if(!lane.laneStart){
+				//lane.feederOn = true;
+				lane.laneStart = true;
+				//lane.divergeUp = false;
+				//lane.vY = 8;
+			}
 		}
-		else if(ae.getSource() == startLane2Button){
-			//if(!lane.laneStart){
-			lane.laneStart = true;
-			lane.divergeUp = false;
-			lane.vY = 8;
-			//}
+		else if(ae.getSource() == switchLaneButton){
+			lane.divergeUp = !lane.divergeUp;
+			lane.vY = -(lane.vY);
 		}
-
+		else if(ae.getSource() == stopLaneButton){
+			lane.laneStart = false;
+		}
+		else if(ae.getSource() == feederOnButton){
+			lane.feederOn = true;
+		}
+		else if(ae.getSource() == feederOffButton){
+			lane.feederOn = false;
+		}
+		else if(ae.getSource() == purgeFeederButton){
+			bin = null;
+			lane.bin = null;
+			lane.binExist = false;
+			lane.feederOn = false;
+		}
 		else if(ae.getSource() == dumpNestButton){
 			lane.nest1Items.clear();
 		}
 	}
-}
 
