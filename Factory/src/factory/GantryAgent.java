@@ -6,7 +6,7 @@ import java.util.*;
 import factory.interfaces.*;
 
 public class GantryAgent extends Agent implements Gantry {
-	   ArrayList<MyBin> myBins = new ArrayList<MyBin>();   
+	   public ArrayList<MyBin> myBins = new ArrayList<MyBin>();   
 	   BinConfig binConfig;
 	   
 	   enum MyBinState { NEEDED, DELIVERED}
