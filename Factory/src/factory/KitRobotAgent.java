@@ -121,16 +121,10 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		server.moveEmptyKitToSlot(2);
 		state = KitRobotAgentState.GRABING_EMPTY_KIT_AND_PLACING_IN_SLOT_TWO;
 	}
-	
+
+
 	/** ANIMATIONS **/
 
-	private void debug(String p){
-		if(true)
-			System.out.println(p);
-	}
 	
-	public String getName(){
-		return "KitRobotAgent";
-	}
 }
 
