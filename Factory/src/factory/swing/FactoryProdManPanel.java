@@ -15,6 +15,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	
 	public FactoryProdManPanel() { // manager has arraylist of kitnames available
 		kitNameBox = new JComboBox();
+		Component kitList;
 		for (int i = 0; i < kitList.size(); i++)
 			kitNameBox.addItem(kitList.get(i));
 		kitNameBox.setPreferredSize(new Dimension(225,25));

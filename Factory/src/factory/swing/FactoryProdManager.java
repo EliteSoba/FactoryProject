@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.awt.event.*;
 
 public class FactoryProdManager extends JFrame {
-
+	private static final long serialVersionUID = 6598851462962389770L;
 	ArrayList<String> kitList;
 	FactoryProdManPanel myPanel;
 
