@@ -87,6 +87,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** MESSAGES **/
 	public void msgEmptyNest(Nest n) {
+		debug("received msgEmptyNest()");
 		if (topLane.lane.getNest() == n) 
 		{
 			topLane.lane.msgIncreaseAmplitude();
@@ -97,9 +98,11 @@ public class FeederAgent extends Agent implements Feeder {
 			bottomLane.lane.msgIncreaseAmplitude();
 			bottomLane.jamState = JamState.MIGHT_BE_JAMMED;
 		}
+		stateChanged();
 	}
 
 	public void msgNestWasDumped(Lane la) {
+		debug("received msgNestWasDumped("+ la.getName() + ")");
 		if (topLane.lane == la)
 		{
 			topLane.state = MyLaneState.NEST_SUCCESSFULLY_DUMPED;
@@ -108,25 +111,33 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			bottomLane.state = MyLaneState.NEST_SUCCESSFULLY_DUMPED;
 		}
+		stateChanged();
 	}
 
 	public void msgLaneNeedsPart(Part part, Lane lane) {
+		debug("received msgLaneNeedsPart("+part.name + "," + lane.getName() + ")");
 		requestedParts.add(new MyPartRequest(part, lane));
+		stateChanged();
 	}
 
 	public void msgHereAreParts(Part part) {
+		debug("received msgHereAreParts("+part.name+")");
+
 		for (MyPartRequest pr : requestedParts) {
 			if(pr.state == MyPartRequestState.ASKED_GANTRY && pr.pt == part) {
 				pr.state = MyPartRequestState.DELIVERED;
 			}
 		}
+		stateChanged();
 	}
 
 	public void msgBadNest(Nest n) {
+		debug("received msgBadNest()");
 		if (topLane.lane.getNest() == n) 
 			topLane.state = MyLaneState.BAD_NEST;
 		else if (bottomLane.lane.getNest() == n)
 			bottomLane.state = MyLaneState.BAD_NEST;
+		stateChanged();
 	}
 
 
@@ -204,6 +215,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** ACTIONS **/
 	private void nestWasDumped(MyLane la) {
+		debug("has dumped nest of lane " + la.lane.getName() + ".");
 		if (this.state == FeederState.CONTAINS_PARTS)
 		{
 			// only if the feeder is actually feeding
@@ -214,25 +226,32 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			la.state = MyLaneState.PURGING;
 		}
+		stateChanged();
 	}
 
 	private void dumpNest(MyLane la) {
+		debug("Go dump nest of lane "+la.lane.getName() + ".");
 		DoStopFeeding();
 		la.state = MyLaneState.TOLD_NEST_TO_DUMP;
 		la.lane.msgDumpNest();
+		stateChanged();
+
 	}
 
 	private void askGantryForPart(MyPartRequest partRequested) { 
-		
+		debug("asking gantry for part " + partRequested.pt.name + ".");
 		if (purgeIfNecessary(partRequested) || this.state == FeederState.EMPTY) 
 		{
 			state = FeederState.WAITING_FOR_PARTS;
 			partRequested.state = MyPartRequestState.ASKED_GANTRY;
 			gantry.msgFeederNeedsPart(partRequested.pt, this);
 		}
+		
+		stateChanged();
 	}
 	
 	private boolean purgeIfNecessary(MyPartRequest partRequested) { 
+		debug("purging if necessary.");
 		boolean purging = false;
 		
 		// Check if Feeder needs to be purged
@@ -293,6 +312,7 @@ public class FeederAgent extends Agent implements Feeder {
 	*/
 	
 	private void processFeederParts(MyPartRequest mpr){
+		debug("processing feeder parts of type "+mpr.pt.name);
 		requestedParts.remove(mpr);
 		currentPart = mpr.pt;
 
@@ -304,9 +324,12 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 		
 		state = FeederState.SHOULD_START_FEEDING;
+		
+		stateChanged();
 	}
 
 	private void StartFeeding(){
+		debug("action start feeding.");
 		final MyLane currentLane;
 		if(currentPart == topLane.part)
 			currentLane = topLane;
@@ -351,7 +374,7 @@ public class FeederAgent extends Agent implements Feeder {
 		//		Timer.new(currentPart.averageDelayTime,{vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this) });
 
 		DoStartFeeding(currentPart);
-
+		stateChanged();
 	}
 	
 	/** This method returns the name of the FeederAgent **/
@@ -386,29 +409,30 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** ANIMATIONS **/
 	private void DoStartFeeding(Part part) {
-		print("Feeder " + feederSlot + " started feeding.");
+		debug("Feeder " + feederSlot + " started feeding.");
 //		graphicLaneManagerClient.doStartFeeding(feederSlot,part);
 	}
 
 	private void DoStopFeeding() {
-		print("stopped feeding.");
+		debug("stopped feeding.");
 //		graphicLaneManagerClient.doStopFeeding(feederSlot);
 	}
 	
 	private void DoPurgeFeeder() {
-		print("purging feeder.");
+		debug("purging feeder.");
 //		graphicLaneManagerClient.doPurgeFeeder(feederSlot);
 	}
 
 	private void DoSwitchLane() {
-		print("switching lane");
+		debug("switching lane");
 //		graphicLaneManagerClient.doSwitchLane(feederSlot);
 	}
 	
 	private void DoContinueFeeding(Part part) {
-		print("continued feeding.");
+		debug("continued feeding.");
 		// worry about this later
 	}
+
 
 
 }

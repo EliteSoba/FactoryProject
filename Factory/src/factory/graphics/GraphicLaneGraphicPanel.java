@@ -17,7 +17,7 @@ public class GraphicLaneGraphicPanel extends JPanel{
 	public GraphicLaneGraphicPanel(GraphicLaneManager lane, GraphicBin bin){
 		this.lane = lane;
 		this.bin = bin;
-		itemsIcon = new ImageIcon("./src/image/itemsStack.png");
+		itemsIcon = new ImageIcon("./Images/itemsStack.png");
 
 		this.setPreferredSize(new Dimension(700,300));
 		this.setVisible(true);

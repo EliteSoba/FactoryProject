@@ -23,7 +23,7 @@ public class GraphicBin{
 				binItems.get(i + j).setY(-40);
 			}
 		}
-		binImage = new ImageIcon("./src/image/bin.png");
+		binImage = new ImageIcon("Images/bin.png");
 	}
 	
 	public ArrayList<GraphicItem> getBinItems(){

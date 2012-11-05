@@ -71,12 +71,12 @@ public class GraphicLaneManager extends JFrame implements ActionListener{
 		}
 		*/
 		//Declaration of variables
-		lane1 = new ImageIcon("./src/image/lane.png");
-		lane2 = new ImageIcon("./src/image/lane.png");
-		divergeLane = new ImageIcon("./src/image/divergeLane.png");
-		nest1 = new ImageIcon("./src/image/nest.png");
-		nest2 = new ImageIcon("./src/image/nest.png");
-		feeder = new ImageIcon("./src/image/feeder.png");
+		lane1 = new ImageIcon("./Images/lane.png");
+		lane2 = new ImageIcon("./Images/lane.png");
+		divergeLane = new ImageIcon("./Images/divergeLane.png");
+		nest1 = new ImageIcon("./Images/nest.png");
+		nest2 = new ImageIcon("./Images/nest.png");
+		feeder = new ImageIcon("./Images/feeder.png");
 
 		//Declaration of JFrame
 		this.setVisible(true);

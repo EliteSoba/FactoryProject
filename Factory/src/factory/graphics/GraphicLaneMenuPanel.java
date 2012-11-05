@@ -27,14 +27,25 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 	
 	protected void setUp() throws Exception {
 		feeder = new FeederAgent("feeder",0);
+		feeder.startThread();
 		top = new LaneAgent();
+		top.startThread();
 		bottom = new LaneAgent();
+		bottom.startThread();
 		gantry = new GantryAgent();
+		gantry.startThread();
 
 		n0 = new NestAgent();
+		n0.startThread();
 		n1 = new NestAgent();
+		n1.startThread();
+
 		n2 = new NestAgent();
+		n2.startThread();
+
 		n3 = new NestAgent();
+		n3.startThread();
+
 		p0 = new Part("Triangle");
 		p1 = new Part("Circle");
 		p2 = new Part("Square");
@@ -78,7 +89,7 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		
 		/* CASES TO TEST:
 		* 1) Single request.
-		* 2) Two different part requests, different lanes/
+		* 2) Two different part requests, different lanes
 		* 3) Two different part requests, same lane.
 		* 4) Two of the same kind of part, different lanes.
 		* 5) Two of the same kind of part, same lane.
@@ -89,12 +100,11 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 			e.printStackTrace();
 		}
 		
-		singlePartRequest();
+		singlePartRequest(); // TEST CASE #1
 	}
 	
 	public void singlePartRequest() {
 		n0.msgYouNeedPart(p0);
-		System.out.println("Msged n0 msgYouNeedPart(p0)");
 	}
 	
 	public void actionPerformed(ActionEvent ae){

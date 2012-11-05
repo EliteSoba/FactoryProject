@@ -35,23 +35,28 @@ public class LaneAgent extends Agent implements Lane {
 	/** MESSAGES **/
 	public void msgIncreaseAmplitude() {
 		nestState = NestState.NEEDS_TO_INCREASE_AMPLITUDE;
+		stateChanged();
 	}
 
 	public void msgNestNeedsPart(Part part) {
+		debug("received msgNestNeedsPart("+part.name+").");
 		myParts.add(new MyPart(part));
+		stateChanged();
 	}
 
 	public void msgDumpNest() {
 		nestState = NestState.NEEDS_TO_DUMP;
+		stateChanged();
 	}
 
 	public void msgNestWasDumped() {
 		nestState = NestState.NEST_WAS_DUMPED;
+		stateChanged();
 	}
 
 	public void msgPurge() {
 		// TODO Auto-generated method stub
-
+		stateChanged();
 	}
 
 	/** SCHEDULER **/
@@ -92,6 +97,7 @@ public class LaneAgent extends Agent implements Lane {
 		//if (nestState != NestState.NEEDS_TO_INCREASE_AMPLITUDE) // unnecessary, will never happen
 			nestState = NestState.NORMAL;
 		myFeeder.msgNestWasDumped(this);
+		stateChanged();
 	}
 	
 	public void increaseAmplitude() {
@@ -101,16 +107,21 @@ public class LaneAgent extends Agent implements Lane {
 			DoIncreaseAmplitude(amplitude);
 			nestState = NestState.NORMAL;
 		}
+		stateChanged();
 	}
 	
 	public void askFeederToSendParts(MyPart part) { 
+		debug("asking feeder to send parts of type " + part.pt.name + ".");
 		myFeeder.msgLaneNeedsPart(part.pt, this);
 		part.state = MyPartState.REQUESTED;
+		stateChanged();
 	}
 
 	public void dumpNest() { 
+		debug("telling my nest it should dump.");
 		nestState = NestState.WAITING_FOR_DUMP_CONFIRMATION;
 		myNest.msgDump();
+		stateChanged();
 	}
 
 	
@@ -118,7 +129,7 @@ public class LaneAgent extends Agent implements Lane {
 	/** ANIMATIONS **/
 	private void DoIncreaseAmplitude(int amp) 
 	{
-		print("amplitude increased to " + amp + ".");
+		debug("amplitude increased to " + amp + ".");
 	}
 
 

@@ -26,28 +26,38 @@ public class NestAgent extends Agent implements Nest {
 	/** MESSAGES **/
 	public void msgDump() {
 		nestState = NestState.NEEDS_TO_DUMP;
+		stateChanged();
 	}
 	public void msgYouNeedPart(Part part) {
 		debug("received msgYouNeedPart("+part.name+").");
 		myParts.add(new MyPart(part));
+		stateChanged();
 	}
 
 
 	/** SCHEDULER **/
 	public boolean pickAndExecuteAnAction() {
+		debug("here?");
 		if (nestState == NestState.NEEDS_TO_DUMP)
 		{
+			debug("1?");
 			dump();
 			return true;
 		}
 		for(MyPart p : myParts)
 		{
+			debug("2?");
+
 			if (p.state == MyPartState.NEEDED)
 			{
+				debug("3?");
+
 				askLaneToSendParts(p);
 				return true;
 			}
 		}
+		
+		debug("4?");
 
 		return false;
 	}
@@ -57,12 +67,14 @@ public class NestAgent extends Agent implements Nest {
 	public void dump() {
 		DoDumpNest();
 		nestState = NestState.NORMAL;
+		stateChanged();
 	}
 	
 	public void askLaneToSendParts(MyPart part) { 
 		debug("asking lane to send parts of type "+part.pt.name + ".");
 		part.state = MyPartState.REQUESTED;
 		myLane.msgNestNeedsPart(part.pt);
+		stateChanged();
 	}
 	
 	

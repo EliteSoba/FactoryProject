@@ -57,7 +57,7 @@ public class GantryAgent extends Agent implements Gantry {
 		DoPickupPurgeBin(); //animation message
 		DoRefillPurgeBin(binConfig.binList.get(b.pt));
 		DoBringRequestedBin(binConfig.binList.get(b.pt /*b.fdr; not sure why this parameter is here.  leaving it for now*/));
-		b.fdr.msgHereIsPart(b.pt);
+		b.fdr.msgHereAreParts(b.pt);
 		b.state = MyBinState.DELIVERED;
 	}
 
