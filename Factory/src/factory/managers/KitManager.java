@@ -8,7 +8,7 @@ import factory.swing.KitManPanel;
 public class KitManager extends Client {
 
 	public KitManager(JPanel buttons) {
-		super(Client.Type.KITMANAGER, buttons);
+		super(Client.Type.KITMANAGER, buttons, null);
 		setInterface();
 	}
 	public static void main(String[] args){
@@ -23,5 +23,4 @@ public class KitManager extends Client {
 		this.setVisible(true);
 		
 	}
-
 }
