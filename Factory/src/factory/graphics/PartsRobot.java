@@ -1,5 +1,3 @@
-package factory.graphics;
-
 import java.awt.Toolkit;
 import java.util.ArrayList;
 

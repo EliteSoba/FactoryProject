@@ -1,5 +1,3 @@
-package factory.graphics;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -39,7 +37,7 @@ class PartsRobotClient extends JPanel implements ActionListener
 		// Initialize flash
 		flashCount = 0;				// flash is off
 		flashLane = 1;				// lane 1 by default; this will automatically be changed by code later
-		flashImage = Toolkit.getDefaultToolkit().getImage("flash3x3.png");
+		flashImage = Toolkit.getDefaultToolkit().getImage("Images/flash3x3.png");
 		//moveRobotTo(2);
 	}
 
