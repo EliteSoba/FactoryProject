@@ -19,7 +19,7 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	// These are for v.0
 	ConveyorAgent conveyor = new ConveyorAgent();
-	VisionAgent vision = new VisionAgent();
+	VisionAgent vision = new VisionAgent(null, null, null, this);
 	PartsRobotAgent partsRobot = new PartsRobotAgent();
 	StandAgent stand = new StandAgent(conveyor, vision, null, partsRobot);
 	KitRobotAgent kitRobot = new KitRobotAgent(stand, this);
