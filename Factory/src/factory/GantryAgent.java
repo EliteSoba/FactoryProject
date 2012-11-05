@@ -6,62 +6,69 @@ import java.util.*;
 import factory.interfaces.*;
 
 public class GantryAgent extends Agent implements Gantry {
-	   public ArrayList<MyBin> myBins = new ArrayList<MyBin>();   
-	   BinConfig binConfig;
-	   
-	   enum MyBinState { NEEDED, DELIVERED}
+	public ArrayList<MyBin> myBins = new ArrayList<MyBin>();   
+	BinConfig binConfig;
 
-	   class MyBin {
-	      
-	      MyBinState state;
-	      Part pt;
-	      Feeder fdr;
+	enum MyBinState { NEEDED, DELIVERED}
 
-	      public MyBin(Part part, Feeder feeder){
-	            this.state = MyBinState.NEEDED;
-	            this.fdr = feeder;
-	            this.pt = part;
-	      }
-	   }
-	   
-	   
-	   
-	   
+	class MyBin {
+
+		MyBinState state;
+		Part pt;
+		Feeder fdr;
+
+		public MyBin(Part part, Feeder feeder){
+			this.state = MyBinState.NEEDED;
+			this.fdr = feeder;
+			this.pt = part;
+		}
+	}
+
+
+
+
 	// *** MESSAGES ***
-	   
-	   public void msgFeederNeedsPart(Part part, Feeder feeder) {
-		   myBins.add(new MyBin(part, feeder));
-		}
 
-		public void msgChangeGantryBinConfig(BinConfig binConfig) {
-		   this.binConfig = binConfig;
-		}
-	   
-	   
+	public void msgFeederNeedsPart(Part part, Feeder feeder) {
+		myBins.add(new MyBin(part, feeder));
+	}
+
+	public void msgChangeGantryBinConfig(BinConfig binConfig) {
+		this.binConfig = binConfig;
+	}
+
+
 	// *** SCHEDULER ***
-	   
-	   public boolean pickAndExecuteAnAction() {
 
-		   for(MyBin b: myBins){
-			   if(b.state == MyBinState.NEEDED){
-				   goFetchTheRequestedBin(b);
-			   }
-		   }
-			return false;
-	   }
-	   
-	// *** ACTIONS ***
-	   private void goFetchTheRequestedBin(MyBin b) {
-		   DoPickupPurgeBin(); //animation message
-		   DoRefillPurgeBin(binConfig.get(b.pt));
-		   DoBringRequestedBin(binConfig.get(b.pt, b.fdr));
-		   b.fdr.msgHereIsPart(b.pt);
-		   b.state = MyBinState.DELIVERED;
+	public boolean pickAndExecuteAnAction() {
+
+		for(MyBin b: myBins){
+			if(b.state == MyBinState.NEEDED){
+				goFetchTheRequestedBin(b);
+			}
 		}
+		return false;
+	}
+
+
+	// *** ACTIONS ***
+	private void goFetchTheRequestedBin(MyBin b) {
+		DoPickupPurgeBin(); //animation message
+		DoRefillPurgeBin(binConfig.get(b.pt));
+		DoBringRequestedBin(binConfig.get(b.pt, b.fdr));
+		b.fdr.msgHereIsPart(b.pt);
+		b.state = MyBinState.DELIVERED;
+	}
 
 	@Override
 	public void msgFeederNeeds(Part pt, Feeder feeder) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
+
 }
+
+
+
+

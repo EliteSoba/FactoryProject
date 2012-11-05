@@ -45,6 +45,8 @@ public class FeederManagementTests extends TestCase {
 	public void testPreconditions() {
 		//test relevant preconditions
 		assertEquals(top.myParts.size(),0); 
+		assertEquals(gantry.myBins.size(),0);
+
 	}
 
 
@@ -63,8 +65,8 @@ public class FeederManagementTests extends TestCase {
 
 
 		gantry.pickAndExecuteAnAction(); // gantry should msgHereAreParts -> feeder 
-		assertEquals(gantry.)
-		
+		assertEquals(gantry.myBins.size(),1); // was the mybin (request for a part) added to the gantry's list
+
 		
 		feeder.pickAndExecuteAnAction(); // feeder should have p1 as its current parts
 //		assertEquals(feeder.currentPart,p1);
