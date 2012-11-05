@@ -2,6 +2,12 @@ package factory.graphics;
 import java.awt.*;
 import javax.swing.*;
 
+import factory.ConveyorAgent;
+import factory.KitRobotAgent;
+import factory.PartsRobotAgent;
+import factory.StandAgent;
+import factory.VisionAgent;
+
 public class FrameKitAssemblyManager extends JFrame{
 	
 	/*FrameKitAssemblyManager.java (800x600) - Tobias Lee
@@ -13,6 +19,14 @@ public class FrameKitAssemblyManager extends JFrame{
 	ControlPanel CP; //The Swing control panel
 	private boolean awaitingCommand;
 	
+	
+	// These are for v.0
+	ConveyorAgent conveyor = new ConveyorAgent();
+	VisionAgent vision = new VisionAgent();
+	PartsRobotAgent partsRobot = new PartsRobotAgent();
+	StandAgent stand = new StandAgent(conveyor, vision, null, partsRobot);
+	KitRobotAgent kitRobot = new KitRobotAgent(stand, this);
+	
 	public FrameKitAssemblyManager() {
 		//Constructor. BorderLayout
 		GKAM = new GraphicKitAssemblyManager(this);
@@ -22,11 +36,31 @@ public class FrameKitAssemblyManager extends JFrame{
 		CP.setPreferredSize(new Dimension(200, 600));
 		this.add(CP, BorderLayout.LINE_END);
 		awaitingCommand = true;
+		
+		// v.0 stuff
+		stand.kitRobot = kitRobot;
+		conveyor.startThread();
+		vision.startThread();
+		partsRobot.startThread();
+		kitRobot.startThread();
+		stand.startThread();
 	}
 	
-	public void addInKit() {
+	public void moveEmptyKitToSlot(int slot){
+		GKAM.robotFromBelt();
+	}
+	
+	/**
+	 * Method to send a new empty kit in the conveyor
+	 */
+	public void sendNewEmptyKit() {
 		//Adds a Kit into the factory
 		GKAM.addInKit();
+		System.out.println("New Empty Kit Requested!");
+	}
+	
+	public void newEmptyKitAtConveyor(){
+		System.out.println("New Empty Kit Arrived!");
 	}
 	
 	public void addOutKit() {
@@ -36,23 +70,15 @@ public class FrameKitAssemblyManager extends JFrame{
 	}
 	
 	public void fromBelt() {
-		//Receive a Kit from the belt
-		GKAM.robotFromBelt();
-		awaitingCommand = false;
+		kitRobot.msgGrabAndBringEmptyKitFromConveyorToSlot("topSlot");
 	}
 	
 	public void fromBeltDone() {
 		System.out.println("From Belt process completed");
-		awaitingCommand = true;
 	}
 	
 	public void outKitDone() {
 		System.out.println("Kit send-out process completed");
-		awaitingCommand = true;
-	}
-	
-	public boolean getAwaitingCommand() {
-		return awaitingCommand;
 	}
 	
 	public static void main(String args[]) {

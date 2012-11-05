@@ -54,7 +54,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		if (arg0.getSource() == test)
 			System.exit(0);
 		else if (arg0.getSource() == sendKit)
-			am.addInKit();
+			am.sendNewEmptyKit();
 		else if (arg0.getSource() == outKit)
 			am.addOutKit();
 		else if (arg0.getSource() == fromBelt)
