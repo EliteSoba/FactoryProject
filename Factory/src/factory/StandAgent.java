@@ -3,6 +3,7 @@ package factory;
 import factory.interfaces.*;
 import agent.Agent;
 import factory.Kit;
+import factory.Kit.KitState;
 
 enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
 enum MyConveyorState { EMPTY, HAS_EMPTY_KIT, FETCHING_EMPTY_KIT }
@@ -249,7 +250,8 @@ public class StandAgent extends Agent implements Stand {
 	   kitRobot.msgComeProcessAnalyzedKitAtInspectionSlot();
 	   state = StandAgentState.KIT_ROBOT;
 	   inspectionSlot.state = MySlotState.PROCESSING_ANALYZED_KIT;                    
-	}    
+	}
+ 
 
 }
 

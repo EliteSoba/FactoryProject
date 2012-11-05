@@ -8,8 +8,7 @@ import agent.Agent;
 import factory.graphics.FrameKitAssemblyManager;
 
 enum KitRobotAgentState { DOING_NOTHING, NEEDS_TO_GRAB_EMPTY_KIT_AND_PLACE_IN_SLOT_ONE, 
-	NEEDS_TO_GRAB_EMPTY_KIT_AND_PLACE_IN_SLOT_TWO, NEEDS_TO_PROCESS_KIT_AT_INSPECTION_SLOT, GRABING_EMPTY_KIT_AND_PLACING_IN_SLOT_ONE,
-	GRABING_EMPTY_KIT_AND_PLACING_IN_SLOT_TWO }
+	NEEDS_TO_GRAB_EMPTY_KIT_AND_PLACE_IN_SLOT_TWO, NEEDS_TO_PROCESS_KIT_AT_INSPECTION_SLOT, GRABING_EMPTY_KIT_AND_PLACING_IN_SLOT }
 
 public class KitRobotAgent extends Agent implements KitRobot {
 
@@ -77,7 +76,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			 * If there is an empty kit at conveyor that needs to be placed at slot one
 			 */
 			if(state == KitRobotAgentState.NEEDS_TO_GRAB_EMPTY_KIT_AND_PLACE_IN_SLOT_ONE){
-				DoGrabEmptyKitAndPlaceInSlotOne();
+				DoGrabEmptyKitAndPlaceInSlot(0);
 				return true;
 			}
 
@@ -85,7 +84,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			 * If there is an empty kit at conveyor that needs to be placed at slot two
 			 */
 			if(state == KitRobotAgentState.NEEDS_TO_GRAB_EMPTY_KIT_AND_PLACE_IN_SLOT_TWO){
-				DoGrabEmptyKitAndPlaceInSlotTwo();
+				DoGrabEmptyKitAndPlaceInSlot(1);
 				return true;
 			}
 			
@@ -96,22 +95,25 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	
 	/** ACTIONS **/
 
-	public void DoGrabEmptyKitAndPlaceInSlotOne(){
+	public void DoGrabEmptyKitAndPlaceInSlot(int slot){
 		debug(" executing DoGrabEmptyKitAndPlaceInSlotOne()");
 		
 		// Tell server to do animation of moving empty kit from conveyor to the topSlot of the stand
-		server.moveEmptyKitToSlot(1);
+		server.moveEmptyKitToSlot(slot);
 
 		// Update the state of the Kit Robot
-		this.state = KitRobotAgentState.GRABING_EMPTY_KIT_AND_PLACING_IN_SLOT_ONE;
+		this.state = KitRobotAgentState.GRABING_EMPTY_KIT_AND_PLACING_IN_SLOT;
 		
 		// Wait until the animation is done
 		try {
+			debug("Waiting on the server to finish the animation moveEmptyKitToSlot()");
 			animation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
+		debug("Animation moveEmptyKitToSlot() was completed");
+
 		// Put an empty kit in the topSlot of the stand
 		stand.topSlot.kit = new Kit();
 		
@@ -119,11 +121,6 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stand.topSlot.state = MySlotState.EMPTY_KIT_JUST_PLACED;
 	}
 	
-	public void DoGrabEmptyKitAndPlaceInSlotTwo(){
-		server.moveEmptyKitToSlot(2);
-		state = KitRobotAgentState.GRABING_EMPTY_KIT_AND_PLACING_IN_SLOT_TWO;
-	}
-
 
 	/** ANIMATIONS **/
 

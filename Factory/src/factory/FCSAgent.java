@@ -6,7 +6,7 @@ import java.util.*;
 import factory.interfaces.*;
 
 //test commit/push
-public class FCSAgent {
+public class FCSAgent extends Agent implements FCS{
 	 ArrayList<MyKitConfig> myKitConfigs = new ArrayList<MyKitConfig>();
 	   PartsRobot partsRobot;
 	   Gantry gantry;
@@ -31,10 +31,12 @@ public class FCSAgent {
 	   public void msgInitialize(BinConfig binConfig) {
 		   this.binConfig = binConfig;
 		   this.passBinConfigurationToGantry = true;
+		   stateChanged();
 		}
 	   
 	   public void msgProduceKit(KitConfig kitConfig) {
 		   myKitConfigs.add(new MyKitConfig(kitConfig));
+		   stateChanged();
 		}
 	   
 	   
@@ -61,6 +63,7 @@ public class FCSAgent {
 	   private void changeGantryBinConfig(){
 	      gantry.msgChangeGantryBinConfig(this.binConfig);
 	      this.passBinConfigurationToGantry = false;
+	      stateChanged();
 	   }
 
 	   /**
@@ -69,6 +72,7 @@ public class FCSAgent {
 	   private void sendKitConfigToPartRobot(MyKitConfig mkc) { 
 	      this.partsRobot.msgMakeKit(mkc.kitConfig);
 	      mkc.state = MyKitConfigState.PRODUCING;
+	      stateChanged();
 	   }
 	   
 }
