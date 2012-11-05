@@ -33,6 +33,7 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 
 
 	// Ryan Cleary's Code
+	JButton normButton;
 	JButton topNestNeedsEar, topNestNeedsHelmet, bottomNestNeedsEar, bottomNestNeedsHelmet, resetButton;
 	FeederAgent feeder;
 	LaneAgent top, bottom;
@@ -106,6 +107,11 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		this.lane = lane;
 		this.bin = bin;
 
+		// This is our button for the normative, v.0 case.  We currently have other buttons in development, 
+		// but they are not guaranteed to work perfectly, as this is a work in progress.
+		normButton = new JButton("v.0 Normative Case");
+		normButton.addActionListener(this);
+
 		topNestNeedsEar = new JButton("Top Nest: Ear");
 		topNestNeedsEar.addActionListener(this);
 
@@ -143,6 +149,7 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		this.setPreferredSize(new Dimension(700,160));
 		this.setVisible(true);
 
+		this.add(normButton);
 		this.add(topNestNeedsEar);
 		this.add(topNestNeedsHelmet);
 		this.add(bottomNestNeedsEar);
@@ -242,7 +249,24 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 ////				lane.binExist = true;
 ////			}
 ////		}
-		if (ae.getSource() == resetButton)
+		if (ae.getSource() == normButton)
+		{
+			// Gantry config:
+			Bin bin0 = new Bin(p0);
+			Bin bin1 = new Bin(p1);
+
+			HashMap<Bin, Integer> binMap = new HashMap<Bin, Integer>(); 
+			binMap.put(bin0, 0);
+			binMap.put(bin1, 1);
+			gantry.msgChangeGantryBinConfig(new BinConfig(binMap));
+
+			// Dump part1 into bins and feed it down the lanes.
+			n0.msgYouNeedPart(p0);
+			
+			// Dump part2 into bins and feed it down the lanes.
+			n1.msgYouNeedPart(p1);
+		}
+	else if (ae.getSource() == resetButton)
 		{
 			// Clear the graphics
 			lane.lane1PurgeOn = true;
@@ -254,6 +278,7 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 			lane.feederOn = false;		
 
 			setUp();
+
 		}
 		else if (ae.getSource() == topNestNeedsEar)
 		{
