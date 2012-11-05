@@ -12,13 +12,14 @@ import factory.interfaces.*;
 public class VisionAgent extends Agent implements Vision {
 	
 	enum KitPicRequestState { NEED_TO_INSPECT, INSPECTED }
-	enum InspectionResults { PASSED, FAILED }
+	public enum InspectionResults { PASSED, FAILED }
 	enum PictureRequestState { NESTS_READY, ASKED_PARTS_ROBOT, PARTS_ROBOT_CLEAR, PICTURE_TAKEN }
 	
 	ArrayList<PictureRequest> picRequests = new ArrayList<PictureRequest>(); 
 	ArrayList<KitPicRequest> kitPicRequests = new ArrayList<KitPicRequest>();     
 	KitRobot kitRobot;
 	PartsRobot partsRobot;
+	Stand stand;
 	Random r = new Random();
 	
 	class KitPicRequest {
@@ -116,7 +117,7 @@ public class VisionAgent extends Agent implements Vision {
 		      k.inspectionResults = InspectionResults.PASSED;
 		   }
 		   k.state = KitPicRequestState.INSPECTED;
-		   kitRobot.msgInspectionResults(k.inspectionResults); //can't pass enum.  change to a string?
+		   stand.msgInspectionResults(k.inspectionResults); //can't pass enum.  change to a string?
 		}
 		private void takePicture(PictureRequest pr){
 		   int randomNumberOne = r.nextInt(3);
