@@ -2,8 +2,8 @@
 
 package factory.graphics;
 
-public class GraphicLaneManagerClient {
 
+public class GraphicLaneManagerClient {
 	public GraphicLaneManagerClient(){
 		
 	}

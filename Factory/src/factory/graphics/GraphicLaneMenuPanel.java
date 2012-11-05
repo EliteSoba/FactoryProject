@@ -2,6 +2,7 @@
 
 package factory.graphics;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -19,15 +20,17 @@ import factory.NestAgent;
 import factory.Part;
 import factory.FeederAgent.DiverterState;
 import factory.VisionAgent;
+import factory.interfaces.Feeder;
 import factory.test.mock.MockGantry;
 
 
 public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 	// Minh's Code:
 	JButton startLaneButton, switchLaneButton, placeBinButton,stopLaneButton,dumpNestButton, feederOnButton,feederOffButton, purgeFeederButton;
-	
-	
+
+
 	// Ryan Cleary's Code
+	JButton topNestNeedsEar, topNestNeedsHelmet, bottomNestNeedsEar, bottomNestNeedsHelmet;
 	FeederAgent feeder;
 	LaneAgent top, bottom;
 	NestAgent n0,n1,n2,n3;
@@ -36,14 +39,16 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 	Part p0,p1,p2;
 
 
-	protected void setUp() throws Exception {
+	protected void setUp() {
 		feeder = new FeederAgent("feeder",0);
 		feeder.startThread();
+		feeder.glmp = this;
 		top = new LaneAgent();
 		top.startThread();
 		bottom = new LaneAgent();
 		bottom.startThread();
 		gantry = new GantryAgent();
+		gantry.glmp = this;
 		gantry.startThread();
 		vision = new VisionAgent(null,null,null);
 		vision.startThread();
@@ -60,12 +65,12 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		n3 = new NestAgent();
 		n3.startThread();
 
-		p0 = new Part("Triangle");
+		p0 = new Part("ear");
 		p0.averageDelayTime = 15; // it takes 20 seconds for this part to go all the way down the lane and then 
-								  // start stacking up.  after 20 seconds, the feeder should stop feeding.
-		p1 = new Part("Circle");
+		// start stacking up.  after 20 seconds, the feeder should stop feeding.
+		p1 = new Part("helmet");
 		p1.averageDelayTime = 12; 
-		p2 = new Part("Triangle");
+		p2 = new Part("ear");
 		p2.averageDelayTime = 10;
 
 		n0.setLane(top);
@@ -79,14 +84,14 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		feeder.setUpLanes(top, bottom);
 		feeder.setGantry(gantry); //for now
 		feeder.diverter = DiverterState.FEEDING_BOTTOM;
-		
-		
+
+
 		Bin bin0 = new Bin(p0);
 		HashMap<Bin, Integer> binMap0 = new HashMap<Bin, Integer>(); 
 		binMap0.put(bin0, 0);
 
 		gantry.msgChangeGantryBinConfig(new BinConfig(binMap0));
-		
+
 		Bin bin1 = new Bin(p1);
 		HashMap<Bin, Integer> binMap1 = new HashMap<Bin, Integer>(); 
 		binMap1.put(bin1, 1);
@@ -101,8 +106,23 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 	public GraphicLaneMenuPanel(GraphicLaneManager lane, GraphicBin bin){
 		this.lane = lane;
 		this.bin = bin;
-
 		
+		this.setLayout(new GridLayout(5,3));
+
+		topNestNeedsEar = new JButton("Top Nest: Ear");
+		topNestNeedsEar.addActionListener(this);
+
+		topNestNeedsHelmet = new JButton("Top Nest: Helmet");
+		topNestNeedsHelmet.addActionListener(this);
+
+		bottomNestNeedsEar = new JButton("Bottom Nest: Ear");
+		bottomNestNeedsEar.addActionListener(this);
+
+		bottomNestNeedsHelmet = new JButton("Bottom Nest: Helmet");
+		bottomNestNeedsHelmet.addActionListener(this);
+
+
+
 		startLaneButton = new JButton("Start Lane");
 		startLaneButton.addActionListener(this);
 		switchLaneButton = new JButton("Switch Lane");
@@ -119,9 +139,14 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		purgeFeederButton.addActionListener(this);
 		dumpNestButton = new JButton("Dump Nest");
 		dumpNestButton.addActionListener(this);
-		
+
 		this.setPreferredSize(new Dimension(700,50));
 		this.setVisible(true);
+
+		this.add(topNestNeedsEar);
+		this.add(topNestNeedsHelmet);
+		this.add(bottomNestNeedsEar);
+		this.add(bottomNestNeedsHelmet);
 		this.add(placeBinButton);
 		this.add(startLaneButton);
 		this.add(stopLaneButton);
@@ -138,17 +163,14 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		 * 4) Two of the same kind of part, different lanes.
 		 * 5) Two of the same kind of part, same lane.
 		 */
-		try {
-			setUp();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
+		setUp();
 
 		//singlePartRequest(); // TEST CASE #1
 		//twoDifferentPartRequestsForDifferentLanes(); // TEST CASE #2
 		//twoDifferentPartRequestsForSameLane(); // TEST CASE #3
 		//twoSamePartRequestsForDifferentLanes(); // TEST CASE #4
-		twoSamePartRequestsForSameLanes(); // TEST CASE #5
+		//twoSamePartRequestsForSameLanes(); // TEST CASE #5
 	}
 
 	public void singlePartRequest() {
@@ -184,23 +206,22 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		// First Part:
 		n0.msgYouNeedPart(p0);
 
-		
 		// Second Part:
 		n0.msgYouNeedPart(p1);
 	}
-	
+
 	public void twoSamePartRequestsForDifferentLanes() {
 		// First Part:
 		n0.msgYouNeedPart(p0);
-		
+
 		// Second Part:
 		n1.msgYouNeedPart(p0); 
 	}
-	
+
 	public void twoSamePartRequestsForSameLanes() {
 		// First Part:
 		n0.msgYouNeedPart(p0);
-		
+
 		// Second Part:
 		n0.msgYouNeedPart(p0); 
 	}
@@ -214,6 +235,17 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 				lane.placedBin = true;
 				lane.binExist = true;
 			}
+		}
+		else if (ae.getSource() == topNestNeedsEar)
+		{
+			setUp();
+
+			Bin bin0 = new Bin(p0);
+			HashMap<Bin, Integer> binMap = new HashMap<Bin, Integer>(); 
+			binMap.put(bin0, 0);
+
+			gantry.msgChangeGantryBinConfig(new BinConfig(binMap));
+			n0.msgYouNeedPart(p0);
 		}
 		else if(ae.getSource() == startLaneButton){
 			if(!lane.laneStart){
@@ -246,4 +278,40 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 			lane.nest1Items.clear();
 		}
 	}
+
+
+	/** ANIMATION METHODS **/
+	public void doStartFeeding(int feederSlot, Part part) {
+		if(!lane.laneStart)
+		{
+			System.out.println("LANE.START");
+			lane.feederOn = true;
+			lane.laneStart = true;
+		}
+	}
+
+	public void doStopFeeding(int feederSlot) {
+		lane.laneStart = false;
+	}
+
+	public void doPurgeFeeder(int feederSlot) {
+		bin = null;
+		lane.bin = null;
+		lane.binExist = false;
+		lane.feederOn = false;		
+	}
+
+	public void doBringRequestedBin(Integer integer, Feeder f) {
+		if(!lane.placedBin){
+			GraphicBin b = new GraphicBin();
+			lane.bin = b;
+			lane.currentItemCount = 0;
+			lane.placedBin = true;
+			lane.binExist = true;
+		}
+	}
 }
+
+
+
+

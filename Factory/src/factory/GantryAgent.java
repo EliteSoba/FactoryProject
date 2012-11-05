@@ -3,9 +3,12 @@ package factory;
 import java.util.ArrayList;
 import agent.Agent;
 import java.util.*;
+
+import factory.graphics.GraphicLaneMenuPanel;
 import factory.interfaces.*;
 
 public class GantryAgent extends Agent implements Gantry {
+	public GraphicLaneMenuPanel glmp;
 	public ArrayList<MyBin> myBins = new ArrayList<MyBin>();   
 	BinConfig binConfig;
 
@@ -58,15 +61,15 @@ public class GantryAgent extends Agent implements Gantry {
 	private void goFetchTheRequestedBin(MyBin b) {
 		DoPickupPurgeBin(); //animation message
 		DoRefillPurgeBin(binConfig.binList.get(b.pt));
-		DoBringRequestedBin(binConfig.binList.get(b.pt /*b.fdr; not sure why this parameter is here.  leaving it for now*/));
+		DoBringRequestedBin(binConfig.binList.get(b.pt),b.fdr);
 		b.fdr.msgHereAreParts(b.pt);
 		b.state = MyBinState.DELIVERED;
 		stateChanged();
 	}
 
-	private void DoBringRequestedBin(Integer integer) {
+	private void DoBringRequestedBin(Integer integer,Feeder f) {
 		print("Bringing requested bin");
-		
+		glmp.doBringRequestedBin(integer,f);
 	}
 
 	private void DoRefillPurgeBin(Integer integer) {

@@ -5,6 +5,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import agent.Agent;
+import factory.graphics.GraphicLaneManagerClient;
+import factory.graphics.GraphicLaneMenuPanel;
 import factory.interfaces.Feeder;
 import factory.interfaces.Gantry;
 import factory.interfaces.Lane;
@@ -14,7 +16,7 @@ import factory.interfaces.Vision;
 public class FeederAgent extends Agent implements Feeder {
 
 	/** DATA **/
-	//private GraphicLaneManagerClient graphicLaneManagerClient;
+	public GraphicLaneMenuPanel glmp;
 	private String name;
 	public int feederSlot;
 	public ArrayList<MyPartRequest> requestedParts = new ArrayList<MyPartRequest>();   
@@ -429,17 +431,17 @@ public class FeederAgent extends Agent implements Feeder {
 	/** ANIMATIONS **/
 	private void DoStartFeeding(Part part) {
 		debug("Feeder " + feederSlot + " started feeding.");
-//		graphicLaneManagerClient.doStartFeeding(feederSlot,part);
+		glmp.doStartFeeding(feederSlot,part);
 	}
 
-	private void DoStopFeeding() {
+	private void DoStopFeeding() { 
 		debug("stopped feeding.");
-//		graphicLaneManagerClient.doStopFeeding(feederSlot);
+		glmp.doStopFeeding(feederSlot);
 	}
 	
 	private void DoPurgeFeeder() {
 		debug("purging feeder.");
-//		graphicLaneManagerClient.doPurgeFeeder(feederSlot);
+		glmp.doPurgeFeeder(feederSlot);
 	}
 
 	private void DoSwitchLane() {

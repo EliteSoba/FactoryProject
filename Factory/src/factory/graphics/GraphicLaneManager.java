@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
+import factory.FeederAgent;
+
 //Parts dumped into bins and fed down the lanes
 
 public class GraphicLaneManager extends JFrame implements ActionListener{
@@ -103,6 +105,8 @@ public class GraphicLaneManager extends JFrame implements ActionListener{
 	}	
 	
 	
+
+
 	public void actionPerformed(ActionEvent ae){
 		repaint();
 	}
