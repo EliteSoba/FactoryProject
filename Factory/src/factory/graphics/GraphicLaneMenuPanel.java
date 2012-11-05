@@ -107,8 +107,6 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		this.lane = lane;
 		this.bin = bin;
 		
-		this.setLayout(new GridLayout(5,3));
-
 		topNestNeedsEar = new JButton("Top Nest: Ear");
 		topNestNeedsEar.addActionListener(this);
 
@@ -140,7 +138,7 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		dumpNestButton = new JButton("Dump Nest");
 		dumpNestButton.addActionListener(this);
 
-		this.setPreferredSize(new Dimension(700,50));
+		this.setPreferredSize(new Dimension(700,160));
 		this.setVisible(true);
 
 		this.add(topNestNeedsEar);
@@ -291,7 +289,7 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 	}
 
 	public void doStopFeeding(int feederSlot) {
-		lane.laneStart = false;
+		lane.feederOn = false;
 	}
 
 	public void doPurgeFeeder(int feederSlot) {

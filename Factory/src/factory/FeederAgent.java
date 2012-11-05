@@ -366,6 +366,7 @@ public class FeederAgent extends Agent implements Feeder {
 		okayToPurgeTimer.schedule(new TimerTask(){
 			public void run() {
 				state = FeederState.OK_TO_PURGE;
+				DoStopFeeding(); // for v.0
 				debug("it is now okay to purge this feeder.");
 				stateChanged();
 			}
@@ -416,10 +417,6 @@ public class FeederAgent extends Agent implements Feeder {
 		this.gantry = g;
 	}
 	
-	/** Set the connection the graphic lane manager client. **/
-//	public void setGraphicLaneManagerClient(GraphicLaneManagerClient glmc) {
-//		this.graphicLaneManagerClient = glmc;
-//	}
 
 	/** This method adds a MyPartRequest to the requestedParts list. 
 	 *  It is used for testing purposes only.
@@ -455,15 +452,15 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	private void DoPurgeTopLane() {
+		debug("purging top lane");
 //		graphicLaneManagerClient.doPurgeTopLane(feederSlot);
 	}
 
 	private void DoPurgeBottomLane() {
+		debug("purging bottom lane");
 //		graphicLaneManagerClient.doPurgeBottomLane(feederSlot);
 	}
 
-
-	
 
 
 }

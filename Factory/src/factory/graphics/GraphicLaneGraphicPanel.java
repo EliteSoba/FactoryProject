@@ -20,7 +20,7 @@ public class GraphicLaneGraphicPanel extends JPanel{
 		//itemsIcon = new ImageIcon("./src/image/" + bin.partName + "Stack.png");
 		feederHasItems = false;
 
-		this.setPreferredSize(new Dimension(700,300));
+		this.setPreferredSize(new Dimension(700,200));
 		this.setVisible(true);
 	}
 
