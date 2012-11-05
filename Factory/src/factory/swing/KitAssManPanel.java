@@ -6,7 +6,7 @@ import javax.swing.*;
 
 
 public class KitAssManPanel extends JPanel{
-
+	private static final long serialVersionUID = -528843836963262949L;
 	JLabel title;
 	JLabel subtitle;
 	JButton incorrectKits;
