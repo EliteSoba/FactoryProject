@@ -12,15 +12,13 @@ public class GraphicKittingStation {
 	
 	private int x, y; //Coordinates
 	public static final int MAX_KITS = 2; //Max number of kits this station can hold
-	//private ArrayList<GraphicKit> kits; //The kits it is holding
-	private GraphicKit[] kits;
-	private GraphicKit check;
+	private GraphicKit[] kits; //The kits it is holding
+	private GraphicKit check; //The kit in the inspection area
 	
 	public GraphicKittingStation(int x, int y) {
 		//Constructor
 		this.x = x;
 		this.y = y;
-		//kits = new ArrayList<GraphicKit>();
 		kits = new GraphicKit[MAX_KITS];
 		for (int i = 0; i < MAX_KITS; i++)
 			kits[i] = null;
@@ -41,9 +39,6 @@ public class GraphicKittingStation {
 	
 	public void revalidateKits() {
 		//Repositions kits to set positions
-		/*for (int i = 0; i < kits.size(); i++) {
-			kits.get(i).move(x+5, y+100*i+10);
-		}*/
 		for (int i = 0; i < MAX_KITS; i++)
 			if (kits[i] != null)
 				kits[i].move(x+5, y+100*i+10);
@@ -54,23 +49,13 @@ public class GraphicKittingStation {
 	public void drawKits(Graphics g) {
 		//Draws the kits
 		revalidateKits();
-		/*for (int i = 0; i < kits.size(); i++) {
-			kits.get(i).paint(g);
-		}*/
+		
 		for (int i = 0; i < MAX_KITS; i++)
 			if (kits[i] != null)
 				kits[i].paint(g);
 		if (check != null)
 			check.paint(g);
 	}
-	
-	/*public void addKit(GraphicKit kit) {
-		//Adds a kit to the station
-		if (kits.size() >= MAX_KITS)
-			return;
-		//kit.move(x+10, y+100*kits.size()+10);
-		kits.add(kit);
-	}*/
 	
 	/**DO NOT USE*/
 	public boolean addKit(GraphicKit kit) {
@@ -104,7 +89,6 @@ public class GraphicKittingStation {
 	
 	public GraphicKit getKit(int index) {
 		//Gets the kit at the index
-		//return kits.get(index);
 		return kits[index];
 	}
 	
@@ -116,7 +100,6 @@ public class GraphicKittingStation {
 		//Removes the kit at the index for transfer
 		GraphicKit temp = kits[index];
 		kits[index] = null;
-		//return kits.remove(index);
 		return temp;
 	}
 	
@@ -129,13 +112,11 @@ public class GraphicKittingStation {
 	
 	public boolean hasKits() {
 		//Returns if the station has any kits
-		//return kits.size() != 0;
 		return kits[0] != null || kits[1] != null;
 	}
 	
 	public boolean maxed() {
 		//Returns if the station is at maximum capacity or not
-		//return kits.size() == MAX_KITS;
 		return kits[0] != null && kits[1] != null;
 	}
 	
@@ -145,7 +126,7 @@ public class GraphicKittingStation {
 	}
 	
 	public void dropCheck() {
-		//Rather unnecessary, but kinda nice for readability
+		//Rather unnecessary, but kind of nice for readability
 		check = null;
 	}
 }
