@@ -28,8 +28,7 @@ public class GraphicLaneManager extends JFrame implements ActionListener{
 	int feederX,feederY;
 	
 	//Items
-	ArrayList <GraphicItem> lane1Items;
-	ArrayList <GraphicItem> lane2Items;
+	ArrayList <GraphicItem> laneItems;
 	ArrayList <GraphicItem> nest1Items;
 	ArrayList <GraphicItem> nest2Items;
 	ArrayList <Boolean> lane1QueueTaken;			//The queue
@@ -44,24 +43,19 @@ public class GraphicLaneManager extends JFrame implements ActionListener{
 	int currentItemCount;		//Current item to be moved
 	int binItemCount;			//current item in bin to dump
 	boolean placedBin;			//true is bin is added to feeder
-	boolean feederOn;			//Feeder on/off
-	boolean binExist;			
 	
 	public GraphicLaneManager(){
 		bin = new GraphicBin();
 		//declaration of variables
-		lane1Items = new ArrayList<GraphicItem>();
-		lane2Items = new ArrayList<GraphicItem>();
+		laneItems = new ArrayList<GraphicItem>();
 		nest1Items = new ArrayList<GraphicItem>();
 		nest2Items = new ArrayList<GraphicItem>();
 		lane1QueueTaken = new ArrayList<Boolean>();
 		lane2QueueTaken = new ArrayList<Boolean>();
-		vX = -8; vY = 8;
+		vX = -8; vY = 0;
 		lane_xPos = 20; lane_yPos = 30;					//MODIFY to change Lane position
 		laneStart = false;
-		divergeUp = false;
-		feederOn = false;
-		binExist = true;
+		divergeUp = true;
 		timerCount = 1; currentItemCount = 0; binItemCount = 0;
 		
 		//Location of bin to appear. x is fixed
@@ -77,12 +71,12 @@ public class GraphicLaneManager extends JFrame implements ActionListener{
 		}
 		*/
 		//Declaration of variables
-		lane1 = new ImageIcon("./src/image/lane.png");
-		lane2 = new ImageIcon("./src/image/lane.png");
-		divergeLane = new ImageIcon("./src/image/divergeLane.png");
-		nest1 = new ImageIcon("./src/image/nest.png");
-		nest2 = new ImageIcon("./src/image/nest.png");
-		feeder = new ImageIcon("./src/image/feeder.png");
+		lane1 = new ImageIcon("./Images/lane.png");
+		lane2 = new ImageIcon("./Images/lane.png");
+		divergeLane = new ImageIcon("./Images/divergeLane.png");
+		nest1 = new ImageIcon("./Images/nest.png");
+		nest2 = new ImageIcon("./Images/nest.png");
+		feeder = new ImageIcon("./Images/feeder.png");
 
 		//Declaration of JFrame
 		this.setVisible(true);
@@ -98,7 +92,6 @@ public class GraphicLaneManager extends JFrame implements ActionListener{
 		this.add(graphicPanel,BorderLayout.NORTH);
 		this.add(menuPanel,BorderLayout.SOUTH);
 		
-		repaint();
 		new javax.swing.Timer(50,this).start();
 	}	
 	
