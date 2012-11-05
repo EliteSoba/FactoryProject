@@ -20,7 +20,7 @@ public class FeederAgent extends Agent implements Feeder {
 	public ArrayList<MyPartRequest> requestedParts = new ArrayList<MyPartRequest>();   
 	public MyLane topLane;
 	public MyLane bottomLane;
-	Vision vision;
+	public Vision vision;
 	public DiverterState diverter = DiverterState.FEEDING_BOTTOM;
 	public Gantry gantry;
 	public Part currentPart;
@@ -30,7 +30,7 @@ public class FeederAgent extends Agent implements Feeder {
 	public Timer feederEmptyTimer = new Timer();
 	public Timer partResettleTimer = new Timer();
 
-	public enum FeederState { EMPTY, WAITING_FOR_PARTS, CONTAINS_PARTS, OK_TO_PURGE, SHOULD_START_FEEDING }
+	public enum FeederState { EMPTY, WAITING_FOR_PARTS, CONTAINS_PARTS, OK_TO_PURGE, SHOULD_START_FEEDING, IS_FEEDING }
 	public enum DiverterState { FEEDING_TOP, FEEDING_BOTTOM }
 
 	public enum MyPartRequestState { NEEDED, ASKED_GANTRY, DELIVERED }
@@ -65,7 +65,7 @@ public class FeederAgent extends Agent implements Feeder {
 	public class MyLane {
 
 		public Lane lane;
-		public MyLaneState state; 
+		public MyLaneState state = MyLaneState.EMPTY;
 		public JamState jamState;
 		public Part part;
 		public boolean readyForPicture = false;
@@ -147,8 +147,10 @@ public class FeederAgent extends Agent implements Feeder {
 
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
 		{
+			debug("---");
 			for (MyPartRequest p : requestedParts)
 			{
+				debug("+++");
 				if (p.state == MyPartRequestState.NEEDED)
 				{
 					askGantryForPart(p);
@@ -171,11 +173,13 @@ public class FeederAgent extends Agent implements Feeder {
 			// Which lane should it feed to?
 			if (topLane.part == currentPart && topLane.state == MyLaneState.EMPTY)
 			{
+				state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
 				StartFeeding();
 				return true;
 			}
 			else if (bottomLane.part == currentPart && bottomLane.state == MyLaneState.EMPTY)
 			{
+				state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
 				StartFeeding();
 				return true;
 			}
@@ -349,26 +353,30 @@ public class FeederAgent extends Agent implements Feeder {
 		okayToPurgeTimer.schedule(new TimerTask(){
 			public void run() {
 				state = FeederState.OK_TO_PURGE;
+				debug("it is now okay to purge this feeder.");
+				stateChanged();
 			}
-		},10000); // okay to purge after 10 seconds of feeding
+		},(long) (currentPart.averageDelayTime / 2) * 1000); // okay to purge after this many seconds
 
 		feederEmptyTimer.schedule(new TimerTask(){
 			public void run(){		    
 				partResettleTimer.schedule(new TimerTask() {
 					public void run() {
-
+						debug(currentLane.lane.getName() + " is ready for a picture.");
 						currentLane.readyForPicture = true;
 
 						if (bottomLane.readyForPicture == true && topLane.readyForPicture == true)
 						{
+							debug("both of my nests are ready for a picture.");
 							vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
 							topLane.readyForPicture = false;
 							bottomLane.readyForPicture = false;
 						}
+						stateChanged();
 					}
 				}, 3000); // 3 seconds to resettle in the nest
 			}
-		}, (long) currentPart.averageDelayTime); // time it takes the part to move down the lane and fill a nest 
+		}, (long) currentPart.averageDelayTime * 1000); // time it takes the part to move down the lane and fill a nest 
 
 		//	Timer.new(30000, { state = FeederState.OK_TO_PURGE; });
 		//		Timer.new(currentPart.averageDelayTime,{vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this) });

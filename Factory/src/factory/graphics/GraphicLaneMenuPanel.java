@@ -4,16 +4,21 @@ package factory.graphics;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import factory.Bin;
+import factory.BinConfig;
 import factory.FeederAgent;
 import factory.GantryAgent;
 import factory.LaneAgent;
 import factory.NestAgent;
 import factory.Part;
 import factory.FeederAgent.DiverterState;
+import factory.VisionAgent;
 import factory.test.mock.MockGantry;
 
 
@@ -22,6 +27,7 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 	LaneAgent top, bottom;
 	NestAgent n0,n1,n2,n3;
 	GantryAgent gantry;
+	VisionAgent vision;
 	Part p0,p1,p2;
 
 	
@@ -34,7 +40,10 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		bottom.startThread();
 		gantry = new GantryAgent();
 		gantry.startThread();
-
+		vision = new VisionAgent(null,null,null);
+		vision.startThread();
+		feeder.vision = vision;
+		
 		n0 = new NestAgent();
 		n0.startThread();
 		n1 = new NestAgent();
@@ -47,13 +56,18 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		n3.startThread();
 
 		p0 = new Part("Triangle");
+//		p0.averageDelayTime = 12; // it takes 12 seconds for this part to go all the way down the lane and then 
+//								  // start stacking up.  after 12 seconds, the feeder should stop feeding.
 		p1 = new Part("Circle");
 		p2 = new Part("Square");
-
 
 		n0.setLane(top);
 		top.setNest(n0);
 		top.setFeeder(feeder);
+
+		n1.setLane(bottom);
+		bottom.setNest(n1);
+		bottom.setFeeder(feeder);
 
 		feeder.setUpLanes(top, bottom);
 		feeder.setGantry(gantry); //for now
@@ -100,11 +114,37 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 			e.printStackTrace();
 		}
 		
-		singlePartRequest(); // TEST CASE #1
+		//singlePartRequest(); // TEST CASE #1
+		twoDifferentPartRequestsForDifferentLanes(); // TEST CASE #2
 	}
 	
 	public void singlePartRequest() {
+		Bin bin0 = new Bin(p0);
+		HashMap<Bin, Integer> binMap = new HashMap<Bin, Integer>(); 
+		binMap.put(bin0, 0);
+		
+
+		gantry.msgChangeGantryBinConfig(new BinConfig(binMap));
 		n0.msgYouNeedPart(p0);
+	}
+	
+	public void twoDifferentPartRequestsForDifferentLanes() {
+		// First Part:
+		Bin bin0 = new Bin(p0);
+		HashMap<Bin, Integer> binMap0 = new HashMap<Bin, Integer>(); 
+		binMap0.put(bin0, 0);
+		
+		gantry.msgChangeGantryBinConfig(new BinConfig(binMap0));
+		n0.msgYouNeedPart(p0);
+		
+		// Second Part:
+		Bin bin1 = new Bin(p1);
+		HashMap<Bin, Integer> binMap1 = new HashMap<Bin, Integer>(); 
+		binMap1.put(bin1, 1);
+		
+		gantry.msgChangeGantryBinConfig(new BinConfig(binMap1));
+		n1.msgYouNeedPart(p1);
+		
 	}
 	
 	public void actionPerformed(ActionEvent ae){
