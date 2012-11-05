@@ -22,7 +22,7 @@ public class GraphicItem{
 		stepY = stepYSize;
 		divergeUp = false;
 		//stateDiverge = true; stateLane = false;
-		imagePath = "Images/ear.png";
+		imagePath = "Images/item.png";
 			itemImage = new ImageIcon(imagePath);
 	}
 	
