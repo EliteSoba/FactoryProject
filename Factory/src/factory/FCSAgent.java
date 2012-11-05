@@ -42,12 +42,16 @@ public class FCSAgent {
 	   public boolean pickAndExecuteAnAction() {
 		   if (this.passBinConfigurationToGantry == true){
 			   changeGantryBinConfig();
+			   return true;
 		   }
 		   for(MyKitConfig mkc: myKitConfigs){
 			   if (mkc.state == MyKitConfigState.PENDING){
 				   sendKitConfigToPartRobot(mkc);
+				   return true;
 			   }
 		   }
+		   
+		   return false;
 	   }
 
 	// *** ACTIONS ***
