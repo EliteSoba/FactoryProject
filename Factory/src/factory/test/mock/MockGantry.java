@@ -22,7 +22,9 @@ public class MockGantry extends MockAgent implements Gantry {
 	}
 
 	@Override
-	public void msgFeederNeeds(Part pt, Feeder feeder) {
-		log.add(new LoggedEvent("msgFeederNeeds(...)")); 
+	public void msgFeederNeedsPart(Part pt, Feeder feeder) {
+		log.add(new LoggedEvent("msgFeederNeedsPart(...)")); 
 	}
+
+
 }

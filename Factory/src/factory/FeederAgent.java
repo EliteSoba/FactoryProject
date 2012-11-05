@@ -21,7 +21,7 @@ public class FeederAgent extends Agent implements Feeder {
 	public MyLane topLane;
 	public MyLane bottomLane;
 	Vision vision;
-	public DiverterState diverter; 
+	public DiverterState diverter = DiverterState.FEEDING_BOTTOM;
 	public Gantry gantry;
 	public Part currentPart;
 	Bin dispenserBin; // need to use this
@@ -331,7 +331,6 @@ public class FeederAgent extends Agent implements Feeder {
 
 		feederEmptyTimer.schedule(new TimerTask(){
 			public void run(){		    
-				state = FeederState.OK_TO_PURGE;
 				partResettleTimer.schedule(new TimerTask() {
 					public void run() {
 
@@ -346,7 +345,7 @@ public class FeederAgent extends Agent implements Feeder {
 					}
 				}, 3000); // 3 seconds to resettle in the nest
 			}
-		}, (long) currentPart.averageDelayTime); // time it takes the part to move down the lane
+		}, (long) currentPart.averageDelayTime); // time it takes the part to move down the lane and fill a nest 
 
 		//	Timer.new(30000, { state = FeederState.OK_TO_PURGE; });
 		//		Timer.new(currentPart.averageDelayTime,{vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this) });
