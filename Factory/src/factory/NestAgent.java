@@ -28,6 +28,7 @@ public class NestAgent extends Agent implements Nest {
 		nestState = NestState.NEEDS_TO_DUMP;
 	}
 	public void msgYouNeedPart(Part part) {
+		debug("received msgYouNeedPart("+part.name+").");
 		myParts.add(new MyPart(part));
 	}
 
@@ -59,6 +60,7 @@ public class NestAgent extends Agent implements Nest {
 	}
 	
 	public void askLaneToSendParts(MyPart part) { 
+		debug("asking lane to send parts of type "+part.pt.name + ".");
 		part.state = MyPartState.REQUESTED;
 		myLane.msgNestNeedsPart(part.pt);
 	}
@@ -66,7 +68,7 @@ public class NestAgent extends Agent implements Nest {
 	
 	/** ANIMATIONS **/
 	private void DoDumpNest() {
-		print("dumping.");
+		debug("dumping.");
 	}
 	
 	

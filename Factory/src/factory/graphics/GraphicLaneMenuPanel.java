@@ -8,9 +8,48 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import factory.FeederAgent;
+import factory.GantryAgent;
+import factory.LaneAgent;
+import factory.NestAgent;
+import factory.Part;
+import factory.FeederAgent.DiverterState;
+import factory.test.mock.MockGantry;
+
 
 public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
+	FeederAgent feeder;
+	LaneAgent top, bottom;
+	NestAgent n0,n1,n2,n3;
+	GantryAgent gantry;
+	Part p0,p1,p2;
 
+	
+	protected void setUp() throws Exception {
+		feeder = new FeederAgent("feeder",0);
+		top = new LaneAgent();
+		bottom = new LaneAgent();
+		gantry = new GantryAgent();
+
+		n0 = new NestAgent();
+		n1 = new NestAgent();
+		n2 = new NestAgent();
+		n3 = new NestAgent();
+		p0 = new Part("Triangle");
+		p1 = new Part("Circle");
+		p2 = new Part("Square");
+
+
+		n0.setLane(top);
+		top.setNest(n0);
+		top.setFeeder(feeder);
+
+		feeder.setUpLanes(top, bottom);
+		feeder.setGantry(gantry); //for now
+		feeder.diverter = DiverterState.FEEDING_BOTTOM;
+	}
+	
+	
 	GraphicLaneManager lane;
 	GraphicBin bin;
 	
@@ -36,6 +75,26 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		this.add(startLane1Button);
 		this.add(startLane2Button);
 		//this.add(dumpNestButton);
+		
+		/* CASES TO TEST:
+		* 1) Single request.
+		* 2) Two different part requests, different lanes/
+		* 3) Two different part requests, same lane.
+		* 4) Two of the same kind of part, different lanes.
+		* 5) Two of the same kind of part, same lane.
+		*/
+		try {
+			setUp();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		singlePartRequest();
+	}
+	
+	public void singlePartRequest() {
+		n0.msgYouNeedPart(p0);
+		System.out.println("Msged n0 msgYouNeedPart(p0)");
 	}
 	
 	public void actionPerformed(ActionEvent ae){
