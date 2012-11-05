@@ -1,6 +1,8 @@
 package factory;
 
 import java.util.ArrayList;
+import java.util.TimerTask;
+
 import agent.Agent;
 import java.util.*;
 
@@ -64,6 +66,22 @@ public class VisionAgent extends Agent implements Vision {
 		   }
 		}
 	}
+	
+	
+	//the following message existed in the wiki, but the parameter is different.  It takes a timer rather than feeder
+	@Override
+	public void msgMyNestsReadyForPicture(Nest nest, Nest nest2,
+			TimerTask timerTask) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	//this message was not in the wiki, but existed in the interface.  comes from stand agent
+	@Override
+	public void msgAnalyzeKitAtInspection(Kit kit) {
+		// TODO Auto-generated method stub
+		
+	}
 	// *** SCHEDULER ***
 	public boolean pickAndExecuteAnAction() {
 		
@@ -81,7 +99,7 @@ public class VisionAgent extends Agent implements Vision {
 		
 		for(KitPicRequest k: kitPicRequests){
 			if(k.state == KitPicRequestState.NEED_TO_INSPECT){
-				takePicture(k);
+				inspectKit(k);
 			}
 		}
 
@@ -90,23 +108,23 @@ public class VisionAgent extends Agent implements Vision {
 		
 	// *** ACTIONS ***
 	private void inspectKit(KitPicRequest k) {
-		   int randomNum = r.nextInt //Random.new(0,10);
+		   int randomNum = r.nextInt(11); //Random.new(0,10);
 		   if (randomNum == 0) {
-		      k.inspectionResults = FAILED;
+		      k.inspectionResults = InspectionResults.FAILED;
 		   }
 		   else {
-		      k.inspectionResults = PASSED;
+		      k.inspectionResults = InspectionResults.PASSED;
 		   }
-		   k.state = INSPECTED;
-		   kitRobot.msgInspectionResults(k.inspectionResults);
+		   k.state = KitPicRequestState.INSPECTED;
+		   kitRobot.msgInspectionResults(k.inspectionResults); //can't pass enum.  change to a string?
 		}
 		private void takePicture(PictureRequest pr){
-		   int randomNumberOne = Random.new(0,2);
-		   int randomNumberTwo = Random.new(0,2);
+		   int randomNumberOne = r.nextInt(3);
+		   int randomNumberTwo = r.nextInt(3);
 		   DoTakePicture();
 		   partsRobot.msgPictureTaken(pr.nestOne, pr.nestTwo);
 		   if(randomNumberOne == 0) {
-		      pr.coordinateOne = new Coordinate(); 
+		      pr.coordinateOne = new Coordinate(10, 10); //the parameters for coordinates don't mean anything in this case, or does it?
 		      partsRobot.msgHereArePartCoordiantes(pr.nestOne.part, pr.coordinateOne);
 		   }
 		   else if(randomNumberOne == 1) {
@@ -117,7 +135,7 @@ public class VisionAgent extends Agent implements Vision {
 		   }
 
 		   if(randomNumberTwo == 0) {
-		      pr.coordinateTwo = new Coordinate(); 
+		      pr.coordinateTwo = new Coordinate(10, 10); 
 		      partsRobot.msgHereArePartCoordiantes(pr.nestTwo.part, pr.coordinateTwo);
 		   }
 		   else if(randomNumberTwo == 1) {
@@ -126,13 +144,18 @@ public class VisionAgent extends Agent implements Vision {
 		   else if(randomNumberTwo == 2) {
 		      pr.feeder.msgEmptyNest(pr.nestTwo);
 		   }
-		   picRequests.delete(pr);
+		   picRequests.remove(pr);
 		}
 
+		private void DoTakePicture() {
+			// TODO Auto-generated method stub
+			
+		}
 		private void checkLineOfSight(PictureRequest pr){
 		   partsRobot.msgClearLineOfSight(pr.nestOne, pr.nestTwo);
 		   pr.state = PictureRequestState.ASKED_PARTS_ROBOT;
 		}
+
 	
 	
 	
