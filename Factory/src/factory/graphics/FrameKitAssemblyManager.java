@@ -55,6 +55,10 @@ public class FrameKitAssemblyManager extends JFrame{
 		System.out.println("New Empty Kit Requested!");
 	}
 	
+	public void takePicture(){
+		GKAM.inspectKit();
+	}
+	
 	public void outKit() {
 		//Sends a Kit out of the factory
 		GKAM.outKit();
@@ -99,10 +103,12 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	public void dumpDone() {
 		System.out.println("Kit has been dumped!");
+		kitRobot.msgAnimationDone();
 	}
 	
 	public void outKitDone() {
 		System.out.println("Kit has left the building!");
+		kitRobot.msgAnimationDone();
 	}
 	
 	public static void main(String args[]) {
