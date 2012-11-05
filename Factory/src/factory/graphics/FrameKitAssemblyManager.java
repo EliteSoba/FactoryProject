@@ -17,7 +17,6 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	GraphicKitAssemblyManager GKAM; //The Graphics part
 	ControlPanel CP; //The Swing control panel
-	private boolean awaitingCommand;
 	
 	
 	// These are for v.0
@@ -35,7 +34,6 @@ public class FrameKitAssemblyManager extends JFrame{
 		CP = new ControlPanel(this);
 		CP.setPreferredSize(new Dimension(200, 600));
 		this.add(CP, BorderLayout.LINE_END);
-		awaitingCommand = true;
 		
 		// v.0 stuff
 		stand.kitRobot = kitRobot;
@@ -47,7 +45,7 @@ public class FrameKitAssemblyManager extends JFrame{
 	}
 	
 	public void moveEmptyKitToSlot(int slot){
-		GKAM.robotFromBelt();
+		GKAM.robotFromBelt(slot);
 	}
 	
 	/**
@@ -59,26 +57,41 @@ public class FrameKitAssemblyManager extends JFrame{
 		System.out.println("New Empty Kit Requested!");
 	}
 	
-	public void newEmptyKitAtConveyor(){
-		System.out.println("New Empty Kit Arrived!");
+	public void outKit() {
+		//Sends a Kit out of the factory
+		GKAM.outKit();
 	}
 	
-	public void addOutKit() {
-		//Sends a Kit out of the factory
-		GKAM.addOutKit();
-		awaitingCommand = false;
+	public void kitToCheck(int slot) {
+		GKAM.checkKit(slot);
+	}
+	
+	public void dumpKit() {
+		GKAM.purgeKit();
 	}
 	
 	public void fromBelt() {
 		kitRobot.msgGrabAndBringEmptyKitFromConveyorToSlot("topSlot");
 	}
 	
+	public void newEmptyKitAtConveyor(){
+		System.out.println("New Empty Kit Arrived!");
+	}
+	
 	public void fromBeltDone() {
-		System.out.println("From Belt process completed");
+		System.out.println("Kit sent to Kitting Station!");
+	}
+	
+	public void toCheckDone() {
+		System.out.println("Kit sent to Inspection Station!");
+	}
+	
+	public void dumpDone() {
+		System.out.println("Kit has been dumped!");
 	}
 	
 	public void outKitDone() {
-		System.out.println("Kit send-out process completed");
+		System.out.println("Kit has left the building!");
 	}
 	
 	public static void main(String args[]) {

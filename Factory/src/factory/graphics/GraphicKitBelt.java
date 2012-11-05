@@ -106,7 +106,7 @@ public class GraphicKitBelt {
 			if (kitIn.getY() >= y+40 && kitIn.getX() <= x+100)
 				kitIn.moveX(v);
 			if (kitIn.getX() >= x+105 && kitIn.getY() >= y+115)
-				pickUp = true;
+				pickUp = true; //Kit in completion
 			if (kitIn.getY() >= y+600)
 				kitIn = null;
 		}

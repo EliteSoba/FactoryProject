@@ -16,6 +16,8 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	 * 				Second option is easier, but no way of confirming that bottom-most kit will be filled first. If Robot needs to target completed kits, then first option is just as viable
 	 * 		[Å„] Update GraphicKittingRobot movement to add kit to GraphicKittingStation
 	 * 		[Å„] Add functionality of GraphicKittingRobot to move from kitting station back to belt
+	 * 		[ ] Create commands as instructed by the Wiki
+	 * 		[ ] Rework comments to have /**MESSAGE* / at the front of each method 
 	 * 		[ ] Create GraphicItems class to display rudimentary items
 	 * 		[ ] Rework GraphicKit to be able to hold GraphicItems
 	 * 		[ ] Rotation of GraphicKit
@@ -49,18 +51,30 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	private boolean toStation;
 	private boolean fromStation;
 	private boolean toBelt;
+	private boolean toCheck;
+	private boolean checkKit;
+	private boolean fromCheck;
+	private boolean purgeKit;
+	private boolean toDump;
+	private int stationTarget;
 	
 	public GraphicKitAssemblyManager(FrameKitAssemblyManager FKAM) {
 		//Constructor
 		//x = 0;
 		am = FKAM;
 		belt = new GraphicKitBelt(0, 0);
-		station = new GraphicKittingStation(400, 130);
+		station = new GraphicKittingStation(400, 131);
 		robot = new GraphicKittingRobot(this, 250, 150);
 		fromBelt = false;
 		toStation = false;
 		fromStation = false;
 		toBelt = false;
+		toCheck = false;
+		checkKit = false;
+		fromCheck = false;
+		purgeKit = false;
+		toDump = false;
+		stationTarget = 0;
 		(new Timer(50, this)).start();
 		this.setPreferredSize(new Dimension(600, 600));
 	}
@@ -72,19 +86,30 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		belt.inKit();
 	}
 	
-	public void addOutKit() {
-		//Sends a kit out of the factory via conveyer belt
-		/*if (belt.kitout())
-			return;
-		belt.outKit(new GraphicKit(150, 300));*/
-		if (station.hasKits() && !robot.kitted())
-			fromStation = true;
+	public void robotFromBelt(int target) {
+		//Sends robot to pick up kit from belt and move to designated slot in the station
+		if (belt.pickUp() && !robot.kitted() && station.getKit(target) == null) {
+			fromBelt = true;
+			stationTarget = target;
+		}
 	}
 	
-	public void robotFromBelt() {
-		//Sends robot to pick up kit from belt
-		if (belt.pickUp() && !robot.kitted() && !station.maxed())
-			fromBelt = true;
+	public void checkKit(int target) {
+		if (!robot.kitted() && station.getKit(target) != null) {
+			checkKit = true;
+			stationTarget = target;
+		}
+	}
+	
+	public void purgeKit() {
+		if (!robot.kitted() && station.getCheck() != null)
+			purgeKit = true;
+	}
+	
+	public void outKit() {
+		//Sends a kit out of the factory via conveyer belt
+		if (station.getCheck() != null && !robot.kitted())
+			fromCheck = true;
 	}
 	
 	public void paint(Graphics g) {
@@ -105,8 +130,6 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	public void moveRobot() {
 		//Moving path control into separate method
 		
-		//robotFromBelt();
-		
 		if (fromBelt) {
 			if (robot.moveFromBelt(5)) {
 				fromBelt = false;
@@ -115,16 +138,30 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 			}
 		}
 		else if (toStation) {
-			if (robot.moveToStation(5)) {
+			if (robot.moveToStation(5, stationTarget)) {
 				toStation = false;
-				station.addKit(robot.unkit());
+				station.addKit(robot.unkit(), stationTarget);
 				am.fromBeltDone();
 			}
 		}
-		else if (fromStation) {
-			if (robot.moveFromStation(5)) {
+		else if (checkKit) {
+			if (robot.moveFromStation(5, stationTarget)) {
 				fromStation = false;
-				robot.setKit(station.popKit(0));
+				robot.setKit(station.popKit(stationTarget));
+				toCheck = true;
+			}
+		}
+		else if (toCheck) {
+			if (robot.moveToCheck(5)) {
+				toCheck = false;
+				station.addCheck(robot.unkit());
+				am.toCheckDone();
+			}
+		}
+		else if (fromCheck) {
+			if (robot.moveToCheck(5)) {
+				fromCheck = false;
+				robot.setKit(station.popCheck());
 				toBelt = true;
 			}
 		}
@@ -133,6 +170,20 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 				toBelt = false;
 				belt.outKit(robot.unkit());
 				am.outKitDone();
+			}
+		}
+		else if (purgeKit) {
+			if (robot.moveToCheck(5)) {
+				purgeKit = false;
+				robot.setKit(station.popCheck());
+				toDump = true;
+			}
+		}
+		else if (toDump) {
+			if (robot.moveToTrash(5)) {
+				toDump = false;
+				robot.unkit();
+				am.dumpDone();
 			}
 		}
 		else
