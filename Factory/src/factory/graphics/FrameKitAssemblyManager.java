@@ -77,7 +77,7 @@ public class FrameKitAssemblyManager extends JFrame{
 		else {
 			System.out.println("Kit at bottomSlot is compete!");
 			stand.bottomSlot.kit.state = KitState.COMPLETE;
-			
+			stand.stateChanged();
 		}
 		//GKAM.checkKit(slot);
 	}
