@@ -1,3 +1,11 @@
+/*
+
+Author: Joey Huang
+Last Edited: 11/8/12 10:08am
+
+Contains non-normative scenario controls for the Gantry Robot.
+*/
+
 package factory.swing;
 
 import java.util.*;
@@ -33,7 +41,7 @@ public class GantryManPanel extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent ae) {
-		if(ae.getSource().equals(robotRevoltButton)) {
+		if(ae.getSource() == robotRevoltButton) {
 	// do something
 }
 	}
