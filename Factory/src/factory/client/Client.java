@@ -40,10 +40,13 @@ public abstract class Client extends JFrame implements ActionListener {
 	public String currentCommand; //current command string from server
 	public ArrayList<String> parsedCommand; //current command parsed into strings
 	protected Timer updater; //repaints graphics
+	boolean connected;
+	
 	
 	Runnable independentInput = new Runnable(){
 		public void run(){
 			for(;;){
+				if(connected)
 				try {
 					input.readLine(); //reads from input each time there is a new string
 					parseInput();
@@ -55,6 +58,7 @@ public abstract class Client extends JFrame implements ActionListener {
 	}; //end independentInput
 	
 	public Client(Type t, JPanel buttons, JPanel Animation){
+		connected = false;
 		type = t;
 		UI = buttons;
 		this.graphics = Animation;
@@ -70,12 +74,13 @@ public abstract class Client extends JFrame implements ActionListener {
 			server = new Socket("127.0.0.1", 12321); //connects to server on localhost
 			input = new BufferedReader(new InputStreamReader(server.getInputStream()));//opens inputStream
 			output = new PrintWriter(new OutputStreamWriter(server.getOutputStream()));//opens outputStream
-			
-		} catch (UnknownHostException e) {
+			connected = true;
+			System.out.println("connected to server!");
+		} catch (Exception e) {
 			System.out.println("Host unavailable");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} 
+			
+		
 	}
 	
 	
