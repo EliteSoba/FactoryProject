@@ -6,7 +6,7 @@ package factory.masterControl;
 // 	Prof. Crowley
 // Another test
 
-package factory.masterControl;
+import java.io.*;
 
 //	Server-Socket Team -- Devon, Mher & Ben
 //	CSCI-200 Factory Project Team 2
@@ -15,7 +15,6 @@ package factory.masterControl;
 // Another test
 
 import java.io.BufferedReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 public class PartHandler {
@@ -25,10 +24,12 @@ PrintWriter out = null;
 BufferedReader in = null;
 boolean haveCMD = false; 
 String cmd = null;
+MasterControl myMC;
 
 	public PartHandler(Socket s, BufferedReader b, PrintWriter p, String me, MasterControl mc){
 		//need to add other initializations
 		Socket mySocket = s;
+        myMC = mc;
 	}
 	
 	public void run() {
@@ -46,11 +47,11 @@ String cmd = null;
 
 	    //This thread loops to get confirmations sent by clients 
 
-	    while( /*condition goes here*/) {
+	    while(true /*condition goes here*/) {
 			cmd = gotCmd();
 			if(haveCMD)
 			{//if there was a command then call parseCmd and send the cmd to Server to assess
-				parseCmd(cmd); 
+				myMC.parseCmd(cmd, this);
 				//sets haveCMD to false because parseCmd notified server?
 				haveCMD = false;
 			}
@@ -63,7 +64,7 @@ String cmd = null;
 		out.println(cmd);
 			try //check if client recived sent cmd, not too sure on how to update result yeto r what results is suposed to be
 			{
-				confirmation =  in.readLine());
+				confirmation =  in.readLine();
 				if(confirmation != null)
 					result = true;
 			}
@@ -78,9 +79,10 @@ String cmd = null;
 	//this loops until it gets a cmd from client 
 	private String gotCmd()
 	{
-		try {
+		String message = null;
+        try {
 		    //Wait for the client to send a String 
-		    String message = in.readLine();
+		    message = in.readLine();
 		    
 		    //Send back a response
 		    // maybe out.println( message );
