@@ -2,6 +2,8 @@ package factory.swing;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+
 import javax.swing.*;
 
 
@@ -9,7 +11,7 @@ import javax.swing.*;
 * This class is the GUI for the Parts Manaager. This will be
 * instantiated in the general PartsManager class (which extends JFrame).
 * Written by : Marc Mendiola
-* Last edited : 11/8/12 9:55 PM
+* Last edited : 11/8/12 10:33 PM
 */
 
 
@@ -20,17 +22,24 @@ public class PartsManPanel extends JPanel{
 	JTabbedPane tabbedPane;
 	AddPanel addPanel;
 	RemovePanel removePanel;
+	ArrayList<String> fileNames;
 	//New Part
 
 	// Methods
 
 	public PartsManPanel(){
+		fileNames = new ArrayList<String>();
+		fileNames.add("ear");
+		fileNames.add("helmet");
+		fileNames.add("circleItem");
 		addPanel = new AddPanel();
 		removePanel = new RemovePanel();
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("addPanel", addPanel);
 		tabbedPane.addTab("removePanel", removePanel);
+		
 		this.add(tabbedPane);
+		
 	}
 
 
@@ -61,11 +70,13 @@ public class PartsManPanel extends JPanel{
 			itemName = new JTextField(8);
 			label2 = new JLabel ("Image : ");
 			imageSelection = new JComboBox();
-			imageSelection.addItem("Item1");
-			imageSelection.addItem("Item2");
+			for(int i = 0; i < fileNames.size(); i++){
+				imageSelection.addItem(fileNames.get(i));
+			}
+			
 			imageSelection.addActionListener(this);
 			previewFrame = new JLabel();
-			ImageIcon imagePreview = new ImageIcon("/Users/mfmendiola/Documents/workspace/LocalSwing/src/Item1.jpg");
+			ImageIcon imagePreview = new ImageIcon("/Users/mfmendiola/Documents/workspace/LocalSwing/src/ear.png");
 			previewFrame.setIcon(imagePreview);
 			
 			saveItem = new JButton ("Save Item");
@@ -112,7 +123,7 @@ public class PartsManPanel extends JPanel{
 		}
 		
 		public void updatePicture(String item){
-			ImageIcon imagePreview = new ImageIcon("/Users/mfmendiola/Documents/workspace/LocalSwing/src/" + item + ".jpg");
+			ImageIcon imagePreview = new ImageIcon("/Users/mfmendiola/Documents/workspace/LocalSwing/src/" + item + ".png");
 			previewFrame.setIcon(imagePreview);
 		}
 		@Override
@@ -125,6 +136,10 @@ public class PartsManPanel extends JPanel{
 		     updatePicture(petName);
 		     }
 
+		}
+		
+		public void refreshList(){
+			
 		}
 
 	}
@@ -149,11 +164,12 @@ public class PartsManPanel extends JPanel{
 					title.setFont(new Font("Serif", Font.BOLD, 16));
 					label1 = new JLabel ("Item : ");
 					imageSelection = new JComboBox();
-					imageSelection.addItem("Item1");
-					imageSelection.addItem("Item2");
+					for(int i = 0; i < fileNames.size(); i++){
+						imageSelection.addItem(fileNames.get(i));
+					}
 					imageSelection.addActionListener(this);
 					previewFrame = new JLabel();
-					ImageIcon imagePreview = new ImageIcon("/Users/mfmendiola/Documents/workspace/LocalSwing/src/Item1.jpg");
+					ImageIcon imagePreview = new ImageIcon("/Users/mfmendiola/Documents/workspace/LocalSwing/src/ear.png");
 					previewFrame.setIcon(imagePreview);
 					
 					removeItem = new JButton ("Remove Item");
@@ -190,7 +206,7 @@ public class PartsManPanel extends JPanel{
 				}
 				
 				public void updatePicture(String item){
-					ImageIcon imagePreview = new ImageIcon("/Users/mfmendiola/Documents/workspace/LocalSwing/src/" + item + ".jpg");
+					ImageIcon imagePreview = new ImageIcon("/Users/mfmendiola/Documents/workspace/LocalSwing/src/" + item + ".png");
 					previewFrame.setIcon(imagePreview);
 				}
 				@Override
@@ -205,6 +221,9 @@ public class PartsManPanel extends JPanel{
 					     updatePicture(petName);
 				     }
 
+				}
+				public void refreshList(){
+					
 				}
 
 	}
