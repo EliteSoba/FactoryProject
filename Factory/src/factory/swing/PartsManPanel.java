@@ -9,7 +9,7 @@ import javax.swing.*;
 * This class is the GUI for the Parts Manaager. This will be
 * instantiated in the general PartsManager class (which extends JFrame).
 * Written by : Marc Mendiola
-* Last edited : 11/8/12 9:45 PM
+* Last edited : 11/8/12 9:55 PM
 */
 
 
@@ -69,6 +69,7 @@ public class PartsManPanel extends JPanel{
 			previewFrame.setIcon(imagePreview);
 			
 			saveItem = new JButton ("Save Item");
+			saveItem.addActionListener(this);
 	
 			c.gridx = 0;
 			c.gridy = 0;
@@ -116,9 +117,13 @@ public class PartsManPanel extends JPanel{
 		}
 		@Override
 		public void actionPerformed(ActionEvent ae) {
+			 if (ae.getSource() == saveItem){
+		    	 System.out.println("I will create a new part and send it to the server.");
+		     }else{
 			 JComboBox cb = (JComboBox)ae.getSource();
 		     String petName = (String)cb.getSelectedItem();
 		     updatePicture(petName);
+		     }
 
 		}
 
@@ -152,6 +157,7 @@ public class PartsManPanel extends JPanel{
 					previewFrame.setIcon(imagePreview);
 					
 					removeItem = new JButton ("Remove Item");
+					removeItem.addActionListener(this);
 			
 					c.gridx = 0;
 					c.gridy = 0;
@@ -189,9 +195,15 @@ public class PartsManPanel extends JPanel{
 				}
 				@Override
 				public void actionPerformed(ActionEvent ae) {
-					 JComboBox cb = (JComboBox)ae.getSource();
-				     String petName = (String)cb.getSelectedItem();
-				     updatePicture(petName);
+					 
+				     if (ae.getSource() == removeItem){
+				    	 System.out.println("I will remove a part and update the server.");
+				    	 
+				     }else{
+				    	 JComboBox cb = (JComboBox)ae.getSource();
+					     String petName = (String)cb.getSelectedItem();
+					     updatePicture(petName);
+				     }
 
 				}
 
