@@ -1,4 +1,4 @@
-package factory.swing;
+//package factory.swing;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -9,7 +9,7 @@ import javax.swing.*;
 * This class is the GUI for the Parts Manaager. This will be
 * instantiated in the general PartsManager class (which extends JFrame).
 * Written by : Marc Mendiola
-* Last edited : 11/4/12 11:03 PM
+* Last edited : 11/8/12 9:45 PM
 */
 
 
@@ -20,6 +20,7 @@ public class PartsManPanel extends JPanel{
 	JTabbedPane tabbedPane;
 	AddPanel addPanel;
 	RemovePanel removePanel;
+	//New Part
 
 	// Methods
 
@@ -118,9 +119,6 @@ public class PartsManPanel extends JPanel{
 			 JComboBox cb = (JComboBox)ae.getSource();
 		     String petName = (String)cb.getSelectedItem();
 		     updatePicture(petName);
-		     if(ae.getSource() == addItem){
-		    	 System.out.println("Item has been added.");
-		     }
 
 		}
 
@@ -157,12 +155,13 @@ public class PartsManPanel extends JPanel{
 			
 					c.gridx = 0;
 					c.gridy = 0;
+					c.gridwidth = 2;
 					c.fill = GridBagConstraints.VERTICAL;
-					c.fill = GridBagConstraints.HORIZONTAL;
-					c.insets = new Insets(0,0,10,0);
+					c.insets = new Insets(0,0,20,0);
 					this.add(title, c);
 					c.fill = GridBagConstraints.VERTICAL;
 					c.fill = GridBagConstraints.HORIZONTAL;
+					c.gridwidth = 1;
 					c.gridx = 0;
 					c.gridy = 1;
 					this.add(label1, c);
@@ -193,10 +192,6 @@ public class PartsManPanel extends JPanel{
 					 JComboBox cb = (JComboBox)ae.getSource();
 				     String petName = (String)cb.getSelectedItem();
 				     updatePicture(petName);
-				     
-				     if(ae.getSource() == removeItem){
-				    	 System.out.println("Item has been removed.");
-				     }
 
 				}
 
