@@ -10,14 +10,11 @@ public class LaneManPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = -4485912622490446254L;
-	JButton zombie = new JButton("Zombie Apocalypse");
-	JButton robotMutiny = new JButton("Robot Mutiny");
-	JButton fire = new JButton("Fire");
-	JButton earthquake = new JButton("Earthquake");
+	JLabel lane1 = new JLabel("Lane 1");
 
 	public LaneManPanel(){
 		
-	       GridBagConstraints c = new GridBagConstraints();
+	    GridBagConstraints c = new GridBagConstraints();
 		setLayout(new GridBagLayout());
 		c.fill = GridBagConstraints.VERTICAL;
 		c.gridx = 0;
