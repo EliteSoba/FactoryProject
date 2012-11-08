@@ -1,4 +1,4 @@
-//package factory.swing;
+package factory.swing;
 
 import java.awt.*;
 import java.awt.event.*;
