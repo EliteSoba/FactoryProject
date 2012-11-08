@@ -1,7 +1,7 @@
 /*
 
 author: Joey Huang
-Last edited: 11/4/12 5:24pm
+Last edited: 11/4812 10:00am
 */
 package factory.swing;
 import java.util.*;
@@ -11,15 +11,13 @@ import javax.swing.*;
 
 
 public class FactoryProdManPanel extends JPanel implements ActionListener {
-	JComboBox kitNameBox;
-	JSpinner spinner;
+	JComboBox kitNameBox; // contain String names of saved kit configurations
+	JSpinner spinner; // quantity of kits to produce
 	JButton submitButton;
-	JTextArea messageBox;
+	JTextArea messageBox; // submission confirmations
 	
-	public FactoryProdManPanel() { // manager has arraylist of kitnames available
+	public FactoryProdManPanel() { 
 		kitNameBox = new JComboBox();
-		//for (int i = 0; i < kitList.size(); i++)
-		//	kitNameBox.addItem(kitList.get(i));
 		kitNameBox.setPreferredSize(new Dimension(225,25));
 		
 		setLayout(new GridBagLayout());
@@ -39,11 +37,6 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		
 		c.gridy = 3;
 		c.anchor = GridBagConstraints.CENTER;
-		/*for(int i = 0; i < kitList.size();i++) {
-			kitNameBox.setSelectedIndex(i);
-			kitNameBox.addActionListener(this);
-		}*/
-		//kitNameBox.setSelectedIndex(0);
 		add(kitNameBox,c);
 
 		c.anchor = GridBagConstraints.LINE_END;
@@ -73,7 +66,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		
 	public void actionPerformed(ActionEvent ae) {
 		
-		if (ae.getSource().equals(submitButton)) {
+		if (ae.getSource().equals(submitButton)) {		// print messages to be displayed in messageBox
 			if (kitNameBox.getSelectedItem() == null)
 				messageBox.append("No kit selected.\n");
 			else
@@ -81,13 +74,13 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		}
 	}
 	
-	public void addKit(String kitName) {	
+	public void addKit(String kitName) {	// call to add new kit name (String) to Jcombobox list
 		kitNameBox.addItem(kitName);	
 		((JComboBox) kitNameBox.getItemAt(kitNameBox.getItemCount()-1)).addActionListener(this);
 		kitNameBox.setSelectedIndex(0);
 	}
 	
-	public void removeKit(String kitName) {
+	public void removeKit(String kitName) { // remove kit from list
 		kitNameBox.removeItem(kitName);
 	}
 }
