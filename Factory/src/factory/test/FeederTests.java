@@ -1,5 +1,5 @@
 package factory.test;
-
+/*
 import factory.FeederAgent;
 import factory.FeederAgent.DiverterState;
 import factory.FeederAgent.FeederState;
@@ -23,7 +23,7 @@ public class FeederTests extends TestCase{
 	Part p1;
 	/**
 	 * Sets up the standard configuration for easy testing.
-	 */
+	 
 	@Override
 	protected void setUp() throws Exception {
 		feeder = new FeederAgent("Feeder1",0);
@@ -40,7 +40,7 @@ public class FeederTests extends TestCase{
 	/**
 	 *  This test creates a feeder and tests its preconditions.
 	 * 
-	 */
+	 
 	public void testPreconditions() {
 		// Makes sure there aren't any parts in the feeder initially.
 		assertEquals(feeder.requestedParts.size(),0);
@@ -53,7 +53,7 @@ public class FeederTests extends TestCase{
 	
 	/** 
 	 * This test makes sure that the Feeder's lanes are getting set up properly.
-	 */
+	 
 	public void testSetUpLanesAndGantry() {
 		// These lanes were set up in the preconditions test
 		assertEquals(feeder.topLane.lane.getName(),"top");
@@ -68,7 +68,7 @@ public class FeederTests extends TestCase{
 	
 	
 	
-	/** Test the MESSAGES **/
+	/** Test the MESSAGES 
 	
 	public void testMsgEmptyNest(){
 		// Some initial setup
@@ -308,7 +308,7 @@ public class FeederTests extends TestCase{
 	
 	
 }
-
+*/
 
 
 

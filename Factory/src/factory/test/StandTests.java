@@ -1,5 +1,5 @@
 package factory.test;
-
+/*
 import factory.StandAgent;
 import factory.StandAgent.MyConveyor;
 import factory.StandAgent.MyConveyorState;
@@ -116,4 +116,4 @@ public class StandTests {
 		fail("Not yet implemented");
 	}
 
-}
+}*/

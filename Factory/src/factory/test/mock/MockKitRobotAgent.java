@@ -1,6 +1,7 @@
 package factory.test.mock;
 
 import factory.interfaces.KitRobot;
+/*
 
 public class MockKitRobotAgent extends MockAgent implements KitRobot {
 
@@ -27,4 +28,4 @@ public class MockKitRobotAgent extends MockAgent implements KitRobot {
 
 	}
 
-}
+}*/

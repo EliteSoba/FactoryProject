@@ -1,5 +1,5 @@
 package factory.test;
-
+/*
 import factory.FeederAgent;
 import factory.FeederAgent.DiverterState;
 import factory.FeederAgent.FeederState;
@@ -24,7 +24,7 @@ public class FeederManagementTests extends TestCase {
 
 	/**
 	 * Sets up the standard configuration for easy testing.
-	 */
+	 
 	@Override
 	protected void setUp() throws Exception {
 		feeder = new FeederAgent("feeder",0);
@@ -64,7 +64,7 @@ public class FeederManagementTests extends TestCase {
 	* 3) Two different part requests, same lane.
 	* 4) Two of the same kind of part, different lanes.
 	* 5) Two of the same kind of part, same lane.
-	*/
+	
 	
 	public void testSingleRequestForANewPart() {
 
@@ -80,10 +80,10 @@ public class FeederManagementTests extends TestCase {
     	assertEquals(feeder.state,FeederAgent.FeederState.WAITING_FOR_PARTS);
 
     	
-    	/*// We are going to use mock gantrys instead
+    	// We are going to use mock gantrys instead
 		gantry.pickAndExecuteAnAction(); // gantry should msgHereAreParts -> feeder 
 		assertEquals(gantry.myBins.size(),1); // was the mybin (request for a part) added to the gantry's list
-		*/
+		
     	
     	feeder.msgHereAreParts(p1);
     	MyPartRequest mpr = null;
@@ -125,7 +125,7 @@ public class FeederManagementTests extends TestCase {
 		// ... 
 	}
 
-}
+}*/
 
 
 

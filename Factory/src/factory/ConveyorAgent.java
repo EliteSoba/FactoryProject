@@ -59,7 +59,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	
 	////Actions
 	private void tellKitRobotAboutEmptyKit() {
-		   kit_robot.msgEmptyKitIsHere();
+		   //kit_robot.msgEmptyKitIsHere();
 		   kr_state = KitRobot_State.NO_ACTION;
 		}
 
@@ -74,7 +74,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 		}
 
 		private void giveKit() {
-		   kit_robot.msgYouTook(on_conveyor);
+		   //kit_robot.msgYouTook(on_conveyor);
 		   on_conveyor = null;
 		   kr_state = KitRobot_State.NO_ACTION;
 		}
