@@ -1,18 +1,8 @@
 package factory.test;
 /*
 import factory.StandAgent;
-import factory.StandAgent.MyConveyor;
-import factory.StandAgent.MyConveyorState;
-import factory.StandAgent.MySlot;
-import factory.StandAgent.MySlotState;
-import factory.StandAgent.StandAgentState;
-import factory.test.mock.*;
 
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-
-public class StandTests {
+public class StandTests extends TestCase {
 
 	StandAgent stand;
 	MockVisionAgent visionMock;
