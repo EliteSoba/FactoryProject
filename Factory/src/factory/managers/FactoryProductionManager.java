@@ -26,4 +26,16 @@ public class FactoryProductionManager extends Client {
 			this.setVisible(true);
 			
 		}
+
+	/*	public void sendOrder(String kitName,String quantity) {
+			// send to kit manager
+			 output.println("DST SRC CMD....
+		}
+		
+		public void populateKitList(ArrayList<String> kitList) {
+			for (int i = 0; i < kitList.size();i++) {
+				buttons.add(
+			}
+		}
+		*/
 }

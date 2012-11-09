@@ -1,7 +1,7 @@
 /*
 
 author: Joey Huang
-Last edited: 11/4812 10:00am
+Last edited: 11/8/12 7:30pm
 */
 package factory.swing;
 import java.util.*;
@@ -69,18 +69,24 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		if (ae.getSource().equals(submitButton)) {		// print messages to be displayed in messageBox
 			if (kitNameBox.getSelectedItem() == null)
 				messageBox.append("No kit selected.\n");
-			else
+			else {
+				// fpm.sendOrder(kitNameBox.getSelectedItem(),(String)spinner.getValue())
+				//output.println("kmg fpm sendorder" + kitnameBox.getSelectedItem() + spinner.getValue());
+				
 			messageBox.append("Order Submitted.\n     Details: " + spinner.getValue() + " units of " + (String)kitNameBox.getSelectedItem() + "\n" );
+			}
 		}
 	}
 	
-	public void addKit(String kitName) {	// call to add new kit name (String) to Jcombobox list
+	public void addKit(String kitName) {	//add new kit name (String) to Jcombobox list - received from kit manager
 		kitNameBox.addItem(kitName);	
 		((JComboBox) kitNameBox.getItemAt(kitNameBox.getItemCount()-1)).addActionListener(this);
 		kitNameBox.setSelectedIndex(0);
 	}
 	
-	public void removeKit(String kitName) { // remove kit from list
-		kitNameBox.removeItem(kitName);
+	public void removeKit(String kitName) { // remove kit from list - received from kit manager
+		kitNameBox.removeItem(kitName);	// should have been validated elsewhere
 	}
+
+
 }
