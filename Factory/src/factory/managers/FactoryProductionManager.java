@@ -1,7 +1,7 @@
 //Ben Mayeux and Stephanie Reagle
 //CS 200
 
-// Last edited: 11/11/12 3:03pm by Joey Huang
+// Last edited: 11/11/12 3:10pm by Joey Huang
 package factory.managers;
 
 import javax.swing.JPanel;
