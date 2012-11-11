@@ -1,7 +1,7 @@
 /*
 
 Author: Joey Huang
-Last Edited: 11/11/12 3:12pm
+Last Edited: 11/11/12 3:38pm
 
 Contains non-normative scenario controls for the Gantry Robot.
 */
@@ -12,6 +12,7 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import factory.managers.*;
 
 public class GantryManPanel extends JPanel implements ActionListener {
 	JButton robotRevoltButton;
