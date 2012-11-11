@@ -23,6 +23,7 @@ public class PartsManPanel extends JPanel{
 	AddPanel addPanel;
 	RemovePanel removePanel;
 	ArrayList<String> fileNames;
+	PartsManager partsManager;
 	//New Part
 
 	// Methods
@@ -41,6 +42,11 @@ public class PartsManPanel extends JPanel{
 		this.add(tabbedPane);
 		
 	}
+	
+	public void setPartsManager(PartsManager manager){
+		partsManager = manager;
+	}
+
 
 
 	// Internal Classes
@@ -48,7 +54,7 @@ public class PartsManPanel extends JPanel{
 	private class AddPanel extends JPanel implements ActionListener{
 
 		// Data
-
+		PartsManager partsManager;
 		JLabel title;
 		JLabel label1;
 		JLabel label2;
@@ -58,7 +64,7 @@ public class PartsManPanel extends JPanel{
 		JButton saveItem;
 
 		//Methods
-
+		
 		public AddPanel(){
 			this.setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
