@@ -87,48 +87,30 @@ public class KitManPanel extends JPanel {
 		c.gridy = 0;
 		partsAssignment.add(pLabel1, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 1;
 		partsAssignment.add(pLabel2, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 2;
 		partsAssignment.add(pLabel3, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 3;
 		partsAssignment.add(pLabel4, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 4;
 		partsAssignment.add(pLabel5, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 5;
 		partsAssignment.add(pLabel6, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 6;
 		partsAssignment.add(pLabel7, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 7;
 		partsAssignment.add(pLabel8, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 9;
 		partsAssignment.add(pKitName, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 10;
 		partsAssignment.add(pSave, c);
 
@@ -137,38 +119,24 @@ public class KitManPanel extends JPanel {
 		c.gridy = 0;
 		partsAssignment.add(pItemComboBox1, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 1;
 		partsAssignment.add(pItemComboBox2, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 2;
 		partsAssignment.add(pItemComboBox3, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 3;
 		partsAssignment.add(pItemComboBox4, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 4;
 		partsAssignment.add(pItemComboBox5, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 5;
 		partsAssignment.add(pItemComboBox6, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 6;
 		partsAssignment.add(pItemComboBox7, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 7;
 		partsAssignment.add(pItemComboBox8, c);
 		
@@ -188,97 +156,61 @@ public class KitManPanel extends JPanel {
 		c.gridy = 0;
 		modifyKit.add(mKitComboBox, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 1;
 		modifyKit.add(mLabel1, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 2;
 		modifyKit.add(mLabel2, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 3;
 		modifyKit.add(mLabel3, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 4;
 		modifyKit.add(mLabel4, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 5;
 		modifyKit.add(mLabel5, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 6;
 		modifyKit.add(mLabel6, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 7;
 		modifyKit.add(mLabel7, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 8;
 		modifyKit.add(mLabel8, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
 		c.gridx = 1;
 		c.gridy = 1;
 		modifyKit.add(mItemComboBox1, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 2;
 		modifyKit.add(mItemComboBox2, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 3;
 		modifyKit.add(mItemComboBox3, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 4;
 		modifyKit.add(mItemComboBox4, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 5;
 		modifyKit.add(mItemComboBox5, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 6;
 		modifyKit.add(mItemComboBox6, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 7;
 		modifyKit.add(mItemComboBox7, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 1;
 		c.gridy = 8;
 		modifyKit.add(mItemComboBox8, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 9;
 		modifyKit.add(mKitName, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
 		c.gridy = 10;
 		modifyKit.add(mSave, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
 		c.gridx = 1;
 		c.gridy = 10;
 		modifyKit.add(mRemove, c);
