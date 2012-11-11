@@ -1,7 +1,7 @@
 /*
 
 Author: Joey Huang
-Last Edited: 11/8/12 10:08am
+Last Edited: 11/11/12 3:00pm
 
 Contains non-normative scenario controls for the Gantry Robot.
 */
@@ -15,7 +15,7 @@ import javax.swing.*;
 
 public class GantryManPanel extends JPanel implements ActionListener {
 	JButton robotRevoltButton;
-	
+	GantryManager gantryManager;
 
 	public GantryManPanel() {
 		setLayout(new GridBagLayout());
@@ -41,8 +41,13 @@ public class GantryManPanel extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent ae) {
-		if(ae.getSource() == robotRevoltButton) {
-	// do something
-}
+		if(ae.getSource() == robotRevoltButton) 		{
+			// do something v.2
+			// gantry manager send message
+		}
+	}
+
+	public void setManager(GantryManager gm) {
+		gantryManager = gm;	
 	}
 }
