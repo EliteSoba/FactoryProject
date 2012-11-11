@@ -33,7 +33,7 @@ public class FactoryProductionManager extends Client {
 					
 	}
 		
-		public void populateKitList(ArrayList<String> kitList) {
+		/*public void populateKitList(ArrayList<String> kitList) {
 			for (int i = 0; i < kitList.size();i++) {
 				buttons.add(
 			}
