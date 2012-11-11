@@ -1,5 +1,4 @@
 package factory.graphics;
-import GraphicItem;
 
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -78,35 +77,7 @@ class AnimatedObject
 	{
 		return imageHeight;
 	}
-	public void addItem(GraphicItem newItem)
-	{
-		items.add(newItem);
-	}
-	public void clearItems()
-	{
-		items.clear();
-	}
-	public boolean hasItem()
-	{
-		if(items.size() >= 1)
-			return true;
-		else
-			return false;
-	}
-	public GraphicItem popItem()
-	{
-		GraphicItem lastItem = items.get(items.size()-1);		// get last item
-		items.remove(items.size()-1);					// remove last item
-		return lastItem;								// return last item
-	}
-	public int getSize()
-	{
-		return items.size();
-	}
-	public GraphicItem getItemAt(int i)
-	{
-		return items.get(i);
-	}
+
 	// Update functions
 	public void move()
 	{
