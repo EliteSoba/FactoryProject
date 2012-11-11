@@ -19,6 +19,12 @@ public class GraphicItem {
 		image = new ImageIcon(imagepath);
 		stepX = 20;
 		stepY = 5;
+		
+		
+		
+		
+		
+		
 		divergeUp = false;
 	}
 	
