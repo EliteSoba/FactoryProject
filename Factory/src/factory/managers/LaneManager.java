@@ -27,16 +27,16 @@ public class LaneManager extends Client {
 	public void sendMessage(int lane, int setting, String message){
 		String set = new String("");
 		if (message == "power"){
-			set = "lm lma lanepowertoggle #"+ lane;
+			set = "lm lma lanepowertoggle "+ lane;
 		}
 		else if (message == "red"){
-			set = "lm lma set lanevibration #"+ lane + " #" + setting;
+			set = "lm lma set lanevibration "+ lane + " " + setting;
 		}
 		else if (message == "yellow"){
-			set = "lm lma set lanevibration #"+ lane + " #" + setting;
+			set = "lm lma set lanevibration "+ lane + " " + setting;
 		}
 		else if (message == "green"){
-			set = "lm lma set lanevibration #"+ lane + " #" + setting;
+			set = "lm lma set lanevibration "+ lane + " " + setting;
 		}
 		
 	}
