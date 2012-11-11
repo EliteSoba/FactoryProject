@@ -50,8 +50,8 @@ public abstract class Client extends JFrame implements ActionListener {
 				try {
 					input.readLine(); //reads from input each time there is a new string
 					parseInput();
-				} catch (IOException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
+					System.out.println("inputStream not open");
 				}
 			}//end for
 		}//end run
@@ -61,6 +61,7 @@ public abstract class Client extends JFrame implements ActionListener {
 		connected = false;
 		type = t;
 		UI = buttons;
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.graphics = Animation;
 		connect(); //connects to server
 		updater = new Timer(1000/30, this); //sets timer to update graphics
@@ -79,13 +80,7 @@ public abstract class Client extends JFrame implements ActionListener {
 		} catch (Exception e) {
 			System.out.println("Host unavailable");
 		} 
-			
-		
 	}
-	
-	
-	
-	
 	
 	public void parseInput(){
 		//TODO parseinput
