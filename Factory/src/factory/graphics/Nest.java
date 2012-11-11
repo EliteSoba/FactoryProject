@@ -24,6 +24,35 @@ class Nest extends AnimatedObject
 		imageHeight = init_imageHeight;
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
 	}
+	public void addItem(GraphicItem newItem)
+	{
+		items.add(newItem);
+	}
+	public void clearItems()
+	{
+		items.clear();
+	}
+	public boolean hasItem()
+	{
+		if(items.size() >= 1)
+			return true;
+		else
+			return false;
+	}
+	public GraphicItem popItem()
+	{
+		GraphicItem lastItem = items.get(items.size()-1);		// get last item
+		items.remove(items.size()-1);					// remove last item
+		return lastItem;								// return last item
+	}
+	public int getSize()
+	{
+		return items.size();
+	}
+	public GraphicItem getItemAt(int i)
+	{
+		return items.get(i);
+	}
 	public void paint(Graphics g) {
 		g.drawImage(image, x, y, null);							// paint nest
 		for(int i = 0; i < items.size(); i++)					// paint each item in the nest
