@@ -1,12 +1,11 @@
 package factory.graphics;
-
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
 class Nest extends AnimatedObject
 {
-	ArrayList<Item> items;
+	ArrayList<GraphicItem> items;
 	
 	public Nest()
 	{
@@ -14,7 +13,7 @@ class Nest extends AnimatedObject
 	}
 	public Nest(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
-		items = new ArrayList<Item>();
+		items = new ArrayList<GraphicItem>();
 		x = init_x;
 		y = init_y;
 		theta = init_theta;
@@ -25,29 +24,9 @@ class Nest extends AnimatedObject
 		imageHeight = init_imageHeight;
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
 	}
-	public void addItem(Item newItem)
-	{
-		items.add(newItem);
-	}
-	public void clearItems()
-	{
-		items.clear();
-	}
-	public Item popItem()
-	{
-		//if(items.size() >= 1)
-		//{
-			Item lastItem = items.get(items.size()-1);		// get last item
-			items.remove(items.size()-1);					// remove last item
-			return lastItem;								// return last item
-		//}
-	}
-	public int getSize()
-	{
-		return items.size();
-	}
-	public Item getItemAt(int i)
-	{
-		return items.get(i);
+	public void paint(Graphics g) {
+		g.drawImage(image, x, y, null);							// paint nest
+		for(int i = 0; i < items.size(); i++)					// paint each item in the nest
+			items.get(i).paint(g, 3+x+(i/3)*25, 3+y+(i%3)*25);
 	}
 }

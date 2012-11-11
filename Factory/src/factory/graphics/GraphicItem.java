@@ -1,5 +1,6 @@
 package factory.graphics;
 
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -77,6 +78,10 @@ public class GraphicItem {
 	}
 	
 	public void paint(Graphics g) {
+		g.drawImage(image.getImage(), x, y, null);
+	}
+	
+	public void paint(Graphics g, int x, int y) {
 		g.drawImage(image.getImage(), x, y, null);
 	}
 	
