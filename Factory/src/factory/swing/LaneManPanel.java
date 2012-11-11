@@ -5,6 +5,7 @@ package factory.swing;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import factory.managers.*;
 
 import javax.swing.*;
 
@@ -21,7 +22,7 @@ public class LaneManPanel extends JPanel implements ActionListener {
 	JButton greenButton = new JButton("Green");
 	JButton powerButton = new JButton("Power");
 	
-	public Boolean sendMessage = false;
+	LaneManager laneManager;
 
 	public LaneManPanel(){
 		powerButton.addActionListener(this);
@@ -66,12 +67,12 @@ public class LaneManPanel extends JPanel implements ActionListener {
 		l.repaint(); 
 	}
 	*/
-	public void sendMessage(){
-		
+	public void setManager(LaneManager l){
+		laneManager=l;
 	}
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getSource() == powerButton){
-			sendMessage=true;
+			laneManager.sendMessage(this.getSelectedLane());
 		}
 		
 	}	

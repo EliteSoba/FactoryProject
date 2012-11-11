@@ -20,21 +20,15 @@ public class LaneManager extends Client {
 	public static void main(String[] args){
 		LaneManPanel buttons = new LaneManPanel();
 		LaneManager l = new LaneManager(buttons);
-		
-		for(;;){
-			if (buttons.sendMessage){
-				sendMessage(buttons.getSelectedLane());
-				buttons.sendMessage=false;
-			}
-		}//end for loop
-		
+		buttons.setManager(l);
 
 	}
 	
-	public static void sendMessage(int lane){
+	public void sendMessage(int lane){
 		//Compile the message that you want to send
-		//Use your client to send message
 		String cmd = "lm lma powerlane "+ lane;
+		//Use your client to send message
+		
 	}
 	
 	public void setInterface() {
