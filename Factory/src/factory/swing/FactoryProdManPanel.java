@@ -8,6 +8,7 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import factory.managers.*;
 
 
 public class FactoryProdManPanel extends JPanel implements ActionListener {
@@ -15,6 +16,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	JSpinner spinner; // quantity of kits to produce
 	JButton submitButton;
 	JTextArea messageBox; // submission confirmations
+	FactoryProductionManager factoryProductionManager;
 	
 	public FactoryProdManPanel() { 
 		kitNameBox = new JComboBox();
@@ -70,9 +72,8 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			if (kitNameBox.getSelectedItem() == null)
 				messageBox.append("No kit selected.\n");
 			else {
-				// fpm.sendOrder(kitNameBox.getSelectedItem(),(String)spinner.getValue())
-				//output.println("kmg fpm sendorder" + kitnameBox.getSelectedItem() + spinner.getValue());
-				
+				 factoryProductionManager.sendOrder(kitNameBox.getSelectedItem(),(String)spinner.getValue());
+					
 			messageBox.append("Order Submitted.\n     Details: " + spinner.getValue() + " units of " + (String)kitNameBox.getSelectedItem() + "\n" );
 			}
 		}
@@ -88,5 +89,8 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		kitNameBox.removeItem(kitName);	// should have been validated elsewhere
 	}
 
+	public void setManager(FactoryProductionManager fpm) {
+		factoryProductionManager = fpm;
+	}
 
 }

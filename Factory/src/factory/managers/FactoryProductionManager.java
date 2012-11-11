@@ -27,10 +27,11 @@ public class FactoryProductionManager extends Client {
 			
 		}
 
-	/*	public void sendOrder(String kitName,String quantity) {
-			// send to kit manager
-			 output.println("DST SRC CMD....
-		}
+		public void sendOrder(String kitName,String quantity) {
+	
+//output.println("kmg fpm sendorder" + kitnameBox.getSelectedItem() + spinner.getValue());
+					
+	}
 		
 		public void populateKitList(ArrayList<String> kitList) {
 			for (int i = 0; i < kitList.size();i++) {
