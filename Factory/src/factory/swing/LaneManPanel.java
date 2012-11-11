@@ -3,9 +3,12 @@
 package factory.swing;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 
-public class LaneManPanel extends JPanel {
+public class LaneManPanel extends JPanel implements ActionListener {
 	/**
 	 * 
 	 */
@@ -17,8 +20,11 @@ public class LaneManPanel extends JPanel {
 	JButton yellowButton = new JButton("Yellow");
 	JButton greenButton = new JButton("Green");
 	JButton powerButton = new JButton("Power");
+	
+	public Boolean sendMessage = false;
 
 	public LaneManPanel(){
+		powerButton.addActionListener(this);
 		
 	    GridBagConstraints c = new GridBagConstraints();
 		setLayout(new GridBagLayout());
@@ -43,6 +49,11 @@ public class LaneManPanel extends JPanel {
 
 	
 	}
+	
+	public int getSelectedLane(){
+		return (Integer) lane.getSelectedItem();
+		
+	}
 	 //main method used for testing
 	//do not delete just comment out
 	/*
@@ -54,5 +65,14 @@ public class LaneManPanel extends JPanel {
 		l.setSize(400,450);
 		l.repaint(); 
 	}
-	*/	
+	*/
+	public void sendMessage(){
+		
+	}
+	public void actionPerformed(ActionEvent ae) {
+		if (ae.getSource() == powerButton){
+			sendMessage=true;
+		}
+		
+	}	
 }
