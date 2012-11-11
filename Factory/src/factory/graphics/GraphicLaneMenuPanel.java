@@ -103,9 +103,8 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 	GraphicLaneManager lane;
 	GraphicBin bin;
 
-	public GraphicLaneMenuPanel(GraphicLaneManager lane, GraphicBin bin){
-		this.lane = lane;
-		this.bin = bin;
+	public GraphicLaneMenuPanel(GraphicLaneManagerClient laneManager){
+		this.lane = laneManager.getLane(0);
 
 		// This is our button for the normative, v.0 case.  We currently have other buttons in development, 
 		// but they are not guaranteed to work perfectly, as this is a work in progress.
@@ -146,7 +145,7 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		dumpNestButton = new JButton("Dump Nest");
 		dumpNestButton.addActionListener(this);
 
-		this.setPreferredSize(new Dimension(700,160));
+		this.setPreferredSize(new Dimension(400,720));
 		this.setVisible(true);
 
 		this.add(normButton);
