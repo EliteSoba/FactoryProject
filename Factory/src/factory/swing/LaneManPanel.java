@@ -73,6 +73,7 @@ public class LaneManPanel extends JPanel implements ActionListener {
 	public void setManager(LaneManager l){
 		laneManager=l;
 	}
+	
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getSource() == powerButton){
 			laneManager.sendMessage(this.getSelectedLane(), 0, "power");

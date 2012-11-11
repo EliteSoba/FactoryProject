@@ -25,18 +25,18 @@ public class LaneManager extends Client {
 	}
 	
 	public void sendMessage(int lane, int setting, String message){
-		String cmd = new String("");
+		String set = new String("");
 		if (message == "power"){
-			cmd = "lm lma lanepowertoggle #"+ lane;
+			set = "lm lma lanepowertoggle #"+ lane;
 		}
 		else if (message == "red"){
-			cmd = "lm lma set lanevibration #"+ lane + " #" + setting;
+			set = "lm lma set lanevibration #"+ lane + " #" + setting;
 		}
 		else if (message == "yellow"){
-			cmd = "lm lma set lanevibration #"+ lane + " #" + setting;
+			set = "lm lma set lanevibration #"+ lane + " #" + setting;
 		}
 		else if (message == "green"){
-			cmd = "lm lma set lanevibration #"+ lane + " #" + setting;
+			set = "lm lma set lanevibration #"+ lane + " #" + setting;
 		}
 		
 	}

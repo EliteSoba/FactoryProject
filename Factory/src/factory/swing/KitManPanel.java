@@ -3,9 +3,15 @@
 package factory.swing;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 
-public class KitManPanel extends JPanel {
+import factory.managers.KitManager;
+import factory.managers.LaneManager;
+
+public class KitManPanel extends JPanel implements ActionListener{
 	/**
 	 * 
 	 */
@@ -74,6 +80,8 @@ public class KitManPanel extends JPanel {
 	JTextField mKitName = new JTextField( "Default Kit");
 	JButton mSave = new JButton("Save Kit Configuration");
 	JButton mRemove = new JButton("Remove Kit");
+	
+	KitManager kitManager;
 
 	public KitManPanel(){
 		
@@ -221,6 +229,10 @@ public class KitManPanel extends JPanel {
 		
 		add(tabbedPane);	
 	}
+	
+	public void setManager(KitManager k){
+		kitManager = k;
+	}
 	 //main method used for testing
 	//do not delete just comment out
 	/*
@@ -232,5 +244,9 @@ public class KitManPanel extends JPanel {
 		k.setSize(400,450);
 		k.repaint(); 
 	}*/
+
+	public void actionPerformed(ActionEvent ae) {
+		
+	}
 		
 }

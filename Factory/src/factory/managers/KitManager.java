@@ -17,9 +17,17 @@ public class KitManager extends Client {
 	public static void main(String[] args){
 	    KitManPanel buttons = new KitManPanel();
 		KitManager k = new KitManager(buttons);
+		buttons.setManager(k);
 	}
 
-	@Override
+	public void sendMessage(String kitname, int setting, String message){
+		String cmd = new String("");
+		if (message == "power"){
+			cmd =  "km kma set kitcontent #kitname #itemnumber #itemname";
+		}
+		
+	}
+	
 	public void setInterface() {
 		this.setSize(800, 800);
 		this.add(UI);
