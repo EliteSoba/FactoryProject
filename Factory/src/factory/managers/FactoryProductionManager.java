@@ -1,7 +1,7 @@
 //Ben Mayeux and Stephanie Reagle
 //CS 200
 
-// Last edited: 11/11/12 3:10pm by Joey Huang
+// Last edited: 11/11/12 3:27pm by Joey Huang
 package factory.managers;
 
 import javax.swing.JPanel;
@@ -29,11 +29,9 @@ public class FactoryProductionManager extends Client {
 			
 		}
 
-		public void sendOrder(String kitName,String quantity) {
-	
-//output.println("kmg fpm sendorder" + kitnameBox.getSelectedItem() + spinner.getValue());
-					
-	}
+		public void sendOrder(String kitname, String quantity) { // request to server to send order to kitmanager
+			output.println("fpm km cmd makekits " + quantity + " " + kitname);		
+		}
 		
 		/*public void populateKitList(ArrayList<String> kitList) {
 			for (int i = 0; i < kitList.size();i++) {
