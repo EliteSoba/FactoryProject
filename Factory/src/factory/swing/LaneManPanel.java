@@ -25,7 +25,10 @@ public class LaneManPanel extends JPanel implements ActionListener {
 	LaneManager laneManager;
 
 	public LaneManPanel(){
-		powerButton.addActionListener(this);
+		powerButton.addActionListener(this); 
+		redButton.addActionListener(this); 
+		yellowButton.addActionListener(this); 
+		greenButton.addActionListener(this); 
 		
 	    GridBagConstraints c = new GridBagConstraints();
 		setLayout(new GridBagLayout());
@@ -72,8 +75,16 @@ public class LaneManPanel extends JPanel implements ActionListener {
 	}
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getSource() == powerButton){
-			laneManager.sendMessage(this.getSelectedLane());
+			laneManager.sendMessage(this.getSelectedLane(), 0, "power");
 		}
-		
+		else if (ae.getSource() == redButton){
+			laneManager.sendMessage(this.getSelectedLane(), 1, "red");
+		}
+		else if (ae.getSource() == yellowButton){
+			laneManager.sendMessage(this.getSelectedLane(), 2, "yellow");
+		}
+		else if (ae.getSource() == greenButton){
+			laneManager.sendMessage(this.getSelectedLane(), 3, "green");
+		}
 	}	
 }
