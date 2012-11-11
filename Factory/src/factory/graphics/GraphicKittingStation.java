@@ -5,7 +5,7 @@ import java.util.*;
 
 public class GraphicKittingStation {
 	
-	/*GraphicKittingStation.java (50x300) - Tobias Lee
+	/*GraphicKittingStation.java (80x300) - Tobias Lee
 	 * This does nothing right now.
 	 * Eventually, it will be something like a graphical representation of the Kitting Station
 	 */
@@ -40,14 +40,13 @@ public class GraphicKittingStation {
 		g.drawString("TRASH", x+5, y+365);
 		drawKits(g);
 		
-		//timer = 0;
 		if (timer != -1) {
 			timer++;
 			g.setColor(Color.white);
 			g.fillOval(x-5*timer+25, y+250-5*timer, 10*timer, 10*timer);
 			if (timer == 5) {
 				timer = -1;
-				GKAM.pictureDone();
+				GKAM.takePictureOfInspectionSlotDone();
 			}
 		}
 	}
@@ -57,7 +56,7 @@ public class GraphicKittingStation {
 		for (int i = 0; i < MAX_KITS; i++)
 			if (kits[i] != null)
 				kits[i].move(x+5, y+100*i+10);
-		if (check != null)
+		if (hasCheck())
 			check.move(x+5, y+210);
 	}
 	
@@ -68,7 +67,7 @@ public class GraphicKittingStation {
 		for (int i = 0; i < MAX_KITS; i++)
 			if (kits[i] != null)
 				kits[i].paint(g);
-		if (check != null)
+		if (hasCheck())
 			check.paint(g);
 	}
 	
@@ -96,7 +95,7 @@ public class GraphicKittingStation {
 	}
 	
 	public boolean addCheck(GraphicKit kit) {
-		if (check != null)
+		if (hasCheck())
 			return false;
 		check = kit;
 		return true;
@@ -121,7 +120,7 @@ public class GraphicKittingStation {
 	public GraphicKit popCheck() {
 		//Removes the kit at the checking station for transfer
 		GraphicKit temp = check;
-		check = null;
+		dropCheck();
 		return temp;
 	}
 	
@@ -149,4 +148,21 @@ public class GraphicKittingStation {
 		//Camera flashing
 		timer = 0;
 	}
+	
+	public void addItem(GraphicItem item, int target) {
+		if (target != 0 && target != 1)
+			return;
+		if (kits[target] == null)
+			return;
+		kits[target].addItem(item);
+	}
+	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
+	}
+	
 }

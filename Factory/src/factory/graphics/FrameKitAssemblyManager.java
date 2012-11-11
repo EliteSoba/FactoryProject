@@ -18,26 +18,26 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	
 	// These are for v.0
-	ConveyorAgent conveyor = new ConveyorAgent();
+	ConveyorAgent conveyor = new ConveyorAgent(this);
 	PartsRobotAgent partsRobot = new PartsRobotAgent();
-	StandAgent stand = new StandAgent(conveyor, null, null, partsRobot);
+	StandAgent stand = new StandAgent(null, null, partsRobot);
 	ConveyorControllerAgent conveyorController = new ConveyorControllerAgent(conveyor, this);
 	VisionAgent vision = new VisionAgent(null, stand, this);
-	KitRobotAgent kitRobot = new KitRobotAgent(stand, this);
+	KitRobotAgent kitRobot = new KitRobotAgent(stand, this, conveyor);
 	
 	public FrameKitAssemblyManager() {
 		//Constructor. BorderLayout
 		GKAM = new GraphicKitAssemblyManager(this);
-		GKAM.setPreferredSize(new Dimension(600, 600));
 		this.add(GKAM, BorderLayout.CENTER);
 		CP = new ControlPanel(this);
-		CP.setPreferredSize(new Dimension(200, 600));
 		this.add(CP, BorderLayout.LINE_END);
 		
 		// v.0 stuff
 		stand.vision = vision;
 		stand.kitRobot = kitRobot;
+		conveyor.conveyor_controller = conveyorController;
 		conveyor.startThread();
+		conveyorController.startThread();
 		vision.startThread();
 		partsRobot.startThread();
 		kitRobot.startThread();
@@ -45,27 +45,22 @@ public class FrameKitAssemblyManager extends JFrame{
 	}
 	
 	public void moveEmptyKitToSlot(int slot){
-		GKAM.robotFromBelt(slot);
+		GKAM.moveEmptyKitToSlot(slot);
 	}
 	
-	/**
-	 * Method to send a new empty kit in the conveyor
-	 */
 	public void sendNewEmptyKit() {
 		System.out.println("New Empty Kit Requested!");
 		//Adds a Kit into the factory
-		GKAM.addInKit();
-		//Should call conveyorController.msgAnimationDone() when animation is complete
-		conveyorController.msgAnimationDone();
+		GKAM.newEmptyKit();
 	}
 	
 	public void takePicture(){
-		GKAM.inspectKit();
+		GKAM.takePictureOfInspectionSlot();
 	}
 	
-	public void outKit() {
+	public void exportKit() {
 		//Sends a Kit out of the factory
-		GKAM.outKit();
+		GKAM.exportKit();
 	}
 	
 	public void kitToCheck(int slot) {
@@ -83,38 +78,39 @@ public class FrameKitAssemblyManager extends JFrame{
 	}
 	
 	public void moveKitFromSlotToInspection(int slot){
-		GKAM.checkKit(slot);
+		GKAM.moveKitToInspection(slot);
 	}
 	public void dumpKit() {
-		GKAM.purgeKit();
+		GKAM.dumpKitAtInspection();
 	}
 	
 	public void newEmptyKitAtConveyor(){
 		System.out.println("New Empty Kit Arrived!");
-		stand.msgEmptyKitIsHere();
+		//Should call conveyorController.msgAnimationDone() when animation is complete
+		conveyorController.msgAnimationDone();
 	}
 	
-	public void fromBeltDone() {
+	public void moveEmptyKitToSlotDone() {
 		System.out.println("Kit sent to Kitting Station!");
 		kitRobot.msgAnimationDone();
 	}
 	
-	public void toCheckDone() {
+	public void moveKitToInspectionDone() {
 		System.out.println("Kit sent to Inspection Station!");
 		kitRobot.msgAnimationDone();
 	}
 	
-	public void pictureDone() {
+	public void takePictureOfInspectionSlotDone() {
 		System.out.println("Picture taken!");
 		vision.msgAnimationDone();
 	}
 	
-	public void dumpDone() {
+	public void dumpKitAtInspectionDone() {
 		System.out.println("Kit has been dumped!");
 		kitRobot.msgAnimationDone();
 	}
 	
-	public void outKitDone() {
+	public void exportKitDone() {
 		System.out.println("Kit has left the building!");
 		kitRobot.msgAnimationDone();
 	}
@@ -124,7 +120,8 @@ public class FrameKitAssemblyManager extends JFrame{
 		FrameKitAssemblyManager FKAM = new FrameKitAssemblyManager();
 		FKAM.setVisible(true);
 		FKAM.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		FKAM.setSize(800, 600);
+		//FKAM.setSize(800, 720);
+		FKAM.pack();
 	}
 
 }
