@@ -1,5 +1,13 @@
 package agent;
 
+import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.*;
 
 /** Base class for simple agents */
@@ -7,8 +15,61 @@ public abstract class Agent {
 	Semaphore stateChange = new Semaphore(1,true);//binary semaphore, fair
 	private AgentThread agentThread;
 
-	protected Agent() {
+    // The following is copied from Client class.
+
+    public enum Type{//Each different agent needs to be enumerated here.
+        CONVEYORAGENT, FEEDERAGENT, GANTRYAGENT, KITROBOTAGENT, LANEAGENT, NESTAGENT, PARTSROBOTAGENT, STANDAGENT, VISIONAGENT
+    }
+    protected Socket server; //connection to server
+    public Type type; //type of client
+    public PrintWriter output; //output stream to server
+    public BufferedReader input; //input stream from server
+    public String currentCommand; //current command string from server
+    public ArrayList<String> parsedCommand; //current command parsed into strings
+    boolean connected;
+
+	protected Agent(Type t) {
+        connected = false;
+        type = t;
+        connect(); //connects to server
+        Thread inputThread = new Thread(independentInput);
+        inputThread.run();
 	}
+
+    public void connect(){
+        try {
+            server = new Socket("127.0.0.1", 12321); //connects to server on localhost
+            input = new BufferedReader(new InputStreamReader(server.getInputStream()));//opens inputStream
+            output = new PrintWriter(new OutputStreamWriter(server.getOutputStream()));//opens outputStream
+            connected = true;
+            System.out.println("connected to server!");
+        } catch (Exception e) {
+            System.out.println("Host unavailable");
+        }
+    }
+
+
+    Runnable independentInput = new Runnable(){
+        public void run(){
+            for(;;){
+                if(connected)
+                    try {
+                        input.readLine(); //reads from input each time there is a new string
+                        parseInput();
+                    } catch (Exception e) {
+                        System.out.println("inputStream not open");
+                    }
+            }//end for
+        }//end run
+    };
+
+    public void parseInput(){
+        //TODO parseinput
+        parsedCommand = new ArrayList<String>(Arrays.asList(currentCommand.split(" "))); //puts string into array list
+
+    }
+
+    // End of Client copy code
 
 	/** This should be called whenever state has changed that might cause
 	 * the agent to do something. */
