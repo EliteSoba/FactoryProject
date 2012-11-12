@@ -6,8 +6,8 @@
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-//import factory.client.Client;
-//import factory.swing.PartsManPanel;
+import factory.client.Client;
+import factory.swing.PartsManPanel;
 
 public class PartsManager extends Client {
 	private static final long serialVersionUID = -205350261062308096L;
