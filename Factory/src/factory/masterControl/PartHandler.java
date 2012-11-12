@@ -36,19 +36,19 @@ String Client_id = null;
 
 	    while(true) 
 	    {
-			cmd = gotCmd();
-			if(haveCMD)
-			{//if there was a command then call parseCmd and send the cmd to Server to assess
-				master.parseCmd(cmd); 
-				//sets haveCMD to false because parseCmd notified server
-				haveCMD = false;
-			}
+		cmd = gotCmd();
+		if(haveCMD)
+		{//if there was a command then call parseCmd and send the cmd to Server to assess
+			master.parseCmd(cmd); 
+			//sets haveCMD to false because parseCmd notified server
+			haveCMD = false;
 		}
+	    }
 		
-		out.close();
-		in.close();
-		master.close();
-		mySocket.close();
+	    out.close();
+	    in.close();
+	    master.close();
+	    mySocket.close();
 	}
 	
 	public boolean send(String cmd) {
