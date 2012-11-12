@@ -108,6 +108,10 @@ public class FactoryProductionManager extends JFrame {
 		panel.moveRobotToKit(0);
 	}
 	
+	public void feedLane(GraphicBin b, int laneNum, boolean divergeUp){
+		panel.feedLane(b,laneNum,divergeUp);
+	}
+	
 	public static void main(String args[]) {
 		//Implements this JFrame
 		FactoryProductionManager FKAM = new FactoryProductionManager();

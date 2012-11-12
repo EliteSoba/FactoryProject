@@ -27,10 +27,10 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	
 	public GraphicPanel(FactoryProductionManager FKAM) {
 		lane = new GraphicLaneManager [4];
-		lane[0] = new GraphicLaneManager(575,50);
-		lane[1] = new GraphicLaneManager(575,210);
-		lane[2] = new GraphicLaneManager(575,370);
-		lane[3] = new GraphicLaneManager(575,530);
+		lane[0] = new GraphicLaneManager(575,50,0,this);
+		lane[1] = new GraphicLaneManager(575,210,1,this);
+		lane[2] = new GraphicLaneManager(575,370,2,this);
+		lane[3] = new GraphicLaneManager(575,530,3,this);
 		
 		am = FKAM;
 		belt = new GraphicKitBelt(0, 0, this);
@@ -202,6 +202,20 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	public void partsRobotArrivedAtCenter()
 	{
 		System.out.println("DEBUG: ARRIVED AT CENTER");
+	}
+	
+	public void feedLane(GraphicBin b, int laneNum, boolean divergeUp){
+		lane[laneNum - 1].bin = b;
+		lane[laneNum - 1].currentItemCount = 0;
+		lane[laneNum - 1].placedBin = true;
+		lane[laneNum - 1].binExist = true;
+		lane[laneNum - 1].laneStart = true;
+		lane[laneNum - 1].divergeUp = divergeUp;
+		lane[laneNum - 1].feederOn = true;
+	}
+	
+	public ArrayList<Nest> getNest(){
+		return nests;
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
