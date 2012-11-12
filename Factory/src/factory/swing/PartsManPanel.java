@@ -26,6 +26,7 @@ public class PartsManPanel extends JPanel{
 	AddPanel addPanel;
 	RemovePanel removePanel;
 	ArrayList<String> fileNames;
+	ArrayList<String> parts;
 	PartsManager partsManager;
 	//New Part
 
@@ -33,6 +34,7 @@ public class PartsManPanel extends JPanel{
 
 	public PartsManPanel(){
 		fileNames = new ArrayList<String>();
+		parts = new ArrayList<String>();
 		fileNames.add("ear");
 		fileNames.add("helmet");
 		fileNames.add("circleItem");
@@ -138,7 +140,17 @@ public class PartsManPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			 if (ae.getSource() == saveItem){
-		    	 System.out.println("I will create a new part and send it to the server.");
+				 boolean nameTaken = false;
+				 for(int i = 0; i < parts.size(); i++){
+					 if(itemName.getText().equals(parts.get(i)))
+						 nameTaken = true;
+				 }
+				 if(nameTaken){
+					 itemName.setText("Name taken.");
+				 }else{
+					 System.out.println("I will create a new part and send it to the server.");
+					 partsManager.sendMessage("add", itemName.getText(), (String)imageSelection.getSelectedItem());
+				 }
 		     }else{
 			 JComboBox cb = (JComboBox)ae.getSource();
 		     String petName = (String)cb.getSelectedItem();
@@ -223,6 +235,7 @@ public class PartsManPanel extends JPanel{
 					 
 				     if (ae.getSource() == removeItem){
 				    	 System.out.println("I will remove a part and update the server.");
+				    	 partsManager.sendMessage("remove", (String)imageSelection.getSelectedItem(), null);
 				    	 
 				     }else{
 				    	 JComboBox cb = (JComboBox)ae.getSource();
