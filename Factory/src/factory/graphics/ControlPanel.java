@@ -26,7 +26,6 @@ public class ControlPanel extends JPanel implements ActionListener{
 		inspect2 = new JButton("Kit 2 Complete");
 		outKit = new JButton("Send Kit Out");
 		dumpKit = new JButton("Dump Kit");
-		fromBelt = new JButton("Get Kit from Belt");
 		test = new JButton("Quit");
 		blank = new JLabel[10];
 		for (int i = 0; i < 10; i++) {
@@ -36,7 +35,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.setLayout(new FlowLayout());
 		//this.add(blank[0]);
 		//this.add(blank[1]);
-		this.add(fromBelt);
+		//this.add(fromBelt);
 		this.add(blank[2]);
 		this.add(inspect1);
 		this.add(blank[3]);
@@ -50,8 +49,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.setPreferredSize(new Dimension(200, 720));
 		outKit.addActionListener(this);
 		outKit.setPreferredSize(new Dimension(170, 50));
-		fromBelt.addActionListener(this);
-		fromBelt.setPreferredSize(new Dimension(170, 50));
+		//fromBelt.addActionListener(this);
+		//fromBelt.setPreferredSize(new Dimension(170, 50));
 		inspect1.addActionListener(this);
 		inspect1.setPreferredSize(new Dimension(170, 50));
 		inspect2.addActionListener(this);
@@ -69,8 +68,6 @@ public class ControlPanel extends JPanel implements ActionListener{
 			System.exit(0);
 		else if (source == outKit)
 			am.exportKit();
-		else if (source == fromBelt)
-			am.moveEmptyKitToSlot(0);
 		else if (source == inspect1)
 			//am.kitToCheck(0);
 			am.sendNewEmptyKit();

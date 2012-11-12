@@ -18,12 +18,12 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	
 	// These are for v.0
-	ConveyorAgent conveyor = new ConveyorAgent(this);
 	PartsRobotAgent partsRobot = new PartsRobotAgent();
 	StandAgent stand = new StandAgent(null, null, partsRobot);
-	ConveyorControllerAgent conveyorController = new ConveyorControllerAgent(conveyor, this);
 	VisionAgent vision = new VisionAgent(null, stand, this);
-	KitRobotAgent kitRobot = new KitRobotAgent(stand, this, conveyor);
+	KitRobotAgent kitRobot = new KitRobotAgent(stand, this, null);
+	ConveyorAgent conveyor = new ConveyorAgent(this, kitRobot);
+	ConveyorControllerAgent conveyorController = new ConveyorControllerAgent(conveyor, this);
 	
 	public FrameKitAssemblyManager() {
 		//Constructor. BorderLayout
@@ -35,7 +35,8 @@ public class FrameKitAssemblyManager extends JFrame{
 		// v.0 stuff
 		stand.vision = vision;
 		stand.kitRobot = kitRobot;
-		conveyor.conveyor_controller = conveyorController;
+		kitRobot.conveyor = conveyor;
+		conveyor.conveyorController = conveyorController;
 		conveyor.startThread();
 		conveyorController.startThread();
 		vision.startThread();
@@ -80,6 +81,7 @@ public class FrameKitAssemblyManager extends JFrame{
 	public void moveKitFromSlotToInspection(int slot){
 		GKAM.moveKitToInspection(slot);
 	}
+	
 	public void dumpKit() {
 		GKAM.dumpKitAtInspection();
 	}
