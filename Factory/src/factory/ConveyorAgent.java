@@ -10,23 +10,25 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	////Data	
 	enum ConveyorState { NO_ACTION, KR_WANTS_EMPTY_KIT, GETTING_EMPTY_KIT, EXPORTING };
 	
-	public KitRobot kit_robot;
-	public ConveyorController conveyor_controller;
+	public KitRobot kitRobot;
+	public ConveyorController conveyorController;
 	public FrameKitAssemblyManager server;
 	
-	Semaphore animation = new Semaphore(0);
+	public Semaphore animation = new Semaphore(0);
 	
-	Kit on_conveyor;  //Supposed to represent what is on the ConveyorAgent
+	public Kit kitAtConveyor;  //Supposed to represent what is on the ConveyorAgent
 	
 	ConveyorState state = ConveyorState.NO_ACTION;
 	
 	/** Public Constructor **/
-	public ConveyorAgent(FrameKitAssemblyManager server) {
+	public ConveyorAgent(FrameKitAssemblyManager server, KitRobot kr) {
 		super();
 		this.server = server;
+		this.kitRobot = kr;
 	}
 	
-	////Messages
+	/** MESSAGES **/
+	
 	public void msgAnimationDone(){
 		debug("Received msgAnimationDone() from server");
 		animation.release();
@@ -34,19 +36,19 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	
 	public void msgHeresEmptyKit(Kit k) {
 		debug("Received msgHeresEmptyKit() from the ConveyorController");
-		on_conveyor = k;
+		kitAtConveyor = k;
 	   	stateChanged();
 	}
 
-	public void msgNeedEmptyKit(KitRobot kr) {
+	public void msgNeedEmptyKit() {
 		debug("Received msgNeedEmptyKit() from the KitRobot");
-		state = ConveyorState.KR_WANTS_EMPTY_KIT;
+		this.state = ConveyorState.KR_WANTS_EMPTY_KIT;
 		stateChanged();
 	}
 
-	public void msgExportKit(KitRobot kr, Kit k) {
+	public void msgExportKit(Kit k) {
 		debug("Received msgExportKit() from the KitRobot for the Kit " + k);
-		on_conveyor = k;
+		kitAtConveyor = k;
 		state = ConveyorState.EXPORTING;
 		stateChanged();
 	}
@@ -59,29 +61,29 @@ public class ConveyorAgent extends Agent implements Conveyor {
 			return true;
 		}
 
-		if (state.equals(ConveyorState.KR_WANTS_EMPTY_KIT) || state.equals(ConveyorState.GETTING_EMPTY_KIT) && on_conveyor != null) {
-			tellKitRobotAboutEmptyKit();
-			return true;
-		}
-
-		if (state.equals(ConveyorState.KR_WANTS_EMPTY_KIT) && on_conveyor == null) {
+		if (state.equals(ConveyorState.KR_WANTS_EMPTY_KIT) && kitAtConveyor == null) {
 			requestEmptyKit();
 			return true;
 		}
 		
+		if (state.equals(ConveyorState.KR_WANTS_EMPTY_KIT) || state.equals(ConveyorState.GETTING_EMPTY_KIT) && kitAtConveyor != null) {
+			tellKitRobotAboutEmptyKit();
+			return true;
+		}
+
 		return false;
 	}
 	
 	////Actions
 	private void tellKitRobotAboutEmptyKit() {
 		debug("Telling The KitRobot About the Empty Kit");
-		kit_robot.msgEmptyKitOnConveyor();
+		kitRobot.msgEmptyKitOnConveyor();
 		state = ConveyorState.NO_ACTION;
 	}
 
 	private void requestEmptyKit() {
 		debug("Requesting Empty Kit From the ConveyorController");
-	    conveyor_controller.msgConveyorWantsEmptyKit(this);
+	    conveyorController.msgConveyorWantsEmptyKit(this);
 	    state = ConveyorState.GETTING_EMPTY_KIT;
 	    stateChanged();
 	}
@@ -97,18 +99,18 @@ public class ConveyorAgent extends Agent implements Conveyor {
 			e.printStackTrace();
 		}
 		debug("Export Animation Completed");
-	    conveyor_controller.msgKitExported(this, on_conveyor);
-		on_conveyor = null;
+	    conveyorController.msgKitExported(this, kitAtConveyor);
+		kitAtConveyor = null;
 		stateChanged();
 	}
 
 	////Misc / Hacks
 	public void setConveyorController(ConveyorController cc) {
-		conveyor_controller = cc;
+		conveyorController = cc;
 	}
 	
 	public void setKitRobot(KitRobot kr) {
-		kit_robot = kr;
+		kitRobot = kr;
 	}
 }
 

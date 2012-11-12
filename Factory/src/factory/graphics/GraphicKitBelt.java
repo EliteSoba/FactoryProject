@@ -114,7 +114,7 @@ public class GraphicKitBelt {
 			if (kitIn.getY() >= y+305) {
 				//Kit in completion
 				if (!pickUp)
-					GKAM.newEmptyKit();
+					GKAM.newEmptyKitDone();
 				pickUp = true;
 			}
 			if (kitIn.getY() >= y+height)
