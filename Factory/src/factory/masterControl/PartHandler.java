@@ -43,12 +43,12 @@ String Client_id = null;
 				//sets haveCMD to false because parseCmd notified server
 				haveCMD = false;
 			}
-			
-			out.close();
-			in.close();
-			master.close();
-			mySocket.close();
 		}
+		
+		out.close();
+		in.close();
+		master.close();
+		mySocket.close();
 	}
 	
 	public boolean send(String cmd) {
