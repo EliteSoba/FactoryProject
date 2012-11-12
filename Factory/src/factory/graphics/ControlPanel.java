@@ -19,6 +19,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton inspect2;
 	JButton dumpKit;
 	JButton partsRobotNest1;
+	JButton partsRobotStation;
 	
 	public ControlPanel(FactoryProductionManager fpm) {
 		//Constructor
@@ -30,6 +31,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		test = new JButton("Quit");
 		blank = new JLabel[10];
 		partsRobotNest1 = new JButton("Nest 1 Full");
+		partsRobotStation = new JButton("Station");
 		for (int i = 0; i < 10; i++) {
 			blank[i] = new JLabel("   ");
 			blank[i].setPreferredSize(new Dimension(150, 10));
@@ -50,6 +52,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.add(test);
 		this.add(blank[5]);
 		this.add(partsRobotNest1);
+		this.add(blank[6]);
+		this.add(partsRobotStation);
 		this.setPreferredSize(new Dimension(200, 720));
 		outKit.addActionListener(this);
 		outKit.setPreferredSize(new Dimension(170, 50));
@@ -65,6 +69,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 		test.setPreferredSize(new Dimension(170, 50));
 		partsRobotNest1.addActionListener(this);
 		partsRobotNest1.setPreferredSize(new Dimension(170, 50));
+		partsRobotStation.addActionListener(this);
+		partsRobotStation.setPreferredSize(new Dimension(170,50));
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -83,6 +89,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 			am.dumpKit();
 		else if(source == partsRobotNest1)
 			am.moveRobotToNest1();
+		else if(source == partsRobotStation)
+			am.moveRobotToStation();
 	}
 
 }

@@ -172,7 +172,8 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	
 	public void moveRobotToKit(int kitIndex)
 	{
-		partsRobot.setDestination(station.getX(),station.getY());
+		partsRobot.setState(3);
+		partsRobot.setDestination(station.getX(),station.getY()-station.getY()%5);
 		partsRobot.setDestinationKit(kitIndex);
 	}
 	
@@ -198,7 +199,7 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	
 	public void actionPerformed(ActionEvent arg0) {
 		// Has robot arrived at its destination?
-		System.out.println(partsRobot.getState());
+		//System.out.println(partsRobot.getState());
 		if(partsRobot.getState() == 1)		// partsRobot has arrived at nest
 		{
 			// Give item to partsRobot

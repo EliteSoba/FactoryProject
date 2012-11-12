@@ -76,7 +76,7 @@ class PartsRobot extends AnimatedObject
 	}
 	public void move()
 	{
-		System.out.println(fx + " " + fy);
+		//System.out.println(fx + " " + fy);
 		if(y == fy && x == fx)	// robot has arrived at destination
 		{
 			if(state == 0)
@@ -133,6 +133,6 @@ class PartsRobot extends AnimatedObject
 		}
 		if(theta < 0) theta = 360;
 		else if(theta > 360) theta = 0;
-		System.out.println(theta);
+		//System.out.println(theta);
 	}
 }
