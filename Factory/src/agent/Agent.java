@@ -56,6 +56,7 @@ public abstract class Agent {
                     try {
                         input.readLine(); //reads from input each time there is a new string
                         parseInput();
+                        System.out.println(input.readLine());
                     } catch (Exception e) {
                         System.out.println("inputStream not open");
                     }
