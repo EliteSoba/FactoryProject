@@ -8,6 +8,11 @@ import factory.graphics.GraphicLaneMenuPanel;
 import factory.interfaces.*;
 
 public class GantryAgent extends Agent implements Gantry {
+	protected GantryAgent(Type t) {
+		super(t);
+		// TODO Auto-generated constructor stub
+	}
+
 	public GraphicLaneMenuPanel glmp;
 	public ArrayList<MyBin> myBins = new ArrayList<MyBin>();   
 	BinConfig binConfig;
