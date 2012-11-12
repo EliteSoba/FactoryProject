@@ -13,13 +13,13 @@ public class GraphicPanel extends JPanel implements ActionListener{
 	GraphicLaneManager [] lane;
 	
 	//KIT MANAGER
-	private FrameKitAssemblyManager am; //The JFrame that holds this. Will be removed when gets integrated with the rest of the project
+	private FactoryProductionManager am; //The JFrame that holds this. Will be removed when gets integrated with the rest of the project
 	private GraphicKitBelt belt; //The conveyer belt
 	private GraphicKittingStation station; //The kitting station
 	private GraphicKittingRobot robot;
 	public static final int WIDTH = 980, HEIGHT = 720;
 	
-	public GraphicPanel(FrameKitAssemblyManager FKAM){
+	public GraphicPanel(FactoryProductionManager FKAM){
 		
 		lane = new GraphicLaneManager [4];
 		lane[0] = new GraphicLaneManager(575,50);

@@ -10,7 +10,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	 * Will be removed when integration occurs
 	 */
 
-	FrameKitAssemblyManager am; //The JFrame etc, etc.
+	FactoryProductionManager am; //The JFrame etc, etc.
 	JLabel[] blank;
 	JButton test;
 	JButton outKit;
@@ -19,9 +19,9 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton inspect2;
 	JButton dumpKit;
 	
-	public ControlPanel(FrameKitAssemblyManager FKAM) {
+	public ControlPanel(FactoryProductionManager fpm) {
 		//Constructor
-		am = FKAM;
+		am = fpm;
 		inspect1 = new JButton("Kit 1 Complete");
 		inspect2 = new JButton("Kit 2 Complete");
 		outKit = new JButton("Send Kit Out");
