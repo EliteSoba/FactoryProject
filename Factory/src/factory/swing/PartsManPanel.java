@@ -1,5 +1,7 @@
 package factory.swing;
-package factory.managers;
+
+
+import factory.managers.*;
 
 import java.awt.*;
 import java.awt.event.*;
