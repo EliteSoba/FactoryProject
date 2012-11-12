@@ -25,51 +25,51 @@ import java.util.TreeMap;
 
 public class MasterControl {
 
-	// Data Members
+    // Data Members
 
-	TreeMap<String, PartHandler> partHandlers;
-	TreeMap<String, Boolean> partOccupied;
-	private static final List<String> dids = Arrays.asList("krm", "kra");
+    TreeMap<String, PartHandler> partHandlers;
+    TreeMap<String, Boolean> partOccupied;
+    private static final List<String> dids = Arrays.asList("krm", "kra", "pm", "lm", "lma", "fpm", "km");
     private static final List<String> cmdTypes = Arrays.asList("cmd", "req", "get", "set", "cnf");
-    private static final List<String> cmds = Arrays.asList("sendrobottokit");
+    private static final List<String> cmds = Arrays.asList("makekits", "addkitname", "rmkitname", "addpartame", "rmpartname", "lanepowertoggle", "vibration", "kitcontent");
 
 
     ServerSocket myServerSocket;
-	// Socket myFactorySocket;
+    // Socket myFactorySocket;
 
-	// Constructor
+    // Constructor
 
-	public MasterControl(){
-		partHandlers = new TreeMap<String, PartHandler>();
-		partOccupied = new TreeMap<String, Boolean>();
-		try{
+    public MasterControl(boolean debug){
+        partHandlers = new TreeMap<String, PartHandler>();
+        partOccupied = new TreeMap<String, Boolean>();
+        try{
             myServerSocket = new ServerSocket(12321);
         } catch(Exception e){
 
             e.printStackTrace();
 
         }
-		// myFactorySocket = new Socket("localhost", "12369");
-		
-		connectAllSockets(); // This waits for every client to start up before moving on.
+        // myFactorySocket = new Socket("localhost", "12369");
 
-                             // At this point, all of the sockets are connected, PartHandlers have been created
-                             // The TreeMaps are updated with all of the relevant data, and the Factory can go.
+        connectAllSockets(debug); // This waits for every client to start up before moving on.
 
-		sendConfirm();
-                             // At this point, all of the parts have been notified that
-                             // the connections have been made, and therefore, the
-                             // Factory simulation can begin.
+        // At this point, all of the sockets are connected, PartHandlers have been created
+        // The TreeMaps are updated with all of the relevant data, and the Factory can go.
 
-	}
+        sendConfirm();
+        // At this point, all of the parts have been notified that
+        // the connections have been made, and therefore, the
+        // Factory simulation can begin.
 
-	// Member Methods
+    }
+
+    // Member Methods
 
 
-	// parseCmd is called by the PartHandler with a string command
-	// Therefore, it needs to be public.
+    // parseCmd is called by the PartHandler with a string command
+    // Therefore, it needs to be public.
 
-	public boolean parseCmd(String cmd, PartHandler sourcePH) {
+    public boolean parseCmd(String cmd, PartHandler sourcePH) {
         // Format is : "src dst cmdtype cmd"
 
         System.out.println("Server has received ... "+cmd);
@@ -86,61 +86,61 @@ public class MasterControl {
         String c = parsedCommand.get(2);        // Cmd Type
         String d = "";
         for(int i = 3; i < parsedCommand.size(); i++){  // Command
-            d+= parsedCommand.get(i);
+            d+= parsedCommand.get(i)+" ";
         }
 
-        String fullCmd = envelopeCmd(a, b, c, d);
+        String fullCmd = envelopeCmd(c, d);
 
         // Now, fullCmd is the full text of the command, parsed and checked by our Server.
-
+        System.out.println("Server received ... "+cmd+" from "+a);
         System.out.println("Server is about to send ... "+fullCmd);
 
         return sendCmd(b, fullCmd);
 
-	}
+    }
 
 
-	// envelopeCmd is called by parseCmd with the details of the message
-	// Therefore, it should be private.
+    // envelopeCmd is called by parseCmd with the details of the message
+    // Therefore, it should be private.
 
-	private String envelopeCmd(String src, String dst, String cmdtype, String cmd){
+    private String envelopeCmd(String cmdtype, String cmd){
 
-		String myCommand = src;
-		myCommand += " ";
-		myCommand += dst;
-		myCommand += " ";
-		myCommand += cmdtype;
-		myCommand += " ";
-		myCommand += cmd;
-		myCommand += "end"+cmdtype;
+        String myCommand = cmdtype;
+        myCommand += " ";
+        myCommand += cmd;
+        myCommand += "end"+cmdtype;
 
-		return myCommand;
+        return myCommand;
 
-	}
+    }
 
 
-	// sendCmd is called by parseCmd with the command to be sent and the destination
-	// sendCmd then calls the Send() method for the requisite PartHandler
-	// Therefore, it should be private.
+    // sendCmd is called by parseCmd with the command to be sent and the destination
+    // sendCmd then calls the Send() method for the requisite PartHandler
+    // Therefore, it should be private.
 
-	private boolean sendCmd(String dst, String fullCmd) {
+    private boolean sendCmd(String dst, String fullCmd) {
 
-		PartHandler myPh = partHandlers.get(dst);
-		return(myPh.send(fullCmd));
-		
-	
-	}
+        PartHandler myPh = partHandlers.get(dst);
+        return(myPh.send(fullCmd));
 
-	
-	// checkCmd is called by parseCmd with the command received to check for errors
-	// Therefore, it should be private.
 
-	private String checkCmd(ArrayList<String> pCmd) {
+    }
+
+
+    // checkCmd is called by parseCmd with the command received to check for errors
+    // Therefore, it should be private.
+
+    private String checkCmd(ArrayList<String> pCmd) {
 
         // Check that the cmd is of a valid length
 
         if(pCmd.size() < 4){
             return "There must be a command.";
+        }
+
+        if(pCmd.size() == 4){
+            return "Missing parameters for command.";
         }
 
         // Check that the source is a valid DID
@@ -179,19 +179,21 @@ public class MasterControl {
             return "This is not a valid command. Please check wiki documentation for correct syntax.";
         }
 
-        // TODO Check that there are enough sub-strings in the cmd for the cmdType
+        // TODO Once a larger number of commands are created... Need to use command identifier to check parameters.
 
         return null;
 
-	}
+    }
 
 
-	// connectAllSockets() is the function responsible for managing each socket connection
-	// It waits until each connection specified in 'dids' has been made, and then continues.
+    // connectAllSockets() is the function responsible for managing each socket connection
+    // It waits until each connection specified in 'dids' has been made, and then continues.
 
-	private void connectAllSockets(){
-        int numConnect = 0;
-        while(numConnect != dids.size()){
+    private void connectAllSockets(boolean debugmode){
+        int numConnected = 0;
+        int numToConnect = (debugmode ? 1 : dids.size());
+
+        while(numConnected != numToConnect){
             try{
                 Socket s = myServerSocket.accept();
                 PrintWriter pw = new PrintWriter( s.getOutputStream(), true );
@@ -206,25 +208,26 @@ public class MasterControl {
             } catch (Exception e){
                 e.printStackTrace();
             }
-            numConnect++;
+            numConnected++;
         }
-		
-	}
 
-	// sendConfirm() is the function responsible for sending a confirmation through each socket
-	// this confirms that every connection has been made, and therefore, the factory sim can begin.
+    }
 
-	private void sendConfirm(){
+    // sendConfirm() is the function responsible for sending a confirmation through each socket
+    // this confirms that every connection has been made, and therefore, the factory sim can begin.
+
+    private void sendConfirm(){
 
         for(String p : dids){
             PartHandler ph = partHandlers.get(p);
             ph.send("mcs start");
         }
 
-	}
+    }
 
     public static void main(String args[]){
-        MasterControl mc = new MasterControl();
+        boolean debug = Boolean.getBoolean(args[0]);
+        MasterControl mc = new MasterControl(debug);
     }
 
 }
