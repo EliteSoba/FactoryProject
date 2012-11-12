@@ -3,6 +3,8 @@
 
 //package factory.managers;
 
+package factory.managers;
+
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
