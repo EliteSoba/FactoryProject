@@ -44,16 +44,17 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 
 
 	protected void setUp() {
-		feeder = new FeederAgent("feeder",0);
-		feeder.startThread();
-		feeder.glmp = this;
-	/*	top = new LaneAgent();
+		top = new LaneAgent();
 		top.startThread();
 		bottom = new LaneAgent();
 		bottom.startThread();
 		gantry = new GantryAgent();
 		gantry.glmp = this;
 		gantry.startThread();
+		feeder = new FeederAgent("feeder",0,top,bottom,gantry);
+		feeder.startThread();
+		feeder.glmp = this;
+		
 		vision = new VisionAgent(null,null,null);
 		vision.startThread();
 		feeder.vision = vision;
@@ -85,7 +86,6 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		bottom.setNest(n1);
 		bottom.setFeeder(feeder);
 
-		feeder.setUpLanes(top, bottom);
 		feeder.setGantry(gantry); //for now
 		feeder.diverter = DiverterState.FEEDING_BOTTOM;
 
@@ -96,7 +96,7 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		binMap.put(bin0, 0);
 		binMap.put(bin1, 1);
 
-		gantry.msgChangeGantryBinConfig(new BinConfig(binMap)); */
+		gantry.msgChangeGantryBinConfig(new BinConfig(binMap)); 
 	}
 
 

@@ -7,9 +7,9 @@ import factory.interfaces.Lane;
 import factory.interfaces.Nest;
 
 public class NestAgent extends Agent implements Nest {
-	protected NestAgent(Type t) {
-		super(t);
-		// TODO Auto-generated constructor stub
+	public NestAgent() {
+		super(Agent.Type.NESTAGENT); // needed for the server 
+	
 	}
 
 

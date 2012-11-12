@@ -8,9 +8,8 @@ import factory.graphics.GraphicLaneMenuPanel;
 import factory.interfaces.*;
 
 public class GantryAgent extends Agent implements Gantry {
-	protected GantryAgent(Type t) {
-		super(t);
-		// TODO Auto-generated constructor stub
+	public GantryAgent() {
+		super(Agent.Type.GANTRYAGENT); // needed for the server 
 	}
 
 	public GraphicLaneMenuPanel glmp;

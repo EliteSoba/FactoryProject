@@ -81,8 +81,11 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 
-	public FeederAgent(String nameStr,int slot) {
+	public FeederAgent(String nameStr,int slot, Lane top, Lane bottom, GantryAgent g) {
 		super(Agent.Type.FEEDERAGENT);
+		this.topLane = new MyLane(top);
+		this.bottomLane = new MyLane(bottom);
+		this.gantry = g;
 		this.name = nameStr+slot;
 		this.feederSlot = slot;
 	}

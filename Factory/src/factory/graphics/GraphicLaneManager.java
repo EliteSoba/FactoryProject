@@ -51,10 +51,10 @@ public class GraphicLaneManager{
 	
 	GraphicPanel graphicPanel;
 	
-	public GraphicLaneManager(int laneX,int laneY){
+	public GraphicLaneManager(int laneX,int laneY, int ID, GraphicPanel gp){
 		lane_xPos = laneX; lane_yPos = laneY;					//MODIFY to change Lane position
-		//laneManagerID = ID;
-		//graphicPanel = gp;
+		laneManagerID = ID;
+		graphicPanel = gp;
 		bin = new GraphicBin(new Part("tmp"));
 		//declaration of variables
 		lane1Items = new ArrayList<GraphicItem>();

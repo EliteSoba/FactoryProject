@@ -32,8 +32,11 @@ public abstract class Agent {
         connected = false;
         type = t;
         connect(); //connects to server
+        System.out.println("got to part 1");
         Thread inputThread = new Thread(independentInput);
-        inputThread.run();
+        System.out.println("got to part 2");
+        inputThread.start();
+        System.out.println("got to part 3");
 	}
 
     public void connect(){
