@@ -79,13 +79,14 @@ public abstract class Client extends JFrame implements ActionListener {
 			System.out.println("connected to server!");
 		} catch (Exception e) {
 			System.out.println("Host unavailable");
-		} 
+		} 	
 	}
 	
 	public void parseInput(){
-		//TODO parseinput
 		parsedCommand = new ArrayList<String>(Arrays.asList(currentCommand.split(" "))); //puts string into array list
-	
+	}
+	public void sendCommand(String cmd){
+		output.println(cmd);
 	}
 
 	@Override
