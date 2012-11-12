@@ -24,6 +24,7 @@ public class KitManager extends Client {
 		String cmd = new String("");
 		if (message == "power"){
 			cmd =  "km kma set kitcontent #kitname #itemnumber #itemname";
+			output.println(cmd);
 		}
 		
 	}

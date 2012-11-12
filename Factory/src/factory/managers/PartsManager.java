@@ -1,5 +1,6 @@
 //Ben Mayeux and Stephanie Reagle and Marc Mendiola
 //CS 200
+package factory.managers;
 
 package factory.managers;
 

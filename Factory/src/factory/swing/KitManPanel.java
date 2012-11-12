@@ -246,15 +246,16 @@ public class KitManPanel extends JPanel implements ActionListener{
 	}*/
 
 	  public void actionPerformed(ActionEvent ae) {
-	/*	if (ae.getSource() == psave) {
+		  if (ae.getSource() == pSave) {
+			  //TODO
+		}
+		else if (ae.getSource() == mSave) {
+		}
+		  
+		else if (ae.getSource() == mRemove){
 
 		}
-		else if (ae.getSource() == msave) {
-		}
-		else if (ae.getSource() == mremove) {
-
-		}
-	*/	
+		
 	}
 		
 }
