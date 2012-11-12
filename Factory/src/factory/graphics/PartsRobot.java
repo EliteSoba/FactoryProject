@@ -1,12 +1,10 @@
 package factory.graphics;
-
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
 class PartsRobot extends AnimatedObject
 {
 	int fx, fy;		// final position (destination)
-	ArrayList<Item> items;
 	boolean arrived;
 	int state;
 	
@@ -16,7 +14,7 @@ class PartsRobot extends AnimatedObject
 	}
 	public PartsRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
-		items = new ArrayList<Item>();
+		items = new ArrayList<GraphicItem>();
 		arrived = false;
 		state = -1;		// 0 = moving to nest, 1 = waiting at nest, 2 = waiting for next action, 3 = moving to kitting station, 4 = waiting at kitting station
 						// 5 = moving to center, 6 = arrived at center
@@ -49,33 +47,9 @@ class PartsRobot extends AnimatedObject
 		if(theta == 0 || theta == 360)
 			x -= amount;
 	}
-	
 	public int getState()
 	{
 		return state;
-	}
-	
-	public void addItem(Item newItem)
-	{
-		items.add(newItem);
-	}
-	
-	public int getSize()
-	{
-		return items.size();
-	}
-	public Item getItemAt(int index)
-	{
-		return items.get(index);
-	}
-	public Item popItem()
-	{
-		//if(items.size() >= 1)
-		//{
-			Item lastItem = items.get(items.size()-1);		// get last item
-			items.remove(items.size()-1);					// remove last item
-			return lastItem;								// return last item
-		//}
 	}
 	public void move()
 	{

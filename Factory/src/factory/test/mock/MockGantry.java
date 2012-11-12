@@ -17,7 +17,7 @@ public class MockGantry extends MockAgent implements Gantry {
 
 	@Override
 	public void msgChangeGantryBinConfig(BinConfig binConfig) {
-		// TODO Auto-generated method stub
+		log.add
 		
 	}
 
