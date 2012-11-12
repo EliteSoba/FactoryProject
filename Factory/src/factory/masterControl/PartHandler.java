@@ -54,20 +54,13 @@ String Client_id = null;
 	public boolean send(String cmd) {
 		boolean result = false;
 		String confirmation = null;
-			try //check if client recived sent cmd
-			{
-				out.println(cmd);	//output command
-				result = true;
-				if(out.checkError())
-				{
-					throw true;
-				}
-			}
-			catch(boolean error)
-			{
-				result = false;
-				System.err.print("Something went wrong when sent");
-			}
+
+		out.println(cmd);	//output command
+		result = true;
+		if(out.checkError())
+		{
+			result = false;
+		}
 		return result;
 	}
 	
