@@ -100,12 +100,12 @@ public class FactoryProductionManager extends JFrame {
 	
 	public void moveRobotToNest1()
 	{
-		panel.moveRobotToNest(1);
+		panel.movePartsRobotToNest(1);
 	}
 	
 	public void moveRobotToStation()
 	{
-		panel.moveRobotToKit(0);
+		panel.movePartsRobotToKit(0);
 	}
 	
 	public void feedLane(GraphicBin b, int laneNum, boolean divergeUp){

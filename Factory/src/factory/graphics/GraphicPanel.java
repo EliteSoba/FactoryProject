@@ -19,18 +19,21 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	private GraphicKitBelt belt; //The conveyer belt
 	private GraphicKittingStation station; //The kitting station
 	private GraphicKittingRobot kitRobot;
-	public static final int WIDTH = 980, HEIGHT = 720;
+	public static final int WIDTH = 1100, HEIGHT = 720;
 	
 	// PARTS MANAGER
 	private ArrayList<Nest> nests;
 	PartsRobot partsRobot;
 	
+	// GANTRY
+	GantryRobot gantryRobot;
+	
 	public GraphicPanel(FactoryProductionManager FKAM) {
 		lane = new GraphicLaneManager [4];
-		lane[0] = new GraphicLaneManager(575,50,0,this);
-		lane[1] = new GraphicLaneManager(575,210,1,this);
-		lane[2] = new GraphicLaneManager(575,370,2,this);
-		lane[3] = new GraphicLaneManager(575,530,3,this);
+		lane[0] = new GraphicLaneManager(510,50,0,this);
+		lane[1] = new GraphicLaneManager(510,210,1,this);
+		lane[2] = new GraphicLaneManager(510,370,2,this);
+		lane[3] = new GraphicLaneManager(510,530,3,this);
 		
 		am = FKAM;
 		belt = new GraphicKitBelt(0, 0, this);
@@ -42,18 +45,17 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		nests = new ArrayList<Nest>();	
 		for(int i = 0; i < 8; i++)
 		{
-			Nest newNest = new Nest(575,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
+			Nest newNest = new Nest(510,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
 			Random randomGen = new Random();
 			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
 				newNest.addItem(new GraphicItem(20,20,"Images/eyesItem.png"));
 			nests.add(newNest);
 		}
-		partsRobot = new PartsRobot(WIDTH/2-100,HEIGHT/2,0,5,5,10,100,100,"Images/robot1.png");
+		partsRobot = new PartsRobot(WIDTH/2-200,HEIGHT/2,0,5,5,10,100,100,"Images/robot1.png");
+		gantryRobot = new GantryRobot(WIDTH-150,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
 		
 		(new Timer(50, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-		
-		this.setPreferredSize(new Dimension(980,720));
 		this.setVisible(true);
 	}
 
@@ -81,16 +83,27 @@ public class GraphicPanel extends JPanel implements ActionListener {
 			Nest currentNest = nests.get(i);
 			currentNest.paint(g);
 		}
-		// Draw the robot
+		// Parts robot client
+		// Draw the nests
+		for(int i = 0; i < nests.size(); i++)
+		{
+			Nest currentNest = nests.get(i);
+			currentNest.paint(g);
+		}
+		
+		// Draw the parts robot
 		final Graphics2D g3 = (Graphics2D)g.create();
 		g3.rotate(Math.toRadians(360-partsRobot.getAngle()), partsRobot.getX()+partsRobot.getImageWidth()/2, partsRobot.getY()+partsRobot.getImageHeight()/2);
-		g3.drawImage(partsRobot.getImage(), partsRobot.getX(), partsRobot.getY(), partsRobot.getImageWidth(), partsRobot.getImageHeight(), this);
 		// Draw items partsRobot is carrying
-		for(int i = 0; i < partsRobot.getSize(); i++)
-		{
-			partsRobot.getItemAt(i).paint(g3, partsRobot.getX()+partsRobot.getImageWidth()-25,partsRobot.getY()+10+i*20);
-		}
+		partsRobot.paint(g3);
 		g3.dispose();
+		final Graphics2D g4 = (Graphics2D)g.create();
+		g4.rotate(Math.toRadians(360-gantryRobot.getAngle()), gantryRobot.getX()+gantryRobot.getImageWidth()/2, gantryRobot.getY()+gantryRobot.getImageHeight()/2);
+		g4.drawImage(gantryRobot.getImage(), gantryRobot.getX(), gantryRobot.getY(), gantryRobot.getImageWidth(), gantryRobot.getImageHeight(), this);
+		// Draw items gantryRobot is carrying
+		for(int i = 0; i < gantryRobot.getSize(); i++)
+			gantryRobot.getItemAt(i).paint(g4, gantryRobot.getX()+gantryRobot.getImageWidth()-25,gantryRobot.getY()+10+i*20);
+		g4.dispose();
 	}
 	public GraphicLaneManager getLane(int index) {
 		return lane[index];
@@ -169,7 +182,19 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		return belt;
 	}
 	
-	public void moveRobotToNest(int nestIndex)
+	public void gantryRobotPickupBin()
+	{
+		gantryRobot.setState(0);
+		gantryRobot.setDestination(WIDTH-100,-200);
+	}
+	
+	public void gantryRobotToFeeder(int feederIndex)
+	{
+		gantryRobot.setState(3);
+		gantryRobot.setDestination(feeder.)
+	}
+	
+	public void movePartsRobotToNest(int nestIndex)
 	{
 		partsRobot.setState(0);
 		partsRobot.adjustShift(5);
@@ -177,14 +202,14 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		partsRobot.setDestinationNest(nestIndex);
 	}
 	
-	public void moveRobotToKit(int kitIndex)
+	public void movePartsRobotToKit(int kitIndex)
 	{
 		partsRobot.setState(3);
-		partsRobot.setDestination(station.getX(),station.getY()-station.getY()%5);
+		partsRobot.setDestination(station.getX()+35,station.getY()-station.getY()%5);
 		partsRobot.setDestinationKit(kitIndex);
 	}
 	
-	public void moveRobotToCenter()
+	public void movePartsRobotToCenter()
 	{
 		partsRobot.setDestination(WIDTH/2-100, HEIGHT/2);
 	}

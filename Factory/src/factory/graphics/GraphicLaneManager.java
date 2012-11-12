@@ -224,10 +224,13 @@ public class GraphicLaneManager{
 					lane1Items.get(i).setVY(0);
 					lane1Items.get(i).setVX(vX);
 				}
-			}
+			}/*
 			//if nest is not empty, continue moving horizontally
-			/*if(lane.nestItems.size() < 8 && lane1Items.get(i).getVY() == 0){
-				lane1Items.get(i).setvX(vX);
+			if(graphicPanel.getNest().get(laneManagerID * 2).getSize() < 9 && lane1Items.get(i).getVX() == 0 && lane1Items.get(i).getVY() == 0){
+				lane1Items.get(i).setVX(vX);
+			}
+			else if(graphicPanel.getNest().get(laneManagerID * 2).getSize() >= 9  && (lane1Items.get(i).getStepX() == lane1QueueTaken.size() + 1) && lane1Items.get(i).getVX() == vX && lane1Items.get(i).getVY() == 0){
+				lane1Items.get(i).setVX(0);
 			}*/
 			//Lane items move horizontally
 			if(lane1Items.get(i).getVX() == vX){
@@ -256,7 +259,7 @@ public class GraphicLaneManager{
 					}
 					if(lane1Items.size() == 0)
 						lane1PurgeOn = false;
-				}
+				}	//if nest is full. remove crashing items and set items speed in queue to 0
 				else if(graphicPanel.getNest().get(laneManagerID * 2).getSize() >= 9){
 					if(lane1Items.get(i).getStepX() == lane1QueueTaken.size() + 1){
 						//System.out.println(" " + lane.laneQueueTaken.size());
@@ -267,38 +270,33 @@ public class GraphicLaneManager{
 							i--;
 						}
 						else{
-							//System.out.print(" " + lane.nestItems.size());
-							//System.out.println(" zero");
+							//System.out.println("ENTERED");
+							//System.out.print("lane size " + lane1Items.size());
 							lane1Items.get(i).setVX(0);
 							lane1QueueTaken.add(new Boolean(true));
 						}
 					}
 				}
-				else if(lane1Items.get(i).getStepX() == 0){
-					//TO BE CHANGED
-					lane1Items.get(i).setVY(0);
-					lane1Items.get(i).setVX(0);
-					lane1Items.get(i).setX(lane_xPos + 3 + 25 * (int)(graphicPanel.getNest().get(laneManagerID * 2).getSize() / 3));
-					boolean testDiverge = !lane1Items.get(i).getDivergeUp();
-					lane1Items.get(i).setY(lane_yPos + 3 + 25 * (graphicPanel.getNest().get(laneManagerID * 2).getSize() % 3) + 80 * ((testDiverge)?0:1));
-					graphicPanel.getNest().get(laneManagerID * 2).addItem(lane1Items.get(i));
-					if(lane1QueueTaken.size() > 0)
-						lane1QueueTaken.remove(0);
-					lane1Items.remove(i);
-					i--;
-					/*
-					lane1Items.get(i).setvY(0);
-					lane1Items.get(i).setvX(0);
-					lane1Items.get(i).setX(lane_xPos + 20 * (int)(nest1Items.size() / 4));
-					boolean testDiverge = !lane1Items.get(i).divergeUp;
-					lane1Items.get(i).setY(lane_yPos + 20 * (nest1Items.size() % 4) + 80 * ((testDiverge)?0:1));
-					nest1Items.add(lane1Items.get(i));
-					if(lane1QueueTaken.size() > 0)
-						lane1QueueTaken.remove(0);
-					lane1Items.remove(i);
-					i--;
-					*/
-					
+				else { //if(graphicPanel.getNest().get(laneManagerID * 2).getSize() < 9){
+
+					System.out.println("Bleh");
+					if(lane1Items.get(i).getStepX() <= 0){		//enters nest
+						System.out.println("Bleh2");
+						//TO BE CHANGED
+						lane1Items.get(i).setVY(0);
+						lane1Items.get(i).setVX(0);
+						lane1Items.get(i).setX(lane_xPos + 3 + 25 * (int)(graphicPanel.getNest().get(laneManagerID * 2).getSize() / 3));
+						boolean testDiverge = !lane1Items.get(i).getDivergeUp();
+						lane1Items.get(i).setY(lane_yPos + 3 + 25 * (graphicPanel.getNest().get(laneManagerID * 2).getSize() % 3) + 80 * ((testDiverge)?0:1));
+						graphicPanel.getNest().get(laneManagerID * 2).addItem(lane1Items.get(0));
+						if(lane1QueueTaken.size() > 0)
+							lane1QueueTaken.remove(0);
+						lane1Items.remove(i);
+						i--;
+						if(graphicPanel.getNest().get(laneManagerID * 2).getSize() >= 9){
+							System.out.println(graphicPanel.getNest().get(laneManagerID * 2).getSize());
+						}
+					}
 				}
 			}
 			else{
