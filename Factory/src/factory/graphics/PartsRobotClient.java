@@ -23,16 +23,16 @@ class PartsRobotClient extends JPanel implements ActionListener
 		// Initialize array
 		nests = new ArrayList<Nest>();
 		// Add the kitting station
-		station = new Station(10,75,0,0,0,0,150,300,"kittingStation.png");
+		station = new Station(10,75,0,0,0,0,150,300,"Images/kittingStation.png");
 		// Add the parts robot
-		robot = new PartsRobot(frameWidth/2,frameHeight/2,0,5,5,10,100,100,"robot1.png");
+		robot = new PartsRobot(frameWidth/2,frameHeight/2,0,5,5,10,100,100,"Images/robot1.png");
 		// Add 8 nests
 		for(int i = 0; i < 8; i++)
 		{
-			Nest newNest = new Nest(frameWidth-100,i*85+75,0,0,0,0,75,75,"nest3x3.png");
+			Nest newNest = new Nest(frameWidth-100,i*85+75,0,0,0,0,75,75,"Images/nest3x3.png");
 			Random randomGen = new Random();
 			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
-				newNest.addItem(new GraphicItem(20,20,"CircleItem.png"));
+				newNest.addItem(new GraphicItem(20,20,"Images/CircleItem.png"));
 			nests.add(newNest);
 		}
 		// Initialize flash
@@ -73,7 +73,7 @@ class PartsRobotClient extends JPanel implements ActionListener
 		// Draw items robot is carrying
 		for(int i = 0; i < robot.getSize(); i++)
 		{
-			robot.getItemAt(i).paint(g, robot.getX()+robot.getImageWidth()-25,robot.getY()+10+i*20);
+			robot.getItemAt(i).paint(g3, robot.getX()+robot.getImageWidth()-25,robot.getY()+10+i*20);
 		}
 		g3.dispose();
 	}
