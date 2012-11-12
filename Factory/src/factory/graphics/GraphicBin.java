@@ -20,9 +20,8 @@ public class GraphicBin{
 		int binSize = 12 * 55;		//Number of items in bin
 		binItems = new ArrayList<GraphicItem>();
 		for(int i = 0; i < binSize;i++){
-			binItems.add(new GraphicItem(-40, 0, "Images/"+partName+".png"));
-			//binItems.get(i).setX(-40);
-			//binItems.get(i).itemImage = new ImageIcon("Images/" + partName + ".png");
+			//binItems.add(new GraphicItem(-40, 0, "Images/"+partName+".png"));
+			binItems.add(new GraphicItem(-40, 0, "Images/eyesItem.png"));
 		}
 		//Declaration of items in bin's location
 		/*for(int i = 0;i<binItems.size();i++){

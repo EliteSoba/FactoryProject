@@ -7,6 +7,12 @@ import factory.interfaces.Lane;
 import factory.interfaces.Nest;
 
 public class NestAgent extends Agent implements Nest {
+	public NestAgent() {
+		super(Agent.Type.NESTAGENT); // needed for the server 
+	
+	}
+
+
 	/** DATA **/
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
 	public Lane myLane;

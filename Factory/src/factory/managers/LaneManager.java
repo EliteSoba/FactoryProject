@@ -3,25 +3,31 @@
 
 package factory.managers;
 
+import java.awt.GridLayout;
+
 import javax.swing.JPanel;
 
 import factory.client.Client;
+import factory.graphics.GraphicLaneGraphicPanel;
+import factory.graphics.GraphicLaneManagerClient;
 import factory.swing.LaneManPanel;
 
 public class LaneManager extends Client {
 	private static final long serialVersionUID = 1L;
 
 
-	public LaneManager(JPanel buttons) {
-		super(Client.Type.LANEMANAGER, buttons, null);
+	public LaneManager(JPanel buttons, GraphicLaneGraphicPanel animation) {
+		
+		super(Client.Type.LANEMANAGER, buttons, animation); //what does this do?
 		setInterface();
 	}
 	
 	public static void main(String[] args){
 		LaneManPanel buttons = new LaneManPanel();
-		LaneManager l = new LaneManager(buttons);
+		//GraphicLaneGraphicPanel animation = new GraphicLaneGraphicPanel(new GraphicLaneManagerClient());
+		LaneManager l = new LaneManager(buttons, null);
 		buttons.setManager(l);
-
+		
 	}
 	
 	public void sendMessage(int lane, int setting, String message){
@@ -45,6 +51,8 @@ public class LaneManager extends Client {
 		this.setSize(800, 800);
 		this.add(UI);
 		this.setVisible(true);
+				
+		
 		
 	}
 

@@ -1,10 +1,12 @@
 package factory.graphics;
+import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
 class PartsRobot extends AnimatedObject
 {
 	int fx, fy;		// final position (destination)
+	int destinationNest, destinationKit;
 	boolean arrived;
 	int state;
 	
@@ -18,6 +20,8 @@ class PartsRobot extends AnimatedObject
 		arrived = false;
 		state = -1;		// 0 = moving to nest, 1 = waiting at nest, 2 = waiting for next action, 3 = moving to kitting station, 4 = waiting at kitting station
 						// 5 = moving to center, 6 = arrived at center
+		destinationNest = -1;
+		destinationKit = -1;
 		x = init_x;
 		y = init_y;
 		fx = init_x;
@@ -42,6 +46,26 @@ class PartsRobot extends AnimatedObject
 		state = init_state;
 	}
 	
+	public int getDestinationKit()
+	{
+		return destinationKit;
+	}
+	
+	public void setDestinationKit(int init_destinationKit)
+	{
+		destinationKit = init_destinationKit;
+	}
+	
+	public int getDestinationNest()
+	{
+		return destinationNest;
+	}
+	
+	public void setDestinationNest(int init_destinationNest)
+	{
+		destinationNest = init_destinationNest;
+	}
+	
 	public void adjustShift(int amount)
 	{
 		if(theta == 0 || theta == 360)
@@ -51,9 +75,17 @@ class PartsRobot extends AnimatedObject
 	{
 		return state;
 	}
+	public void paint(Graphics g)
+	{
+		// Draw the parts robot itself
+		g.drawImage(image, x, y, imageWidth, imageHeight, null);
+		// Draw the items it's carrying
+		for(int i = 0; i < items.size(); i++)
+			items.get(i).paint(g, x+imageWidth-25,y+10+i*20);
+	}
 	public void move()
 	{
-		System.out.println(fx + " " + fy);
+		//System.out.println(fx + " " + fy);
 		if(y == fy && x == fx)	// robot has arrived at destination
 		{
 			if(state == 0)
@@ -110,6 +142,6 @@ class PartsRobot extends AnimatedObject
 		}
 		if(theta < 0) theta = 360;
 		else if(theta > 360) theta = 0;
-		System.out.println(theta);
+		//System.out.println(theta);
 	}
 }

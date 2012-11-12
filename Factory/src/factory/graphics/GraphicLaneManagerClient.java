@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 
 public class GraphicLaneManagerClient extends JFrame implements ActionListener{
-
+	
 	//Panels
 	GraphicLaneMenuPanel menuPanel;
 	GraphicLaneGraphicPanel graphicPanel;

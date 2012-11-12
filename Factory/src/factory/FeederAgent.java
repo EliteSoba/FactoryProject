@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import agent.Agent;
+import agent.Agent.Type;
 import factory.graphics.GraphicLaneManagerClient;
 import factory.graphics.GraphicLaneMenuPanel;
 import factory.interfaces.Feeder;
@@ -80,8 +81,11 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 
-	public FeederAgent(String nameStr,int slot) {
+	public FeederAgent(String nameStr,int slot, Lane top, Lane bottom, GantryAgent g) {
 		super(Agent.Type.FEEDERAGENT);
+		this.topLane = new MyLane(top);
+		this.bottomLane = new MyLane(bottom);
+		this.gantry = g;
 		this.name = nameStr+slot;
 		this.feederSlot = slot;
 	}
@@ -369,8 +373,8 @@ public class FeederAgent extends Agent implements Feeder {
 			diverter = DiverterState.FEEDING_BOTTOM;
 			DoSwitchLane();   // Animation to switch lane
 		}
-
-
+		
+		
 		okayToPurgeTimer.schedule(new TimerTask(){
 			public void run() {
 				state = FeederState.OK_TO_PURGE;

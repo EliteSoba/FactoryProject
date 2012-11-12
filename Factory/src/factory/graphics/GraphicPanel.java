@@ -19,18 +19,21 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	private GraphicKitBelt belt; //The conveyer belt
 	private GraphicKittingStation station; //The kitting station
 	private GraphicKittingRobot kitRobot;
-	public static final int WIDTH = 980, HEIGHT = 720;
+	public static final int WIDTH = 1100, HEIGHT = 720;
 	
 	// PARTS MANAGER
 	private ArrayList<Nest> nests;
 	PartsRobot partsRobot;
 	
+	// GANTRY
+	GantryRobot gantryRobot;
+	
 	public GraphicPanel(FactoryProductionManager FKAM) {
 		lane = new GraphicLaneManager [4];
-		lane[0] = new GraphicLaneManager(575,50);
-		lane[1] = new GraphicLaneManager(575,210);
-		lane[2] = new GraphicLaneManager(575,370);
-		lane[3] = new GraphicLaneManager(575,530);
+		lane[0] = new GraphicLaneManager(510,50,0,this);
+		lane[1] = new GraphicLaneManager(510,210,1,this);
+		lane[2] = new GraphicLaneManager(510,370,2,this);
+		lane[3] = new GraphicLaneManager(510,530,3,this);
 		
 		am = FKAM;
 		belt = new GraphicKitBelt(0, 0, this);
@@ -42,18 +45,17 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		nests = new ArrayList<Nest>();	
 		for(int i = 0; i < 8; i++)
 		{
-			Nest newNest = new Nest(575,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
+			Nest newNest = new Nest(510,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
 			Random randomGen = new Random();
 			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
 				newNest.addItem(new GraphicItem(20,20,"Images/eyesItem.png"));
 			nests.add(newNest);
 		}
-		partsRobot = new PartsRobot(WIDTH/2-100,HEIGHT/2,0,5,5,10,100,100,"Images/robot1.png");
+		partsRobot = new PartsRobot(WIDTH/2-200,HEIGHT/2,0,5,5,10,100,100,"Images/robot1.png");
+		gantryRobot = new GantryRobot(WIDTH-150,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
 		
 		(new Timer(50, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-		
-		this.setPreferredSize(new Dimension(980,720));
 		this.setVisible(true);
 	}
 
@@ -81,16 +83,27 @@ public class GraphicPanel extends JPanel implements ActionListener {
 			Nest currentNest = nests.get(i);
 			currentNest.paint(g);
 		}
-		// Draw the robot
+		// Parts robot client
+		// Draw the nests
+		for(int i = 0; i < nests.size(); i++)
+		{
+			Nest currentNest = nests.get(i);
+			currentNest.paint(g);
+		}
+		
+		// Draw the parts robot
 		final Graphics2D g3 = (Graphics2D)g.create();
 		g3.rotate(Math.toRadians(360-partsRobot.getAngle()), partsRobot.getX()+partsRobot.getImageWidth()/2, partsRobot.getY()+partsRobot.getImageHeight()/2);
-		g3.drawImage(partsRobot.getImage(), partsRobot.getX(), partsRobot.getY(), partsRobot.getImageWidth(), partsRobot.getImageHeight(), this);
 		// Draw items partsRobot is carrying
-		for(int i = 0; i < partsRobot.getSize(); i++)
-		{
-			partsRobot.getItemAt(i).paint(g3, partsRobot.getX()+partsRobot.getImageWidth()-25,partsRobot.getY()+10+i*20);
-		}
+		partsRobot.paint(g3);
 		g3.dispose();
+		final Graphics2D g4 = (Graphics2D)g.create();
+		g4.rotate(Math.toRadians(360-gantryRobot.getAngle()), gantryRobot.getX()+gantryRobot.getImageWidth()/2, gantryRobot.getY()+gantryRobot.getImageHeight()/2);
+		g4.drawImage(gantryRobot.getImage(), gantryRobot.getX(), gantryRobot.getY(), gantryRobot.getImageWidth(), gantryRobot.getImageHeight(), this);
+		// Draw items gantryRobot is carrying
+		for(int i = 0; i < gantryRobot.getSize(); i++)
+			gantryRobot.getItemAt(i).paint(g4, gantryRobot.getX()+gantryRobot.getImageWidth()-25,gantryRobot.getY()+10+i*20);
+		g4.dispose();
 	}
 	public GraphicLaneManager getLane(int index) {
 		return lane[index];
@@ -145,10 +158,17 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		am.dumpKitAtInspectionDone();
 	}
 	
-	public void exportKit() {
+	public void moveKitFromInspectionToConveyor() {
 		//Sends a kit out of the factory via conveyer belt
 		if (station.getCheck() != null && !kitRobot.kitted())
 			kitRobot.setFromCheck(true);
+	}
+	public void moveKitFromInspectionToConveyorDone() {
+		am.moveKitFromInspectionToConveyorDone();
+	}
+	
+	public void exportKit() {
+		belt.exportKit();
 	}
 	public void exportKitDone() {
 		am.exportKitDone();
@@ -161,8 +181,92 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	public GraphicKitBelt getBelt() {
 		return belt;
 	}
-
+	
+	public void gantryRobotPickupBin()
+	{
+		gantryRobot.setState(0);
+		gantryRobot.setDestination(WIDTH-100,-200);
+	}
+	
+	public void gantryRobotToFeeder(int feederIndex)
+	{
+		gantryRobot.setState(3);
+		gantryRobot.setDestination(feeder.)
+	}
+	
+	public void movePartsRobotToNest(int nestIndex)
+	{
+		partsRobot.setState(0);
+		partsRobot.adjustShift(5);
+		partsRobot.setDestination(nests.get(nestIndex-1).getX()-nests.get(nestIndex-1).getImageWidth()-10,nests.get(nestIndex-1).getY()-15);
+		partsRobot.setDestinationNest(nestIndex);
+	}
+	
+	public void movePartsRobotToKit(int kitIndex)
+	{
+		partsRobot.setState(3);
+		partsRobot.setDestination(station.getX()+35,station.getY()-station.getY()%5);
+		partsRobot.setDestinationKit(kitIndex);
+	}
+	
+	public void movePartsRobotToCenter()
+	{
+		partsRobot.setDestination(WIDTH/2-100, HEIGHT/2);
+	}
+	
+	public void partsRobotArrivedAtNest()
+	{
+		System.out.println("Debug:ARRIVED AT NEST");
+	}
+	
+	public void partsRobotArrivedAtStation()
+	{
+		System.out.println("DEBUG: ARRIVED AT STATION");
+	}
+	
+	public void partsRobotArrivedAtCenter()
+	{
+		System.out.println("DEBUG: ARRIVED AT CENTER");
+	}
+	
+	public void feedLane(GraphicBin b, int laneNum, boolean divergeUp){
+		lane[laneNum - 1].bin = b;
+		lane[laneNum - 1].currentItemCount = 0;
+		lane[laneNum - 1].placedBin = true;
+		lane[laneNum - 1].binExist = true;
+		lane[laneNum - 1].laneStart = true;
+		lane[laneNum - 1].divergeUp = divergeUp;
+		lane[laneNum - 1].feederOn = true;
+	}
+	
+	public ArrayList<Nest> getNest(){
+		return nests;
+	}
+	
 	public void actionPerformed(ActionEvent arg0) {
+		// Has robot arrived at its destination?
+		//System.out.println(partsRobot.getState());
+		if(partsRobot.getState() == 1)		// partsRobot has arrived at nest
+		{
+			// Give item to partsRobot
+			if(partsRobot.getSize() < 4)
+			{
+				partsRobot.addItem(nests.get(partsRobot.getDestinationNest()-1).popItem());
+				partsRobot.setState(2);
+			}
+				partsRobotArrivedAtNest();
+		}
+		else if(partsRobot.getState() == 4)	// partsRobot has arrived at kitting station
+		{
+			for(int i = 0; i < partsRobot.getSize(); i++)
+				station.addItem(partsRobot.popItem(),partsRobot.getDestinationKit());
+			partsRobotArrivedAtStation();
+		}
+		else if(partsRobot.getState() == 6)
+		{
+			partsRobotArrivedAtCenter();
+		}
+		partsRobot.move();							// Update position and angle of partsRobot
 		repaint();		
 	}
 }
