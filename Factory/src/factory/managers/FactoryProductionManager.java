@@ -19,6 +19,7 @@ public class FactoryProductionManager extends Client {
 		public static void main(String[] args){
 		    FactoryProdManPanel buttons = new FactoryProdManPanel();
 			FactoryProductionManager f = new FactoryProductionManager(buttons);
+			buttons.setManager(f);
 		}
 
 		@Override
