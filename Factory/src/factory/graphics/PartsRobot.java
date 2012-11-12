@@ -5,6 +5,7 @@ import java.util.ArrayList;
 class PartsRobot extends AnimatedObject
 {
 	int fx, fy;		// final position (destination)
+	int destinationNest, destinationKit;
 	boolean arrived;
 	int state;
 	
@@ -18,6 +19,8 @@ class PartsRobot extends AnimatedObject
 		arrived = false;
 		state = -1;		// 0 = moving to nest, 1 = waiting at nest, 2 = waiting for next action, 3 = moving to kitting station, 4 = waiting at kitting station
 						// 5 = moving to center, 6 = arrived at center
+		destinationNest = -1;
+		destinationKit = -1;
 		x = init_x;
 		y = init_y;
 		fx = init_x;
@@ -40,6 +43,26 @@ class PartsRobot extends AnimatedObject
 	public void setState(int init_state)
 	{
 		state = init_state;
+	}
+	
+	public int getDestinationKit()
+	{
+		return destinationKit;
+	}
+	
+	public void setDestinationKit(int init_destinationKit)
+	{
+		destinationKit = init_destinationKit;
+	}
+	
+	public int getDestinationNest()
+	{
+		return destinationNest;
+	}
+	
+	public void setDestinationNest(int init_destinationNest)
+	{
+		destinationNest = init_destinationNest;
 	}
 	
 	public void adjustShift(int amount)
