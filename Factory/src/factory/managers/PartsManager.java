@@ -2,7 +2,7 @@
 //CS 200
 
 
-import factory.managers;
+import factory.managers.*;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
