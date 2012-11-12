@@ -8,10 +8,6 @@ import factory.interfaces.Lane;
 import factory.interfaces.Nest;
 
 public class LaneAgent extends Agent implements Lane {
-	protected LaneAgent(Type t) {
-		super(t);
-		// TODO Auto-generated constructor stub
-	}
 
 	/** DATA **/
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();

@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import agent.Agent;
+import agent.Agent.Type;
 import factory.graphics.GraphicLaneManagerClient;
 import factory.graphics.GraphicLaneMenuPanel;
 import factory.interfaces.Feeder;
