@@ -161,8 +161,60 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	public GraphicKitBelt getBelt() {
 		return belt;
 	}
-
+	
+	public void moveRobotToNest(int nestIndex)
+	{
+		partsRobot.adjustShift(5);
+		partsRobot.setDestination(nests.get(nestIndex-1).getX()-nests.get(nestIndex-1).getImageWidth()-10,nests.get(nestIndex-1).getY()-15);
+		partsRobot.setDestinationNest(nestIndex);
+	}
+	
+	public void moveRobotToKit(int kitIndex)
+	{
+		partsRobot.setDestination(station.getX(),station.getY());
+		partsRobot.setDestinationKit(kitIndex);
+	}
+	
+	public void moveRobotToCenter()
+	{
+		partsRobot.setDestination(WIDTH/2-100, HEIGHT/2);
+	}
+	
+	public void partsRobotArrivedAtNest()
+	{
+		System.out.println("Debug:ARRIVED AT NEST");
+	}
+	
+	public void partsRobotArrivedAtStation()
+	{
+		System.out.println("DEBUG: ARRIVED AT STATION");
+	}
+	
+	public void partsRobotArrivedAtCenter()
+	{
+		System.out.println("DEBUG: ARRIVED AT CENTER");
+	}
+	
 	public void actionPerformed(ActionEvent arg0) {
+		// Has robot arrived at its destination?
+		if(partsRobot.getState() == 1)		// partsRobot has arrived at nest
+		{
+			// Give item to partsRobot
+			partsRobot.addItem(nests.get(partsRobot.getDestinationNest()-1).popItem());
+			partsRobot.setState(2);
+			partsRobotArrivedAtNest();
+		}
+		else if(partsRobot.getState() == 4)	// partsRobot has arrived at kitting station
+		{
+			for(int i = 0; i < partsRobot.getSize(); i++)
+				station.addItem(partsRobot.popItem(),partsRobot.getDestinationKit());
+			partsRobotArrivedAtStation();
+		}
+		else if(partsRobot.getState() == 6)
+		{
+			partsRobotArrivedAtCenter();
+		}
+		partsRobot.move();							// Update position and angle of partsRobot
 		repaint();		
 	}
 }
