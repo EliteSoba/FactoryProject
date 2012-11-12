@@ -1,4 +1,4 @@
-/*package factory.graphics;
+package factory.graphics;
 import java.awt.*;
 import javax.swing.*;
 
@@ -11,7 +11,7 @@ public class FrameKitAssemblyManager extends JFrame{
 	/*FrameKitAssemblyManager.java (800x600) - Tobias Lee
 	 * This integrates the GraphicKitAssemblyManager with a small Control Panel to demonstrate commands
 	 * This will be removed when the project gets integrated
-	 *
+	 */
 	
 	GraphicKitAssemblyManager GKAM; //The Graphics part
 	ControlPanel CP; //The Swing control panel
@@ -57,6 +57,10 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	public void takePicture(){
 		GKAM.takePictureOfInspectionSlot();
+	}
+	
+	public void moveKitFromInspectionToConveyor() {
+		GKAM.moveKitFromInspectionToConveyor();
 	}
 	
 	public void exportKit() {
@@ -112,6 +116,11 @@ public class FrameKitAssemblyManager extends JFrame{
 		kitRobot.msgAnimationDone();
 	}
 	
+	public void moveKitFromInspectionToConveyorDone() {
+		System.out.println("Kit sent to Conveyor Belt!");
+		kitRobot.msgAnimationDone();
+	}
+	
 	public void exportKitDone() {
 		System.out.println("Kit has left the building!");
 		kitRobot.msgAnimationDone();
@@ -127,4 +136,3 @@ public class FrameKitAssemblyManager extends JFrame{
 	}
 
 }
-*/

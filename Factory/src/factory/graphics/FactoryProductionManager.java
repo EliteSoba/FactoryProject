@@ -32,6 +32,10 @@ public class FactoryProductionManager extends JFrame {
 		panel.takePictureOfInspectionSlot();
 	}
 	
+	public void moveKitFromInspectionToConveyor() {
+		panel.moveKitFromInspectionToConveyor();
+	}
+	
 	public void exportKit() {
 		//Sends a Kit out of the factory
 		panel.exportKit();
@@ -84,9 +88,28 @@ public class FactoryProductionManager extends JFrame {
 		//kitRobot.msgAnimationDone();
 	}
 	
+	public void moveKitFromInspectionToConveyorDone() {
+		System.out.println("Kit sent to Conveyor Belt!");
+		//kitRobot.msgAnimationDone();
+	}
+	
 	public void exportKitDone() {
 		System.out.println("Kit has left the building!");
 		//kitRobot.msgAnimationDone();
+	}
+	
+	public void moveRobotToNest1()
+	{
+		panel.moveRobotToNest(1);
+	}
+	
+	public void moveRobotToStation()
+	{
+		panel.moveRobotToKit(0);
+	}
+	
+	public void feedLane(GraphicBin b, int laneNum, boolean divergeUp){
+		panel.feedLane(b,laneNum,divergeUp);
 	}
 	
 	public static void main(String args[]) {

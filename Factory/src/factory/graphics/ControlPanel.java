@@ -1,7 +1,14 @@
 package factory.graphics;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import factory.Part;
 
 public class ControlPanel extends JPanel implements ActionListener{
 	
@@ -18,6 +25,9 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton inspect1;
 	JButton inspect2;
 	JButton dumpKit;
+	JButton partsRobotNest1;
+	JButton partsRobotStation;
+	JButton feedLane1;
 	
 	public ControlPanel(FactoryProductionManager fpm) {
 		//Constructor
@@ -28,6 +38,9 @@ public class ControlPanel extends JPanel implements ActionListener{
 		dumpKit = new JButton("Dump Kit");
 		test = new JButton("Quit");
 		blank = new JLabel[10];
+		partsRobotNest1 = new JButton("Nest 1 Full");
+		partsRobotStation = new JButton("Station");
+		feedLane1 = new JButton("Feed Lane 1");
 		for (int i = 0; i < 10; i++) {
 			blank[i] = new JLabel("   ");
 			blank[i].setPreferredSize(new Dimension(150, 10));
@@ -46,6 +59,12 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.add(dumpKit);
 		this.add(blank[6]);*/
 		this.add(test);
+		this.add(blank[5]);
+		this.add(partsRobotNest1);
+		this.add(blank[6]);
+		this.add(partsRobotStation);
+		this.add(blank[7]);
+		this.add(feedLane1);
 		this.setPreferredSize(new Dimension(200, 720));
 		outKit.addActionListener(this);
 		outKit.setPreferredSize(new Dimension(170, 50));
@@ -59,6 +78,12 @@ public class ControlPanel extends JPanel implements ActionListener{
 		dumpKit.setPreferredSize(new Dimension(170, 50));
 		test.addActionListener(this);
 		test.setPreferredSize(new Dimension(170, 50));
+		partsRobotNest1.addActionListener(this);
+		partsRobotNest1.setPreferredSize(new Dimension(170, 50));
+		partsRobotStation.addActionListener(this);
+		partsRobotStation.setPreferredSize(new Dimension(170,50));
+		feedLane1.addActionListener(this);
+		feedLane1.setPreferredSize(new Dimension(170, 50));
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -75,6 +100,13 @@ public class ControlPanel extends JPanel implements ActionListener{
 			am.kitToCheck(1);
 		else if (source == dumpKit)
 			am.dumpKit();
+		else if(source == partsRobotNest1)
+			am.moveRobotToNest1();
+		else if(source == partsRobotStation)
+			am.moveRobotToStation();
+		else if(source == feedLane1)
+			am.feedLane(new GraphicBin(new Part("ear")),1,true);
+		
 	}
 
 }

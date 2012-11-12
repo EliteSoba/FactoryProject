@@ -1,20 +1,19 @@
 package factory.graphics;
-import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
-class PartsRobot extends AnimatedObject
+class GantryRobot extends AnimatedObject
 {
 	int fx, fy;		// final position (destination)
 	int destinationNest, destinationKit;
 	boolean arrived;
 	int state;
 	
-	public PartsRobot()
+	public GantryRobot()
 	{
 		
 	}
-	public PartsRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
+	public GantryRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
 		items = new ArrayList<GraphicItem>();
 		arrived = false;
@@ -75,14 +74,6 @@ class PartsRobot extends AnimatedObject
 	{
 		return state;
 	}
-	public void paint(Graphics g)
-	{
-		// Draw the parts robot itself
-		g.drawImage(image, x, y, imageWidth, imageHeight, null);
-		// Draw the items it's carrying
-		for(int i = 0; i < items.size(); i++)
-			items.get(i).paint(g, x+imageWidth-25,y+10+i*20);
-	}
 	public void move()
 	{
 		//System.out.println(fx + " " + fy);
@@ -91,17 +82,12 @@ class PartsRobot extends AnimatedObject
 			if(state == 0)
 			{
 				state = 1;
-				System.out.println("Arrived at nest, waiting for item pickup.");
+				System.out.println("Arrived at bin pickup point, waiting for bin pickup.");
 			}
 			else if(state == 3)
 			{
 				state = 4;
-				System.out.println("Arrived at kitting station, waiting for item dropoff.");
-			}
-			else if(state == 5)		// going towards station
-			{
-				state = 6;
-				System.out.println("Arrived at center.");
+				System.out.println("Arrived at feeder, waiting for feeder dumping.");
 			}
 		}
 		else if(y > fy)

@@ -1,4 +1,4 @@
-/*package factory.graphics;
+package factory.graphics;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -49,7 +49,7 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	 * 			- HANDLE WHAT TO DO WHEN TOO MANY KITS ARE CIRCULATING (4TH KIT FROM BELT TRANSFERRING TO STATION)
 	 * 			Are hardfixes really a bad thing?
 	 * 			!- HANDLED BY 201 TEAM
-	 *
+	 */
 	
 	private FrameKitAssemblyManager am; //The JFrame that holds this. Will be removed when gets integrated with the rest of the project
 	private GraphicKitBelt belt; //The conveyer belt
@@ -117,10 +117,17 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		am.dumpKitAtInspectionDone();
 	}
 	
-	public void exportKit() {
+	public void moveKitFromInspectionToConveyor() {
 		//Sends a kit out of the factory via conveyer belt
 		if (station.getCheck() != null && !robot.kitted())
 			robot.setFromCheck(true);
+	}
+	public void moveKitFromInspectionToConveyorDone() {
+		am.moveKitFromInspectionToConveyorDone();
+	}
+	
+	public void exportKit() {
+		belt.exportKit();
 	}
 	public void exportKitDone() {
 		am.exportKitDone();
@@ -152,4 +159,3 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	}
 
 }
-*/
