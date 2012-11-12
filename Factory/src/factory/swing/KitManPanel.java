@@ -88,65 +88,65 @@ public class KitManPanel extends JPanel implements ActionListener{
 		JTabbedPane tabbedPane = new JTabbedPane();
 	       GridBagConstraints c = new GridBagConstraints();
 
-		JPanel partsAssignment = new JPanel();
-		partsAssignment.setLayout(new GridBagLayout());
+		JPanel createKit = new JPanel();
+		createKit.setLayout(new GridBagLayout());
 		c.fill = GridBagConstraints.VERTICAL;
 		c.gridx = 0;
 		c.gridy = 0;
-		partsAssignment.add(pLabel1, c);
+		createKit.add(pLabel1, c);
 
 		c.gridy = 1;
-		partsAssignment.add(pLabel2, c);
+		createKit.add(pLabel2, c);
 
 		c.gridy = 2;
-		partsAssignment.add(pLabel3, c);
+		createKit.add(pLabel3, c);
 
 		c.gridy = 3;
-		partsAssignment.add(pLabel4, c);
+		createKit.add(pLabel4, c);
 
 		c.gridy = 4;
-		partsAssignment.add(pLabel5, c);
+		createKit.add(pLabel5, c);
 
 		c.gridy = 5;
-		partsAssignment.add(pLabel6, c);
+		createKit.add(pLabel6, c);
 
 		c.gridy = 6;
-		partsAssignment.add(pLabel7, c);
+		createKit.add(pLabel7, c);
 
 		c.gridy = 7;
-		partsAssignment.add(pLabel8, c);
+		createKit.add(pLabel8, c);
 
 		c.gridy = 9;
-		partsAssignment.add(pKitName, c);
+		createKit.add(pKitName, c);
 
 		c.gridy = 10;
-		partsAssignment.add(pSave, c);
+		createKit.add(pSave, c);
 
 		c.fill = GridBagConstraints.VERTICAL;
 		c.gridx = 1;
 		c.gridy = 0;
-		partsAssignment.add(pItemComboBox1, c);
+		createKit.add(pItemComboBox1, c);
 
 		c.gridy = 1;
-		partsAssignment.add(pItemComboBox2, c);
+		createKit.add(pItemComboBox2, c);
 
 		c.gridy = 2;
-		partsAssignment.add(pItemComboBox3, c);
+		createKit.add(pItemComboBox3, c);
 
 		c.gridy = 3;
-		partsAssignment.add(pItemComboBox4, c);
+		createKit.add(pItemComboBox4, c);
 
 		c.gridy = 4;
-		partsAssignment.add(pItemComboBox5, c);
+		createKit.add(pItemComboBox5, c);
 
 		c.gridy = 5;
-		partsAssignment.add(pItemComboBox6, c);
+		createKit.add(pItemComboBox6, c);
 
 		c.gridy = 6;
-		partsAssignment.add(pItemComboBox7, c);
+		createKit.add(pItemComboBox7, c);
 
 		c.gridy = 7;
-		partsAssignment.add(pItemComboBox8, c);
+		createKit.add(pItemComboBox8, c);
 		
 		JPanel productionSchedule = new JPanel();
 		productionSchedule.setLayout(new GridBagLayout());
@@ -223,7 +223,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 		c.gridy = 10;
 		modifyKit.add(mRemove, c);
 
-		tabbedPane.addTab("Parts Assignment", partsAssignment);
+		tabbedPane.addTab("Create Kit", createKit);
 		tabbedPane.addTab("Production Schedule", productionSchedule);
 		tabbedPane.addTab("Modify Kit", modifyKit);
 		

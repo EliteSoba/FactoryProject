@@ -38,7 +38,7 @@ public class LaneManager extends Client {
 		else if (message == "green"){
 			set = "lm lma set lanevibration "+ lane + " " + setting;
 		}
-		
+		//send via a function
 	}
 	
 	public void setInterface() {
