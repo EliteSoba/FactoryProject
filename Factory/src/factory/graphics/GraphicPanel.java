@@ -145,10 +145,17 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		am.dumpKitAtInspectionDone();
 	}
 	
-	public void exportKit() {
+	public void moveKitFromInspectionToConveyor() {
 		//Sends a kit out of the factory via conveyer belt
 		if (station.getCheck() != null && !kitRobot.kitted())
 			kitRobot.setFromCheck(true);
+	}
+	public void moveKitFromInspectionToConveyorDone() {
+		am.moveKitFromInspectionToConveyorDone();
+	}
+	
+	public void exportKit() {
+		belt.exportKit();
 	}
 	public void exportKitDone() {
 		am.exportKitDone();

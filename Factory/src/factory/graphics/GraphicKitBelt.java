@@ -14,6 +14,7 @@ public class GraphicKitBelt {
 	private GraphicKit kitIn; //The Kit entering the factory
 	private GraphicKit kitOut; //The Kit exiting the factory
 	private boolean pickUp; //When a Kit has arrived
+	private boolean export;
 	private GraphicPanel GKAM;
 	public static int width = 50, height = GraphicPanel.HEIGHT;
 	
@@ -25,6 +26,7 @@ public class GraphicKitBelt {
 		pickUp = false;
 		kitIn = null;
 		kitOut = null;
+		export = false;
 		this.GKAM = GKAM;
 	}
 	
@@ -83,6 +85,11 @@ public class GraphicKitBelt {
 		kitOut.move(x+(width-40)/2, y+305);
 	}
 	
+	public void exportKit() {
+		if (kitout())
+			export = true;
+	}
+	
 	public void drawKitIn(Graphics g) {
 		//Draws the kit that's entering the factory
 		if (kitin())
@@ -98,7 +105,7 @@ public class GraphicKitBelt {
 	public void moveBelt(int v) {
 		//Increments t for animation
 		
-		if (kitin() && !pickUp || kitout())
+		if (kitin() && !pickUp || kitout() && export)
 		t += v;
 		if (t >= 50)
 			t = 0;
@@ -139,8 +146,11 @@ public class GraphicKitBelt {
 			else*/
 				kitOut.moveY(v);
 			
-			if (kitOut.getY() >= y+height)
+			if (kitOut.getY() >= y+height) {
 				kitOut = null;
+				export = false;
+				GKAM.exportKit();
+			}
 		}
 	}
 	
