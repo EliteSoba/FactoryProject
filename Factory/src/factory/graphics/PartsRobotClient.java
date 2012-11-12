@@ -32,7 +32,7 @@ class PartsRobotClient extends JPanel implements ActionListener
 			Nest newNest = new Nest(frameWidth-100,i*85+75,0,0,0,0,75,75,"Images/nest3x3.png");
 			Random randomGen = new Random();
 			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
-				newNest.addItem(new GraphicItem(20,20,"Images/CircleItem.png"));
+				newNest.addItem(new GraphicItem(20,20,"Images/eyesItem.png"));
 			nests.add(newNest);
 		}
 		// Initialize flash
