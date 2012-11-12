@@ -144,8 +144,13 @@ public class VisionAgent extends Agent implements Vision {
 			
 		}
 
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		server.takePicture();
-		
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -155,12 +160,12 @@ public class VisionAgent extends Agent implements Vision {
 		
 	   int randomNum = r.nextInt(11);
 	   if(randomNum < 4)
-		   stand.msgResultsOfKitAtInspection(KitState.FAILED_INSPECTION);
+		   stand.msgResultsOfKitAtInspection(KitState.PASSED_INSPECTION);
 	   else
 		   stand.msgResultsOfKitAtInspection(KitState.PASSED_INSPECTION);
 		   
 	   pictureAllowed.release();
-	   
+
 	   k.state = KitPicRequestState.INSPECTED;
 	}
 	

@@ -60,7 +60,7 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	private void sendEmptyKit() {
 		//Creates a random time that it will take for the empty kit to make it to the kitting cell
 		
-		int delivery_time = (int) (1000 + (Math.random()*9000)); //Random time it will take for the empty kit to make it to the cell
+		int delivery_time = (int) (1000 + (Math.random()*2000)); //Random time it will take for the empty kit to make it to the cell
 		
 		timer.schedule(new TimerTask(){
 		    public void run(){

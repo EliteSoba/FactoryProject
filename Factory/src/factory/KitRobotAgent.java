@@ -7,6 +7,7 @@ import java.util.concurrent.Semaphore;
 
 import factory.Kit.KitState;
 import factory.StandAgent.MySlotState;
+import factory.StandAgent.StandAgentState;
 import factory.graphics.FrameKitAssemblyManager;
 import factory.interfaces.*;
 import agent.*;
@@ -50,14 +51,13 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		if (pos.equals("topSlot")) {
 			if (!actions.contains(StandInfo.NEED_EMPTY_TOP)) {
 				actions.add(StandInfo.NEED_EMPTY_TOP);
-				stateChanged();
 			}
 		} else if (pos.equals("bottomSlot")) {
 			if (!actions.contains(StandInfo.NEED_EMPTY_BOTTOM)) {
 				actions.add(StandInfo.NEED_EMPTY_BOTTOM);
-				stateChanged();
 			}
 		}
+		stateChanged();
 	}
 	
 	public void msgComeMoveKitToInspectionSlot(String pos) {
@@ -94,62 +94,66 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		if (!actions.contains(StandInfo.INSPECTION_SLOT_DONE)) {
 			actions.add(StandInfo.INSPECTION_SLOT_DONE);
 		}
+		stateChanged();
+		
 	}
 	
 	
 	////Scheduler
 	protected boolean pickAndExecuteAnAction() {	
 
-		if (actions.contains(StandInfo.NEED_EMPTY_BOTTOM) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
-			requestEmptyKit();
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.KIT_BAD)) {
-			actions.remove(StandInfo.KIT_BAD);
-			dumpKit();
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.KIT_GOOD) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
-			actions.remove(StandInfo.KIT_GOOD);
-			exportKit();
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.INSPECTION_SLOT_DONE)) {
-			actions.remove(StandInfo.INSPECTION_SLOT_DONE);
-			processKitAtInspection(); 
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.NEED_INSPECTION_TOP) && (inspectionAreaClear == 1)) {
-			actions.remove(StandInfo.NEED_INSPECTION_TOP);
-			moveToInspectionSpot("topSlot");
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.NEED_INSPECTION_BOTTOM) && (inspectionAreaClear == 1)) {
-			actions.remove(StandInfo.NEED_INSPECTION_BOTTOM);
-			moveToInspectionSpot("bottomSlot");
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.NEED_EMPTY_TOP) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
-			requestEmptyKit();
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.NEED_EMPTY_TOP) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
-			actions.remove(StandInfo.NEED_EMPTY_TOP);
-			putEmptyKitOnStand("topSlot");
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.NEED_EMPTY_BOTTOM) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
-			actions.remove(StandInfo.NEED_EMPTY_BOTTOM);
-			putEmptyKitOnStand("bottomSlot");
-			return true;
+		synchronized(actions){
+			if (actions.contains(StandInfo.NEED_EMPTY_BOTTOM) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
+				requestEmptyKit();
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.KIT_BAD)) {
+				actions.remove(StandInfo.KIT_BAD);
+				dumpKit();
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.KIT_GOOD) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
+				actions.remove(StandInfo.KIT_GOOD);
+				exportKit();
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.INSPECTION_SLOT_DONE) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
+				actions.remove(StandInfo.INSPECTION_SLOT_DONE);
+				processKitAtInspection(); 
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.NEED_INSPECTION_TOP) && (inspectionAreaClear == 1)) {
+				actions.remove(StandInfo.NEED_INSPECTION_TOP);
+				moveToInspectionSpot("topSlot");
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.NEED_INSPECTION_BOTTOM) && (inspectionAreaClear == 1)) {
+				actions.remove(StandInfo.NEED_INSPECTION_BOTTOM);
+				moveToInspectionSpot("bottomSlot");
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.NEED_EMPTY_TOP) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
+				requestEmptyKit();
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.NEED_EMPTY_TOP) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
+				actions.remove(StandInfo.NEED_EMPTY_TOP);
+				putEmptyKitOnStand("topSlot");
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.NEED_EMPTY_BOTTOM) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
+				actions.remove(StandInfo.NEED_EMPTY_BOTTOM);
+				putEmptyKitOnStand("bottomSlot");
+				return true;
+			}
 		}
 		
 		return false;
@@ -160,7 +164,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		//action for checking the inspected kit and then doing the correct action.
 		debug("Executing processKitAtInspection()");
 		
-		if (stand.inspectionSlot.kit.equals(KitState.PASSED_INSPECTION)) {
+		if (stand.inspectionSlot.kit.state.equals(KitState.PASSED_INSPECTION)) {
 			//kit passed inspection
 			if (!actions.contains(StandInfo.KIT_GOOD) && !actions.contains(StandInfo.KIT_BAD)) {
 				actions.add(StandInfo.KIT_GOOD);
@@ -198,6 +202,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public void exportKit() {
 		//action for exporting a good kit
 		debug("KitRobot picking up kit from inspection to export");
+		
 		holding = stand.inspectionSlot.kit;
 		server.exportKit(); //This should be the call for the animation for hte KitRobot to take the Kit at the inspection slot and put it on the conveyor
 		

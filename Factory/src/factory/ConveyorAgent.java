@@ -92,12 +92,14 @@ public class ConveyorAgent extends Agent implements Conveyor {
 		debug("Exporting Kit");
 		//server.exportKit(); //Animation for moving the kit out of the cell on the conveyor
 		
-		try {
+		/**
+		  try {
 			debug("Waiting on the server to finish the animation of exporting Kit");
 			animation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		 */
 		debug("Export Animation Completed");
 	    conveyorController.msgKitExported(this, kitAtConveyor);
 		kitAtConveyor = null;

@@ -79,8 +79,9 @@ public class StandAgent extends Agent implements Stand {
 			stateChanged();
 		}
 		else {
-			// Throw Exception
-		}
+			debug("msgPartsRobotNoLongerUsingStand() called when it wasn't using it!!");
+			System.exit(1);
+	   }
 	}
 	
 	/**
@@ -100,7 +101,8 @@ public class StandAgent extends Agent implements Stand {
 	      stateChanged();
 	   }
 	   else {
-	      // Throw Exception
+		   debug("msgPartsRobotNoLongerUsingStand() called when it wasn't using it!!");
+		   System.exit(1);
 	   }
 	}
 	
@@ -144,29 +146,23 @@ public class StandAgent extends Agent implements Stand {
 			/**
 			 * If there is a completed kit and the stand is not being used
 			 */
-			if (state == StandAgentState.FREE && topSlot.kit != null && topSlot.kit.state == KitState.COMPLETE && topSlot.state == MySlotState.BUILDING_KIT) {
+			if (state == StandAgentState.FREE && topSlot.kit != null && topSlot.kit.state == KitState.COMPLETE 
+					&& topSlot.state == MySlotState.BUILDING_KIT && inspectionSlot.state == MySlotState.EMPTY) {
 			   DoTellKitRobotToMoveKitToInspectionSlot(topSlot);
 			   return true;
 			}
-			if (state == StandAgentState.FREE && bottomSlot.kit != null && bottomSlot.kit.state == KitState.COMPLETE && bottomSlot.state == MySlotState.BUILDING_KIT) {
+			if (state == StandAgentState.FREE && bottomSlot.kit != null && bottomSlot.kit.state == KitState.COMPLETE 
+					&& bottomSlot.state == MySlotState.BUILDING_KIT && inspectionSlot.state == MySlotState.EMPTY) {
 			   DoTellKitRobotToMoveKitToInspectionSlot(bottomSlot);
 			   return true;
 			}
-			
-			/**
-			 * If there is an empty kit at the conveyor and there is a place to put it, ask the Kit Robot to fetch it
-			 * as long as the stand is not being used.
-			 */
-			if (state == StandAgentState.FREE && (topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY)) {
-			   DoAskKitRobotToGetEmptyKit();
-			   return true;
-			}       
-			
+		
 
 			/**
 			 * If the stand is free and the kitRobot wants to deliver empty kit
 			 */
-			if (state == StandAgentState.FREE && kitRobotWantsToDeliverEmptyKit == true && (topSlot.state == MySlotState.EMPTY_KIT_REQUESTED || bottomSlot.state == MySlotState.EMPTY_KIT_REQUESTED)) {
+			if (state == StandAgentState.FREE && kitRobotWantsToDeliverEmptyKit == true
+					&& (topSlot.state == MySlotState.EMPTY_KIT_REQUESTED || bottomSlot.state == MySlotState.EMPTY_KIT_REQUESTED)) {
 			   DoTellKitRobotToDeliverEmptyKit();
 			   return true;
 			}
@@ -179,6 +175,17 @@ public class StandAgent extends Agent implements Stand {
 			   DoTellPartsRobotToDeliverParts();
 			   return true;
 			}
+
+			/**
+			 * If there is an empty kit at the conveyor and there is a place to put it, ask the Kit Robot to fetch it
+			 * as long as the stand is not being used.
+			 */
+			if (state == StandAgentState.FREE && (topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY)
+					&& (inspectionSlot.state ==  MySlotState.EMPTY)) {
+			   DoAskKitRobotToGetEmptyKit();
+			   return true;
+			}       
+			
 		}
 		
 		return false;
