@@ -1,6 +1,10 @@
 Team 2
 ======
+<<<<<<< HEAD
  #Hashtags
+=======
+#Hashtags
+>>>>>>> master
 ======
 Factory Project
 
