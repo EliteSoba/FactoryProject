@@ -54,7 +54,7 @@ public abstract class Agent {
             for(;;){
                 if(connected)
                     try {
-                        input.readLine(); //reads from input each time there is a new string
+                        currentCommand = input.readLine(); //reads from input each time there is a new string
                         parseInput();
                     } catch (Exception e) {
                         System.out.println("inputStream not open");
@@ -64,10 +64,11 @@ public abstract class Agent {
     };
 
     public void parseInput(){
-        //TODO parseinput
         parsedCommand = new ArrayList<String>(Arrays.asList(currentCommand.split(" "))); //puts string into array list
-
+        doCommand(parsedCommand);
     }
+
+    public abstract void doCommand(ArrayList<String> pCmd); // also must be implemented by child class
 
     // End of Client copy code
 
