@@ -48,6 +48,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.add(dumpKit);
 		this.add(blank[6]);*/
 		this.add(test);
+		this.add(blank[5]);
 		this.add(partsRobotNest1);
 		this.setPreferredSize(new Dimension(200, 720));
 		outKit.addActionListener(this);
