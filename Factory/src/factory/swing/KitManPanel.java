@@ -245,8 +245,8 @@ public class KitManPanel extends JPanel implements ActionListener{
 		k.repaint(); 
 	}*/
 
-	/*public void actionPerformed(ActionEvent ae) {
-		if (ae.getSource() == psave) {
+	  public void actionPerformed(ActionEvent ae) {
+	/*	if (ae.getSource() == psave) {
 
 		}
 		else if (ae.getSource() == msave) {
@@ -254,7 +254,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 		else if (ae.getSource() == mremove) {
 
 		}
-		
-	}*/
+	*/	
+	}
 		
 }
