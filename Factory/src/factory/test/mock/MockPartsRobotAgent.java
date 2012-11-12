@@ -29,7 +29,8 @@ public class MockPartsRobotAgent extends MockAgent implements PartsRobot {
 
 	@Override
 	public void msgMakeKit(KitConfig kitConfig) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent(
+				"Received message msgMakeKit from the FCS"));
 		
 	}
 

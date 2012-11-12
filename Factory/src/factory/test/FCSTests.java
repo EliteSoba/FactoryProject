@@ -91,8 +91,8 @@ public class FCSTests extends TestCase{
 		//call the fcs scheduler
 		fcs.pickAndExecuteAnAction();
 		
-		//tests to see if the parts robot log got the message
-		assertTrue("Parts Robot should have gotten a message to make a kit.", partsRobot.log
+		//tests to see if the parts robot log got the message from the FCS
+		assertTrue("Parts Robot should have gotten a message to make a kit from the FCS.", partsRobot.log
 				.containsString("msgMakeKit"));
 		
 		//tests to see if the kit config state changed from PENDING to PRODUCING
