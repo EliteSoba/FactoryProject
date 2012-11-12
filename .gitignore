@@ -9,7 +9,7 @@
 *.pydevproject
 .project
 .metadata
-bin/**
+/Factory/bin/**
 tmp/**
 tmp/**/*
 *.tmp
