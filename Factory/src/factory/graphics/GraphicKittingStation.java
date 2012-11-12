@@ -15,9 +15,9 @@ public class GraphicKittingStation {
 	private GraphicKit[] kits; //The kits it is holding
 	private GraphicKit check; //The kit in the inspection area
 	private int timer;
-	GraphicKitAssemblyManager GKAM;
+	GraphicPanel GKAM;
 	
-	public GraphicKittingStation(int x, int y, GraphicKitAssemblyManager GKAM) {
+	public GraphicKittingStation(int x, int y, GraphicPanel GKAM) {
 		//Constructor
 		this.x = x;
 		this.y = y;
