@@ -1,85 +1,114 @@
 package factory;
 
+import java.util.concurrent.Semaphore;
+
+import factory.graphics.FrameKitAssemblyManager;
 import factory.interfaces.*;
 import agent.Agent;
 
 public class ConveyorAgent extends Agent implements Conveyor {
-	////Data
-	enum KitRobot_State { NO_ACTION, TAKING_KIT, WANTS_EMPTY_KIT, WANTS_EXPORT };
+	////Data	
+	enum ConveyorState { NO_ACTION, KR_WANTS_EMPTY_KIT, GETTING_EMPTY_KIT, EXPORTING };
 	
-	KitRobot kit_robot;
-	ConveyorController conveyor_controller;
+	public KitRobot kit_robot;
+	public ConveyorController conveyor_controller;
+	public FrameKitAssemblyManager server;
+	
+	Semaphore animation = new Semaphore(0);
 	
 	Kit on_conveyor;  //Supposed to represent what is on the ConveyorAgent
-	KitRobot_State kr_state = KitRobot_State.NO_ACTION;
+	
+	ConveyorState state = ConveyorState.NO_ACTION;
 	
 	/** Public Constructor **/
-	public ConveyorAgent() {
+	public ConveyorAgent(FrameKitAssemblyManager server) {
 		super();
+		this.server = server;
 	}
 	
 	////Messages
+	public void msgAnimationDone(){
+		debug("Received msgAnimationDone() from server");
+		animation.release();
+	}
+	
 	public void msgHeresEmptyKit(Kit k) {
-	   on_conveyor = k;
-	   stateChanged();
-	}
-
-	public void msgTakingKit() {
-	   kr_state = KitRobot_State.TAKING_KIT;
-	   stateChanged();
-	}
-
-	public void msgPuttingKit(KitRobot kr, Kit k) {
-	   on_conveyor = k;
-	   stateChanged();
+		debug("Received msgHeresEmptyKit() from the ConveyorController");
+		on_conveyor = k;
+	   	stateChanged();
 	}
 
 	public void msgNeedEmptyKit(KitRobot kr) {
-	   kr_state = KitRobot_State.WANTS_EMPTY_KIT;
-	   stateChanged();
+		debug("Received msgNeedEmptyKit() from the KitRobot");
+		state = ConveyorState.KR_WANTS_EMPTY_KIT;
+		stateChanged();
 	}
 
-	public void msgExportKit(KitRobot kr) {
-	   kr_state = KitRobot_State.WANTS_EXPORT;
-	   stateChanged();
+	public void msgExportKit(KitRobot kr, Kit k) {
+		debug("Received msgExportKit() from the KitRobot for the Kit " + k);
+		on_conveyor = k;
+		state = ConveyorState.EXPORTING;
+		stateChanged();
 	}
 	
 	////Scheduler
 	protected boolean pickAndExecuteAnAction() {
-		if (kr_state.equals(KitRobot_State.WANTS_EXPORT)) { exportKit(); return true; }
+		if (state.equals(ConveyorState.EXPORTING)) { 
+			state = ConveyorState.NO_ACTION;
+			exportKit();
+			return true;
+		}
 
-		if (kr_state.equals(KitRobot_State.WANTS_EMPTY_KIT) && on_conveyor != null) { tellKitRobotAboutEmptyKit(); return true; }
+		if (state.equals(ConveyorState.KR_WANTS_EMPTY_KIT) || state.equals(ConveyorState.GETTING_EMPTY_KIT) && on_conveyor != null) {
+			tellKitRobotAboutEmptyKit();
+			return true;
+		}
 
-		if (kr_state.equals(KitRobot_State.TAKING_KIT)) { giveKit(); return true; }
-
-		if (kr_state.equals(KitRobot_State.WANTS_EMPTY_KIT) && on_conveyor == null) { requestEmptyKit(); return true; }
+		if (state.equals(ConveyorState.KR_WANTS_EMPTY_KIT) && on_conveyor == null) {
+			requestEmptyKit();
+			return true;
+		}
 		
 		return false;
 	}
 	
 	////Actions
 	private void tellKitRobotAboutEmptyKit() {
-		   //kit_robot.msgEmptyKitIsHere();
-		   kr_state = KitRobot_State.NO_ACTION;
-		}
+		debug("Telling The KitRobot About the Empty Kit");
+		kit_robot.msgEmptyKitOnConveyor();
+		state = ConveyorState.NO_ACTION;
+	}
 
-		private void requestEmptyKit() {
-		   conveyor_controller.msgConveyorWantsEmptyKit(this);
-		   kr_state = KitRobot_State.NO_ACTION;
-		}
+	private void requestEmptyKit() {
+		debug("Requesting Empty Kit From the ConveyorController");
+	    conveyor_controller.msgConveyorWantsEmptyKit(this);
+	    state = ConveyorState.GETTING_EMPTY_KIT;
+	    stateChanged();
+	}
 
-		private void exportKit() {
-		   //with the new design this is optional, but if we want ConveyorController to keep track of all exported kits, we can via this message;
-			conveyor_controller.msgKitExported(this, on_conveyor);
+	private void exportKit() {
+		debug("Exporting Kit");
+		//server.exportKit(); //Animation for moving the kit out of the cell on the conveyor
+		
+		try {
+			debug("Waiting on the server to finish the animation of exporting Kit");
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
+		debug("Export Animation Completed");
+	    conveyor_controller.msgKitExported(this, on_conveyor);
+		on_conveyor = null;
+		stateChanged();
+	}
 
-		private void giveKit() {
-		   //kit_robot.msgYouTook(on_conveyor);
-		   on_conveyor = null;
-		   kr_state = KitRobot_State.NO_ACTION;
-		}
-
-	////Misc
+	////Misc / Hacks
+	public void setConveyorController(ConveyorController cc) {
+		conveyor_controller = cc;
+	}
 	
+	public void setKitRobot(KitRobot kr) {
+		kit_robot = kr;
+	}
 }
 

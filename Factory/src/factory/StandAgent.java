@@ -10,14 +10,13 @@ public class StandAgent extends Agent implements Stand {
 	/** DATA **/
 
 	public enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
-	public enum MyConveyorState { EMPTY, HAS_EMPTY_KIT, FETCHING_EMPTY_KIT }
-	public enum MySlotState { EMPTY, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION, KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT}
+	public enum MySlotState { EMPTY, EMPTY_KIT_REQUESTED, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION, KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT}
 
 	public StandAgentState state;
 	
-	public MyConveyor conveyor;
 	public PartsRobot partsRobot;
 	public Boolean partsRobotWantsToDeliverParts = false;
+	public Boolean kitRobotWantsToDeliverEmptyKit = false;
 	public KitRobot kitRobot;
 	public Vision vision;
 	
@@ -36,33 +35,22 @@ public class StandAgent extends Agent implements Stand {
 			this.kit = null;
 		}
 	}
-	
-	public class MyConveyor {
-		public Conveyor conveyor;
-		public MyConveyorState state;
-
-		public MyConveyor(Conveyor conveyor){
-			this.state = MyConveyorState.EMPTY;
-			this.conveyor = conveyor;
-		}
-	}
 
 	
 	/**
 	 * Constructor
-	 * @param conveyor
 	 * @param vision
 	 * @param kitRobot
 	 * @param partsRobot
 	 */
-	public StandAgent(Conveyor conveyor, Vision vision, KitRobot kitRobot, PartsRobot partsRobot){
+	public StandAgent(Vision vision, KitRobot kitRobot, PartsRobot partsRobot){
 		super();
-		this.conveyor = new MyConveyor(conveyor);
 		this.vision = vision;
 		this.partsRobot = partsRobot;
 		this.kitRobot = kitRobot;
-		
+
 		partsRobotWantsToDeliverParts = false;
+		kitRobotWantsToDeliverEmptyKit = false;
 		this.state = StandAgentState.FREE;
 		
 		topSlot = new MySlot("topSlot");
@@ -75,9 +63,9 @@ public class StandAgent extends Agent implements Stand {
 	/**
 	 * Message that is Received from the conveyor when it brought an empty kit
 	 */
-	public void msgEmptyKitIsHere() {
-		debug("Received msgEmptyKitIsHere() from the server.");
-		conveyor.state = MyConveyorState.HAS_EMPTY_KIT;
+	public void msgEmptyKitIsHereAndWantToDeliver() {
+		debug("Received msgEmptyKitIsHereAndWantToDeliver() from the server.");
+		kitRobotWantsToDeliverEmptyKit = true;
 		stateChanged();
 	}
 	
@@ -142,7 +130,7 @@ public class StandAgent extends Agent implements Stand {
 			/**
 			 * If there is a Kit in the Inspection Slot that has been analyzed, then ask KitRobot to process it 
 			 */
-			if (inspectionSlot.state == MySlotState.KIT_ANALYZED) {
+			if (state == StandAgentState.FREE && inspectionSlot.state == MySlotState.KIT_ANALYZED) {
 				DoProcessAnalyzedKit();
 				return true;
 			}
@@ -164,15 +152,26 @@ public class StandAgent extends Agent implements Stand {
 			   DoTellKitRobotToMoveKitToInspectionSlot(bottomSlot);
 			   return true;
 			}
+			
 			/**
 			 * If there is an empty kit at the conveyor and there is a place to put it, ask the Kit Robot to fetch it
 			 * as long as the stand is not being used.
 			 */
-			if (state == StandAgentState.FREE && conveyor.state == MyConveyorState.HAS_EMPTY_KIT 
-					&& (topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY)) {
-			   DoFetchEmptyKitFromConveyor();
+			if (state == StandAgentState.FREE && (topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY)) {
+			   DoAskKitRobotToGetEmptyKit();
 			   return true;
 			}       
+			
+
+			/**
+			 * If the stand is free and the kitRobot wants to deliver empty kit
+			 */
+			if (state == StandAgentState.FREE && kitRobotWantsToDeliverEmptyKit == true && (topSlot.kit != null || bottomSlot.kit != null)) {
+			   DoTellKitRobotToDeliverEmptyKit();
+			   return true;
+			}
+			
+
 			/**
 			 * If the stand is free and the partRobot wants to deliver parts
 			 */
@@ -190,26 +189,38 @@ public class StandAgent extends Agent implements Stand {
 	/**
 	 * Method that tells the KitRobot to fetch the empty Kit
 	 */
-	private void DoFetchEmptyKitFromConveyor() {
-		debug("Executing DoFetchEmptyKitFromConveyor()");
+	private void DoAskKitRobotToGetEmptyKit() {
+		debug("Executing DoAskKitRobotToGetEmptyKit()");
 
 		if (topSlot.state == MySlotState.EMPTY) {
-			kitRobot.msgGrabAndBringEmptyKitFromConveyorToSlot(topSlot.name);
+			debug("Asking kit robot to get empty bin for slot " + topSlot.name);
+			//kitRobot.msgNeedEmptyKitAtSlot(topSlot.name);
+			topSlot.state = MySlotState.EMPTY_KIT_REQUESTED;
 		}
 		else if (bottomSlot.state == MySlotState.EMPTY) {
-			kitRobot.msgGrabAndBringEmptyKitFromConveyorToSlot(bottomSlot.name);
+			debug("Asking kit robot to get empty bin for slot " + bottomSlot.name);
+			//kitRobot.msgNeedEmptyKitAtSlot(bottomSlot.name);
+			bottomSlot.state = MySlotState.EMPTY_KIT_REQUESTED;
 		}
 		else {
 			// Throw exception
 		}
+	}  
+	
+	/**
+	 * Method that tells the KitRobot to deliver the empty kit
+	 */
+	private void DoTellKitRobotToDeliverEmptyKit(){
+		kitRobot.msgDeliverEmptyKit();
 		state = StandAgentState.KIT_ROBOT;
-		conveyor.state = MyConveyorState.FETCHING_EMPTY_KIT;
-	}   
+		kitRobotWantsToDeliverEmptyKit = false;
+	}
+	
 	/**
 	 * Method that places the empty bin in the right slot
 	 */
 	private void DoProcessEmptyBinFromConveyor() {
-		debug("Executing DoFetchEmptyKitFromConveyor()");
+		debug("Executing DoProcessEmptyBinFromConveyor()");
 
 		if(topSlot.state  == MySlotState.EMPTY_KIT_JUST_PLACED) {
 			DoTellPartsRobotToBuildKitAtSlot(topSlot);
@@ -222,6 +233,7 @@ public class StandAgent extends Agent implements Stand {
 		}
 	   
 	}
+	
 	/**
 	 * Method that tells the PartsRobot to build Kit
 	 */
@@ -230,6 +242,7 @@ public class StandAgent extends Agent implements Stand {
 		partsRobot.msgBuildKitAtSlot(slot.name);
 		slot.state = MySlotState.BUILDING_KIT;
 	} 
+	
 	/**
 	 * Method that tells the PartsRobot to deliver parts
 	 */
