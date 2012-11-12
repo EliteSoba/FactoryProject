@@ -89,6 +89,11 @@ public class FactoryProductionManager extends JFrame {
 		//kitRobot.msgAnimationDone();
 	}
 	
+	public void moveRobotToNest1()
+	{
+		panel.moveRobotToNest(1);
+	}
+	
 	public static void main(String args[]) {
 		//Implements this JFrame
 		FactoryProductionManager FKAM = new FactoryProductionManager();
