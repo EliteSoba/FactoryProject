@@ -205,6 +205,7 @@ public class MasterControl {
                 PartHandler ph = new PartHandler(s, br, pw, name, this);
                 partHandlers.put(name, ph);
                 partOccupied.put(name, false);
+                pw.println("connected");
             } catch (Exception e){
                 e.printStackTrace();
             }
