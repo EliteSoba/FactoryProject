@@ -81,7 +81,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	public FeederAgent(String nameStr,int slot) {
-		super();
+		super(Agent.Type.FEEDERAGENT);
 		this.name = nameStr+slot;
 		this.feederSlot = slot;
 	}
