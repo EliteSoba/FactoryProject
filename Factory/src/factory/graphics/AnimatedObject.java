@@ -1,5 +1,4 @@
 package factory.graphics;
-
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ class AnimatedObject
 	}
 	public AnimatedObject(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
+		items = new ArrayList<GraphicItem>();
 		x = init_x;
 		y = init_y;
 		theta = init_theta;
@@ -77,7 +77,35 @@ class AnimatedObject
 	{
 		return imageHeight;
 	}
-
+	public void addItem(GraphicItem newItem)
+	{
+		items.add(newItem);
+	}
+	public void clearItems()
+	{
+		items.clear();
+	}
+	public boolean hasItem()
+	{
+		if(items.size() >= 1)
+			return true;
+		else
+			return false;
+	}
+	public GraphicItem popItem()
+	{
+		GraphicItem lastItem = items.get(items.size()-1);		// get last item
+		items.remove(items.size()-1);					// remove last item
+		return lastItem;								// return last item
+	}
+	public int getSize()
+	{
+		return items.size();
+	}
+	public GraphicItem getItemAt(int i)
+	{
+		return items.get(i);
+	}
 	// Update functions
 	public void move()
 	{

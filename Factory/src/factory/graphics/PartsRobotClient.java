@@ -23,16 +23,16 @@ class PartsRobotClient extends JPanel implements ActionListener
 		// Initialize array
 		nests = new ArrayList<Nest>();
 		// Add the kitting station
-		station = new Station(10,75,0,0,0,0,150,300,"Images/kittingStation.png");
+		station = new Station(10,75,0,0,0,0,150,300,"kittingStation.png");
 		// Add the parts robot
-		robot = new PartsRobot(frameWidth/2,frameHeight/2,0,5,5,10,100,100,"Images/robot1.png");
+		robot = new PartsRobot(frameWidth/2,frameHeight/2,0,5,5,10,100,100,"robot1.png");
 		// Add 8 nests
 		for(int i = 0; i < 8; i++)
 		{
-			Nest newNest = new Nest(frameWidth-100,i*85+75,0,0,0,0,75,75,"Images/nest3x3.png");
+			Nest newNest = new Nest(frameWidth-100,i*85+75,0,0,0,0,75,75,"nest3x3.png");
 			Random randomGen = new Random();
 			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
-				newNest.addItem(new Item(20,20,"Images/CircleItem.png"));
+				newNest.addItem(new GraphicItem(20,20,"CircleItem.png"));
 			nests.add(newNest);
 		}
 		// Initialize flash
@@ -51,15 +51,7 @@ class PartsRobotClient extends JPanel implements ActionListener
 		{
 			Nest currentNest = nests.get(i);
 			// Draw nest
-			g2.drawImage(currentNest.getImage(),currentNest.getX(),currentNest.getY(),currentNest.getImageWidth(),currentNest.getImageHeight(),this);
-			// Draw items in nest
-			for(int j = 0; j < nests.get(i).getSize(); j++)
-			{
-				Item currentItem = currentNest.getItemAt(j);
-				int item_x = currentNest.getX()+3+(j/3)*25;
-				int item_y = currentNest.getY()+3+(j%3)*25;
-				g2.drawImage(currentItem.getImage(),item_x,item_y,currentItem.getImageWidth(),currentItem.getImageHeight(),this);
-			}
+			currentNest.paint(g);
 			// Draw flash?
 			if(flashCount > 0)		// is flash on?
 				if(flashLane-1 == i)	// is the flash for the current nest?
@@ -70,8 +62,7 @@ class PartsRobotClient extends JPanel implements ActionListener
 		// Draw items on staiton
 		for(int i = 0; i < station.getSize(); i++)
 		{
-			Item stationItem = station.getItemAt(i);
-			g2.drawImage(stationItem.getImage(), station.getX()+5+(i/14)*20, station.getY()+5+(i%14)*20, stationItem.getImageWidth(), stationItem.getImageHeight(), this);
+			station.getItemAt(i).paint(g, 5+station.getX()+(i/14)*20, 5+station.getY()+(i%14)*20);
 		}
 		g2.dispose();
 		//System.out.println(robot.getAngle());
@@ -82,12 +73,9 @@ class PartsRobotClient extends JPanel implements ActionListener
 		// Draw items robot is carrying
 		for(int i = 0; i < robot.getSize(); i++)
 		{
-			Item robotItem = robot.getItemAt(i);
-			g3.drawImage(robotItem.getImage(), robot.getX()+robot.getImageWidth()-25, robot.getY()+10+i*20, robotItem.getImageWidth(), robotItem.getImageHeight(), this);
+			robot.getItemAt(i).paint(g, robot.getX()+robot.getImageWidth()-25,robot.getY()+10+i*20);
 		}
 		g3.dispose();
-		// Draw items robot is carrying
-
 	}
 
 	public static void main(String arg[])
