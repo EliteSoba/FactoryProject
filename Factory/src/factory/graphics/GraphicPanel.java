@@ -26,7 +26,7 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	PartsRobot partsRobot;
 	
 	// GANTRY
-	GantryRobot gantryRobot;
+	//GantryRobot gantryRobot;
 	
 	public GraphicPanel(FactoryProductionManager FKAM) {
 		lane = new GraphicLaneManager [4];
@@ -52,7 +52,7 @@ public class GraphicPanel extends JPanel implements ActionListener {
 			nests.add(newNest);
 		}
 		partsRobot = new PartsRobot(WIDTH/2-200,HEIGHT/2,0,5,5,10,100,100,"Images/robot1.png");
-		gantryRobot = new GantryRobot(WIDTH-150,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
+		//gantryRobot = new GantryRobot(WIDTH-150,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
 		
 		(new Timer(50, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -97,13 +97,13 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		// Draw items partsRobot is carrying
 		partsRobot.paint(g3);
 		g3.dispose();
-		final Graphics2D g4 = (Graphics2D)g.create();
+		/*final Graphics2D g4 = (Graphics2D)g.create();
 		g4.rotate(Math.toRadians(360-gantryRobot.getAngle()), gantryRobot.getX()+gantryRobot.getImageWidth()/2, gantryRobot.getY()+gantryRobot.getImageHeight()/2);
 		g4.drawImage(gantryRobot.getImage(), gantryRobot.getX(), gantryRobot.getY(), gantryRobot.getImageWidth(), gantryRobot.getImageHeight(), this);
 		// Draw items gantryRobot is carrying
 		for(int i = 0; i < gantryRobot.getSize(); i++)
 			gantryRobot.getItemAt(i).paint(g4, gantryRobot.getX()+gantryRobot.getImageWidth()-25,gantryRobot.getY()+10+i*20);
-		g4.dispose();
+		g4.dispose();*/
 	}
 	public GraphicLaneManager getLane(int index) {
 		return lane[index];
@@ -182,7 +182,7 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		return belt;
 	}
 	
-	public void gantryRobotPickupBin()
+	/*public void gantryRobotPickupBin()
 	{
 		gantryRobot.setState(0);
 		gantryRobot.setDestination(WIDTH-100,-200);
@@ -191,8 +191,8 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	public void gantryRobotToFeeder(int feederIndex)
 	{
 		gantryRobot.setState(3);
-		gantryRobot.setDestination(feeder.)
-	}
+		//gantryRobot.setDestination(feeder.)
+	}*/
 	
 	public void movePartsRobotToNest(int nestIndex)
 	{
