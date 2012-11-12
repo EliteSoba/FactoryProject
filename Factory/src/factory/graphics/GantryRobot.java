@@ -2,12 +2,13 @@ package factory.graphics;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
-class GantryRobot extends AnimatedObject
+class GantryRobot
 {
 	int fx, fy;		// final position (destination)
-	int destinationNest, destinationKit;
+	int destinationFeeder;
 	boolean arrived;
 	int state;
+	GraphicBin bin;
 	
 	public GantryRobot()
 	{
@@ -15,12 +16,11 @@ class GantryRobot extends AnimatedObject
 	}
 	public GantryRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
-		items = new ArrayList<GraphicItem>();
+		bin = new GraphicBin();
 		arrived = false;
 		state = -1;		// 0 = moving to nest, 1 = waiting at nest, 2 = waiting for next action, 3 = moving to kitting station, 4 = waiting at kitting station
 						// 5 = moving to center, 6 = arrived at center
-		destinationNest = -1;
-		destinationKit = -1;
+		destinationFeeder = -1;
 		x = init_x;
 		y = init_y;
 		fx = init_x;
@@ -45,24 +45,14 @@ class GantryRobot extends AnimatedObject
 		state = init_state;
 	}
 	
-	public int getDestinationKit()
+	public int getDestinationFeeder()
 	{
-		return destinationKit;
+		return destinationFeeder;
 	}
 	
-	public void setDestinationKit(int init_destinationKit)
+	public void setDestinationFeeder(int init_destinationFeeder)
 	{
-		destinationKit = init_destinationKit;
-	}
-	
-	public int getDestinationNest()
-	{
-		return destinationNest;
-	}
-	
-	public void setDestinationNest(int init_destinationNest)
-	{
-		destinationNest = init_destinationNest;
+		destinationFeeder = init_destinationFeeder;
 	}
 	
 	public void adjustShift(int amount)

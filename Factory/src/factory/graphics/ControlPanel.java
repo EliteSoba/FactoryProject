@@ -27,6 +27,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton dumpKit;
 	JButton partsRobotNest1;
 	JButton partsRobotStation;
+	JButton gantryRobotGetBin;
+	JButton gantryRobotFeeder1;
 	JButton feedLane1;
 	
 	public ControlPanel(FactoryProductionManager fpm) {
@@ -40,6 +42,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 		blank = new JLabel[10];
 		partsRobotNest1 = new JButton("Nest 1 Full");
 		partsRobotStation = new JButton("Station");
+		gantryRobotGetBin = new JButton("Fetch a Bin");
+		gantryRobotFeeder1 = new JButton("Feeder 1 Dump");
 		feedLane1 = new JButton("Feed Lane 1");
 		for (int i = 0; i < 10; i++) {
 			blank[i] = new JLabel("   ");
@@ -65,6 +69,10 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.add(partsRobotStation);
 		this.add(blank[7]);
 		this.add(feedLane1);
+		this.add(blank[8]);
+		this.add(gantryRobotGetBin);
+		this.add(blank[9]);
+		this.add(gantryRobotFeeder1);
 		this.setPreferredSize(new Dimension(200, 720));
 		outKit.addActionListener(this);
 		outKit.setPreferredSize(new Dimension(170, 50));
@@ -82,6 +90,10 @@ public class ControlPanel extends JPanel implements ActionListener{
 		partsRobotNest1.setPreferredSize(new Dimension(170, 50));
 		partsRobotStation.addActionListener(this);
 		partsRobotStation.setPreferredSize(new Dimension(170,50));
+		gantryRobotGetBin.addActionListener(this);
+		gantryRobotGetBin.setPreferredSize(new Dimension(170,50));
+		gantryRobotFeeder1.addActionListener(this);
+		gantryRobotFeeder1.setPreferredSize(new Dimension(170,50));
 		feedLane1.addActionListener(this);
 		feedLane1.setPreferredSize(new Dimension(170, 50));
 	}
@@ -106,7 +118,10 @@ public class ControlPanel extends JPanel implements ActionListener{
 			am.moveRobotToStation();
 		else if(source == feedLane1)
 			am.feedLane(new GraphicBin(new Part("ear")),1,true);
-		
+		else if(source == gantryRobotGetBin)
+			am.getBin();
+		else if(source == gantryRobotFeeder1)
+			am.moveGantryToFeeder1();
 	}
 
 }
