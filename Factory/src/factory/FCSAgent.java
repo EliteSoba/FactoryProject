@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import agent.Agent;
 import java.util.*;
 import factory.interfaces.*;
+import factory.test.mock.MockGantry;
+import factory.test.mock.MockPartsRobotAgent;
 
 //test commit/push
 public class FCSAgent extends Agent implements FCS{
-	 ArrayList<MyKitConfig> myKitConfigs = new ArrayList<MyKitConfig>();
+	 public ArrayList<MyKitConfig> myKitConfigs = new ArrayList<MyKitConfig>();
 	   PartsRobot partsRobot;
 	   Gantry gantry;
 	   BinConfig binConfig;
-	   Boolean passBinConfigurationToGantry = false;
+	   public Boolean passBinConfigurationToGantry = false;
 	   
 	   enum MyKitConfigState { PENDING, PRODUCING }
 
@@ -26,9 +28,17 @@ public class FCSAgent extends Agent implements FCS{
 	      }
 	   }
 	   
+	   //this is temporarily used for testing purposes.  Constructor will likely change.
+	   public FCSAgent(Gantry gantry, PartsRobot partsRobot) {
+		this.gantry = gantry;
+		this.partsRobot = partsRobot;
+	}
+
+	   
 	// *** MESSAGES ***
 	   
-	   public void msgInitialize(BinConfig binConfig) {
+
+	public void msgInitialize(BinConfig binConfig) {
 		   this.binConfig = binConfig;
 		   this.passBinConfigurationToGantry = true;
 		   stateChanged();

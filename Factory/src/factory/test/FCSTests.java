@@ -41,7 +41,7 @@ public class FCSTests extends TestCase{
 		
 		//passBinConfigurationToGantry should be true
 		assertTrue("passBinConfigurationToGantry should be true after calling msgInitialize.  Instead, it is: "
-				+ fcs.getPassBinConfigurationToGantry(), fcs.getPassBinConfigurationToGantry());
+				+ fcs.passBinConfigurationToGantry, fcs.passBinConfigurationToGantry);
 		
 		//test to see that the gantry robot has not been given a message before the scheduler is called.
 		//Its log should be empty.
@@ -58,7 +58,7 @@ public class FCSTests extends TestCase{
 		
 		//passBinConfigurationToGantry should be false after calling the scheduler. 
 		assertFalse("passBinConfigurationToGantry should be false after calling the scheduler.  Instead, it is: "
-				+ fcs.getPassBinConfigurationToGantry(), fcs.getPassBinConfigurationToGantry());
+				+ fcs.passBinConfigurationToGantry, fcs.passBinConfigurationToGantry);
 		
 		//only one message should be sent to the gantry
 		assertEquals(

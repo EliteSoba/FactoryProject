@@ -13,6 +13,8 @@ public class MockPartsRobotAgent extends MockAgent implements PartsRobot {
 		// TODO Auto-generated constructor stub
 	}
 
+	public EventLog log = new EventLog();
+	
 	@Override
 	public void msgBuildKitAtSlot(String slot) {
 		// TODO Auto-generated method stub
