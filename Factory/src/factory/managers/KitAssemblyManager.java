@@ -3,6 +3,8 @@
 
 package factory.managers;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -14,23 +16,31 @@ import factory.swing.KitAssManPanel;
 public class KitAssemblyManager extends Client {
 	private static final long serialVersionUID = -4230607892468748490L;
 
-		public KitAssemblyManager(JPanel buttons) {
-			super(Client.Type.KITASSEMBLYMANAGER, buttons, null);
+		public KitAssemblyManager(JPanel buttons, JPanel animation) {
+			super(Client.Type.KITASSEMBLYMANAGER, buttons, animation);
 			setInterface();
 		}
 		public static void main(String[] args){
 		    KitAssManPanel buttons = new KitAssManPanel();
-			KitAssemblyManager k = new KitAssemblyManager(buttons);
+		    JPanel animation = new JPanel(); //TODO where graphics panel goes
+			KitAssemblyManager k = new KitAssemblyManager(buttons, animation);
 		}
 
-		@Override
 		public void setInterface() {
-			this.setSize(800, 800);
-			this.add(UI);
-			this.setVisible(true);
+			setSize(1780, 720);
+			GridBagConstraints c = new GridBagConstraints();
+			setLayout(new GridBagLayout());
 			
+			c.fill = GridBagConstraints.VERTICAL;
+			c.gridx = 0;
+			c.gridy = 0;
+			add(graphics, c);
+			
+			c.gridx = 2;
+			add(UI, c);
+			setVisible(true);
 		}
-		@Override
+
 		public void doCommand(ArrayList<String> pCmd) {
 			// TODO Auto-generated method stub
 			

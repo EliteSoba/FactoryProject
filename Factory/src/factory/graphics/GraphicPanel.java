@@ -38,7 +38,7 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		am = FKAM;
 		belt = new GraphicKitBelt(0, 0, this);
 		station = new GraphicKittingStation(200, 191, this);
-		kitRobot = new GraphicKittingRobot(this, 70, 250);
+		kitRobot = new GraphicKittingRobot(this, belt, station, 70, 250);
 		
 		// Parts robot client
 		// Add 8 nests
@@ -179,6 +179,11 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	
 	public GraphicKitBelt getBelt() {
 		return belt;
+	}
+	
+	public void cameraFlash()
+	{
+		
 	}
 	
 	public void moveGantryRobotToPickup()

@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import factory.client.Client;
+
 public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	
 	/*GraphicKitAssemblyManager.java (350x720) - Tobias Lee
@@ -51,19 +53,19 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	 * 			!- HANDLED BY 201 TEAM
 	 */
 	
-	private FrameKitAssemblyManager am; //The JFrame that holds this. Will be removed when gets integrated with the rest of the project
+	private Client am; //The JFrame that holds this. Will be removed when gets integrated with the rest of the project
 	private GraphicKitBelt belt; //The conveyer belt
 	private GraphicKittingStation station; //The kitting station
 	private GraphicKittingRobot robot;
 	public static final int WIDTH = 280, HEIGHT = 720;
 	
-	public GraphicKitAssemblyManager(FrameKitAssemblyManager FKAM) {
+	public GraphicKitAssemblyManager(Client FKAM) {
 		//Constructor
 		//x = 0;
 		am = FKAM;
-		belt = new GraphicKitBelt(0, 0, this);
-		station = new GraphicKittingStation(200, 191, this);
-		robot = new GraphicKittingRobot(this, 70, 250);
+		belt = new GraphicKitBelt(0, 0, null);
+		station = new GraphicKittingStation(200, 191, null);
+		robot = new GraphicKittingRobot(null, belt, station, 70, 250);
 		(new Timer(50, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 	}
@@ -75,7 +77,7 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		belt.inKit();
 	}
 	public void newEmptyKitDone() {
-		am.newEmptyKitAtConveyor();
+		//am.newEmptyKitAtConveyor();
 	}
 	
 	public void moveEmptyKitToSlot(int target) {
@@ -86,7 +88,7 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		}
 	}
 	public void moveEmptyKitToSlotDone() {
-		am.moveEmptyKitToSlotDone();
+		//am.moveEmptyKitToSlotDone();
 	}
 	
 	public void moveKitToInspection(int target) {
@@ -97,7 +99,7 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		}
 	}
 	public void moveKitToInspectionDone() {
-		am.moveKitToInspectionDone();
+		//am.moveKitToInspectionDone();
 	}
 	
 	public void takePictureOfInspectionSlot() {
@@ -105,7 +107,7 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		station.checkKit();
 	}
 	public void takePictureOfInspectionSlotDone() {
-		am.takePictureOfInspectionSlotDone();
+		//am.takePictureOfInspectionSlotDone();
 	}
 	
 	public void dumpKitAtInspection() {
@@ -114,7 +116,7 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 			robot.setPurgeKit(true);
 	}
 	public void dumpKitAtInspectionDone() {
-		am.dumpKitAtInspectionDone();
+		//am.dumpKitAtInspectionDone();
 	}
 	
 	public void moveKitFromInspectionToConveyor() {
@@ -123,14 +125,14 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 			robot.setFromCheck(true);
 	}
 	public void moveKitFromInspectionToConveyorDone() {
-		am.moveKitFromInspectionToConveyorDone();
+		//am.moveKitFromInspectionToConveyorDone();
 	}
 	
 	public void exportKit() {
 		belt.exportKit();
 	}
 	public void exportKitDone() {
-		am.exportKitDone();
+		//am.exportKitDone();
 	}
 	
 	public void paint(Graphics g) {
@@ -156,6 +158,14 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		//etc.
 		repaint();
+	}
+	
+	public static void main(String args[]) {
+		JFrame f = new JFrame();
+		f.add(new GraphicKitAssemblyManager(null));
+		f.setVisible(true);
+		f.pack();
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 }
