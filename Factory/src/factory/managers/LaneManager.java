@@ -3,11 +3,12 @@
 
 package factory.managers;
 
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
-
+import factory.graphics.*;
 import factory.client.Client;
 import factory.graphics.GraphicLaneGraphicPanel;
 import factory.graphics.GraphicLaneManagerClient;
@@ -17,16 +18,16 @@ public class LaneManager extends Client {
 	private static final long serialVersionUID = 1L;
 
 
-	public LaneManager(JPanel buttons, GraphicLaneGraphicPanel animation) {
+	public LaneManager(JPanel buttons) {
 		
-		super(Client.Type.LANEMANAGER, buttons, animation); //what does this do?
+		super(Client.Type.LANEMANAGER, buttons, null); 
 		setInterface();
 	}
 	
 	public static void main(String[] args){
 		LaneManPanel buttons = new LaneManPanel();
-		//GraphicLaneGraphicPanel animation = new GraphicLaneGraphicPanel(new GraphicLaneManagerClient());
-		LaneManager l = new LaneManager(buttons, null);
+		//GraphicPanel animation = new GraphicPanel(null);
+		LaneManager l = new LaneManager(buttons);
 		buttons.setManager(l);
 		
 	}
@@ -45,16 +46,22 @@ public class LaneManager extends Client {
 		else if (message == "green"){
 			set = "lm lma set lanevibration "+ lane + " " + setting;
 		}
-		//send via a function
+		sendCommand(set);
 	}
 	
 	public void setInterface() {
-		this.setSize(800, 800);
-		this.add(UI);
-		this.setVisible(true);
-				
+		setSize(1780, 720);
+		GridBagConstraints c = new GridBagConstraints();
+		setLayout(new GridBagLayout());
 		
+		c.fill = GridBagConstraints.VERTICAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		add(graphics, c);
 		
+		c.gridx = 2;
+		add(UI, c);
+		setVisible(true);
 	}
 
 	@Override
