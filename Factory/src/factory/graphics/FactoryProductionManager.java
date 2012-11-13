@@ -112,6 +112,16 @@ public class FactoryProductionManager extends JFrame {
 		panel.feedLane(b,laneNum,divergeUp);
 	}
 	
+	public void getBin()
+	{
+		panel.moveGantryRobotToPickup();
+	}
+	
+	public void moveGantryToFeeder1()
+	{
+		panel.moveGantryRobotToFeeder(0);
+	}
+	
 	public static void main(String args[]) {
 		//Implements this JFrame
 		FactoryProductionManager FKAM = new FactoryProductionManager();

@@ -17,12 +17,13 @@ PrintWriter out = null;
 BufferedReader in = null;
 boolean haveCMD = false; 
 String cmd = null;
+String message;
 MasterControl master = null;
 String Client_id = null;
 
 	public PartHandler(Socket s, BufferedReader b, PrintWriter p, String me, MasterControl mc){
 		//need to add other initializations
-		Socket mySocket = s;
+		mySocket = s;
 		out = p;
 		in = b;
 		master = mc;
@@ -40,20 +41,15 @@ String Client_id = null;
 		cmd = gotCmd();
 		if(haveCMD)
 		{//if there was a command then call parseCmd and send the cmd to Server to assess
-			master.parseCmd(cmd); 
+			master.parseCmd(cmd,this); 
 			//sets haveCMD to false because parseCmd notified server
 			haveCMD = false;
 		}
 	    }
-		
-	    out.close();
-	    in.close();
-	    mySocket.close();
 	}
 	
 	public boolean send(String cmd) {
 		boolean result = false;
-		String confirmation = null;
 
 		out.println(cmd);	//output command
 		result = true;
@@ -69,7 +65,7 @@ String Client_id = null;
 	{
 		try {
 		    //Wait for the client to send a String 
-		    String message = in.readLine();
+		    message = in.readLine();
 		    
 		} catch (Exception e) {
 		    e.printStackTrace();

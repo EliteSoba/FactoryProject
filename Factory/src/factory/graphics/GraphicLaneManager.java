@@ -55,7 +55,7 @@ public class GraphicLaneManager{
 		lane_xPos = laneX; lane_yPos = laneY;					//MODIFY to change Lane position
 		laneManagerID = ID;
 		graphicPanel = gp;
-		bin = new GraphicBin(new Part("tmp"));
+		//bin = new GraphicBin(new Part("tmp"));
 		//declaration of variables
 		lane1Items = new ArrayList<GraphicItem>();
 		lane2Items = new ArrayList<GraphicItem>();
@@ -78,7 +78,7 @@ public class GraphicLaneManager{
 		timerCount = 1; currentItemCount = 0; binItemCount = 0; vibrationCount = 0;
 		
 		//Location of bin to appear. x is fixed
-		feederX = lane_yPos + 335; feederY = lane_yPos + 30;
+		feederX = lane_xPos + 250; feederY = lane_yPos + 15;
 		
 		/*
 		//Declaration of items in bin's location
