@@ -1,6 +1,7 @@
 package factory.graphics;
 
 import java.awt.*;
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -98,6 +99,11 @@ public class GraphicPanel extends JPanel implements ActionListener{
 	}
 	public GraphicLaneManager getLane(int index) {
 		return lane[index];
+	}
+	
+	public void paint(Graphics g) {
+		g.setColor(new Color(200, 200, 200));
+		g.fillRect(0, 0, getWidth(), getHeight());
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
