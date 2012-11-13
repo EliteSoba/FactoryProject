@@ -2,7 +2,7 @@
 //CS 200
 package factory.managers;
 
-package factory.managers;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -40,6 +40,12 @@ public class PartsManager extends Client {
 		}else if (option.equals("remove")){
 			message = "pm km cmd rmpartname " + itemName + " " + filePath;
 		}
+		
+	}
+
+	@Override
+	public void doCommand(ArrayList<String> pCmd) {
+		// TODO Auto-generated method stub
 		
 	}
 

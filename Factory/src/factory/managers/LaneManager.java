@@ -4,6 +4,7 @@
 package factory.managers;
 
 import java.awt.GridLayout;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -53,6 +54,12 @@ public class LaneManager extends Client {
 		this.setVisible(true);
 				
 		
+		
+	}
+
+	@Override
+	public void doCommand(ArrayList<String> pCmd) {
+		// TODO Auto-generated method stub
 		
 	}
 
