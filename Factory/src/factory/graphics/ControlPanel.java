@@ -117,7 +117,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		else if(source == partsRobotStation)
 			am.moveRobotToStation();
 		else if(source == feedLane1)
-			am.feedLane(new GraphicBin(new Part("eyes")),1);
+			am.feedLane(1);	//FEEDS THE LANE! Lane 1-8, NOT 0-7
 		else if(source == gantryRobotGetBin)
 			am.getBin();
 		else if(source == gantryRobotFeeder1)

@@ -235,11 +235,8 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		System.out.println("DEBUG: ARRIVED AT CENTER");
 	}
 	
-	public void feedLane(GraphicBin b, int laneNum){
-		lane[(laneNum - 1) / 2].bin = b;
+	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 1-8, NOT 0-7
 		lane[(laneNum - 1) / 2].currentItemCount = 0;
-		lane[(laneNum - 1) / 2].placedBin = true;
-		lane[(laneNum - 1) / 2].binExist = true;
 		lane[(laneNum - 1) / 2].laneStart = true;
 		lane[(laneNum - 1) / 2].divergeUp = ((laneNum- 1) % 2 == 0);
 		lane[(laneNum - 1) / 2].feederOn = true;
@@ -324,6 +321,7 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		else if(gantryRobot.getState() == 4)
 		{
 			lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.takeBin());
+			lane[gantryRobot.getDestinationFeeder()].binExist = true;
 			gantryRobotArrivedAtFeeder();
 		}
 		partsRobot.move();							// Update position and angle of partsRobot

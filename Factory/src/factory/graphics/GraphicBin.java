@@ -1,6 +1,7 @@
 //Minh La
 
 package factory.graphics;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ public class GraphicBin{
 
 	public GraphicBin(Part part){
 		partName = part.name;
-		int binSize = 12 * 55;		//Number of items in bin
+		int binSize = 14;		//Number of items in bin
 		binItems = new ArrayList<GraphicItem>();
 		for(int i = 0; i < binSize;i++){
 			//binItems.add(new GraphicItem(-40, 0, "Images/"+partName+".png"));
@@ -29,7 +30,7 @@ public class GraphicBin{
 			binItems.get(i).itemImage = new ImageIcon("Images/" + partName + ".png");
 		}*/
 		binItemsStackImage = new ImageIcon("Images/binCrate.png");
-		binImage = new ImageIcon("Images/bin.png");
+		binImage = new ImageIcon("Images/binCrate.png");
 	}
 
 	public ArrayList<GraphicItem> getBinItems(){
@@ -38,6 +39,10 @@ public class GraphicBin{
 
 	public ImageIcon getBinImage(){
 		return binImage;
+	}
+	
+	public void paint(Graphics g, int x, int y) {
+		g.drawImage(binImage.getImage(), x, y, null);
 	}
 
 }

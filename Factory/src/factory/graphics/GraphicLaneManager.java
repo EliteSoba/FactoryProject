@@ -42,7 +42,7 @@ public class GraphicLaneManager{
 	int binItemCount;			//current item in bin to dump
 	int vibrationCount;			//every 2 paint, it'll vibrate
 	int laneManagerID;					//lane Manager Number
-	boolean placedBin;			//true is bin is added to feeder
+	//boolean placedBin;			//true is bin is added to feeder
 	boolean feederOn;			//Feeder on/off
 	boolean binExist;			
 	boolean feederHasItems;		//Check to see if feeder has item to. If does, then paint the image
@@ -71,7 +71,7 @@ public class GraphicLaneManager{
 		laneStart = false;
 		divergeUp = false;
 		feederOn = false;
-		binExist = true;
+		binExist = false;
 		feederHasItems = false;
 		lane1PurgeOn = false;		//Nest purge is off unless turned on
 		lane2PurgeOn = false;		//Nest purge is off unless turned on
@@ -113,33 +113,22 @@ public class GraphicLaneManager{
 		
 		
 		g2.drawImage(feederIcon.getImage(), lane_xPos+250, lane_yPos+15, null);
-
+		/*
 		if(placedBin){
 			g2.drawImage(bin.getBinImage().getImage(), lane_xPos+325, lane_yPos+30, null);
 			if(binItemCount == 0){
-				g2.drawImage(bin.binItemsStackImage.getImage(), lane_xPos+335, lane_yPos+40, null);
 			}
 			if(binItemCount == 3){
-				g2.drawImage(bin.binItemsStackImage.getImage(), lane_xPos+265, feederY+10, null);
-				/**ORIGINAL be4 infinity parts
-				 * for(int i = 0;i < bin.getBinItems().size() ;i = i + (bin.getBinItems().size() / 4)){
-					for(int j = 0; j < bin.getBinItems().size() / 4;j++){
-						bin.getBinItems().get(i+j).setX(lane.feederX + 10 + j * 20);
-						bin.getBinItems().get(i+j).setY(lane.feederY + 10 + (i/(bin.getBinItems().size() / 4)) * 20);
-					}
-				}
-				**/
 				placedBin = false;
 				feederHasItems = true;
 				binItemCount = 0;
 			}
 			binItemCount++;
 		}
-		
+		*/
 		if(binExist){
-			if(feederHasItems){
-				g2.drawImage(bin.binItemsStackImage.getImage(), lane_xPos+265, feederY+10, null);
-			}
+			g2.drawImage(bin.getBinImage().getImage(),lane_xPos+265, feederY+10, null);
+			//g2.drawImage(bin.getBinImage(), lane_xPos+265, feederY+10, null);
 			if(laneStart){
 	
 				if(feederOn){

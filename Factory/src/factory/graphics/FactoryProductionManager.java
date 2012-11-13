@@ -108,8 +108,8 @@ public class FactoryProductionManager extends JFrame {
 		panel.movePartsRobotToKit(0);
 	}
 	
-	public void feedLane(GraphicBin b, int laneNum){
-		panel.feedLane(b,laneNum);
+	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 1-8, NOT 0-7
+		panel.feedLane(laneNum);
 	}
 	
 	public void getBin()
