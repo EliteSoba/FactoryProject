@@ -3,6 +3,8 @@
 
 package factory.managers;
 
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
 
 import factory.client.Client;
@@ -26,6 +28,11 @@ public class KitAssemblyManager extends Client {
 			this.setSize(800, 800);
 			this.add(UI);
 			this.setVisible(true);
+			
+		}
+		@Override
+		public void doCommand(ArrayList<String> pCmd) {
+			// TODO Auto-generated method stub
 			
 		}
 }
