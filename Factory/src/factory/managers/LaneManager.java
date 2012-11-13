@@ -10,30 +10,27 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import factory.graphics.*;
 import factory.client.Client;
-import factory.graphics.GraphicLaneGraphicPanel;
-import factory.graphics.GraphicLaneManagerClient;
-import factory.swing.LaneManPanel;
 
 public class LaneManager extends Client {
 	private static final long serialVersionUID = 1L;
 
 
-	public LaneManager(JPanel buttons) {
+	public LaneManager(JPanel animation) {
 		
-		super(Client.Type.LANEMANAGER, buttons, null); 
+		super(Client.Type.LANEMANAGER, null, animation); 
 		setInterface();
 	}
 	
 	public static void main(String[] args){
-		LaneManPanel buttons = new LaneManPanel();
-		//GraphicPanel animation = new GraphicPanel(null);
-		LaneManager l = new LaneManager(buttons);
-		buttons.setManager(l);
+		//LaneManPanel buttons = new LaneManPanel(); //to be implemented in V.2
+		JPanel animation = new GraphicPanel(null);
+		//LaneManager l = new LaneManager(buttons); //to be implemented in V.2
+		//buttons.setManager(l);  //to be implemented in V.2
 		
 	}
 	
 	public void sendMessage(int lane, int setting, String message){
-		String set = new String("");
+		/*String set = new String("");
 		if (message == "power"){
 			set = "lm lma lanepowertoggle "+ lane;
 		}
@@ -46,7 +43,7 @@ public class LaneManager extends Client {
 		else if (message == "green"){
 			set = "lm lma set lanevibration "+ lane + " " + setting;
 		}
-		sendCommand(set);
+		sendCommand(set);*/ // to be implemented in V.2
 	}
 	
 	public void setInterface() {
@@ -59,14 +56,12 @@ public class LaneManager extends Client {
 		c.gridy = 0;
 		add(graphics, c);
 		
-		c.gridx = 2;
-		add(UI, c);
+		/*c.gridx = 2;
+		add(UI, c);*/ //to be implemented in V.2
 		setVisible(true);
 	}
 
-	@Override
 	public void doCommand(ArrayList<String> pCmd) {
-		// TODO Auto-generated method stub
 		
 	}
 

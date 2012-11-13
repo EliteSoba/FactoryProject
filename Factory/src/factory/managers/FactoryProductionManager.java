@@ -23,7 +23,7 @@ public class FactoryProductionManager extends Client {
 		}
 		public static void main(String[] args){
 		    FactoryProdManPanel buttons = new FactoryProdManPanel();
-		    GraphicPanel animation = new GraphicPanel(null);
+		    GraphicPanel animation = new GraphicPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
 			FactoryProductionManager f = new FactoryProductionManager(buttons, animation);
 			buttons.setManager(f);
 		}
@@ -44,19 +44,19 @@ public class FactoryProductionManager extends Client {
 			
 		}
 
-		public void sendOrder(String kitname, String quantity, String message) { // request to server to send order to kitmanager
+		public void sendMessage (String kitname, String quantity, String message) { // sends message out from swing
 			String set = new String("");
 			set = "fpm km cmd makekits " + quantity + " " + kitname;	
 			sendCommand(set);
 			//
 		}
 		
-		public void sendDone(String process) {
+		public void sendDone(String process) { //sends message out from graphics (Tobi's Function)
 			//Process changes depending on previous command
 			sendCommand(process);
 		}
 		
-		public void doCommand(ArrayList<String> pCmd) {
+		public void doCommand(ArrayList<String> pCmd) { 
 			//receive message
 			
 		}

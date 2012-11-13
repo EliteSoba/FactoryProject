@@ -137,7 +137,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			if (kitNameBox.getSelectedItem() == null)
 				messageBox.append("No kit selected.\n");
 			else {
-				 factoryProductionManager.sendOrder((String)kitNameBox.getSelectedItem(),(String)spinner.getValue());
+				 factoryProductionManager.sendMessage((String)kitNameBox.getSelectedItem(),(String)spinner.getValue(), "hi");
 					
 			messageBox.append("Order Submitted.\n     Details: " + spinner.getValue() + " units of " + (String)kitNameBox.getSelectedItem() + "\n" );
 			}
