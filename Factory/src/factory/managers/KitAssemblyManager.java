@@ -10,19 +10,20 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import factory.client.Client;
+import factory.graphics.GraphicKitAssemblyManager;
 import factory.swing.GantryManPanel;
 import factory.swing.KitAssManPanel;
 
 public class KitAssemblyManager extends Client {
 	private static final long serialVersionUID = -4230607892468748490L;
 
-		public KitAssemblyManager(JPanel buttons, JPanel animation) {
+		public KitAssemblyManager(JPanel buttons, GraphicKitAssemblyManager animation) {
 			super(Client.Type.KITASSEMBLYMANAGER, buttons, animation);
 			setInterface();
 		}
 		public static void main(String[] args){
 		    KitAssManPanel buttons = new KitAssManPanel();
-		    JPanel animation = new JPanel(); //TODO where graphics panel goes
+		    GraphicKitAssemblyManager animation = new GraphicKitAssemblyManager(null); //TODO where graphics panel goes
 			KitAssemblyManager k = new KitAssemblyManager(buttons, animation);
 		}
 
