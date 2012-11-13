@@ -1,12 +1,19 @@
 //Minh La
 
 package factory.graphics;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
+import factory.Part;
 
 public class GraphicPanel extends JPanel implements ActionListener {
 	
@@ -236,10 +243,16 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	}
 	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 1-8, NOT 0-7
-		lane[(laneNum - 1) / 2].currentItemCount = 0;
-		lane[(laneNum - 1) / 2].laneStart = true;
-		lane[(laneNum - 1) / 2].divergeUp = ((laneNum- 1) % 2 == 0);
-		lane[(laneNum - 1) / 2].feederOn = true;
+		/*//Testing for quick feed
+		lane[(laneNum - 1) / 2].bin = new GraphicBin(new Part("eyes"));
+		lane[(laneNum - 1) / 2].binExist = true;
+		//end Test*/
+		if(lane[(laneNum - 1) / 2].binExist && lane[(laneNum - 1) / 2].bin.getBinItems().size() > 0){
+			lane[(laneNum - 1) / 2].laneStart = true;
+			lane[(laneNum - 1) / 2].divergeUp = ((laneNum- 1) % 2 == 0);
+			lane[(laneNum - 1) / 2].feederOn = true;
+		}
+		//System.out.println("bin size " + lane[(laneNum - 1) / 2].bin.getBinItems().size());
 	}
 	
 	public void startLane(int laneNum){
@@ -264,7 +277,6 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	}
 	
 	public void purgeFeederLane(int feederNum){ // takes in lane 1 - 4
-		lane[(feederNum - 1)].bin = null;
 		lane[(feederNum - 1)].bin = null;
 		lane[(feederNum - 1)].binExist = false;
 		lane[(feederNum - 1)].feederOn = false;

@@ -15,10 +15,11 @@ public class GraphicBin{
 	ImageIcon binImage;
 	String partName;
 	ImageIcon binItemsStackImage;
+	int binSize;
 
 	public GraphicBin(Part part){
 		partName = part.name;
-		int binSize = 14;		//Number of items in bin
+		binSize = 14;		//Number of items in bin
 		binItems = new ArrayList<GraphicItem>();
 		for(int i = 0; i < binSize;i++){
 			//binItems.add(new GraphicItem(-40, 0, "Images/"+partName+".png"));
