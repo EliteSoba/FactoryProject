@@ -14,7 +14,7 @@ import javax.swing.*;
 * This class is the GUI for the Parts Manaager. This will be
 * instantiated in the general PartsManager class (which extends JFrame).
 * Written by : Marc Mendiola
-* Last edited : 11/8/12 10:33 PM
+* Last edited : 11/12/12 11:59 PM
 */
 
 
@@ -141,8 +141,8 @@ public class PartsManPanel extends JPanel{
 		public void actionPerformed(ActionEvent ae) {
 			 if (ae.getSource() == saveItem){
 				 boolean nameTaken = false;
-				 for(int i = 0; i < parts.size(); i++){
-					 if(itemName.getText().equals(parts.get(i)))
+				 for(int i = 0; i < partsManager.getParts().size(); i++){
+					 if(itemName.getText().equals(partsManager.getParts().get(i)))
 						 nameTaken = true;
 				 }
 				 if(nameTaken){
@@ -159,10 +159,7 @@ public class PartsManPanel extends JPanel{
 
 		}
 		
-		public void refreshList(){
-			
-		}
-
+		
 	}
 
 	private class RemovePanel extends JPanel implements ActionListener{
@@ -244,10 +241,7 @@ public class PartsManPanel extends JPanel{
 				     }
 
 				}
-				public void refreshList(){
-					
-				}
-
+				
 	}
 
 }
