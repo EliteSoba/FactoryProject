@@ -30,12 +30,9 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public enum ConveyorStatus {EMPTY, GETTING_KIT, EMPTY_KIT, COMPLETED_KIT};
 	public enum StandInfo { NEED_EMPTY_TOP, NEED_EMPTY_BOTTOM, NEED_INSPECTION_TOP, NEED_INSPECTION_BOTTOM, INSPECTION_SLOT_DONE, KIT_GOOD, KIT_BAD };
 	
-	public KitRobotAgent() {
-		super(Agent.Type.KITROBOTAGENT);
-	}
 	
 	public KitRobotAgent(StandAgent stand, FrameKitAssemblyManager server, ConveyorAgent conveyor){
-		super(Agent.Type.KITROBOTAGENT);
+		super();
 		this.conveyor = conveyor;
 		this.stand = stand;
 		this.server = server;

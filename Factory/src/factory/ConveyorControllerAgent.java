@@ -19,7 +19,7 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	Timer timer = new Timer();
 	
 	public ConveyorControllerAgent(Conveyor conveyor, FrameKitAssemblyManager server) {
-		super(Agent.Type.CONVEYORCONTROLLERAGENT);
+		super();
 		this.conveyor = conveyor;
 		this.server = server;
 	}
