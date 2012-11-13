@@ -137,11 +137,11 @@ public class GraphicLaneManager{
 							bin.getBinItems().get(0).setY(lane_yPos + 70);
 							if(divergeUp){
 								bin.getBinItems().get(0).setVY(-8);
-								bin.getBinItems().get(0).setDivergeUp(false);
+								bin.getBinItems().get(0).setDivergeUp(true);
 							}
 							else{
 								bin.getBinItems().get(0).setVY(8);
-								bin.getBinItems().get(0).setDivergeUp(true);
+								bin.getBinItems().get(0).setDivergeUp(false);
 							}
 							//System.out.println(bin.getBinItems()[currentItemCount].getVY() + " vY = " + vY);
 							bin.getBinItems().get(0).setVX(0);
@@ -150,8 +150,11 @@ public class GraphicLaneManager{
 							else
 								lane2Items.add(bin.getBinItems().get(0));
 							bin.getBinItems().remove(0);
-							if(bin.getBinItems().size() == 0)
+							if(bin.getBinItems().size() == 0){
 								feederOn = false;
+								graphicPanel.feedLaneDone(laneManagerID * 2 + ((divergeUp)?0:1));
+								System.out.println("Done feeding");
+							}
 						}/*
 						else{//bin should be empty. remove items from bin
 							for(int i = 0;i<bin.getBinItems().size();i++){
@@ -269,7 +272,7 @@ public class GraphicLaneManager{
 					lane1Items.get(i).setVY(0);
 					lane1Items.get(i).setVX(0);
 					lane1Items.get(i).setX(lane_xPos + 3 + 25 * (int)(graphicPanel.getNest().get(laneManagerID * 2).getSize() / 3));
-					boolean testDiverge = !lane1Items.get(i).getDivergeUp();
+					boolean testDiverge = lane1Items.get(i).getDivergeUp();
 					lane1Items.get(i).setY(lane_yPos + 3 + 25 * (graphicPanel.getNest().get(laneManagerID * 2).getSize() % 3) + 80 * ((testDiverge)?0:1));
 					graphicPanel.getNest().get(laneManagerID * 2).addItem(lane1Items.get(i));
 					if(lane1QueueTaken.size() > 0)

@@ -243,16 +243,20 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	}
 	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 1-8, NOT 0-7
-		/*//Testing for quick feed
+		//Testing for quick feed
 		lane[(laneNum - 1) / 2].bin = new GraphicBin(new Part("eyes"));
 		lane[(laneNum - 1) / 2].binExist = true;
-		//end Test*/
+		//end Test
 		if(lane[(laneNum - 1) / 2].binExist && lane[(laneNum - 1) / 2].bin.getBinItems().size() > 0){
 			lane[(laneNum - 1) / 2].laneStart = true;
 			lane[(laneNum - 1) / 2].divergeUp = ((laneNum- 1) % 2 == 0);
 			lane[(laneNum - 1) / 2].feederOn = true;
 		}
 		//System.out.println("bin size " + lane[(laneNum - 1) / 2].bin.getBinItems().size());
+	}
+
+	public void feedLaneDone(int laneNum){
+		am.feedLaneDone(laneNum);
 	}
 	
 	public void startLane(int laneNum){

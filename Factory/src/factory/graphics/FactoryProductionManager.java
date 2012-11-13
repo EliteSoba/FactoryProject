@@ -122,6 +122,12 @@ public class FactoryProductionManager extends JFrame {
 		panel.moveGantryRobotToFeeder(0);
 	}
 	
+	//Lane Manager Messages
+	public void feedLaneDone(int laneNum) {
+		System.out.println("Lane " + (laneNum + 1) + " has finished feeding.");
+		//kitRobot.msgAnimationDone();
+	}
+	
 	public static void main(String args[]) {
 		//Implements this JFrame
 		FactoryProductionManager FKAM = new FactoryProductionManager();
