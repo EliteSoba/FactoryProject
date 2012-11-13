@@ -80,7 +80,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 
 	private void exportKit() {
 		debug("Exporting Kit");
-		server.exportKit(); //Animation for moving the kit out of the cell on the conveyor
+		//server.exportKit(); //Animation for moving the kit out of the cell on the conveyor
 		
 		/**
 		  try {
@@ -97,6 +97,15 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	}
 
 	////Misc / Hacks
+	public Kit getAtConveyor() {
+		return kitAtConveyor;
+	}
+	
+	public void setAtConveyor(Kit k) {
+		this.kitAtConveyor = k;
+	}
+	
+	
 	public void setConveyorController(ConveyorController cc) {
 		conveyorController = cc;
 	}

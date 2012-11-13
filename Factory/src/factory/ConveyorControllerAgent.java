@@ -57,7 +57,7 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		    	//The message to tell the Conveyor about the new kit is Conveyor.msgHeresEmptyKit(new Kit());
 		    	
 		    	// Tell server to do animation of moving empty kit from conveyor to the topSlot of the stand
-				server.sendNewEmptyKit();
+				//server.sendNewEmptyKit();
 				
 				// Wait until the animation is done
 				try {

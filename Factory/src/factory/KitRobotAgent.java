@@ -7,8 +7,6 @@ import java.util.concurrent.Semaphore;
 
 import factory.Kit.KitState;
 import factory.StandAgent.MySlotState;
-import factory.StandAgent.StandAgentState;
-import factory.graphics.FrameKitAssemblyManager;
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
 import agent.*;
@@ -29,8 +27,8 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public enum ConveyorStatus {EMPTY, GETTING_KIT, EMPTY_KIT, COMPLETED_KIT};
 	public enum StandInfo { NEED_EMPTY_TOP, NEED_EMPTY_BOTTOM, NEED_INSPECTION_TOP, NEED_INSPECTION_BOTTOM, INSPECTION_SLOT_DONE, KIT_GOOD, KIT_BAD };
 	
+	//Constructor used for UnitTesting only
 	public KitRobotAgent() {
-		//constructor used in unit testing
 		super(null);
 	}
 	
@@ -102,7 +100,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public boolean pickAndExecuteAnAction() {	
 
 		synchronized(actions){
-			
+
 			if (actions.contains(StandInfo.KIT_BAD)) {
 				actions.remove(StandInfo.KIT_BAD);
 				dumpKit();
@@ -253,7 +251,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		//Here do the animation for picking up the kit from the conveyor
 		if(pos.equals("topSlot")) {
 			//server.moveEmptyKitToSlot(0); //Animation for hte kit robot to go to the conveyor and pick up the kit
-		}  else if (pos == "bottomSlot") {
+		}  else if (pos.equals("bottomSlot")) {
 			//server.moveEmptyKitToSlot(1); //Animation for hte kit robot to go to the conveyor and pick up the kit
 		}
 
@@ -306,6 +304,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
 		debug("Animation moveKitFromSlotToInspection() was completed");
 		if(slot == 0) {
 			// Put an empty kit in the topSlot of the stand
@@ -323,5 +322,10 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		}
 		
 		stand.msgKitRobotNoLongerUsingStand();
+	}
+	
+	//Hacks / MISC
+	public void setConveyor(Conveyor conveyor) {
+		this.conveyor = conveyor;
 	}
 }
