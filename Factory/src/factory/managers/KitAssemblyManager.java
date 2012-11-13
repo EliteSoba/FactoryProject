@@ -7,23 +7,20 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
 
-import javax.swing.JPanel;
-
 import factory.client.Client;
-import factory.swing.GantryManPanel;
-import factory.swing.KitAssManPanel;
+import factory.graphics.GraphicKitAssemblyManager;
 
 public class KitAssemblyManager extends Client {
 	private static final long serialVersionUID = -4230607892468748490L;
 
-		public KitAssemblyManager(JPanel buttons, JPanel animation) {
-			super(Client.Type.KITASSEMBLYMANAGER, buttons, animation);
+		public KitAssemblyManager( GraphicKitAssemblyManager animation) {
+			super(Client.Type.KITASSEMBLYMANAGER, null, animation);
 			setInterface();
 		}
 		public static void main(String[] args){
-		    KitAssManPanel buttons = new KitAssManPanel();
-		    JPanel animation = new JPanel(); //TODO where graphics panel goes
-			KitAssemblyManager k = new KitAssemblyManager(buttons, animation);
+		    //KitAssManPanel buttons = new KitAssManPanel(); //to be implemented in V.2
+		    GraphicKitAssemblyManager animation = new GraphicKitAssemblyManager(null);
+			KitAssemblyManager k = new KitAssemblyManager(animation);
 		}
 
 		public void setInterface() {
@@ -36,13 +33,13 @@ public class KitAssemblyManager extends Client {
 			c.gridy = 0;
 			add(graphics, c);
 			
-			c.gridx = 2;
-			add(UI, c);
+			/*c.gridx = 2;
+			add(UI, c);*/ //to be implemented in V.2
 			setVisible(true);
 		}
 
 		public void doCommand(ArrayList<String> pCmd) {
-			// TODO Auto-generated method stub
+			// TODO receive commands
 			
 		}
 }

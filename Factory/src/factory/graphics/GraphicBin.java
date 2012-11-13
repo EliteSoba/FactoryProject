@@ -28,7 +28,7 @@ public class GraphicBin{
 			binItems.get(i).setX(-40);
 			binItems.get(i).itemImage = new ImageIcon("Images/" + partName + ".png");
 		}*/
-		binItemsStackImage = new ImageIcon("Images/"  + partName +"Stack.png");
+		binItemsStackImage = new ImageIcon("Images/binCrate.png");
 		binImage = new ImageIcon("Images/bin.png");
 	}
 
