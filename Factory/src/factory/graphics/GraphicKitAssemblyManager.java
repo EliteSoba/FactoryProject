@@ -65,7 +65,7 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		am = FKAM;
 		belt = new GraphicKitBelt(0, 0, null);
 		station = new GraphicKittingStation(200, 191, null);
-		robot = new GraphicKittingRobot(null, 70, 250);
+		robot = new GraphicKittingRobot(null, belt, station, 70, 250);
 		(new Timer(50, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 	}
@@ -158,6 +158,14 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		//etc.
 		repaint();
+	}
+	
+	public static void main(String args[]) {
+		JFrame f = new JFrame();
+		f.add(new GraphicKitAssemblyManager(null));
+		f.setVisible(true);
+		f.pack();
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 }
