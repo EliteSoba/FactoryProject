@@ -25,7 +25,7 @@ public class FCSAgent extends Agent implements FCS{
 	   public boolean freeToMakeKit = true;
 //	   public Queue<Map> myKitConfigs = new LinkedList<Map>();
 	   
-	   enum KitProductionState { PENDING, PRODUCING, FINISHED }
+	   enum KitProductionState { PENDING, PRODUCING, FINISHED, PURGING }
 	   KitProductionState state = KitProductionState.PENDING;
 
 	   

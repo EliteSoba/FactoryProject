@@ -1,14 +1,26 @@
 package factory.graphics;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
+import factory.Part;
+
 class GantryRobot
 {
+	int x, y;							// current position
+	int dx, dy;						// change in position
+	int theta;						// image angle
+	int dtheta;						// change in image angle
+	int imageWidth, imageHeight;		// image size
+	Image image;
 	int fx, fy;		// final position (destination)
 	int destinationFeeder;
 	boolean arrived;
 	int state;
 	GraphicBin bin;
+	boolean hasBin;
+	Image binImage;
 	
 	public GantryRobot()
 	{
@@ -16,7 +28,8 @@ class GantryRobot
 	}
 	public GantryRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
-		bin = new GraphicBin();
+		bin = new GraphicBin(new Part("TestItem"));
+		hasBin = false;
 		arrived = false;
 		state = -1;		// 0 = moving to nest, 1 = waiting at nest, 2 = waiting for next action, 3 = moving to kitting station, 4 = waiting at kitting station
 						// 5 = moving to center, 6 = arrived at center
@@ -32,6 +45,7 @@ class GantryRobot
 		imageWidth = init_imageWidth;
 		imageHeight = init_imageHeight;
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
+		binImage = Toolkit.getDefaultToolkit().getImage("Images/binCrate.png");
 	}
 	
 	public void setDestination(int init_fx, int init_fy)
@@ -64,6 +78,44 @@ class GantryRobot
 	{
 		return state;
 	}
+	public void paint(Graphics g)
+	{
+		// Draw the parts robot itself
+		g.drawImage(image, x, y, imageWidth, imageHeight, null);
+		// Draw the bin if it has one
+		if(hasBin)
+			g.drawImage(binImage, x+imageWidth-25, y, 50, 95, null);
+	}
+	// Get functions
+	public int getX()
+	{
+		return x;
+	}
+	public int getY()
+	{
+		return y;
+	}
+	public Image getImage()
+	{
+		return image;
+	}
+	public int getAngle()
+	{
+		return theta;
+	}
+	public int getImageWidth()
+	{
+		return imageWidth;
+	}
+	public int getImageHeight()
+	{
+		return imageHeight;
+	}
+	public GraphicBin takeBin()
+	{
+		hasBin = false;
+		return bin;
+	}
 	public void move()
 	{
 		//System.out.println(fx + " " + fy);
@@ -72,6 +124,7 @@ class GantryRobot
 			if(state == 0)
 			{
 				state = 1;
+				hasBin = true;
 				System.out.println("Arrived at bin pickup point, waiting for bin pickup.");
 			}
 			else if(state == 3)

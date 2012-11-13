@@ -38,7 +38,7 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		am = FKAM;
 		belt = new GraphicKitBelt(0, 0, this);
 		station = new GraphicKittingStation(200, 191, this);
-		kitRobot = new GraphicKittingRobot(this, 70, 250);
+		kitRobot = new GraphicKittingRobot(this, belt, station, 70, 250);
 		
 		// Parts robot client
 		// Add 8 nests
@@ -99,10 +99,9 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		g3.dispose();
 		final Graphics2D g4 = (Graphics2D)g.create();
 		g4.rotate(Math.toRadians(360-gantryRobot.getAngle()), gantryRobot.getX()+gantryRobot.getImageWidth()/2, gantryRobot.getY()+gantryRobot.getImageHeight()/2);
-		g4.drawImage(gantryRobot.getImage(), gantryRobot.getX(), gantryRobot.getY(), gantryRobot.getImageWidth(), gantryRobot.getImageHeight(), this);
-		// Draw items gantryRobot is carrying
-		for(int i = 0; i < gantryRobot.getSize(); i++)
-			gantryRobot.getItemAt(i).paint(g4, gantryRobot.getX()+gantryRobot.getImageWidth()-25,gantryRobot.getY()+10+i*20);
+		gantryRobot.paint(g4);
+		// Draw bin gantryRobot is carrying
+
 		g4.dispose();
 	}
 	public GraphicLaneManager getLane(int index) {
@@ -182,16 +181,23 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		return belt;
 	}
 	
-	public void gantryRobotPickupBin()
+	public void cameraFlash()
 	{
+		
+	}
+	
+	public void moveGantryRobotToPickup(String path)
+	{
+		//System.out.println("Moving");
 		gantryRobot.setState(0);
 		gantryRobot.setDestination(WIDTH-100,-200);
 	}
 	
-	public void gantryRobotToFeeder(int feederIndex)
+	public void moveGantryRobotToFeeder(int feederIndex)
 	{
 		gantryRobot.setState(3);
-		gantryRobot.setDestination(feeder.)
+		gantryRobot.setDestinationFeeder(feederIndex);
+		gantryRobot.setDestination(lane[feederIndex].feederX+50, lane[feederIndex].feederY+15);
 	}
 	
 	public void movePartsRobotToNest(int nestIndex)
@@ -229,18 +235,63 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		System.out.println("DEBUG: ARRIVED AT CENTER");
 	}
 	
-	public void feedLane(GraphicBin b, int laneNum, boolean divergeUp){
-		lane[laneNum - 1].bin = b;
-		lane[laneNum - 1].currentItemCount = 0;
-		lane[laneNum - 1].placedBin = true;
-		lane[laneNum - 1].binExist = true;
-		lane[laneNum - 1].laneStart = true;
-		lane[laneNum - 1].divergeUp = divergeUp;
-		lane[laneNum - 1].feederOn = true;
+	public void feedLane(GraphicBin b, int laneNum){
+		lane[(laneNum - 1) / 2].bin = b;
+		lane[(laneNum - 1) / 2].currentItemCount = 0;
+		lane[(laneNum - 1) / 2].placedBin = true;
+		lane[(laneNum - 1) / 2].binExist = true;
+		lane[(laneNum - 1) / 2].laneStart = true;
+		lane[(laneNum - 1) / 2].divergeUp = ((laneNum- 1) % 2 == 0);
+		lane[(laneNum - 1) / 2].feederOn = true;
+	}
+	
+	public void startLane(int laneNum){
+		lane[(laneNum - 1) / 2].laneStart = true;
+	}
+	
+	public void switchLane(int laneNum){
+		lane[(laneNum - 1) / 2].divergeUp = !lane[(laneNum - 1) / 4].divergeUp;
+		lane[(laneNum - 1) / 2].vY = -(lane[(laneNum - 1) / 4].vY);
+	}
+	
+	public void stopLane(int laneNum){
+		lane[(laneNum - 1) / 2].laneStart = false;
+	}
+	
+	public void turnFeederOnLane(int laneNum){
+		lane[(laneNum - 1) / 2].feederOn = true;
+	}
+	
+	public void turnFeederOffLane(int laneNum){
+		lane[(laneNum - 1) / 2].feederOn = false;
+	}
+	
+	public void purgeFeederLane(int feederNum){ // takes in lane 1 - 4
+		lane[(feederNum - 1)].bin = null;
+		lane[(feederNum - 1)].bin = null;
+		lane[(feederNum - 1)].binExist = false;
+		lane[(feederNum - 1)].feederOn = false;
+	}
+	
+	public void purgeLaneLane(int laneNum){
+		if((laneNum - 1) % 2 == 0)
+			lane[(laneNum - 1) / 2].lane1PurgeOn = true;
+		else
+			lane[(laneNum - 1) / 2].lane2PurgeOn = true;
+		lane[(laneNum - 1) / 2].feederOn = false;
+		lane[(laneNum - 1) / 2].laneStart = false;
 	}
 	
 	public ArrayList<Nest> getNest(){
 		return nests;
+	}
+	
+	public void gantryRobotArrivedAtFeeder() {
+		System.out.println("DEBUG: ARRIVED AT FEEDER");
+	}
+	
+	public void gantryRobotArrivedAtPickup() {
+		System.out.println("DEBUG: ARRIVED AT PICKUP");
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -266,7 +317,17 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		{
 			partsRobotArrivedAtCenter();
 		}
+		if(gantryRobot.getState() == 1)
+		{
+			gantryRobotArrivedAtPickup();
+		}
+		else if(gantryRobot.getState() == 4)
+		{
+			lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.takeBin());
+			gantryRobotArrivedAtFeeder();
+		}
 		partsRobot.move();							// Update position and angle of partsRobot
+		gantryRobot.move();
 		repaint();		
 	}
 }

@@ -50,6 +50,7 @@ public abstract class Client extends JFrame implements ActionListener {
 				try {
 					currentCommand = input.readLine(); //reads from input each time there is a new string
 					parseInput();
+					doCommand(parsedCommand);
 				} catch (Exception e) {
 					System.out.println("inputStream not open");
 				}
@@ -61,13 +62,13 @@ public abstract class Client extends JFrame implements ActionListener {
 		connected = false;
 		type = t;
 		UI = buttons;
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.graphics = Animation;
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		graphics = Animation;
 		connect(); //connects to server
 		updater = new Timer(1000/30, this); //sets timer to update graphics
 		setInterface(); //to be implemented...set size, layout, add UI etc...
 		Thread inputThread = new Thread(independentInput);
-		inputThread.run();
+		inputThread.start();
 	}
 	
 	public void connect(){
@@ -83,8 +84,7 @@ public abstract class Client extends JFrame implements ActionListener {
 	}
 	
 	public void parseInput(){
-		parsedCommand = new ArrayList<String>(Arrays.asList(currentCommand.split(" "))); //puts string into array list
-	    doCommand(parsedCommand);
+		parsedCommand = new ArrayList<String>(Arrays.asList(currentCommand.split(" "))); //puts string into array list   
     }
 	public void sendCommand(String cmd){
 		output.println(cmd);

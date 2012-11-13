@@ -1,97 +1,41 @@
 package agent;
 
-import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.*;
+import java.util.*;
 import java.util.concurrent.*;
+
+import factory.masterControl.MasterControl;
 
 /** Base class for simple agents */
 public abstract class Agent {
 	Semaphore stateChange = new Semaphore(1,true);//binary semaphore, fair
 	private AgentThread agentThread;
+	
+	protected MasterControl server;
+	protected Semaphore animation = new Semaphore(0,true); // semaphore for animation interaction with server
 
-    // The following is copied from Client class.
-
-    public enum Type{//Each different agent needs to be enumerated here.
-        CONVEYORAGENT, FEEDERAGENT, GANTRYAGENT, KITROBOTAGENT, LANEAGENT, NESTAGENT, PARTSROBOTAGENT, STANDAGENT, VISIONAGENT
-    }
-    protected Socket server; //connection to server
-    public Type type; //type of client
-    public PrintWriter output; //output stream to server
-    public BufferedReader input; //input stream from server
-    public String currentCommand; //current command string from server
-    public ArrayList<String> parsedCommand; //current command parsed into strings
-    boolean connected;
-
-	protected Agent(Type t) {
-        connected = false;
-        type = t;
-        connect(); //connects to server
-        System.out.println("got to part 1");
-        Thread inputThread = new Thread(independentInput);
-        System.out.println("got to part 2");
-        inputThread.start();
-        System.out.println("got to part 3");
+	
+	protected Agent(MasterControl mc) {
+		server = mc;
 	}
-
-    public void connect(){
-        try {
-            server = new Socket("127.0.0.1", 12321); //connects to server on localhost
-            input = new BufferedReader(new InputStreamReader(server.getInputStream()));//opens inputStream
-            output = new PrintWriter(new OutputStreamWriter(server.getOutputStream()));//opens outputStream
-            connected = true;
-            System.out.println("connected to server!");
-        } catch (Exception e) {
-            System.out.println("Host unavailable");
-        }
-    }
-
-
-    Runnable independentInput = new Runnable(){
-        public void run(){
-            for(;;){
-                if(connected)
-                    try {
-                        input.readLine(); //reads from input each time there is a new string
-                        parseInput();
-                        System.out.println(input.readLine());
-                    } catch (Exception e) {
-                        System.out.println("inputStream not open");
-                    }
-            }//end for
-        }//end run
-    };
-
-    public void parseInput(){
-        //TODO parseinput
-        parsedCommand = new ArrayList<String>(Arrays.asList(currentCommand.split(" "))); //puts string into array list
-
-    }
-
-    // End of Client copy code
 
 	/** This should be called whenever state has changed that might cause
 	 * the agent to do something. */
-	public void stateChanged() {
+	protected void stateChanged() {
 		stateChange.release(); 
 	}
 
 	/** Agents must implement this scheduler to perform any actions appropriate for the
 	 * current state.  Will be called whenever a state change has occurred,
 	 * and will be called repeated as long as it returns true.
-	 * @return true if and only if some action was executed that might have changed the
+	 * @return true iff some action was executed that might have changed the
 	 * state.
 	 */
 	protected abstract boolean pickAndExecuteAnAction();
 
 	/** Return agent name for messages.  Default is to return java instance
 	 * name. */
-	public String getName() {
+	protected String getName() {
 		return StringUtil.shortName(this);
 	}
 
@@ -103,13 +47,13 @@ public abstract class Agent {
 	protected void print(String msg) {
 		print(msg, null);
 	}
-	
-    protected void debug(String msg){
-    	if(true){
-    		print(msg, null);
-    	}
-    }
 
+	protected void debug(String msg) {
+		if(true) {
+			print(msg, null);
+		}
+	}
+	
 	/** Print message with exception stack trace */
 	protected void print(String msg, Throwable e) {
 		StringBuffer sb = new StringBuffer();
@@ -141,6 +85,11 @@ public abstract class Agent {
 			agentThread.stopAgent();
 			agentThread = null;
 		}
+	}
+	
+	/** MESSAGE from the animation, notifying the agent that the animation is done. **/
+	public void msgAnimationDone() {
+		animation.release();
 	}
 
 	/** Agent scheduler thread, calls respondToStateChange() whenever a state

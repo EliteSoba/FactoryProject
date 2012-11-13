@@ -2,6 +2,10 @@
 
 package factory.managers;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
 
 import factory.client.Client;
@@ -10,13 +14,14 @@ import factory.swing.KitManPanel;
 public class KitManager extends Client {
 	private static final long serialVersionUID = -3161852324870948654L;
 
-	public KitManager(JPanel buttons) {
-		super(Client.Type.KITMANAGER, buttons, null);
+	public KitManager(JPanel buttons, JPanel animation) {
+		super(Client.Type.KITMANAGER, buttons, animation);
 		setInterface();
 	}
 	public static void main(String[] args){
 	    KitManPanel buttons = new KitManPanel();
-		KitManager k = new KitManager(buttons);
+	    JPanel animation = new JPanel();
+		KitManager k = new KitManager(buttons, animation);
 		buttons.setManager(k);
 	}
 
@@ -30,9 +35,24 @@ public class KitManager extends Client {
 	}
 	
 	public void setInterface() {
-		this.setSize(800, 800);
-		this.add(UI);
-		this.setVisible(true);
+		setSize(1780, 720);
+		GridBagConstraints c = new GridBagConstraints();
+		setLayout(new GridBagLayout());
+		
+		c.fill = GridBagConstraints.VERTICAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		add(graphics, c);
+		
+		c.gridx = 2;
+		add(UI, c);
+		setVisible(true);
+		
+	}
+	
+	
+	public void doCommand(ArrayList<String> pCmd) {
+		// TODO Auto-generated method stub
 		
 	}
 }

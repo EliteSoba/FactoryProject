@@ -14,7 +14,6 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	enum Conveyor_State { WANTS_EMPTY_KIT, EMPTY_KIT_SENDING, NO_ACTION };
 	Conveyor_State conveyor_state = Conveyor_State.NO_ACTION;
 	FrameKitAssemblyManager server;
-	Semaphore animation = new Semaphore(0);
 	
 	Timer timer = new Timer();
 	
@@ -24,30 +23,21 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		this.server = server;
 	}
 	////Messages
-	public void msgAnimationDone(){
-		debug("Received msgAnimationDone() from server");
-		animation.release();
-	}
-	
-	public void msgConveyorWantsEmptyKit(Conveyor c) {
+	public void msgConveyorWantsEmptyKit() {
 		if (!conveyor_state.equals(Conveyor_State.WANTS_EMPTY_KIT) && !conveyor_state.equals(Conveyor_State.EMPTY_KIT_SENDING)) {
 			conveyor_state = Conveyor_State.WANTS_EMPTY_KIT;
 			stateChanged();
 		}
 	}
 	
-	/**
-	 * this function is for later if we want to keep track of all exported kits, which I assume we will eventually but
-	 * doesn't quite fit the animation flow yet.
-	 */
-	public void msgKitExported(Conveyor c, Kit k) {
+	public void msgKitExported(Kit k) {
 		exported_kits.add(k);
 		stateChanged();
 	}
 	
 	
 	////Scheduler
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		if (conveyor_state.equals(Conveyor_State.WANTS_EMPTY_KIT)) {
 			conveyor_state = Conveyor_State.EMPTY_KIT_SENDING;
 			sendEmptyKit();
