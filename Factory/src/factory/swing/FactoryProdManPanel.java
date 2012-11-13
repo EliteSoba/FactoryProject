@@ -1,7 +1,7 @@
 /*
 
 author: Joey Huang
-Last edited: 11/12/12 11:17pm
+Last edited: 11/13/12 9:31am
 */
 package factory.swing;
 import java.util.*;
@@ -17,15 +17,17 @@ import factory.managers.*;
 public class FactoryProdManPanel extends JPanel implements ActionListener {
 	JComboBox kitNameBox; // contain String names of saved kit configurations
 	JSpinner spinner; // quantity of kits to produce
-	JButton submitButton;
+	JButton submitButton; // submit order
 	JTextArea messageBox; // submission confirmations
 	FactoryProductionManager factoryProductionManager;
 	JTabbedPane tabContainer;
-	JPanel newOrderPanel;
+	JPanel newOrderPanel; // new order panel
+
 	
-	JPanel schedulePanel;
-	DefaultTableModel model;
+	JPanel schedulePanel; // production schedule panel
+	DefaultTableModel model; 
 	JTable table;
+	JButton stopFactory; // terminate all factory operations - close program
 	
 	public FactoryProdManPanel() { 
 		newOrderPanel = new JPanel();
@@ -97,12 +99,6 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		    	column.setPreferredWidth(30);
 		    }
 		}
-
-		// method to insert row / order
-	/*	for(int i=0;i<4;i++) {
-			Object[] rowData = {i+1,"Kit"+(i+1),"10"};
-			model.insertRow(i,rowData);		
-		}*/
 	
 		schedulePanel.setLayout(new BorderLayout());
 		JLabel label = new JLabel("<html><p style=\"margin:30px 0 30px 0;\">Production Schedule</html>");
@@ -118,29 +114,39 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		container.add(scrollPane);
 		schedulePanel.add(container,BorderLayout.CENTER);
 		
-		//setSize(300,720);
-		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setVisible(true);
-		
 		//javax.swing.Timer timer = new javax.swing.Timer(1000,this);
 		//timer.start();
+		
+		stopFactory = new JButton("Terminate All Operations");
+		stopFactory.addActionListener(this);
+		schedulePanel.add(stopFactory, BorderLayout.SOUTH);
 		
 		tabContainer = new JTabbedPane();
 		tabContainer.addTab("New Order",newOrderPanel);
 		tabContainer.addTab("Schedule",schedulePanel);
+		tabContainer.setPreferredSize(new Dimension(290,710));
 		add(tabContainer);
 	}
 		
 	public void actionPerformed(ActionEvent ae) {
 		
-		if (ae.getSource().equals(submitButton)) {		// print messages to be displayed in messageBox
+		if (ae.getSource() == submitButton) {		// print messages to be displayed in messageBox
 			if (kitNameBox.getSelectedItem() == null)
 				messageBox.append("No kit selected.\n");
 			else {
-				 factoryProductionManager.sendMessage((String)kitNameBox.getSelectedItem(),(String)spinner.getValue(), "hi");
+				
+				String set = new String("");
+				set = "fpm fcs cmd makekits " + (String)spinner.getValue() + " " + (String)kitNameBox.getSelectedItem();	
+				factoryProductionManager.sendCommand(set);
 					
 			messageBox.append("Order Submitted.\n     Details: " + spinner.getValue() + " units of " + (String)kitNameBox.getSelectedItem() + "\n" );
 			}
+		}
+		else if (ae.getSource() == stopFactory) {
+			messageBox.append("Terminating all operations...\n");
+			String set = new String("");
+			set = "";
+			factoryProductionManager.sendCommand(set);
 		}
 	}
 	
@@ -151,30 +157,13 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	}
 	
 	public void removeKit(String kitName) { // remove kit from list - received from kit manager
-		kitNameBox.removeItem(kitName);	// should have been validated elsewhere
+		kitNameBox.removeItem(kitName);
 	}
 
 	public void setManager(FactoryProductionManager fpm) {
 		factoryProductionManager = fpm;
 	}
 	
-/*	public void doCommand(ArrayList<String> parsedCommands) {
-		// THIS IN MANAGER?
-		
-		 add new kit
-		  addKit(kitName)
-	
-		 
-		
-		  removeKit
-				
-		
-		 command : update kits remaining
-
-
-		
-	} */
-
 	public void kitProduced() { // update kits remaining
 		String numstr = (String)model.getValueAt(0,2);
 		int num = Integer.parseInt(numstr);
@@ -182,17 +171,13 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			num--;
 			model.setValueAt(Integer.toString(num), 0, 2);
 		}
-		else if (num == 0) {
-		//	int modelRow = table.convertRowIndexToModel(0);
-		//	model.removeRow(modelRow);
+		
+		if (num == 0) {
 			model.removeRow(0);
 			for (int i = 0; i < model.getRowCount();i++) {
 				model.setValueAt((i+1)+"",i,0);
 			}
 			table.revalidate();
-		}
-		else {
-		
 		}
 	}
 }
