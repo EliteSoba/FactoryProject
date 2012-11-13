@@ -452,7 +452,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** ANIMATIONS **/
 	private void DoStartFeeding(Part part) {
-		server.sendCommand("fpm", "cmd startFeeding " + feederSlot + " endcmd");
+		server.sendCmd("fpm", "cmd startFeeding " + feederSlot + " endcmd");
 		debug("Feeder " + feederSlot + " started feeding.");
 		animation.acquire();
 //		glmp.doStartFeeding(feederSlot,part);
