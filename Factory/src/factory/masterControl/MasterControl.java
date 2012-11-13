@@ -119,7 +119,7 @@ public class MasterControl {
     // sendCmd then calls the Send() method for the requisite PartHandler
     // Therefore, it should be private.
 
-    private boolean sendCmd(String dst, String fullCmd) {
+    public boolean sendCmd(String dst, String fullCmd) {
 
         PartHandler myPh = partHandlers.get(dst);
         return(myPh.send(fullCmd));
