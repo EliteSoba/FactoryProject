@@ -42,8 +42,8 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	}
 	
 	////Messages
-	public void msgDeliverEmptyKit() {
-		debug("Received msgDeliverEmptyKit() from Stand");
+	public void msgStandClear() {
+		debug("Received msgStandClear() from Stand");
 		standApproval.release();
 	}
 	
@@ -227,7 +227,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		
 		//Animation is now done, kit is on the conveyor
 		conveyor.msgExportKit(holding);
-	
+
 		stand.inspectionSlot.kit = null;
 		stand.inspectionSlot.state = MySlotState.EMPTY;
 		stand.msgKitRobotNoLongerUsingStand();
