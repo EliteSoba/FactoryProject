@@ -80,9 +80,6 @@ public class FactoryProductionPanel extends JPanel implements ActionListener {
 		station.paint(g);
 		kitRobot.paint(g);
 		
-		belt.moveBelt(5);
-		kitRobot.moveRobot(5);
-		
 		// Parts robot client
 		// Draw the nests
 		for(int i = 0; i < nests.size(); i++)
@@ -342,6 +339,9 @@ public class FactoryProductionPanel extends JPanel implements ActionListener {
 		}
 		partsRobot.move();							// Update position and angle of partsRobot
 		gantryRobot.move();
+		belt.moveBelt(5);
+		kitRobot.moveRobot(5);
+		
 		repaint();		
 	}
 }
