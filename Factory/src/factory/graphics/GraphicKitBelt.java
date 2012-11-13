@@ -16,7 +16,7 @@ public class GraphicKitBelt {
 	private boolean pickUp; //When a Kit has arrived
 	private boolean export;
 	private GraphicPanel GKAM;
-	public static int width = 50, height = GraphicPanel.HEIGHT;
+	public static int width = 50, height = FactoryProductionPanel.HEIGHT;
 	
 	public GraphicKitBelt(int m, int n, GraphicPanel GKAM) {
 		//Constructor

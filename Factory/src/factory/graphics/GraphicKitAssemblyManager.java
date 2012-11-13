@@ -5,7 +5,7 @@ import javax.swing.*;
 
 import factory.client.Client;
 
-public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
+public class GraphicKitAssemblyManager extends GraphicPanel implements ActionListener{
 	
 	/*GraphicKitAssemblyManager.java (350x720) - Tobias Lee
 	 * This is the graphical display of the Kit Assembly Manager
@@ -63,9 +63,9 @@ public class GraphicKitAssemblyManager extends JPanel implements ActionListener{
 		//Constructor
 		//x = 0;
 		am = FKAM;
-		belt = new GraphicKitBelt(0, 0, null);
-		station = new GraphicKittingStation(200, 191, null);
-		robot = new GraphicKittingRobot(null, belt, station, 70, 250);
+		belt = new GraphicKitBelt(0, 0, this);
+		station = new GraphicKittingStation(200, 191, this);
+		robot = new GraphicKittingRobot(this, 70, 250);
 		(new Timer(50, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 	}

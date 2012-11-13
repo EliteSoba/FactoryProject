@@ -9,7 +9,7 @@ import java.awt.Graphics2D;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-public class GraphicLaneGraphicPanel extends JPanel{
+public class GraphicLaneGraphicPanel extends GraphicPanel{
 	
 	GraphicLaneManagerClient client;
 	GraphicLaneManager [] lane;
@@ -18,10 +18,8 @@ public class GraphicLaneGraphicPanel extends JPanel{
 		this.client = c;
 		
 		lane = new GraphicLaneManager [4];
-		lane[0] = new GraphicLaneManager(20,50);
-		lane[1] = new GraphicLaneManager(20,210);
-		lane[2] = new GraphicLaneManager(20,370);
-		lane[3] = new GraphicLaneManager(20,530);
+		for (int i = 0; i < lane.length; i++)
+			lane[i] = new GraphicLaneManager(20, 160*i + 50, i, this);
 		
 		this.setPreferredSize(new Dimension(600,720));
 		this.setVisible(true);

@@ -31,11 +31,11 @@ public class GraphicKittingRobot {
 	private boolean toDump;
 	private int stationTarget;
 	
-	public GraphicKittingRobot(GraphicPanel GKAM, GraphicKitBelt belt, GraphicKittingStation station, int x, int y) {
+	public GraphicKittingRobot(GraphicPanel GKAM, int x, int y) {
 		//Constructor
 		this.GKAM = GKAM;
-		this.belt = belt;
-		this.station = station;
+		this.belt = GKAM.getBelt();
+		this.station = GKAM.getStation();
 		this.x = x;
 		this.y = y;
 		startX = x;

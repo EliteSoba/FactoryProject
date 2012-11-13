@@ -23,7 +23,7 @@ public class LaneManager extends Client {
 	
 	public static void main(String[] args){
 		//LaneManPanel buttons = new LaneManPanel(); //to be implemented in V.2
-		JPanel animation = new GraphicPanel(null);
+		JPanel animation = new FactoryProductionPanel(null);
 		LaneManager l = new LaneManager(animation); //to be implemented in V.2
 		//buttons.setManager(l);  //to be implemented in V.2
 		

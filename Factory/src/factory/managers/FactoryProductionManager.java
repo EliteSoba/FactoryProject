@@ -11,19 +11,19 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import factory.client.Client;
-import factory.graphics.GraphicPanel;
+import factory.graphics.FactoryProductionPanel;
 import factory.swing.FactoryProdManPanel;
 
 public class FactoryProductionManager extends Client {
 	static final long serialVersionUID = -2074747328301562732L;
 
-		public FactoryProductionManager(JPanel buttons, GraphicPanel animation) {
+		public FactoryProductionManager(JPanel buttons, FactoryProductionPanel animation) {
 			super(Client.Type.FACTORYPRODUCTIONMANAGER, buttons, animation);
 			setInterface();
 		}
 		public static void main(String[] args){
 		    FactoryProdManPanel buttons = new FactoryProdManPanel();
-		    GraphicPanel animation = new GraphicPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
+		    FactoryProductionPanel animation = new FactoryProductionPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
 			FactoryProductionManager f = new FactoryProductionManager(buttons, animation);
 			buttons.setManager(f);
 		}
@@ -44,26 +44,60 @@ public class FactoryProductionManager extends Client {
 			
 		}
 
-		public void sendMessage (String kitname, String quantity, String message) { // sends message out from swing
-			String set = new String("");
-			set = "fpm km cmd makekits " + quantity + " " + kitname;	
-			sendCommand(set);
-		}
 		
 		public void sendDone(String process) { //sends message out from graphics (Tobi's Function)
 			//Process changes depending on previous command
 			sendCommand(process);
 		}
 		
-		public void doCommand(ArrayList<String> pCmd) { 
-			//receive message
-			
+			@Override
+	public void doCommand(ArrayList<String> pCmd) {
+		int size = pCmd.size();
+		//parameters lay between i = 2 and i = size - 2
+		String action = pCmd.get(0);
+		String identifier = pCmd.get(1);
+		if(action == "cmd"){
+			/*if(identifier == command1)
+			 * do(command1);
+			 * else if(identifier == command2)
+			 * do(command2);
+			 */
+
+// add kit
+// remove kit
+// modify kit
+// add part
+// remove part
+// update kit
 		}
-		
-		/*public void populateKitList(ArrayList<String> kitList) {
-			for (int i = 0; i < kitList.size();i++) {
-				buttons.add(
-			}
+		else if(action == "req"){
+			/*if(identifier == request1)
+			 * do(request1);
+			 * else if(identifier == request2)
+			 * do(request2);
+			 */
 		}
-		*/
+		else if(action == "get"){
+			/*if(identifier == get1)
+			 * do(get1);
+			 * else if(identifier == get2)
+			 * do(get2);
+			 */
+		}
+		else if(action == "set"){
+			/*if(identifier == set1)
+			 * do(set1);
+			 * else if(identifier == set2)
+			 * do(set2);
+			 */
+		}
+		else if(action == "cnf"){
+			/*if(identifier == confirm1)
+			 * do(confirm1);
+			 * else if(identifier == confirm2)
+			 * do(confirm2);
+			 */
+		}
+	}
+
 }

@@ -1,6 +1,6 @@
 //Minh La
 
-package factory.graphics;
+package factory.graphics.GUILaneManager;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -9,21 +9,21 @@ import javax.swing.ImageIcon;
 
 import factory.Part;
 
-public class GraphicBin{
+public class GUIGraphicBin{
 
-	ArrayList <GraphicItem> binItems;
+	ArrayList <GUIGraphicItem> binItems;
 	ImageIcon binImage;
 	String partName;
 	ImageIcon binItemsStackImage;
 	int binSize;
 
-	public GraphicBin(Part part){
+	public GUIGraphicBin(Part part){
 		partName = part.name;
 		binSize = 14;		//Number of items in bin
-		binItems = new ArrayList<GraphicItem>();
+		binItems = new ArrayList<GUIGraphicItem>();
 		for(int i = 0; i < binSize;i++){
 			//binItems.add(new GraphicItem(-40, 0, "Images/"+partName+".png"));
-			binItems.add(new GraphicItem(-40, 0, "Images/eyesItem.png"));
+			binItems.add(new GUIGraphicItem(-40, 0, "Images/eyesItem.png"));
 		}
 		//Declaration of items in bin's location
 		/*for(int i = 0;i<binItems.size();i++){
@@ -34,7 +34,7 @@ public class GraphicBin{
 		binImage = new ImageIcon("Images/binCrate.png");
 	}
 
-	public ArrayList<GraphicItem> getBinItems(){
+	public ArrayList<GUIGraphicItem> getBinItems(){
 		return binItems;
 	}
 

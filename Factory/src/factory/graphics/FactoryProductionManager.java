@@ -8,11 +8,11 @@ import factory.Kit.KitState;
 
 public class FactoryProductionManager extends JFrame {
 	
-	GraphicPanel panel;
+	FactoryProductionPanel panel;
 	ControlPanel cp;
 	
 	public FactoryProductionManager() {
-		panel = new GraphicPanel(this);
+		panel = new FactoryProductionPanel(this);
 		this.add(panel, BorderLayout.CENTER);
 		cp = new ControlPanel(this);
 		this.add(cp, BorderLayout.LINE_END);
@@ -120,6 +120,12 @@ public class FactoryProductionManager extends JFrame {
 	public void moveGantryToFeeder1()
 	{
 		panel.moveGantryRobotToFeeder(0);
+	}
+	
+	//Lane Manager Messages
+	public void feedLaneDone(int laneNum) {
+		System.out.println("Lane " + (laneNum + 1) + " has finished feeding.");
+		//kitRobot.msgAnimationDone();
 	}
 	
 	public static void main(String args[]) {
