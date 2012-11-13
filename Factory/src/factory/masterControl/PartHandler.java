@@ -41,7 +41,7 @@ String Client_id = null;
 		cmd = gotCmd();
 		if(haveCMD)
 		{//if there was a command then call parseCmd and send the cmd to Server to assess
-			master.parseCmd(cmd,this); 
+			master.command(cmd);
 			//sets haveCMD to false because parseCmd notified server
 			haveCMD = false;
 		}
