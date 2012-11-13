@@ -114,7 +114,7 @@ public class FactoryProductionManager extends JFrame {
 	
 	public void getBin()
 	{
-		panel.moveGantryRobotToPickup();
+		panel.moveGantryRobotToPickup("IMAGE FILE PATH GOES HERE LATER");
 	}
 	
 	public void moveGantryToFeeder1()

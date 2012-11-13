@@ -186,7 +186,7 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		
 	}
 	
-	public void moveGantryRobotToPickup()
+	public void moveGantryRobotToPickup(String path)
 	{
 		//System.out.println("Moving");
 		gantryRobot.setState(0);
@@ -249,6 +249,14 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		return nests;
 	}
 	
+	public void gantryRobotArrivedAtFeeder() {
+		System.out.println("DEBUG: ARRIVED AT FEEDER");
+	}
+	
+	public void gantryRobotArrivedAtPickup() {
+		System.out.println("DEBUG: ARRIVED AT PICKUP");
+	}
+	
 	public void actionPerformed(ActionEvent arg0) {
 		// Has robot arrived at its destination?
 		//System.out.println(partsRobot.getState());
@@ -274,12 +282,12 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		}
 		if(gantryRobot.getState() == 1)
 		{
-			//gantryRobotArrivedAtPickup
+			gantryRobotArrivedAtPickup();
 		}
 		else if(gantryRobot.getState() == 4)
 		{
 			lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.takeBin());
-			//gantryRobotArrivedAtFeeder
+			gantryRobotArrivedAtFeeder();
 		}
 		partsRobot.move();							// Update position and angle of partsRobot
 		gantryRobot.move();
