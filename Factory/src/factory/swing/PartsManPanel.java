@@ -87,7 +87,7 @@ public class PartsManPanel extends JPanel{
 			
 			imageSelection.addActionListener(this);
 			previewFrame = new JLabel();
-			ImageIcon imagePreview = new ImageIcon("../Images/ear.png");
+			ImageIcon imagePreview = new ImageIcon("Images/ear.png");
 			previewFrame.setIcon(imagePreview);
 			
 			saveItem = new JButton ("Save Item");
@@ -134,7 +134,7 @@ public class PartsManPanel extends JPanel{
 		}
 		
 		public void updatePicture(String item){
-			ImageIcon imagePreview = new ImageIcon("../Images/" + item + ".png");
+			ImageIcon imagePreview = new ImageIcon("Images/" + item + ".png");
 			previewFrame.setIcon(imagePreview);
 		}
 		@Override
@@ -190,7 +190,7 @@ public class PartsManPanel extends JPanel{
 					}
 					imageSelection.addActionListener(this);
 					previewFrame = new JLabel();
-					ImageIcon imagePreview = new ImageIcon("../Images/ear.png");
+					ImageIcon imagePreview = new ImageIcon("Images/ear.png");
 					previewFrame.setIcon(imagePreview);
 					
 					removeItem = new JButton ("Remove Item");
@@ -227,7 +227,7 @@ public class PartsManPanel extends JPanel{
 				}
 				
 				public void updatePicture(String item){
-					ImageIcon imagePreview = new ImageIcon("../Images/" + item + ".png");
+					ImageIcon imagePreview = new ImageIcon("Images/" + item + ".png");
 					previewFrame.setIcon(imagePreview);
 				}
 				@Override
