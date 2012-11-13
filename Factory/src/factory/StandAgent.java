@@ -220,7 +220,7 @@ public class StandAgent extends Agent implements Stand {
 	 */
 	private void DoTellKitRobotToDeliverEmptyKit(){
 		debug("Executing DoTellKitRobotToDeliverEmptyKit()");
-		kitRobot.msgDeliverEmptyKit();
+		kitRobot.msgStandClear();
 		state = StandAgentState.KIT_ROBOT;
 		kitRobotWantsToDeliverEmptyKit = false;
 	}

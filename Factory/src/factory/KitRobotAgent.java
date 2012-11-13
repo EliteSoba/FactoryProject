@@ -17,8 +17,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	////Data
 	public StandAgent stand;
 	public ConveyorAgent conveyor;
-	public FrameKitAssemblyManager server;
-	
+
 	String name;
 	
 	Kit holding = null;
@@ -35,11 +34,10 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		super(new MasterControl(false));
 	}
 	
-	public KitRobotAgent(StandAgent stand, FrameKitAssemblyManager server, ConveyorAgent conveyor, MasterControl mc){
+	public KitRobotAgent(StandAgent stand, ConveyorAgent conveyor, MasterControl mc){
 		super(mc);
 		this.conveyor = conveyor;
 		this.stand = stand;
-		this.server = server;
 	}
 	
 	////Messages

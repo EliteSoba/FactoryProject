@@ -23,7 +23,7 @@ public class KitRobotTests extends TestCase {
 		KitRobotAgent kitrobot = new KitRobotAgent();
 		
 		//Messaging the KitRobot about an empty slot in the Stand
-		kitrobot.msgNeedEmptyKitAtSlot("TopSlot");
+		kitrobot.msgNeedEmptyKitAtSlot("topSlot");
 		
 		assertTrue("Should have the NEED_EMPTY_TOP StandInfo in the actions, but does not.", kitrobot.actions.contains(StandInfo.NEED_EMPTY_TOP));
 		
