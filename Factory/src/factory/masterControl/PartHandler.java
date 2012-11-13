@@ -28,6 +28,7 @@ String Client_id = null;
 		master = mc;
 		Client_id = me;
 		
+		(new Thread(this).start();
 	}
 	
 	public void run() 
@@ -47,7 +48,6 @@ String Client_id = null;
 		
 	    out.close();
 	    in.close();
-	    master.close();
 	    mySocket.close();
 	}
 	
@@ -81,12 +81,6 @@ String Client_id = null;
 			haveCMD = true;
 		}
 		return message;
-	}
-	
-	public static void main(String[] args) throws IOException
-	{
-		(new Thread(new PartHandler())).start();
-		
 	}
 	
 }
