@@ -1,6 +1,7 @@
 package factory;
 
 import factory.interfaces.*;
+import factory.masterControl.MasterControl;
 import agent.Agent;
 import factory.Kit;
 import factory.Kit.KitState;
@@ -43,8 +44,8 @@ public class StandAgent extends Agent implements Stand {
 	 * @param kitRobot
 	 * @param partsRobot
 	 */
-	public StandAgent(Vision vision, KitRobot kitRobot, PartsRobot partsRobot){
-		super();
+	public StandAgent(Vision vision, KitRobot kitRobot, PartsRobot partsRobot, MasterControl mc){
+		super(mc);
 		this.vision = vision;
 		this.partsRobot = partsRobot;
 		this.kitRobot = kitRobot;
