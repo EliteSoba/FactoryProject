@@ -1,7 +1,5 @@
 package factory;
 
-import java.util.concurrent.Semaphore;
-
 import factory.graphics.FrameKitAssemblyManager;
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
@@ -13,16 +11,14 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	
 	public KitRobot kitRobot;
 	public ConveyorController conveyorController;
-	public FrameKitAssemblyManager server;
 	
 	public Kit kitAtConveyor;  //Supposed to represent what is on the ConveyorAgent
 	
 	ConveyorState state = ConveyorState.NO_ACTION;
 	
 	/** Public Constructor **/
-	public ConveyorAgent(FrameKitAssemblyManager server, KitRobot kr, MasterControl mc) {
+	public ConveyorAgent(KitRobot kr, MasterControl mc) {
 		super(mc);
-		this.server = server;
 		this.kitRobot = kr;
 	}
 	
@@ -101,6 +97,15 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	}
 
 	////Misc / Hacks
+	public Kit getAtConveyor() {
+		return kitAtConveyor;
+	}
+	
+	public void setAtConveyor(Kit k) {
+		this.kitAtConveyor = k;
+	}
+	
+	
 	public void setConveyorController(ConveyorController cc) {
 		conveyorController = cc;
 	}
