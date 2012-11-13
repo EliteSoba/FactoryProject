@@ -9,6 +9,6 @@ public interface Stand {
 	void msgEmptyKitIsHereAndWantToDeliver();
 	void msgKitRobotNoLongerUsingStand();
 	void msgPartRobotWantsToPlaceParts();
-	
+	void msgKitRobotWantsToExportKit();
 
 }

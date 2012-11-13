@@ -36,7 +36,7 @@ String Client_id = null;
 	{
 	    //This thread loops to get confirmations sent by clients 
 
-	    while(true) 
+	    for(;;) 
 	    {
 		cmd = gotCmd();
 		if(haveCMD)

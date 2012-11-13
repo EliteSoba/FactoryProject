@@ -7,23 +7,21 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
 
-import javax.swing.JPanel;
-
 import factory.client.Client;
-import factory.swing.GantryManPanel;
-import factory.swing.KitAssManPanel;
+import factory.graphics.GraphicKitAssemblyManager;
 
 public class KitAssemblyManager extends Client {
 	private static final long serialVersionUID = -4230607892468748490L;
 
-		public KitAssemblyManager(JPanel buttons, JPanel animation) {
-			super(Client.Type.KITASSEMBLYMANAGER, buttons, animation);
+		public KitAssemblyManager( GraphicKitAssemblyManager animation) {
+			super(Client.Type.KITASSEMBLYMANAGER, null, animation);
 			setInterface();
 		}
 		public static void main(String[] args){
-		    KitAssManPanel buttons = new KitAssManPanel();
-		    JPanel animation = new JPanel(); //TODO where graphics panel goes
-			KitAssemblyManager k = new KitAssemblyManager(buttons, animation);
+		    //KitAssManPanel buttons = new KitAssManPanel(); //to be implemented in V.2
+		    GraphicKitAssemblyManager animation = new GraphicKitAssemblyManager(null);
+			KitAssemblyManager k = new KitAssemblyManager(animation);
+			//buttons.setManager(k);
 		}
 
 		public void setInterface() {
@@ -36,13 +34,27 @@ public class KitAssemblyManager extends Client {
 			c.gridy = 0;
 			add(graphics, c);
 			
-			c.gridx = 2;
-			add(UI, c);
+			/*c.gridx = 2;
+			add(UI, c);*/ //to be implemented in V.2
 			setVisible(true);
+		}
+		
+		public void sendMessage (String kitname, String quantity, String message) { // sends message out from swing
+			String set = new String("");
+			if (message == "incorrectKits"){
+				//TODO get the format of the command from server //for V.2
+			}
+			else if (message == "kitRobotFreeze"){
+				//TODO get the format of the command from server //for V.2
+			}
+			else{
+				set = "bad command";
+			}
+			sendCommand(set);
 		}
 
 		public void doCommand(ArrayList<String> pCmd) {
-			// TODO Auto-generated method stub
+			// TODO receive commands
 			
 		}
 }

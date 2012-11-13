@@ -29,7 +29,8 @@ public class MasterControl {
 
     TreeMap<String, PartHandler> partHandlers;
     TreeMap<String, Boolean> partOccupied;
-    private static final List<String> dids = Arrays.asList("krm", "kra", "pm", "lm", "lma", "fpm", "km");
+    private static final List<String> clients = Arrays.asList("krm", "pm", "lm", "fpm", "km");
+    private static final List<String> agents = Arrays.asList("kra", "lma");
     private static final List<String> cmdTypes = Arrays.asList("cmd", "req", "get", "set", "cnf");
     private static final List<String> cmds = Arrays.asList("makekits", "addkitname", "rmkitname", "addpartame", "rmpartname", "lanepowertoggle", "vibration", "kitcontent");
 
@@ -49,12 +50,12 @@ public class MasterControl {
             e.printStackTrace();
 
         }
-        // myFactorySocket = new Socket("localhost", "12369");
-
         connectAllSockets(debug); // This waits for every client to start up before moving on.
 
         // At this point, all of the sockets are connected, PartHandlers have been created
         // The TreeMaps are updated with all of the relevant data, and the Factory can go.
+
+        startAgents();
 
         sendConfirm();
         // At this point, all of the parts have been notified that
@@ -65,37 +66,74 @@ public class MasterControl {
 
     // Member Methods
 
+    private void startAgents(){
+        //Start all of the agents!!!!!
+    }
 
-    // parseCmd is called by the PartHandler with a string command
-    // Therefore, it needs to be public.
+    // parseDst is called by Clients and Agents and determines whether to
+    // call methods locally to Agents, or to send them through to a Client
 
-    public boolean parseCmd(String cmd, PartHandler sourcePH) {
-        // Format is : "src dst cmdtype cmd"
+    public boolean command(String cmd){
+        // Split into array
+        // Figure out destination
+        // Call either agentCmd() or clientCmd()
+        ArrayList <String> parsedCommand = new ArrayList<String>(Arrays.asList(cmd.split(" "))); //puts string into array list
 
-        System.out.println("Server has received ... "+cmd);
+        if(clients.contains(parsedCommand.get(1))){
+            return clientCmd(parsedCommand);
+        } else {
+            return agentCmd(parsedCommand);
+        }
 
-        ArrayList<String> parsedCommand = new ArrayList<String>(Arrays.asList(cmd.split(" ")));
-        String s = checkCmd(parsedCommand);
+
+
+    }
+
+
+    // agentCmd is the giant parser that figures out
+    // what method to call on what agent.
+
+    public boolean agentCmd(ArrayList<String> cmd){
+        //If...
+            //If
+            //Else if...
+            //Else if...
+        //Else if
+            //If
+            //Else if...
+            //Else if...
+        //...
+        return false; // Default is false.
+    }
+
+    // clientCmd figures out which partHandler to use sendCmd on
+    // and then sends it.
+
+
+    public boolean clientCmd(ArrayList<String> cmd){
+        String s = checkCmd(cmd);
+        String a = cmd.get(0); // Source
+        String b = cmd.get(1); // Destination
+        String c = cmd.get(2); // CommandType
+        String d = "";
+        PartHandler sourcePH = determinePH(a);
+        PartHandler destinationPH = determinePH(b);
+
         if(s != null){
-            sourcePH.send("ERR : Failed to parse command. Log : "+s);
+            sourcePH.send("err failed to parse command XXX log "+s);
             return false;
         }
 
-        String a = parsedCommand.get(0);        // Source
-        String b = parsedCommand.get(1);        // Destination
-        String c = parsedCommand.get(2);        // Cmd Type
-        String d = "";
-        for(int i = 3; i < parsedCommand.size(); i++){  // Command
-            d+= parsedCommand.get(i)+" ";
+        for(int i = 3; i < cmd.size(); i++){  // Command
+            d+= cmd.get(i)+" ";
         }
 
         String fullCmd = envelopeCmd(c, d);
 
-        // Now, fullCmd is the full text of the command, parsed and checked by our Server.
         System.out.println("Server received ... "+cmd+" from "+a);
         System.out.println("Server is about to send ... "+fullCmd);
 
-        return sendCmd(b, fullCmd);
+        return sendCmd(destinationPH, fullCmd);
 
     }
 
@@ -119,12 +157,15 @@ public class MasterControl {
     // sendCmd then calls the Send() method for the requisite PartHandler
     // Therefore, it should be private.
 
-    private boolean sendCmd(String dst, String fullCmd) {
+    private boolean sendCmd(PartHandler myPH, String fullCmd) {
 
-        PartHandler myPh = partHandlers.get(dst);
-        return(myPh.send(fullCmd));
+        return(myPH.send(fullCmd));
 
 
+    }
+
+    private PartHandler determinePH(String id){
+        return partHandlers.get(id);
     }
 
 
@@ -136,47 +177,47 @@ public class MasterControl {
         // Check that the cmd is of a valid length
 
         if(pCmd.size() < 4){
-            return "There must be a command.";
+            return "there must be a command";
         }
 
         if(pCmd.size() == 4){
-            return "Missing parameters for command.";
+            return "missing parameters for command";
         }
 
         // Check that the source is a valid DID
 
-        if(!dids.contains(pCmd.get(0))){
-            return "Source is not valid Destination ID";
+        if(!clients.contains(pCmd.get(0)) && !agents.contains(pCmd.get(0))){
+            return "source is not valid client or agent id";
         }
 
         // Check that the destination is a valid DID
 
-        if(!dids.contains(pCmd.get(1))){
-            return "Destination is not valid Destination ID";
+        if(!clients.contains(pCmd.get(0)) && !agents.contains(pCmd.get(0))){
+            return "destination is not valid client or agent id";
         }
 
         // Check that the source != the destination
 
         if(pCmd.get(0).equals(pCmd.get(1))){
-            return "Source and Destination cannot be the same";
+            return "source and Destination cannot be the same";
         }
 
         // Check that the destination is not currently busy
 
         if(!partOccupied.get(pCmd.get(1))){
-            return "Destination is busy, cannot send message.";
+            return "destination is busy cannot send message.";
         }
 
         // Check that the cmdType is a valid cmdType
 
         if(!cmdTypes.contains(pCmd.get(2))){
-            return "CommandType is not valid CommandType";
+            return "commandtype is not valid commandtype";
         }
 
         // Check that the first sub-string in the cmd is a valid cmd
 
         if(!cmds.contains(pCmd.get(3))){
-            return "This is not a valid command. Please check wiki documentation for correct syntax.";
+            return "this is not a valid command please check wiki documentation for correct syntax.";
         }
 
         // TODO Once a larger number of commands are created... Need to use command identifier to check parameters.
@@ -191,7 +232,7 @@ public class MasterControl {
 
     private void connectAllSockets(boolean debugmode){
         int numConnected = 0;
-        int numToConnect = (debugmode ? 1 : dids.size());
+        int numToConnect = (debugmode ? 1 : clients.size());
 
         while(numConnected != numToConnect){
             try{
@@ -219,7 +260,7 @@ public class MasterControl {
 
     private void sendConfirm(){
 
-        for(String p : dids){
+        for(String p : clients){
             PartHandler ph = partHandlers.get(p);
             ph.send("mcs start");
         }

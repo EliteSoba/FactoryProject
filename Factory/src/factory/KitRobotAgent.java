@@ -22,7 +22,6 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	
 	Kit holding = null;
 	Semaphore standApproval = new Semaphore(0); //Semaphore for waiting for stand
-	Semaphore animation = new Semaphore(0); //Semaphore for animation
 	int inspectionAreaClear = 1; //0 = not clear, 1 = clear, -1 = need to find out	starting at empty
 	public ConveyorStatus conveyor_state = ConveyorStatus.EMPTY;
 	public List<StandInfo> actions = Collections.synchronizedList(new ArrayList<StandInfo>());
@@ -31,25 +30,20 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public enum StandInfo { NEED_EMPTY_TOP, NEED_EMPTY_BOTTOM, NEED_INSPECTION_TOP, NEED_INSPECTION_BOTTOM, INSPECTION_SLOT_DONE, KIT_GOOD, KIT_BAD };
 	
 	public KitRobotAgent() {
-		super(Agent.Type.KITROBOTAGENT);
+		super();
 	}
 	
 	public KitRobotAgent(StandAgent stand, FrameKitAssemblyManager server, ConveyorAgent conveyor){
-		super(Agent.Type.KITROBOTAGENT);
+		super();
 		this.conveyor = conveyor;
 		this.stand = stand;
 		this.server = server;
 	}
 	
 	////Messages
-	public void msgDeliverEmptyKit() {
-		debug("Received msgDeliverEmptyKit() from Stand");
+	public void msgStandClear() {
+		debug("Received msgStandClear() from Stand");
 		standApproval.release();
-	}
-	
-	public void msgAnimationDone(){
-		debug("Received msgAnimationDone() from server");
-		animation.release();
 	}
 	
 	public void msgNeedEmptyKitAtSlot(String pos) {
@@ -105,7 +99,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	
 	
 	////Scheduler
-	protected boolean pickAndExecuteAnAction() {	
+	public boolean pickAndExecuteAnAction() {	
 
 		synchronized(actions){
 			
@@ -227,7 +221,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		
 		//Animation is now done, kit is on the conveyor
 		conveyor.msgExportKit(holding);
-	
+
 		stand.inspectionSlot.kit = null;
 		stand.inspectionSlot.state = MySlotState.EMPTY;
 		stand.msgKitRobotNoLongerUsingStand();

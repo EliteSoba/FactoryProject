@@ -24,13 +24,14 @@ public class LaneManager extends Client {
 	public static void main(String[] args){
 		//LaneManPanel buttons = new LaneManPanel(); //to be implemented in V.2
 		JPanel animation = new GraphicPanel(null);
-		//LaneManager l = new LaneManager(buttons); //to be implemented in V.2
+		LaneManager l = new LaneManager(animation); //to be implemented in V.2
 		//buttons.setManager(l);  //to be implemented in V.2
 		
 	}
 	
 	public void sendMessage(int lane, int setting, String message){
-		/*String set = new String("");
+		String set = new String("");
+		/*
 		if (message == "power"){
 			set = "lm lma lanepowertoggle "+ lane;
 		}
@@ -42,8 +43,8 @@ public class LaneManager extends Client {
 		}
 		else if (message == "green"){
 			set = "lm lma set lanevibration "+ lane + " " + setting;
-		}
-		sendCommand(set);*/ // to be implemented in V.2
+		}*/ // to be implemented in V.2
+		sendCommand(set); 
 	}
 	
 	public void setInterface() {
@@ -62,7 +63,44 @@ public class LaneManager extends Client {
 	}
 
 	public void doCommand(ArrayList<String> pCmd) {
-		
+		int size = pCmd.size();
+		//parameters lay between i = 2 and i = size - 2
+		String action = pCmd.get(0);
+		String identifier = pCmd.get(1);
+		if(action == "cmd"){
+			/*if(identifier == command1)
+			 * do(command1);
+			 * else if(identifier == command2)
+			 * do(command2);
+			 */
+		}
+		else if(action == "req"){
+			/*if(identifier == request1)
+			 * do(request1);
+			 * else if(identifier == request2)
+			 * do(request2);
+			 */
+		}
+		else if(action == "get"){
+			/*if(identifier == get1)
+			 * do(get1);
+			 * else if(identifier == get2)
+			 * do(get2);
+			 */
+		}
+		else if(action == "set"){
+			/*if(identifier == set1)
+			 * do(set1);
+			 * else if(identifier == set2)
+			 * do(set2);
+			 */
+		}
+		else if(action == "cnf"){
+			/*if(identifier == confirm1)
+			 * do(confirm1);
+			 * else if(identifier == confirm2)
+			 * do(confirm2);
+			 */
+		}
 	}
-
 }

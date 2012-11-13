@@ -3,9 +3,9 @@ package factory;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 
 import agent.Agent;
-import agent.Agent.Type;
 import factory.graphics.GraphicLaneManagerClient;
 import factory.graphics.GraphicLaneMenuPanel;
 import factory.interfaces.Feeder;
@@ -13,11 +13,13 @@ import factory.interfaces.Gantry;
 import factory.interfaces.Lane;
 import factory.interfaces.Nest;
 import factory.interfaces.Vision;
+import factory.masterControl.MasterControl;
 
 public class FeederAgent extends Agent implements Feeder {
 
 	/** DATA **/
 	public GraphicLaneMenuPanel glmp;
+	public Semaphore animation = new Semaphore(0); // semaphore responsible for animations from the server
 	private String name;
 	public int feederSlot;
 	public ArrayList<MyPartRequest> requestedParts = new ArrayList<MyPartRequest>();   
@@ -81,8 +83,8 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 
-	public FeederAgent(String nameStr,int slot, Lane top, Lane bottom, GantryAgent g) {
-		super(Agent.Type.FEEDERAGENT);
+	public FeederAgent(String nameStr,int slot, Lane top, Lane bottom, GantryAgent g, MasterControl mc) {
+		super(mc);
 		this.topLane = new MyLane(top);
 		this.bottomLane = new MyLane(bottom);
 		this.gantry = g;
@@ -92,6 +94,16 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** MESSAGES **/
+	
+	/**
+	 * Message from the server when the animation is done
+	 */
+	public void msgAnimationDone(){
+		debug("Received msgAnimationDone() from server");
+		animation.release();
+	}
+	
+	
 	public void msgEmptyNest(Nest n) {
 		debug("received msgEmptyNest()");
 		if (topLane.lane.getNest() == n) 
@@ -438,40 +450,47 @@ public class FeederAgent extends Agent implements Feeder {
 		requestedParts.add(new MyPartRequest(p,l,s));
 	}
 
-	/** ANIMATIONS **/
+	/** ANIMATIONS 
+	 * @throws InterruptedException **/
 	private void DoStartFeeding(Part part) {
+		server.sendCmd("fpm", "cmd startFeeding " + feederSlot + " endcmd");
 		debug("Feeder " + feederSlot + " started feeding.");
-		glmp.doStartFeeding(feederSlot,part);
+		animation.tryAcquire();
 	}
 
 	private void DoStopFeeding() { 
+		server.sendCmd("fpm", "cmd stopFeeding " + feederSlot + " endcmd");
 		debug("stopped feeding.");
-		glmp.doStopFeeding(feederSlot);
+		animation.tryAcquire();
 	}
 
 	private void DoPurgeFeeder() {
+		server.sendCmd("fpm", "cmd purgeFeeder " + feederSlot + " endcmd");
 		debug("purging feeder.");
-		glmp.doPurgeFeeder(feederSlot);
+		animation.tryAcquire();
 	}
 
 	private void DoSwitchLane() {
+		server.sendCmd("fpm", "cmd switchLane " + feederSlot + " endcmd");
 		debug("switching lane");
-		glmp.doSwitchLane(feederSlot);
+		animation.tryAcquire();
 	}
 
 	private void DoContinueFeeding(Part part) {
 		debug("continued feeding.");
-		// worry about this later (not in v.0)
+		// worry about this later (v.2)
 	}
 
 	private void DoPurgeTopLane() {
+		server.sendCmd("fpm", "cmd purgeTopLane " + feederSlot + " endcmd");
 		debug("purging top lane");
-		glmp.doPurgeTopLane(feederSlot);
+		animation.tryAcquire();
 	}
 
 	private void DoPurgeBottomLane() {
+		server.sendCmd("fpm", "cmd purgeBottomLane " + feederSlot + " endcmd");
 		debug("purging bottom lane");
-		glmp.doPurgeBottomLane(feederSlot);
+		animation.tryAcquire();
 	}
 
 

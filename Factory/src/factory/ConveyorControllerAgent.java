@@ -14,21 +14,15 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	enum Conveyor_State { WANTS_EMPTY_KIT, EMPTY_KIT_SENDING, NO_ACTION };
 	Conveyor_State conveyor_state = Conveyor_State.NO_ACTION;
 	FrameKitAssemblyManager server;
-	Semaphore animation = new Semaphore(0);
 	
 	Timer timer = new Timer();
 	
 	public ConveyorControllerAgent(Conveyor conveyor, FrameKitAssemblyManager server) {
-		super(Agent.Type.CONVEYORCONTROLLERAGENT);
+		super();
 		this.conveyor = conveyor;
 		this.server = server;
 	}
 	////Messages
-	public void msgAnimationDone(){
-		debug("Received msgAnimationDone() from server");
-		animation.release();
-	}
-	
 	public void msgConveyorWantsEmptyKit() {
 		if (!conveyor_state.equals(Conveyor_State.WANTS_EMPTY_KIT) && !conveyor_state.equals(Conveyor_State.EMPTY_KIT_SENDING)) {
 			conveyor_state = Conveyor_State.WANTS_EMPTY_KIT;
@@ -43,7 +37,7 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	
 	
 	////Scheduler
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		if (conveyor_state.equals(Conveyor_State.WANTS_EMPTY_KIT)) {
 			conveyor_state = Conveyor_State.EMPTY_KIT_SENDING;
 			sendEmptyKit();
