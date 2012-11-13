@@ -16,7 +16,7 @@ public class GraphicKittingRobot {
 	private GraphicKit kit; //The kit the robot is holding. I'll draw it properly later when I actually have items to draw
 	private int direction; //For now I'm using directions 2 = down, 4 = left, 6 = right, 8 = up. I'll probably change this in the future but this is the way I'm used to
 	ImageIcon robot[]; //The icons for the robot with robot[direction] showing the robot facing the direction, and robot[direction-1] shows it facing that direction holding an empty kit
-	FactoryProductionPanel GKAM; //The Panel to allow the drawing of ImageIcons
+	GraphicPanel GKAM; //The Panel to allow the drawing of ImageIcons
 	GraphicKitBelt belt;
 	GraphicKittingStation station;
 
@@ -31,11 +31,11 @@ public class GraphicKittingRobot {
 	private boolean toDump;
 	private int stationTarget;
 	
-	public GraphicKittingRobot(FactoryProductionPanel GKAM, GraphicKitBelt belt, GraphicKittingStation station, int x, int y) {
+	public GraphicKittingRobot(GraphicPanel GKAM, int x, int y) {
 		//Constructor
 		this.GKAM = GKAM;
-		this.belt = belt;
-		this.station = station;
+		this.belt = GKAM.getBelt();
+		this.station = GKAM.getStation();
 		this.x = x;
 		this.y = y;
 		startX = x;

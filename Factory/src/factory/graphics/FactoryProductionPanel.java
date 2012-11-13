@@ -1,24 +1,19 @@
 //Minh La
 
 package factory.graphics;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Random;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.Timer;
 
-import factory.Part;
-
-public class FactoryProductionPanel extends JPanel implements ActionListener {
+import factory.*;
+import factory.client.*;
+public class FactoryProductionPanel extends GraphicPanel implements ActionListener {
 	
 	// LANE MANAGER
-	GraphicLaneManagerClient client;
+	/*GraphicLaneManagerClient client;
 	GraphicLaneManager [] lane;
 	
 	// KIT MANAGER
@@ -33,19 +28,18 @@ public class FactoryProductionPanel extends JPanel implements ActionListener {
 	PartsRobot partsRobot;
 	
 	// GANTRY
-	GantryRobot gantryRobot;
+	GantryRobot gantryRobot;*/
 	
-	public FactoryProductionPanel(FactoryProductionManager FKAM) {
+	public FactoryProductionPanel(JFrame FKAM) {
 		lane = new GraphicLaneManager [4];
-		lane[0] = new GraphicLaneManager(510,50,0,this);
-		lane[1] = new GraphicLaneManager(510,210,1,this);
-		lane[2] = new GraphicLaneManager(510,370,2,this);
-		lane[3] = new GraphicLaneManager(510,530,3,this);
 		
-		am = FKAM;
+		for (int i = 0; i < lane.length; i++)
+			lane[i] = new GraphicLaneManager(510, 160*i + 50, i, this);
+		if (FKAM instanceof Client)
+		am = (Client)FKAM;
 		belt = new GraphicKitBelt(0, 0, this);
 		station = new GraphicKittingStation(200, 191, this);
-		kitRobot = new GraphicKittingRobot(this, belt, station, 70, 250);
+		kitRobot = new GraphicKittingRobot(this, 70, 250);
 		
 		// Parts robot client
 		// Add 8 nests
@@ -108,9 +102,7 @@ public class FactoryProductionPanel extends JPanel implements ActionListener {
 
 		g4.dispose();
 	}
-	public GraphicLaneManager getLane(int index) {
-		return lane[index];
-	}
+
 	
 	public void newEmptyKit() {
 		//Adds a kit into the factory via conveyer belt
@@ -118,9 +110,9 @@ public class FactoryProductionPanel extends JPanel implements ActionListener {
 			return;
 		belt.inKit();
 	}
-	public void newEmptyKitDone() {
-		am.newEmptyKitAtConveyor();
-	}
+	/*public void newEmptyKitDone() {
+		//am.newEmptyKitAtConveyor();
+	}*/
 	
 	public void moveEmptyKitToSlot(int target) {
 		//Sends robot to pick up kit from belt and move to designated slot in the station
@@ -129,9 +121,9 @@ public class FactoryProductionPanel extends JPanel implements ActionListener {
 			kitRobot.setStationTarget(target);
 		}
 	}
-	public void moveEmptyKitToSlotDone() {
-		am.moveEmptyKitToSlotDone();
-	}
+	/*public void moveEmptyKitToSlotDone() {
+		//am.moveEmptyKitToSlotDone();
+	}*/
 	
 	public void moveKitToInspection(int target) {
 		//Sends robot to move kit from designated slot in the station to inspection station
@@ -140,104 +132,90 @@ public class FactoryProductionPanel extends JPanel implements ActionListener {
 			kitRobot.setStationTarget(target);
 		}
 	}
-	public void moveKitToInspectionDone() {
-		am.moveKitToInspectionDone();
-	}
+	/*public void moveKitToInspectionDone() {
+		//am.moveKitToInspectionDone();
+	}*/
 	
 	public void takePictureOfInspectionSlot() {
 		//Triggers the camera flash
 		station.checkKit();
 	}
-	public void takePictureOfInspectionSlotDone() {
-		am.takePictureOfInspectionSlotDone();
-	}
+	/*public void takePictureOfInspectionSlotDone() {
+		//am.takePictureOfInspectionSlotDone();
+	}*/
 	
 	public void dumpKitAtInspection() {
 		//Sends robot to move kit from inspection station to trash
 		if (!kitRobot.kitted() && station.getCheck() != null)
 			kitRobot.setPurgeKit(true);
 	}
-	public void dumpKitAtInspectionDone() {
-		am.dumpKitAtInspectionDone();
-	}
+	/*public void dumpKitAtInspectionDone() {
+		//am.dumpKitAtInspectionDone();
+	}*/
 	
 	public void moveKitFromInspectionToConveyor() {
 		//Sends a kit out of the factory via conveyer belt
 		if (station.getCheck() != null && !kitRobot.kitted())
 			kitRobot.setFromCheck(true);
 	}
-	public void moveKitFromInspectionToConveyorDone() {
-		am.moveKitFromInspectionToConveyorDone();
-	}
+	/*public void moveKitFromInspectionToConveyorDone() {
+		//am.moveKitFromInspectionToConveyorDone();
+	}*/
 	
-	public void exportKit() {
+	/*public void exportKit() {
 		belt.exportKit();
 	}
 	public void exportKitDone() {
-		am.exportKitDone();
-	}
+		//am.exportKitDone();
+	}*/
 	
-	public GraphicKittingStation getStation() {
-		return station;
-	}
-	
-	public GraphicKitBelt getBelt() {
-		return belt;
-	}
-	
-	public void cameraFlash()
-	{
+	public void cameraFlash() {
 		
 	}
 	
-	public void moveGantryRobotToPickup(String path)
-	{
+	public void moveGantryRobotToPickup(String path) {
 		//System.out.println("Moving");
 		gantryRobot.setState(0);
 		gantryRobot.setDestination(WIDTH-100,-200);
 	}
+	/*public void gantryRobotArrivedAtPickup() {
+		System.out.println("DEBUG: ARRIVED AT PICKUP");
+	}*/
 	
-	public void moveGantryRobotToFeeder(int feederIndex)
-	{
+	public void moveGantryRobotToFeeder(int feederIndex) {
 		gantryRobot.setState(3);
 		gantryRobot.setDestinationFeeder(feederIndex);
 		gantryRobot.setDestination(lane[feederIndex].feederX+50, lane[feederIndex].feederY+15);
 	}
+	/*public void gantryRobotArrivedAtFeeder() {
+		System.out.println("DEBUG: ARRIVED AT FEEDER");
+	}*/
 	
-	public void movePartsRobotToNest(int nestIndex)
-	{
+	public void movePartsRobotToNest(int nestIndex) {
 		partsRobot.setState(0);
 		partsRobot.adjustShift(5);
 		partsRobot.setDestination(nests.get(nestIndex-1).getX()-nests.get(nestIndex-1).getImageWidth()-10,nests.get(nestIndex-1).getY()-15);
 		partsRobot.setDestinationNest(nestIndex);
 	}
+	/*public void partsRobotArrivedAtNest() {
+		System.out.println("Debug:ARRIVED AT NEST");
+	}*/
 	
-	public void movePartsRobotToKit(int kitIndex)
-	{
+	public void movePartsRobotToKit(int kitIndex) {
 		partsRobot.setState(3);
 		partsRobot.setDestination(station.getX()+35,station.getY()-station.getY()%5);
 		partsRobot.setDestinationKit(kitIndex);
 	}
+	/*public void partsRobotArrivedAtStation() {
+		System.out.println("DEBUG: ARRIVED AT STATION");
+	}*/
 	
-	public void movePartsRobotToCenter()
-	{
+	public void movePartsRobotToCenter() {
 		partsRobot.setDestination(WIDTH/2-100, HEIGHT/2);
 	}
-	
-	public void partsRobotArrivedAtNest()
-	{
-		System.out.println("Debug:ARRIVED AT NEST");
-	}
-	
-	public void partsRobotArrivedAtStation()
-	{
-		System.out.println("DEBUG: ARRIVED AT STATION");
-	}
-	
-	public void partsRobotArrivedAtCenter()
-	{
+	/*public void partsRobotArrivedAtCenter() {
 		System.out.println("DEBUG: ARRIVED AT CENTER");
-	}
+	}*/
 	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 1-8, NOT 0-7
 		/*//Testing for quick feed
@@ -251,10 +229,9 @@ public class FactoryProductionPanel extends JPanel implements ActionListener {
 		}
 		//System.out.println("bin size " + lane[(laneNum - 1) / 2].bin.getBinItems().size());
 	}
-
-	public void feedLaneDone(int laneNum){
+	/*public void feedLaneDone(int laneNum){
 		//am.feedLaneDone(laneNum);
-	}
+	}*/
 	
 	public void startLane(int laneNum){
 		lane[(laneNum - 1) / 2].laneStart = true;
@@ -292,17 +269,18 @@ public class FactoryProductionPanel extends JPanel implements ActionListener {
 		lane[(laneNum - 1) / 2].laneStart = false;
 	}
 	
+	/*public GraphicKittingStation getStation() {
+		return station;
+	}
+	public GraphicKitBelt getBelt() {
+		return belt;
+	}
 	public ArrayList<Nest> getNest(){
 		return nests;
 	}
-	
-	public void gantryRobotArrivedAtFeeder() {
-		System.out.println("DEBUG: ARRIVED AT FEEDER");
-	}
-	
-	public void gantryRobotArrivedAtPickup() {
-		System.out.println("DEBUG: ARRIVED AT PICKUP");
-	}
+	public GraphicLaneManager getLane(int index) {
+		return lane[index];
+	}*/
 	
 	public void actionPerformed(ActionEvent arg0) {
 		// Has robot arrived at its destination?
