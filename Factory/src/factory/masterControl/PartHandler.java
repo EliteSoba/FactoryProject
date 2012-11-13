@@ -22,13 +22,13 @@ MasterControl master = null;
 String Client_id = null;
 
 	public PartHandler(Socket s, BufferedReader b, PrintWriter p, String me, MasterControl mc){
-		//need to add other initializations
+		//Get all the required variables set so PartHandler can function correctly
 		mySocket = s;
 		out = p;
 		in = b;
 		master = mc;
 		Client_id = me;
-		
+		//Sets up thread for the partHandler
 		(new Thread(this)).start();
 	}
 	
