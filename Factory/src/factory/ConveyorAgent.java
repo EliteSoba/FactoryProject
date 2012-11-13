@@ -83,7 +83,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 
 	private void requestEmptyKit() {
 		debug("Requesting Empty Kit From the ConveyorController");
-	    conveyorController.msgConveyorWantsEmptyKit(this);
+	    conveyorController.msgConveyorWantsEmptyKit();
 	    state = ConveyorState.GETTING_EMPTY_KIT;
 	    stateChanged();
 	}
@@ -101,7 +101,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 		}
 		 */
 		debug("Export Animation Completed");
-	    conveyorController.msgKitExported(this, kitAtConveyor);
+	    conveyorController.msgKitExported(kitAtConveyor);
 		kitAtConveyor = null;
 		stateChanged();
 	}

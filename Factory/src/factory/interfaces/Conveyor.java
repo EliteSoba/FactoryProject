@@ -6,11 +6,11 @@ public interface Conveyor {
 
 		public void msgAnimationDone();
 		
-		public void msgHeresEmptyKit(ConveyorController cc, Kit k);
+		public void msgHeresEmptyKit(Kit k);
 
-		public void msgNeedEmptyKit(KitRobot kr);
+		public void msgNeedEmptyKit();
 
-		public void msgExportKit(KitRobot kr, Kit k);
+		public void msgExportKit(Kit k);
 		
 
 }

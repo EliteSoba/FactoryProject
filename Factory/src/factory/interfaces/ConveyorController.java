@@ -6,8 +6,8 @@ public interface ConveyorController {
 	
 	public void msgAnimationDone();
 	
-	public void msgConveyorWantsEmptyKit(Conveyor c);
+	public void msgConveyorWantsEmptyKit();
 	
-	public void msgKitExported(Conveyor c, Kit k);
+	public void msgKitExported(Kit k);
 	
 }

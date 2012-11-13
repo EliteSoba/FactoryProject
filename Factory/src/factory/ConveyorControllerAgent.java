@@ -29,14 +29,14 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		animation.release();
 	}
 	
-	public void msgConveyorWantsEmptyKit(Conveyor c) {
+	public void msgConveyorWantsEmptyKit() {
 		if (!conveyor_state.equals(Conveyor_State.WANTS_EMPTY_KIT) && !conveyor_state.equals(Conveyor_State.EMPTY_KIT_SENDING)) {
 			conveyor_state = Conveyor_State.WANTS_EMPTY_KIT;
 			stateChanged();
 		}
 	}
 	
-	public void msgKitExported(Conveyor c, Kit k) {
+	public void msgKitExported(Kit k) {
 		exported_kits.add(k);
 		stateChanged();
 	}

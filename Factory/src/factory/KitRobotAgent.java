@@ -24,11 +24,11 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	Semaphore standApproval = new Semaphore(0); //Semaphore for waiting for stand
 	Semaphore animation = new Semaphore(0); //Semaphore for animation
 	int inspectionAreaClear = 1; //0 = not clear, 1 = clear, -1 = need to find out	starting at empty
-	ConveyorStatus conveyor_state = ConveyorStatus.EMPTY;
-	List<StandInfo> actions = Collections.synchronizedList(new ArrayList<StandInfo>());
+	public ConveyorStatus conveyor_state = ConveyorStatus.EMPTY;
+	public List<StandInfo> actions = Collections.synchronizedList(new ArrayList<StandInfo>());
 
-	enum ConveyorStatus {EMPTY, GETTING_KIT, EMPTY_KIT, COMPLETED_KIT};
-	enum StandInfo {NEED_EMPTY_TOP, NEED_EMPTY_BOTTOM, NEED_INSPECTION_TOP, NEED_INSPECTION_BOTTOM, INSPECTION_SLOT_DONE, KIT_GOOD, KIT_BAD };
+	public enum ConveyorStatus {EMPTY, GETTING_KIT, EMPTY_KIT, COMPLETED_KIT};
+	public enum StandInfo {NEED_EMPTY_TOP, NEED_EMPTY_BOTTOM, NEED_INSPECTION_TOP, NEED_INSPECTION_BOTTOM, INSPECTION_SLOT_DONE, KIT_GOOD, KIT_BAD };
 	
 	public KitRobotAgent() {
 		super(Agent.Type.KITROBOTAGENT);
@@ -42,7 +42,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	}
 	
 	////Messages
-	public void msgDeliverEmptyKit(Stand stand) {
+	public void msgDeliverEmptyKit() {
 		debug("Received msgDeliverEmptyKit() from Stand");
 		standApproval.release();
 	}
@@ -52,7 +52,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		animation.release();
 	}
 	
-	public void msgNeedEmptyKitAtSlot(Stand stand, String pos) {
+	public void msgNeedEmptyKitAtSlot(String pos) {
 		debug("Received msgNeedEmptyKitAtSlot() from the Stand for "+ pos);
 		if (pos.equals("topSlot")) {
 			if (!actions.contains(StandInfo.NEED_EMPTY_TOP)) {
@@ -66,7 +66,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stateChanged();
 	}
 	
-	public void msgComeMoveKitToInspectionSlot(Stand stand, String pos) {
+	public void msgComeMoveKitToInspectionSlot(String pos) {
 		debug("Received msgComeMoveKitToInspectionSlot() From Stand for " + pos);
 		if (pos.equals("topSlot")) {
 			if (!actions.contains(StandInfo.NEED_INSPECTION_TOP)) {
@@ -81,13 +81,13 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		}
 	}
 		
-	public void msgEmptyKitOnConveyor(Conveyor conveyor) {
+	public void msgEmptyKitOnConveyor() {
 		debug("Received msgEmptyKitOnConveyor() from the Conveyor");
 		conveyor_state = ConveyorStatus.EMPTY_KIT;
 		stateChanged();
 	}
 	
-	public void msgInspectionAreaStatus(Stand stand, int status) {
+	public void msgInspectionAreaStatus(int status) {
 		debug("Received msgInspectionAreaStatus() from the Stand with a status of "+status);
 		if (status < 2 && status >= 0) {
 			inspectionAreaClear = status;
@@ -95,7 +95,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		}
 	}
 	
-	public void msgComeProcessAnalyzedKitAtInspectionSlot(Stand stand) {
+	public void msgComeProcessAnalyzedKitAtInspectionSlot() {
 		debug("Received msgComeProcessAnalayzedKitAtInspectionSlot from Stand");
 		if (!actions.contains(StandInfo.INSPECTION_SLOT_DONE)) {
 			actions.add(StandInfo.INSPECTION_SLOT_DONE);
@@ -144,7 +144,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				return true;
 			}
 			
-			if (actions.contains(StandInfo.NEED_EMPTY_TOP) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
+			if ((actions.contains(StandInfo.NEED_EMPTY_TOP) || actions.contains(StandInfo.NEED_EMPTY_BOTTOM)) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
 				requestEmptyKit();
 				return true;
 			}
