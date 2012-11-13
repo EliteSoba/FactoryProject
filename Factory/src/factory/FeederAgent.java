@@ -3,6 +3,7 @@ package factory;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 
 import agent.Agent;
 import agent.Agent.Type;
@@ -18,6 +19,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** DATA **/
 	public GraphicLaneMenuPanel glmp;
+	public Semaphore animation = new Semaphore(0); // semaphore responsible for animations from the server
 	private String name;
 	public int feederSlot;
 	public ArrayList<MyPartRequest> requestedParts = new ArrayList<MyPartRequest>();   
@@ -92,6 +94,16 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** MESSAGES **/
+	
+	/**
+	 * Message from the server when the animation is done
+	 */
+	public void msgAnimationDone(){
+		debug("Received msgAnimationDone() from server");
+		animation.release();
+	}
+	
+	
 	public void msgEmptyNest(Nest n) {
 		debug("received msgEmptyNest()");
 		if (topLane.lane.getNest() == n) 
@@ -440,8 +452,10 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** ANIMATIONS **/
 	private void DoStartFeeding(Part part) {
+		server.sendCommand("fpm", "cmd startFeeding " + feederSlot + " endcmd");
 		debug("Feeder " + feederSlot + " started feeding.");
-		glmp.doStartFeeding(feederSlot,part);
+		animation.acquire();
+//		glmp.doStartFeeding(feederSlot,part);
 	}
 
 	private void DoStopFeeding() { 

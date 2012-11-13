@@ -4,12 +4,19 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 
+import factory.masterControl.MasterControl;
+
 /** Base class for simple agents */
 public abstract class Agent {
 	Semaphore stateChange = new Semaphore(1,true);//binary semaphore, fair
 	private AgentThread agentThread;
+	
+	protected MasterControl server;
+	protected Semaphore animation = new Semaphore(0,true); // semaphore for animation interaction with server
 
-	protected Agent() {
+	
+	protected Agent(MasterControl mc) {
+		server = mc;
 	}
 
 	/** This should be called whenever state has changed that might cause
@@ -78,6 +85,11 @@ public abstract class Agent {
 			agentThread.stopAgent();
 			agentThread = null;
 		}
+	}
+	
+	/** MESSAGE from the animation, notifying the agent that the animation is done. **/
+	public void msgAnimationDone() {
+		animation.release();
 	}
 
 	/** Agent scheduler thread, calls respondToStateChange() whenever a state
