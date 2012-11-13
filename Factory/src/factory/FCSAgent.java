@@ -11,6 +11,7 @@ import java.util.*;
 
 import factory.KitConfig.MyPart;
 import factory.interfaces.*;
+import factory.masterControl.MasterControl;
 import factory.test.mock.MockGantry;
 import factory.test.mock.MockPartsRobotAgent;
 
@@ -30,7 +31,8 @@ public class FCSAgent extends Agent implements FCS{
 
 	   
 	   //this is temporarily used for testing purposes.  Constructor will likely change.
-	   public FCSAgent(Gantry gantry, PartsRobot partsRobot) {
+	   public FCSAgent(Gantry gantry, PartsRobot partsRobot, MasterControl mc) {
+		   super(mc);
 		this.gantry = gantry;
 		this.partsRobot = partsRobot;
 	}
