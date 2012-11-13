@@ -108,7 +108,7 @@ public class FactoryProductionManager extends JFrame {
 		panel.movePartsRobotToKit(0);
 	}
 	
-	public void feedLane(GraphicBin b, int laneNum, boolean divergeUp){
+	public void feedLane(GraphicBin b, int laneNum){
 		panel.feedLane(b,laneNum);
 	}
 	

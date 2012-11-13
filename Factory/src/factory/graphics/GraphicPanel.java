@@ -236,34 +236,34 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	}
 	
 	public void feedLane(GraphicBin b, int laneNum){
-		lane[(laneNum - 1) / 4].bin = b;
-		lane[(laneNum - 1) / 4].currentItemCount = 0;
-		lane[(laneNum - 1) / 4].placedBin = true;
-		lane[(laneNum - 1) / 4].binExist = true;
-		lane[(laneNum - 1) / 4].laneStart = true;
-		lane[(laneNum - 1) / 4].divergeUp = ((laneNum- 1) % 2 == 0);
-		lane[(laneNum - 1) / 4].feederOn = true;
+		lane[(laneNum - 1) / 2].bin = b;
+		lane[(laneNum - 1) / 2].currentItemCount = 0;
+		lane[(laneNum - 1) / 2].placedBin = true;
+		lane[(laneNum - 1) / 2].binExist = true;
+		lane[(laneNum - 1) / 2].laneStart = true;
+		lane[(laneNum - 1) / 2].divergeUp = ((laneNum- 1) % 2 == 0);
+		lane[(laneNum - 1) / 2].feederOn = true;
 	}
 	
 	public void startLane(int laneNum){
-		lane[(laneNum - 1) / 4].laneStart = true;
+		lane[(laneNum - 1) / 2].laneStart = true;
 	}
 	
 	public void switchLane(int laneNum){
-		lane[(laneNum - 1) / 4].divergeUp = !lane[(laneNum - 1) / 4].divergeUp;
-		lane[(laneNum - 1) / 4].vY = -(lane[(laneNum - 1) / 4].vY);
+		lane[(laneNum - 1) / 2].divergeUp = !lane[(laneNum - 1) / 4].divergeUp;
+		lane[(laneNum - 1) / 2].vY = -(lane[(laneNum - 1) / 4].vY);
 	}
 	
 	public void stopLane(int laneNum){
-		lane[(laneNum - 1) / 4].laneStart = false;
+		lane[(laneNum - 1) / 2].laneStart = false;
 	}
 	
 	public void turnFeederOnLane(int laneNum){
-		lane[(laneNum - 1) / 4].feederOn = true;
+		lane[(laneNum - 1) / 2].feederOn = true;
 	}
 	
 	public void turnFeederOffLane(int laneNum){
-		lane[(laneNum - 1) / 4].feederOn = false;
+		lane[(laneNum - 1) / 2].feederOn = false;
 	}
 	
 	public void purgeFeederLane(int feederNum){ // takes in lane 1 - 4
@@ -275,11 +275,11 @@ public class GraphicPanel extends JPanel implements ActionListener {
 	
 	public void purgeLaneLane(int laneNum){
 		if((laneNum - 1) % 2 == 0)
-			lane[(laneNum - 1) / 4].lane1PurgeOn = true;
+			lane[(laneNum - 1) / 2].lane1PurgeOn = true;
 		else
-			lane[(laneNum - 1) / 4].lane2PurgeOn = true;
-		lane[(laneNum - 1) / 4].feederOn = false;
-		lane[(laneNum - 1) / 4].laneStart = false;
+			lane[(laneNum - 1) / 2].lane2PurgeOn = true;
+		lane[(laneNum - 1) / 2].feederOn = false;
+		lane[(laneNum - 1) / 2].laneStart = false;
 	}
 	
 	public ArrayList<Nest> getNest(){
