@@ -42,7 +42,8 @@ public class GantryManPanel extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent ae) {
-		if(ae.getSource() == robotRevoltButton) 		{
+		if(ae.getSource() == robotRevoltButton){
+			gantryManager.sendMessage(null, null, "robotRevolt");
 			// do something v.2
 			// gantry manager send message
 		}

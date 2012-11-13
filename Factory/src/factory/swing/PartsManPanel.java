@@ -48,7 +48,7 @@ public class PartsManPanel extends JPanel{
 		
 	}
 	
-	public void setPartsManager(PartsManager manager){
+	public void setManager(PartsManager manager){
 		partsManager = manager;
 	}
 
@@ -230,7 +230,7 @@ public class PartsManPanel extends JPanel{
 					ImageIcon imagePreview = new ImageIcon("Images/" + item + ".png");
 					previewFrame.setIcon(imagePreview);
 				}
-				@Override
+
 				public void actionPerformed(ActionEvent ae) {
 					 
 				     if (ae.getSource() == removeItem){

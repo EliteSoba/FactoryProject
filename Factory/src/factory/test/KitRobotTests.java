@@ -1,5 +1,7 @@
 package factory.test;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import factory.*;
 import factory.test.mock.*;
@@ -13,13 +15,12 @@ public class KitRobotTests extends TestCase {
 		/**
 		 * Test case for the KitRobotAgent getting a request for an empty kit while there is nothing on the Conveyor currently
 		 */
-		
-		//Creating KitRobot
-		KitRobotAgent kitrobot = new KitRobotAgent();
-		
 		//Creating MockConveyor and MockStand
 		MockStand stand = new MockStand("Stand");
 		MockConveyor conveyor = new MockConveyor("Conveyor");
+		
+		//Creating KitRobot
+		KitRobotAgent kitrobot = new KitRobotAgent();
 		
 		//Messaging the KitRobot about an empty slot in the Stand
 		kitrobot.msgNeedEmptyKitAtSlot("TopSlot");

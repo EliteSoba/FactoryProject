@@ -6,10 +6,11 @@ import java.util.*;
 
 import factory.graphics.GraphicLaneMenuPanel;
 import factory.interfaces.*;
-
+import factory.masterControl.MasterControl;
+//test commit
 public class GantryAgent extends Agent implements Gantry {
-	public GantryAgent() {
-		super(Agent.Type.GANTRYAGENT); // needed for the server 
+	public GantryAgent(MasterControl mc) {
+		super(mc); // needed for the server 
 	}
 
 	public GraphicLaneMenuPanel glmp;
@@ -67,7 +68,8 @@ public class GantryAgent extends Agent implements Gantry {
 		DoRefillPurgeBin(binConfig.binList.get(b.pt));
 		DoBringRequestedBin(binConfig.binList.get(b.pt),b.fdr,b.pt);
 		b.fdr.msgHereAreParts(b.pt);
-		b.state = MyBinState.DELIVERED;
+		b.state = MyBinState.DELIVERED; //is this needed?  Or do I just remove it?
+		//myBins.remove(b);
 		stateChanged();
 	}
 

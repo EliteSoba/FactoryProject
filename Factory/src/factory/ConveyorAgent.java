@@ -14,8 +14,6 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	public ConveyorController conveyorController;
 	public FrameKitAssemblyManager server;
 	
-	public Semaphore animation = new Semaphore(0);
-	
 	public Kit kitAtConveyor;  //Supposed to represent what is on the ConveyorAgent
 	
 	ConveyorState state = ConveyorState.NO_ACTION;
@@ -28,11 +26,6 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	}
 	
 	/** MESSAGES **/
-	
-	public void msgAnimationDone(){
-		debug("Received msgAnimationDone() from server");
-		animation.release();
-	}
 	
 	public void msgHeresEmptyKit(Kit k) {
 		debug("Received msgHeresEmptyKit() from the ConveyorController");
@@ -54,7 +47,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	}
 	
 	////Scheduler
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		if (state.equals(ConveyorState.EXPORTING)) { 
 			state = ConveyorState.NO_ACTION;
 			exportKit();

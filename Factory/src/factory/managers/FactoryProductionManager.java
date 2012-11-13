@@ -48,7 +48,6 @@ public class FactoryProductionManager extends Client {
 			String set = new String("");
 			set = "fpm km cmd makekits " + quantity + " " + kitname;	
 			sendCommand(set);
-			//
 		}
 		
 		public void sendDone(String process) { //sends message out from graphics (Tobi's Function)

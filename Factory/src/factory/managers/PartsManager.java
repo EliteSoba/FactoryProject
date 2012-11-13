@@ -7,8 +7,6 @@ import java.awt.GridBagLayout;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-
 import factory.client.Client;
 import factory.swing.PartsManPanel;
 
@@ -25,7 +23,7 @@ public class PartsManager extends Client {
 	    PartsManPanel buttons = new PartsManPanel();
 	    JPanel animation = new JPanel(); //TODO where graphics panel goes 
 		PartsManager manager = new PartsManager(buttons, animation);
-		buttons.setPartsManager(manager);
+		buttons.setManager(manager);
 	}
 	
 	public void setInterface() {
@@ -45,9 +43,12 @@ public class PartsManager extends Client {
 	
 	public void sendMessage(String option, String itemName, String filePath){
 		String message = null;
+		
 		if(option.equals("add")){
 			message = "pm km cmd addpartname " + itemName + " " + filePath;
-		}else if (option.equals("remove")){
+		}
+		
+		else if (option.equals("remove")){
 			message = "pm km cmd rmpartname " + itemName + " " + filePath;
 		}
 		

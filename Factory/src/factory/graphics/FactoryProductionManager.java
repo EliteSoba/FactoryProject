@@ -108,13 +108,13 @@ public class FactoryProductionManager extends JFrame {
 		panel.movePartsRobotToKit(0);
 	}
 	
-	public void feedLane(GraphicBin b, int laneNum, boolean divergeUp){
-		panel.feedLane(b,laneNum,divergeUp);
+	public void feedLane(GraphicBin b, int laneNum){
+		panel.feedLane(b,laneNum);
 	}
 	
 	public void getBin()
 	{
-		panel.moveGantryRobotToPickup();
+		panel.moveGantryRobotToPickup("IMAGE FILE PATH GOES HERE LATER");
 	}
 	
 	public void moveGantryToFeeder1()

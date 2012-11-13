@@ -11,6 +11,7 @@ import java.util.concurrent.Semaphore;
 import factory.Kit.KitState;
 import factory.graphics.FactoryProductionManager;
 import factory.interfaces.*;
+import factory.masterControl.MasterControl;
 
 public class VisionAgent extends Agent implements Vision {
 	
@@ -27,13 +28,11 @@ public class VisionAgent extends Agent implements Vision {
 	
 
 	Semaphore pictureAllowed = new Semaphore(1);
-	Semaphore animation = new Semaphore(0);
 	
-	public VisionAgent(PartsRobot partsRobot, Stand stand, FactoryProductionManager server){
-		super(Agent.Type.VISIONAGENT);
+	public VisionAgent(PartsRobot partsRobot, Stand stand, MasterControl mc){
+		super(mc);
 		this.partsRobot = partsRobot;
 		this.stand = stand;
-		this.server = server;
 	}
 	
 	class KitPicRequest {
