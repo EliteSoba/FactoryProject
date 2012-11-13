@@ -28,7 +28,7 @@ String Client_id = null;
 		master = mc;
 		Client_id = me;
 		
-		(new Thread(this).start();
+		(new Thread(this)).start();
 	}
 	
 	public void run() 
