@@ -50,6 +50,7 @@ public abstract class Client extends JFrame implements ActionListener {
 				try {
 					currentCommand = input.readLine(); //reads from input each time there is a new string
 					parseInput();
+					doCommand(parsedCommand);
 				} catch (Exception e) {
 					System.out.println("inputStream not open");
 				}
@@ -83,8 +84,7 @@ public abstract class Client extends JFrame implements ActionListener {
 	}
 	
 	public void parseInput(){
-		parsedCommand = new ArrayList<String>(Arrays.asList(currentCommand.split(" "))); //puts string into array list
-	    doCommand(parsedCommand);
+		parsedCommand = new ArrayList<String>(Arrays.asList(currentCommand.split(" "))); //puts string into array list   
     }
 	public void sendCommand(String cmd){
 		output.println(cmd);
