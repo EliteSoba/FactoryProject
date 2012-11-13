@@ -181,6 +181,11 @@ public class GraphicPanel extends JPanel implements ActionListener {
 		return belt;
 	}
 	
+	public void cameraFlash()
+	{
+		
+	}
+	
 	public void moveGantryRobotToPickup()
 	{
 		//System.out.println("Moving");

@@ -68,7 +68,7 @@ class PartsRobot extends AnimatedObject
 	
 	public void adjustShift(int amount)
 	{
-		if(theta == 0 || theta == 360)
+		//if(theta == 0 || theta == 360)
 			x -= amount;
 	}
 	public int getState()
@@ -88,21 +88,31 @@ class PartsRobot extends AnimatedObject
 		//System.out.println(fx + " " + fy);
 		if(y == fy && x == fx)	// robot has arrived at destination
 		{
-			if(state == 0)
-			{
-				state = 1;
-				System.out.println("Arrived at nest, waiting for item pickup.");
-			}
-			else if(state == 3)
-			{
-				state = 4;
-				System.out.println("Arrived at kitting station, waiting for item dropoff.");
-			}
-			else if(state == 5)		// going towards station
-			{
-				state = 6;
-				System.out.println("Arrived at center.");
-			}
+			//if(theta % 90 == 0)
+			//{
+				if(state == 0)
+				{
+					state = 1;
+					System.out.println("Arrived at nest, waiting for item pickup.");
+				}
+				else if(state == 3)
+				{
+					state = 4;
+					System.out.println("Arrived at kitting station, waiting for item dropoff.");
+				}
+				else if(state == 5)		// going towards station
+				{
+					state = 6;
+					System.out.println("Arrived at center.");
+				}
+			//}
+			//else
+			//{
+			//	if(state == 0)
+			//		theta += 10;
+			//	else if(state == 3)
+			//		theta -= 10;
+			//}
 		}
 		else if(y > fy)
 		{
