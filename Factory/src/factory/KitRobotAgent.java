@@ -10,6 +10,7 @@ import factory.StandAgent.MySlotState;
 import factory.StandAgent.StandAgentState;
 import factory.graphics.FrameKitAssemblyManager;
 import factory.interfaces.*;
+import factory.masterControl.MasterControl;
 import agent.*;
 
 public class KitRobotAgent extends Agent implements KitRobot {
@@ -30,11 +31,12 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public enum StandInfo { NEED_EMPTY_TOP, NEED_EMPTY_BOTTOM, NEED_INSPECTION_TOP, NEED_INSPECTION_BOTTOM, INSPECTION_SLOT_DONE, KIT_GOOD, KIT_BAD };
 	
 	public KitRobotAgent() {
-		super();
+		//constructor used in unit testing
+		super(new MasterControl(false));
 	}
 	
-	public KitRobotAgent(StandAgent stand, FrameKitAssemblyManager server, ConveyorAgent conveyor){
-		super();
+	public KitRobotAgent(StandAgent stand, FrameKitAssemblyManager server, ConveyorAgent conveyor, MasterControl mc){
+		super(mc);
 		this.conveyor = conveyor;
 		this.stand = stand;
 		this.server = server;

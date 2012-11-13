@@ -4,6 +4,7 @@ import java.util.concurrent.Semaphore;
 
 import factory.graphics.FrameKitAssemblyManager;
 import factory.interfaces.*;
+import factory.masterControl.MasterControl;
 import agent.Agent;
 
 public class ConveyorAgent extends Agent implements Conveyor {
@@ -19,8 +20,8 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	ConveyorState state = ConveyorState.NO_ACTION;
 	
 	/** Public Constructor **/
-	public ConveyorAgent(FrameKitAssemblyManager server, KitRobot kr) {
-		super();
+	public ConveyorAgent(FrameKitAssemblyManager server, KitRobot kr, MasterControl mc) {
+		super(mc);
 		this.server = server;
 		this.kitRobot = kr;
 	}

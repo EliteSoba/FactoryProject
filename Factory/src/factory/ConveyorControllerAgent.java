@@ -5,6 +5,7 @@ import java.util.concurrent.Semaphore;
 
 import factory.graphics.FrameKitAssemblyManager;
 import factory.interfaces.*;
+import factory.masterControl.MasterControl;
 import agent.Agent;
 
 public class ConveyorControllerAgent extends Agent implements ConveyorController {
@@ -17,8 +18,8 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	
 	Timer timer = new Timer();
 	
-	public ConveyorControllerAgent(Conveyor conveyor, FrameKitAssemblyManager server) {
-		super();
+	public ConveyorControllerAgent(Conveyor conveyor, FrameKitAssemblyManager server, MasterControl mc) {
+		super(mc);
 		this.conveyor = conveyor;
 		this.server = server;
 	}
