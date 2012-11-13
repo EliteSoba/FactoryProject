@@ -11,19 +11,19 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import factory.client.Client;
-import factory.graphics.GraphicPanel;
+import factory.graphics.FactoryProductionPanel;
 import factory.swing.FactoryProdManPanel;
 
 public class FactoryProductionManager extends Client {
 	static final long serialVersionUID = -2074747328301562732L;
 
-		public FactoryProductionManager(JPanel buttons, GraphicPanel animation) {
+		public FactoryProductionManager(JPanel buttons, FactoryProductionPanel animation) {
 			super(Client.Type.FACTORYPRODUCTIONMANAGER, buttons, animation);
 			setInterface();
 		}
 		public static void main(String[] args){
 		    FactoryProdManPanel buttons = new FactoryProdManPanel();
-		    GraphicPanel animation = new GraphicPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
+		    FactoryProductionPanel animation = new FactoryProductionPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
 			FactoryProductionManager f = new FactoryProductionManager(buttons, animation);
 			buttons.setManager(f);
 		}

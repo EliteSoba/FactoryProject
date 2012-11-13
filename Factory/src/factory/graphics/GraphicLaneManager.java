@@ -48,9 +48,9 @@ public class GraphicLaneManager{
 	boolean lane1PurgeOn;
 	boolean lane2PurgeOn;
 	
-	GraphicPanel graphicPanel;
+	FactoryProductionPanel graphicPanel;
 	
-	public GraphicLaneManager(int laneX,int laneY, int ID, GraphicPanel gp){
+	public GraphicLaneManager(int laneX,int laneY, int ID, FactoryProductionPanel gp){
 		lane_xPos = laneX; lane_yPos = laneY;					//MODIFY to change Lane position
 		laneManagerID = ID;
 		graphicPanel = gp;
