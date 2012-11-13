@@ -8,6 +8,7 @@ import factory.KitRobotAgent.ConveyorStatus;
 
 public class KitRobotTests extends TestCase {
 	
+	@Test
 	public void testNewKitRequest() {
 		/**
 		 * Test case for the KitRobotAgent getting a request for an empty kit while there is nothing on the Conveyor currently
@@ -37,6 +38,8 @@ public class KitRobotTests extends TestCase {
 		assertEquals("Conveyor_State should now be ConveyorStatus.GETTING_KIT, instead it is "+kitrobot.conveyor_state, kitrobot.conveyor_state, ConveyorStatus.GETTING_KIT);
 		
 		kitrobot.msgEmptyKitOnConveyor(); //Simulating the empty kit coming to the conveyor
+		
+		
 	}
 
 }

@@ -28,7 +28,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public List<StandInfo> actions = Collections.synchronizedList(new ArrayList<StandInfo>());
 
 	public enum ConveyorStatus {EMPTY, GETTING_KIT, EMPTY_KIT, COMPLETED_KIT};
-	public enum StandInfo {NEED_EMPTY_TOP, NEED_EMPTY_BOTTOM, NEED_INSPECTION_TOP, NEED_INSPECTION_BOTTOM, INSPECTION_SLOT_DONE, KIT_GOOD, KIT_BAD };
+	public enum StandInfo { NEED_EMPTY_TOP, NEED_EMPTY_BOTTOM, NEED_INSPECTION_TOP, NEED_INSPECTION_BOTTOM, INSPECTION_SLOT_DONE, KIT_GOOD, KIT_BAD };
 	
 	public KitRobotAgent() {
 		super(Agent.Type.KITROBOTAGENT);
@@ -71,14 +71,13 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		if (pos.equals("topSlot")) {
 			if (!actions.contains(StandInfo.NEED_INSPECTION_TOP)) {
 				actions.add(StandInfo.NEED_INSPECTION_TOP);
-				stateChanged();
 			}
 		} else if (pos.equals("bottomSlot")) {
 			if (!actions.contains(StandInfo.NEED_INSPECTION_BOTTOM)) {
 				actions.add(StandInfo.NEED_INSPECTION_BOTTOM);
-				stateChanged();
 			}
 		}
+		stateChanged();
 	}
 		
 	public void msgEmptyKitOnConveyor() {
@@ -109,10 +108,6 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	protected boolean pickAndExecuteAnAction() {	
 
 		synchronized(actions){
-			if (actions.contains(StandInfo.NEED_EMPTY_BOTTOM) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
-				requestEmptyKit();
-				return true;
-			}
 			
 			if (actions.contains(StandInfo.KIT_BAD)) {
 				actions.remove(StandInfo.KIT_BAD);
@@ -126,7 +121,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				return true;
 			}
 			
-			if (actions.contains(StandInfo.INSPECTION_SLOT_DONE) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
+			if (actions.contains(StandInfo.INSPECTION_SLOT_DONE)) {
 				actions.remove(StandInfo.INSPECTION_SLOT_DONE);
 				processKitAtInspection(); 
 				return true;
@@ -166,7 +161,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	}
 	
 	//Actions
-	public void processKitAtInspection(){
+	public void processKitAtInspection() {
 		//action for checking the inspected kit and then doing the correct action.
 		debug("Executing processKitAtInspection()");
 		
@@ -174,15 +169,15 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			//kit passed inspection
 			if (!actions.contains(StandInfo.KIT_GOOD) && !actions.contains(StandInfo.KIT_BAD)) {
 				actions.add(StandInfo.KIT_GOOD);
-				stateChanged();
+				stand.msgKitRobotNoLongerUsingStand();
 			}
 		} else {
 			//kit failed inspection
 			if (!actions.contains(StandInfo.KIT_GOOD) && !actions.contains(StandInfo.KIT_BAD)) {
 				actions.add(StandInfo.KIT_BAD);
-				stateChanged();
 			}
 		}
+		stateChanged();
 	}
 	
 	public void dumpKit() {
@@ -208,6 +203,15 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public void exportKit() {
 		//action for exporting a good kit
 		debug("KitRobot picking up kit from inspection to export");
+		
+		stand.msgKitRobotWantsToExportKit();
+		
+		try {
+			debug("Waiting for the stand to tell KitRobot it is clear to go");
+			standApproval.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		holding = stand.inspectionSlot.kit;
 		server.exportKit(); //This should be the call for the animation for hte KitRobot to take the Kit at the inspection slot and put it on the conveyor
