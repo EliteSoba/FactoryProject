@@ -40,7 +40,6 @@ public class KitRobotTests extends TestCase {
 		
 		kitrobot.msgEmptyKitOnConveyor(); //Simulating the empty kit coming to the conveyor
 		
-		
 	}
 
 }

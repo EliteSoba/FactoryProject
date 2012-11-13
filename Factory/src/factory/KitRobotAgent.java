@@ -31,7 +31,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	
 	public KitRobotAgent() {
 		//constructor used in unit testing
-		super(new MasterControl(false));
+		super(null);
 	}
 	
 	public KitRobotAgent(StandAgent stand, ConveyorAgent conveyor, MasterControl mc){
@@ -177,7 +177,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public void dumpKit() {
 		//action for dumping a bad kit
 		debug("KitRobot dumping bad kit");
-		server.dumpKit();
+		//server.dumpKit();
 
 		// Wait until the animation is done
 		try {
@@ -208,7 +208,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		}
 		
 		holding = stand.inspectionSlot.kit;
-		server.exportKit(); //This should be the call for the animation for hte KitRobot to take the Kit at the inspection slot and put it on the conveyor
+		//server.exportKit(); //This should be the call for the animation for hte KitRobot to take the Kit at the inspection slot and put it on the conveyor
 		
 		// Wait until the animation is done
 		try {
@@ -251,10 +251,11 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		conveyor.kitAtConveyor = null;
 		
 		//Here do the animation for picking up the kit from the conveyor
-		if(pos == "topSlot")
-			server.moveEmptyKitToSlot(0); //Animation for hte kit robot to go to the conveyor and pick up the kit
-		else if (pos == "bottomSlot")
-			server.moveEmptyKitToSlot(1); //Animation for hte kit robot to go to the conveyor and pick up the kit
+		if(pos.equals("topSlot")) {
+			//server.moveEmptyKitToSlot(0); //Animation for hte kit robot to go to the conveyor and pick up the kit
+		}  else if (pos == "bottomSlot") {
+			//server.moveEmptyKitToSlot(1); //Animation for hte kit robot to go to the conveyor and pick up the kit
+		}
 
 		try {
 			debug("Kit robot is taking empty kit from conveyor");
@@ -296,7 +297,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		} else {
 			slot = 1;
 		}
-		server.moveKitFromSlotToInspection(slot);
+		//server.moveKitFromSlotToInspection(slot);
 		
 		// Wait until the animation is done
 		try {
