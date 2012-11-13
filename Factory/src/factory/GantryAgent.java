@@ -7,7 +7,7 @@ import java.util.*;
 import factory.graphics.GraphicLaneMenuPanel;
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
-
+//test commit
 public class GantryAgent extends Agent implements Gantry {
 	public GantryAgent(MasterControl mc) {
 		super(mc); // needed for the server 
