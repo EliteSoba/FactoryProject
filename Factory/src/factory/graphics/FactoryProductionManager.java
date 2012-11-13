@@ -109,7 +109,7 @@ public class FactoryProductionManager extends JFrame {
 	}
 	
 	public void feedLane(GraphicBin b, int laneNum, boolean divergeUp){
-		panel.feedLane(b,laneNum,divergeUp);
+		panel.feedLane(b,laneNum);
 	}
 	
 	public void getBin()
