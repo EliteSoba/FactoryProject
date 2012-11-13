@@ -22,7 +22,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	
 	/** Public Constructor **/
 	public ConveyorAgent(FrameKitAssemblyManager server, KitRobot kr) {
-		super();
+		super(Agent.Type.CONVEYORAGENT);
 		this.server = server;
 		this.kitRobot = kr;
 	}

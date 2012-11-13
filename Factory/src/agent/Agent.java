@@ -18,7 +18,7 @@ public abstract class Agent {
     // The following is copied from Client class.
 
     public enum Type{//Each different agent needs to be enumerated here.
-        CONVEYORAGENT, FEEDERAGENT, GANTRYAGENT, KITROBOTAGENT, LANEAGENT, NESTAGENT, PARTSROBOTAGENT, STANDAGENT, VISIONAGENT
+        CONVEYORAGENT, FEEDERAGENT, GANTRYAGENT, KITROBOTAGENT, LANEAGENT, NESTAGENT, PARTSROBOTAGENT, STANDAGENT, VISIONAGENT, CONVEYORCONTROLLERAGENT
     }
     protected Socket server; //connection to server
     public Type type; //type of client

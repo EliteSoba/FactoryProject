@@ -19,7 +19,7 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	Timer timer = new Timer();
 	
 	public ConveyorControllerAgent(Conveyor conveyor, FrameKitAssemblyManager server) {
-		super();
+		super(Agent.Type.CONVEYORCONTROLLERAGENT);
 		this.conveyor = conveyor;
 		this.server = server;
 	}
@@ -36,10 +36,6 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		}
 	}
 	
-	/**
-	 * this function is for later if we want to keep track of all exported kits, which I assume we will eventually but
-	 * doesn't quite fit the animation flow yet.
-	 */
 	public void msgKitExported(Conveyor c, Kit k) {
 		exported_kits.add(k);
 		stateChanged();
