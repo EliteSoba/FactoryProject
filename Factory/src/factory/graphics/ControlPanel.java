@@ -118,10 +118,10 @@ public class ControlPanel extends JPanel implements ActionListener{
 			am.moveRobotToStation();
 		else if(source == feedLane1)
 			am.feedLane(new GraphicBin(new Part("ear")),1,true);
-		//else if(source == gantryRobotGetBin)
-		//	am.getBin();
-		//else if(source == gantryRobotFeeder1)
-		//	am.moveGantryToFeeder1();
+		else if(source == gantryRobotGetBin)
+			am.getBin();
+		else if(source == gantryRobotFeeder1)
+			am.moveGantryToFeeder1();
 	}
 
 }
