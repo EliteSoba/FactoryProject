@@ -21,6 +21,7 @@ public class KitAssemblyManager extends Client {
 		    //KitAssManPanel buttons = new KitAssManPanel(); //to be implemented in V.2
 		    GraphicKitAssemblyManager animation = new GraphicKitAssemblyManager(null);
 			KitAssemblyManager k = new KitAssemblyManager(animation);
+			//buttons.setManager(k);
 		}
 
 		public void setInterface() {
@@ -36,6 +37,20 @@ public class KitAssemblyManager extends Client {
 			/*c.gridx = 2;
 			add(UI, c);*/ //to be implemented in V.2
 			setVisible(true);
+		}
+		
+		public void sendMessage (String kitname, String quantity, String message) { // sends message out from swing
+			String set = new String("");
+			if (message == "incorrectKits"){
+				//TODO get the format of the command from server //for V.2
+			}
+			else if (message == "kitRobotFreeze"){
+				//TODO get the format of the command from server //for V.2
+			}
+			else{
+				set = "bad command";
+			}
+			sendCommand(set);
 		}
 
 		public void doCommand(ArrayList<String> pCmd) {

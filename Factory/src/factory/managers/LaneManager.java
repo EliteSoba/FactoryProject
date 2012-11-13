@@ -24,13 +24,14 @@ public class LaneManager extends Client {
 	public static void main(String[] args){
 		//LaneManPanel buttons = new LaneManPanel(); //to be implemented in V.2
 		JPanel animation = new GraphicPanel(null);
-		//LaneManager l = new LaneManager(buttons); //to be implemented in V.2
+		LaneManager l = new LaneManager(animation); //to be implemented in V.2
 		//buttons.setManager(l);  //to be implemented in V.2
 		
 	}
 	
 	public void sendMessage(int lane, int setting, String message){
-		/*String set = new String("");
+		String set = new String("");
+		/*
 		if (message == "power"){
 			set = "lm lma lanepowertoggle "+ lane;
 		}
@@ -42,8 +43,8 @@ public class LaneManager extends Client {
 		}
 		else if (message == "green"){
 			set = "lm lma set lanevibration "+ lane + " " + setting;
-		}
-		sendCommand(set);*/ // to be implemented in V.2
+		}*/ // to be implemented in V.2
+		sendCommand(set); 
 	}
 	
 	public void setInterface() {

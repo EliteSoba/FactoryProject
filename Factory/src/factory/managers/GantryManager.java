@@ -38,10 +38,22 @@ public class GantryManager extends Client {
 		setVisible(true);
 		
 	}
+	
+	public void sendMessage (String kitname, String quantity, String message) { // sends message out from swing
+		String cmd = new String("");
+		if (message ==  "robotRevolt"){
+			//TODO get the format of the command from server //for V.2
+		}
+		
+		else{
+			cmd = "bad command";
+		}
+			sendCommand(cmd);
+	}
 
 
 	public void doCommand(ArrayList<String> pCmd) {
 		//receive message
-		
+		//be able to handle err
 	}
 }
