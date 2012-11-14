@@ -101,6 +101,8 @@ public class GraphicLaneManager{
 	
 	public void setBin(GraphicBin bin){
 		this.bin = bin;
+		if (bin != null)
+			binExist = true;
 	}
 	
 	public GraphicBin getBin(){
