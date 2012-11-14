@@ -113,7 +113,6 @@ public class GraphicLaneManager{
 		Graphics2D g2 = (Graphics2D) g;
 		
 		
-		g2.drawImage(feederIcon.getImage(), lane_xPos+250, lane_yPos+15, null);
 		/*
 		if(placedBin){
 			g2.drawImage(bin.getBinImage().getImage(), lane_xPos+325, lane_yPos+30, null);
@@ -128,7 +127,7 @@ public class GraphicLaneManager{
 		}
 		*/
 		if(binExist){
-			g2.drawImage(bin.getBinImage().getImage(),lane_xPos+265, feederY+10, null);
+			g2.drawImage(bin.getBinImage().getImage(),lane_xPos+300, feederY+15, null);		// Minh's magic numbers >____>
 			//g2.drawImage(bin.getBinImage(), lane_xPos+265, feederY+10, null);
 			if(laneStart){
 	
@@ -174,6 +173,8 @@ public class GraphicLaneManager{
 		else{
 			processLane();
 		}
+		// Draw feeder
+		g2.drawImage(feederIcon.getImage(), lane_xPos+250, lane_yPos+15, null);
 		//g2.drawImage(nest1.getImage(),lane_xPos,lane_yPos,null);
 		//g2.drawImage(nest2.getImage(),lane_xPos,lane_yPos + 80,null);
 		//g2.drawImage(nest1Icon.getImage(), lane_xPos, lane_yPos, null);

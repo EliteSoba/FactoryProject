@@ -136,7 +136,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	public void moveGantryRobotToPickup(String path) {
 		//System.out.println("Moving");
 		gantryRobot.setState(0);
-		gantryRobot.setDestination(WIDTH-100,-200);
+		gantryRobot.setDestination(WIDTH-100,-100);
 	}
 	/*public void gantryRobotArrivedAtPickup() {
 		System.out.println("DEBUG: ARRIVED AT PICKUP");
@@ -145,7 +145,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	public void moveGantryRobotToFeeder(int feederIndex) {
 		gantryRobot.setState(3);
 		gantryRobot.setDestinationFeeder(feederIndex);
-		gantryRobot.setDestination(lane[feederIndex].feederX+50, lane[feederIndex].feederY+15);
+		gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
 	}
 	/*public void gantryRobotArrivedAtFeeder() {
 		System.out.println("DEBUG: ARRIVED AT FEEDER");
