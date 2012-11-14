@@ -9,10 +9,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import factory.client.*;
+import factory.Part;
 
 public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 	
-	public static final int WIDTH = 600, HEIGHT = 720;
+	public static final int WIDTH = 400, HEIGHT = 720;
 	
 	public GantryRobotPanel(JFrame GR) {
 		if (GR instanceof Client)
@@ -20,7 +21,10 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 		
 		lane = new GraphicLaneManager [4];
 		for (int i = 0; i < lane.length; i++)
-			lane[i] = new GraphicLaneManager(10, 160*i + 50, i, this);
+			lane[i] = new GraphicLaneManager(-200, 160*i + 50, i, this);
+		
+		lane[0].setBin(new GraphicBin(new Part("TestItem")));
+		lane[0].binExist = true;
 		
 		gantryRobot = new GantryRobot(WIDTH-150,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
 		
@@ -51,6 +55,18 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 			lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.takeBin());
 			gantryRobotArrivedAtFeeder();
 		}
+	}
+	
+	public void paint(Graphics g) {
+		g.setColor(new Color(200, 200, 200));
+		g.fillRect(0, 0, getWidth(), getHeight());
+		if (lane != null)
+			for (int i = 0; i < lane.length; i++) {
+				if (lane[i] != null)
+					lane[i].paintFeeder(g);
+			}
+		
+		gantryRobot.paint(g);
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
