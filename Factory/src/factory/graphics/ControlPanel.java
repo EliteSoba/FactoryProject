@@ -109,7 +109,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 			//am.kitToCheck(0);
 			am.sendNewEmptyKit();
 		else if (source == inspect2)
-			am.kitToCheck(1);
+			//am.kitToCheck(1);
+			am.moveEmptyKitToSlot(0);
 		else if (source == dumpKit)
 			am.dumpKit();
 		else if(source == partsRobotNest1)
