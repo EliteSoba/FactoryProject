@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import factory.graphics.*;
 import factory.client.Client;
 import factory.swing.GantryManPanel;
 
@@ -15,7 +16,9 @@ public class GantryManager extends Client {
 	static final long serialVersionUID = 8492299864169935860L;
 
 	public GantryManager(JPanel buttons, JPanel animation) {
-		super(Client.Type.GM, buttons, animation);
+		super(Client.Type.GM, null, null);
+		UI = new GantryManPanel();
+		graphics = new GantryRobotPanel(this);
 		setInterface();
 	}
 	public static void main(String[] args){
