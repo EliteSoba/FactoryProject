@@ -62,43 +62,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 
 	public void paint(Graphics g) {
 		super.paint(g);
-		
-		for (int i = 0; i < lane.length; i++) {
-			if (lane[i] != null)
-				lane[i].paintLane(g);
-		}
-
-		belt.paint(g);
-		station.paint(g);
-		kitRobot.paint(g);
-		
-		// Parts robot client
-		// Draw the nests
-		for(int i = 0; i < nests.size(); i++) {
-			Nest currentNest = nests.get(i);
-			currentNest.paint(g);
-		}
-		// Parts robot client
-		// Draw the nests
-		for(int i = 0; i < nests.size(); i++) {
-			Nest currentNest = nests.get(i);
-			currentNest.paint(g);
-		}
-		
-		// Draw the parts robot
-		final Graphics2D g3 = (Graphics2D)g.create();
-		g3.rotate(Math.toRadians(360-partsRobot.getAngle()), partsRobot.getX()+partsRobot.getImageWidth()/2, partsRobot.getY()+partsRobot.getImageHeight()/2);
-		// Draw items partsRobot is carrying
-		partsRobot.paint(g3);
-		g3.dispose();
-		
-		// Draw the Gantry Robot
-		final Graphics2D g4 = (Graphics2D)g.create();
-		g4.rotate(Math.toRadians(360-gantryRobot.getAngle()), gantryRobot.getX()+gantryRobot.getImageWidth()/2, gantryRobot.getY()+gantryRobot.getImageHeight()/2);
-		gantryRobot.paint(g4);
-		// Draw bin gantryRobot is carrying
-
-		g4.dispose();
 	}
 
 	
@@ -173,7 +136,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	public void moveGantryRobotToPickup(String path) {
 		//System.out.println("Moving");
 		gantryRobot.setState(0);
-		gantryRobot.setDestination(WIDTH-100,-200);
+		gantryRobot.setDestination(WIDTH-100,-100);
 	}
 	/*public void gantryRobotArrivedAtPickup() {
 		System.out.println("DEBUG: ARRIVED AT PICKUP");
@@ -182,7 +145,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	public void moveGantryRobotToFeeder(int feederIndex) {
 		gantryRobot.setState(3);
 		gantryRobot.setDestinationFeeder(feederIndex);
-		gantryRobot.setDestination(lane[feederIndex].feederX+50, lane[feederIndex].feederY+15);
+		gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
 	}
 	/*public void gantryRobotArrivedAtFeeder() {
 		System.out.println("DEBUG: ARRIVED AT FEEDER");
@@ -326,7 +289,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		else if(gantryRobot.getState() == 4)
 		{
 			lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.takeBin());
-			lane[gantryRobot.getDestinationFeeder()].binExist = true;
 			gantryRobotArrivedAtFeeder();
 		}
 	}
