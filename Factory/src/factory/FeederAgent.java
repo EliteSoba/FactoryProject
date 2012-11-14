@@ -35,7 +35,8 @@ public class FeederAgent extends Agent implements Feeder {
 	public Timer okayToPurgeTimer = new Timer();
 	public Timer feederEmptyTimer = new Timer();
 	public Timer partResettleTimer = new Timer();
-
+	public boolean feederHasABinUnderneath = false; // no bin underneath the feeder initially
+	
 	public enum FeederState { EMPTY, WAITING_FOR_PARTS, CONTAINS_PARTS, OK_TO_PURGE, SHOULD_START_FEEDING, IS_FEEDING }
 	public enum DiverterState { FEEDING_TOP, FEEDING_BOTTOM }
 
@@ -144,7 +145,9 @@ public class FeederAgent extends Agent implements Feeder {
 
 	public void msgHereAreParts(Part part) {
 		debug("received msgHereAreParts("+part.name+")");
-
+		
+		feederHasABinUnderneath = true; // should never be false again
+		
 		for (MyPartRequest pr : requestedParts) {
 			if(pr.state == MyPartRequestState.ASKED_GANTRY && pr.pt == part) {
 				pr.state = MyPartRequestState.DELIVERED;
@@ -567,6 +570,11 @@ public class FeederAgent extends Agent implements Feeder {
 		//	}
 	}
 
+	
+	/** OTHER **/
+	public boolean getFeederHasABinUnderneath() {
+		return feederHasABinUnderneath;
+	}
 
 }
 

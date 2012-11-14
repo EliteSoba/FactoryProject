@@ -227,13 +227,13 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		lane[feederNum].feederOn = false;
 	}
 	
-	public void purgeFeederLane(int feederNum){ // takes in lane 1 - 4
+	public void purgeFeeder(int feederNum){ // takes in lane 1 - 4
 		lane[(feederNum - 1)].bin = null;
 		lane[(feederNum - 1)].binExist = false;
 		lane[(feederNum - 1)].feederOn = false;
 	}
 	
-	public void purgeLaneLane(int laneNum){
+	public void purgeLane(int laneNum){
 		if((laneNum - 1) % 2 == 0)
 			lane[(laneNum - 1) / 2].lane1PurgeOn = true;
 		else
@@ -241,6 +241,9 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		lane[(laneNum - 1) / 2].feederOn = false;
 		lane[(laneNum - 1) / 2].laneStart = false;
 	}
+	
+	//MINH, CAN YOU MAKE A PURGETOPLANE(INT FEEDERNUM) AND PURGEBOTTOMLANE(INT FEEDERNUM)
+	// ALSO PLZ MAKE EVERYTHING 0-BASED
 	
 	/*public GraphicKittingStation getStation() {
 		return station;

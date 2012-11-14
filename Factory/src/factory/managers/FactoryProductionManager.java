@@ -73,7 +73,7 @@ public class FactoryProductionManager extends Client {
 			else if (identifier == "purgeFeeder")
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(3));
-				((FactoryProductionPanel) graphics).purgeFeederLane(feederSlot);
+				((FactoryProductionPanel) graphics).purgeFeeder(feederSlot);
 			}
 			else if (identifier == "switchLane")
 			{
