@@ -5,6 +5,7 @@ package factory.managers;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -28,14 +29,14 @@ public class KitAssemblyManager extends Client {
 		}
 
 		public void setInterface() {
-			setSize(280, 720);
-			setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));
-			
+			setSize(1780, 720);
+			setLayout(new GridLayout(1,2));
+
 			add(graphics);
 			
-			/*c.gridx = 2;
-			add(UI, c);*/ //to be implemented in V.2
+			//add(UI); //to be implemented in V.2
 			setVisible(true);
+
 		}
 		
 		public void sendMessage (String kitname, String quantity, String message) { // sends message out from swing

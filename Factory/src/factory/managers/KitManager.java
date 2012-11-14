@@ -4,6 +4,7 @@ package factory.managers;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -36,18 +37,12 @@ public class KitManager extends Client {
 	
 	public void setInterface() {
 		setSize(1780, 720);
-		GridBagConstraints c = new GridBagConstraints();
-		setLayout(new GridBagLayout());
+		setLayout(new GridLayout(1,2));
+
+		add(graphics);
 		
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 0;
-		add(graphics, c);
-		
-		c.gridx = 2;
-		add(UI, c);
+		add(UI);
 		setVisible(true);
-		
 	}
 	
 	
