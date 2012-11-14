@@ -268,8 +268,8 @@ public class MasterControl {
     }
 
     public static void main(String args[]){
-        boolean debug = Boolean.getBoolean(args[0]);
-        MasterControl mc = new MasterControl(debug);
+       // boolean debug = Boolean.getBoolean(args[0]);
+        MasterControl mc = new MasterControl(true);
     }
 
 }
