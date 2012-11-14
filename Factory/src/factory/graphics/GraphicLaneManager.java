@@ -126,11 +126,42 @@ public class GraphicLaneManager{
 			binItemCount++;
 		}
 		*/
+		
+		// Draw feeder
+		paintFeeder(g2);
+		//g2.drawImage(nest1.getImage(),lane_xPos,lane_yPos,null);
+		//g2.drawImage(nest2.getImage(),lane_xPos,lane_yPos + 80,null);
+		//g2.drawImage(nest1Icon.getImage(), lane_xPos, lane_yPos, null);
+		//g2.drawImage(nest2Icon.getImage(), lane_xPos, lane_yPos+80, null);
+		g2.drawImage(lane1Icon.getImage(), lane_xPos+75, lane_yPos+20, null);
+		g2.drawImage(lane2Icon.getImage(), lane_xPos+75, lane_yPos+100, null);
+		g2.drawImage(divergeLaneIcon.getImage(), lane_xPos+210, lane_yPos+20, null);
+		/*for(int i = 0;i<bin.getBinItems().size();i++)
+			bin.getBinItems().get(i).getImageIcon().paintIcon(this,g2,bin.getBinItems().get(i).getX(),bin.getBinItems().get(i).getY());
+		*/
+		for(int i = 0;i<lane1Items.size();i++)
+			lane1Items.get(i).paint(g2);
+		for(int i = 0;i<lane2Items.size();i++)
+			lane2Items.get(i).paint(g2);
+//		for(int i = 0;i<nest1.getSize();i++)
+//			nest1.items.get(i).paint(g2);
+//		for(int i = 0;i<nest2.getSize();i++)
+//			nest2.items.get(i).paint(g2);
+//	
+		vibrationCount++;
+	} // END Paint function
+	
+	public void paintFeeder(Graphics g) {
+		if(binExist)
+			g.drawImage(bin.getBinImage().getImage(),lane_xPos+300, feederY+15, null);
+		g.drawImage(feederIcon.getImage(), lane_xPos+250, lane_yPos+15, null);
+	}
+	
+	public void moveLane() {
 		if(binExist){
 			//g2.drawImage(bin.getBinImage().getImage(),lane_xPos+300, feederY+15, null);		// Minh's magic numbers >____>
 			//g2.drawImage(bin.getBinImage(), lane_xPos+265, feederY+10, null);
 			if(laneStart){
-	
 				if(feederOn){
 					if(timerCount % 10 == 0){		//Put an item on lane on a timed interval
 						if(bin.getBinItems().size() > 0){
@@ -173,34 +204,6 @@ public class GraphicLaneManager{
 		else{
 			processLane();
 		}
-		// Draw feeder
-		paintFeeder(g2);
-		//g2.drawImage(nest1.getImage(),lane_xPos,lane_yPos,null);
-		//g2.drawImage(nest2.getImage(),lane_xPos,lane_yPos + 80,null);
-		//g2.drawImage(nest1Icon.getImage(), lane_xPos, lane_yPos, null);
-		//g2.drawImage(nest2Icon.getImage(), lane_xPos, lane_yPos+80, null);
-		g2.drawImage(lane1Icon.getImage(), lane_xPos+75, lane_yPos+20, null);
-		g2.drawImage(lane2Icon.getImage(), lane_xPos+75, lane_yPos+100, null);
-		g2.drawImage(divergeLaneIcon.getImage(), lane_xPos+210, lane_yPos+20, null);
-		/*for(int i = 0;i<bin.getBinItems().size();i++)
-			bin.getBinItems().get(i).getImageIcon().paintIcon(this,g2,bin.getBinItems().get(i).getX(),bin.getBinItems().get(i).getY());
-		*/
-		for(int i = 0;i<lane1Items.size();i++)
-			lane1Items.get(i).paint(g2);
-		for(int i = 0;i<lane2Items.size();i++)
-			lane2Items.get(i).paint(g2);
-//		for(int i = 0;i<nest1.getSize();i++)
-//			nest1.items.get(i).paint(g2);
-//		for(int i = 0;i<nest2.getSize();i++)
-//			nest2.items.get(i).paint(g2);
-//	
-		vibrationCount++;
-	} // END Paint function
-	
-	public void paintFeeder(Graphics g) {
-		if(binExist)
-			g.drawImage(bin.getBinImage().getImage(),lane_xPos+300, feederY+15, null);
-		g.drawImage(feederIcon.getImage(), lane_xPos+250, lane_yPos+15, null);
 	}
 		
 	public void processLane(){

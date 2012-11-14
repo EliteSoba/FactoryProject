@@ -10,6 +10,8 @@ import factory.client.*;
 public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	public static final int WIDTH = 1100, HEIGHT = 720;
+	public static final int delay = 50;
+	
 	protected Client am; //The Client that holds this
 	
 	protected boolean isLaneManager;

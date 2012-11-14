@@ -60,7 +60,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		partsRobot = new PartsRobot(WIDTH/2-200,HEIGHT/2,0,5,5,10,100,100,"Images/robot1.png");
 		gantryRobot = new GantryRobot(WIDTH-150,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
 		
-		(new Timer(50, this)).start();
+		(new Timer(delay, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		this.setVisible(true);
 	}
@@ -244,9 +244,16 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		}
 	}
 	
+	public void moveLanes() {
+		for (int i = 0; i < lane.length; i++)
+			lane[i].moveLane();
+	}
+	
 	public void actionPerformed(ActionEvent arg0) {
 		partsRobotStateCheck();
 		gantryRobotStateCheck();
+		
+		moveLanes();
 		
 		partsRobot.move();							// Update position and angle of partsRobot
 		gantryRobot.move();

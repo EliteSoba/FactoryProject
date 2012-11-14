@@ -28,7 +28,7 @@ public class KitAssemblyPanel extends GraphicPanel implements ActionListener{
 		station = new GraphicKittingStation(200, 191, this);
 		kitRobot = new GraphicKittingRobot(this, 70, 250);
 		
-		(new Timer(50, this)).start();
+		(new Timer(delay, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		this.setVisible(true);
 	}
