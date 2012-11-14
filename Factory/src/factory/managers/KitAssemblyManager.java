@@ -1,4 +1,4 @@
-//Ben Mayeux and Stephanie Reagle
+//Ben Mayeux, Stephanie Reagle, Marc Mendiola
 //CS 200
 
 package factory.managers;
@@ -6,6 +6,8 @@ package factory.managers;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
+
+import javax.swing.BoxLayout;
 
 import factory.client.Client;
 import factory.graphics.KitAssemblyPanel;
@@ -15,7 +17,7 @@ public class KitAssemblyManager extends Client {
 
 		public KitAssemblyManager( KitAssemblyPanel animation) {
 			super(Client.Type.KAM, null, animation);
-			setInterface();
+			//this.setInterface();
 		}
 		public static void main(String[] args){
 		    //KitAssManPanel buttons = new KitAssManPanel(); //to be implemented in V.2
@@ -25,14 +27,10 @@ public class KitAssemblyManager extends Client {
 		}
 
 		public void setInterface() {
-			setSize(1780, 720);
-			GridBagConstraints c = new GridBagConstraints();
-			setLayout(new GridBagLayout());
+			setSize(280, 720);
+			setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));
 			
-			c.fill = GridBagConstraints.VERTICAL;
-			c.gridx = 0;
-			c.gridy = 0;
-			add(graphics, c);
+			add(graphics);
 			
 			/*c.gridx = 2;
 			add(UI, c);*/ //to be implemented in V.2
