@@ -57,6 +57,29 @@ public class FactoryProductionManager extends Client {
 		String action = pCmd.get(0);
 		String identifier = pCmd.get(1);
 		if(action == "cmd"){
+			/*
+			 * fa fpm cmd startFeeding " + feederSlot + " endcmd
+			 */
+			if (identifier == "startFeeding")
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(3));
+				((FactoryProductionPanel) graphics).turnFeederOn(feederSlot);
+			}
+			else if (identifier == "stopFeeding")
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(3));
+				((FactoryProductionPanel) graphics).turnFeederOff(feederSlot);
+			} 
+			else if (identifier == "purgeFeeder")
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(3));
+				((FactoryProductionPanel) graphics).purgeFeeder(feederSlot);
+			}
+			else if (identifier == "switchLane")
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(3));
+				((FactoryProductionPanel) graphics).switchFeederLane(feederSlot);
+			}
 			/*if(identifier == command1)
 			 * do(command1);
 			 * else if(identifier == command2)

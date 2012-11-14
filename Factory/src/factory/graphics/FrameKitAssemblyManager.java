@@ -13,7 +13,7 @@ public class FrameKitAssemblyManager extends JFrame{
 	 * This will be removed when the project gets integrated
 	 */
 	
-	GraphicKitAssemblyManager GKAM; //The Graphics part
+	KitAssemblyPanel GKAM; //The Graphics part
 	ControlPanel CP; //The Swing control panel
 	
 	
@@ -27,7 +27,7 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	public FrameKitAssemblyManager() {
 		//Constructor. BorderLayout
-		GKAM = new GraphicKitAssemblyManager(this);
+		GKAM = new KitAssemblyPanel(this);
 		this.add(GKAM, BorderLayout.CENTER);
 		CP = new ControlPanel(this);
 		this.add(CP, BorderLayout.LINE_END);

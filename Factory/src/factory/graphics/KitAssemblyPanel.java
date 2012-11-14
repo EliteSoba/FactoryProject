@@ -1,11 +1,12 @@
 package factory.graphics;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import factory.client.*;
+import factory.*;
 
-import factory.client.Client;
-
-public class GraphicKitAssemblyManager extends GraphicPanel implements ActionListener{
+public class KitAssemblyPanel extends GraphicPanel implements ActionListener{
 	
 	/*GraphicKitAssemblyManager.java (350x720) - Tobias Lee
 	 * This is the graphical display of the Kit Assembly Manager
@@ -53,20 +54,20 @@ public class GraphicKitAssemblyManager extends GraphicPanel implements ActionLis
 	 * 			!- HANDLED BY 201 TEAM
 	 */
 	
-	private Client am; //The JFrame that holds this. Will be removed when gets integrated with the rest of the project
-	private GraphicKitBelt belt; //The conveyer belt
-	private GraphicKittingStation station; //The kitting station
-	private GraphicKittingRobot robot;
+	//private Client am; //The JFrame that holds this.
+	//private GraphicKitBelt belt; //The conveyer belt
+	//private GraphicKittingStation station; //The kitting station
+	//private GraphicKittingRobot robot;
 	public static final int WIDTH = 280, HEIGHT = 720;
 	
-	public GraphicKitAssemblyManager(JFrame FKAM) {
+	public KitAssemblyPanel(JFrame FKAM) {
 		//Constructor
 		//x = 0;
 		if (FKAM instanceof Client)
 			am = (Client)FKAM;
 		belt = new GraphicKitBelt(0, 0, this);
 		station = new GraphicKittingStation(200, 191, this);
-		robot = new GraphicKittingRobot(this, 70, 250);
+		kitRobot = new GraphicKittingRobot(this, 70, 250);
 		(new Timer(50, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 	}
@@ -80,17 +81,17 @@ public class GraphicKitAssemblyManager extends GraphicPanel implements ActionLis
 	
 	public void moveEmptyKitToSlot(int target) {
 		//Sends robot to pick up kit from belt and move to designated slot in the station
-		if (belt.pickUp() && !robot.kitted() && station.getKit(target) == null) {
-			robot.setFromBelt(true);
-			robot.setStationTarget(target);
+		if (belt.pickUp() && !kitRobot.kitted() && station.getKit(target) == null) {
+			kitRobot.setFromBelt(true);
+			kitRobot.setStationTarget(target);
 		}
 	}
 	
 	public void moveKitToInspection(int target) {
 		//Sends robot to move kit from designated slot in the station to inspection station
-		if (!robot.kitted() && station.getKit(target) != null) {
-			robot.setCheckKit(true);
-			robot.setStationTarget(target);
+		if (!kitRobot.kitted() && station.getKit(target) != null) {
+			kitRobot.setCheckKit(true);
+			kitRobot.setStationTarget(target);
 		}
 	}
 	
@@ -101,42 +102,35 @@ public class GraphicKitAssemblyManager extends GraphicPanel implements ActionLis
 	
 	public void dumpKitAtInspection() {
 		//Sends robot to move kit from inspection station to trash
-		if (!robot.kitted() && station.getCheck() != null)
-			robot.setPurgeKit(true);
+		if (!kitRobot.kitted() && station.getCheck() != null)
+			kitRobot.setPurgeKit(true);
 	}
 	
 	public void moveKitFromInspectionToConveyor() {
 		//Sends a kit out of the factory via conveyer belt
-		if (station.getCheck() != null && !robot.kitted())
-			robot.setFromCheck(true);
+		if (station.getCheck() != null && !kitRobot.kitted())
+			kitRobot.setFromCheck(true);
 	}
 	
 	public void paint(Graphics g) {
 		//Paints all the objects
 		super.paint(g);
 		
-		belt.paint(g);
-		station.paint(g);
-		robot.paint(g);
-	}
-	
-	public GraphicKittingStation getStation() {
-		return station;
-	}
-	public GraphicKitBelt getBelt() {
-		return belt;
+//		belt.paint(g);
+//		station.paint(g);
+//		kitRobot.paint(g);
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
 		//etc.
 		belt.moveBelt(5);
-		robot.moveRobot(5);
+		kitRobot.moveRobot(5);
 		repaint();
 	}
 	
 	public static void main(String args[]) {
 		JFrame f = new JFrame();
-		f.add(new GraphicKitAssemblyManager(null));
+		f.add(new KitAssemblyPanel(null));
 		f.setVisible(true);
 		f.pack();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

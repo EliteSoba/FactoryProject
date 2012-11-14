@@ -6,12 +6,12 @@ import javax.swing.*;
 
 import factory.Kit.KitState;
 
-public class FactoryProductionManager extends JFrame {
+public class GraphicFactoryProductionManager extends JFrame {
 	
 	FactoryProductionPanel panel;
 	ControlPanel cp;
 	
-	public FactoryProductionManager() {
+	public GraphicFactoryProductionManager() {
 		panel = new FactoryProductionPanel(this);
 		this.add(panel, BorderLayout.CENTER);
 		cp = new ControlPanel(this);
@@ -130,7 +130,7 @@ public class FactoryProductionManager extends JFrame {
 	
 	public static void main(String args[]) {
 		//Implements this JFrame
-		FactoryProductionManager FKAM = new FactoryProductionManager();
+		GraphicFactoryProductionManager FKAM = new GraphicFactoryProductionManager();
 		FKAM.setVisible(true);
 		FKAM.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//FKAM.setSize(800, 720);

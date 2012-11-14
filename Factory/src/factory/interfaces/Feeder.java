@@ -16,5 +16,6 @@ public interface Feeder {
 	
 	public void setGantry(Gantry g);
 
+	public boolean getFeederHasABinUnderneath();
 	
 }

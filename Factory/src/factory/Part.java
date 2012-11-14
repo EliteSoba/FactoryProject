@@ -5,6 +5,8 @@ public class Part {
 		this.name = string;
 	}
 	public String name;               // name of the part type
-	public double averageDelayTime;   // The average time that the part takes to reach the nest to be used by the feeder
-	public double productionTime;       // The time it takes to produce a piece when refilling
+	public double nestStabilizationTime;   // The average time that the part takes to reach the nest to be used by the feeder
+	public String description;
+	public int id;
+	public String imagePath; //file path of the image associated with the part
 }
