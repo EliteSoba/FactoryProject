@@ -17,7 +17,7 @@ public class LaneManager extends Client {
 
 	public LaneManager(JPanel animation) {
 		
-		super(Client.Type.LANEMANAGER, null, animation); 
+		super(Client.Type.LM, null, animation); 
 		setInterface();
 	}
 	
@@ -101,6 +101,16 @@ public class LaneManager extends Client {
 			 * else if(identifier == confirm2)
 			 * do(confirm2);
 			 */
+		}
+		
+		else if(action.equals("err")){
+			String error;
+			error = new String();
+			for(int i = 1; i<this.parsedCommand.size(); i++)
+				error.concat(parsedCommand.get(i));
+			System.out.println(error);
+		
+			
 		}
 	}
 }

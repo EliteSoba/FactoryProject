@@ -7,7 +7,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import factory.client.*;
 
-public class GraphicPanel extends JPanel implements ActionListener{
+public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	public static final int WIDTH = 1100, HEIGHT = 720;
 	protected Client am; //The Client that holds this
@@ -22,7 +22,7 @@ public class GraphicPanel extends JPanel implements ActionListener{
 	protected GraphicKittingRobot kitRobot;
 	
 	// PARTS MANAGER
-	protected  ArrayList<Nest> nests;
+	protected ArrayList<Nest> nests;
 	protected PartsRobot partsRobot;
 	
 	// GANTRY
@@ -104,6 +104,44 @@ public class GraphicPanel extends JPanel implements ActionListener{
 	public void paint(Graphics g) {
 		g.setColor(new Color(200, 200, 200));
 		g.fillRect(0, 0, getWidth(), getHeight());
+		if (lane != null)
+			for (int i = 0; i < lane.length; i++) {
+				if (lane[i] != null)
+					lane[i].paintLane(g);
+			}
+			if (belt != null)
+				belt.paint(g);
+			if (station != null)
+				station.paint(g);
+			if (kitRobot != null)
+				kitRobot.paint(g);
+			
+			// Parts robot client
+			// Draw the nests
+			if (nests != null)
+			for(int i = 0; i < nests.size(); i++) {
+				Nest currentNest = nests.get(i);
+				currentNest.paint(g);
+			}
+			
+			// Draw the parts robot
+			if (partsRobot != null) {
+				final Graphics2D g3 = (Graphics2D)g.create();
+				g3.rotate(Math.toRadians(360-partsRobot.getAngle()), partsRobot.getX()+partsRobot.getImageWidth()/2, partsRobot.getY()+partsRobot.getImageHeight()/2);
+				// Draw items partsRobot is carrying
+				partsRobot.paint(g3);
+				g3.dispose();
+			}
+			
+			// Draw the Gantry Robot
+			if (gantryRobot != null) {
+				final Graphics2D g4 = (Graphics2D)g.create();
+				g4.rotate(Math.toRadians(360-gantryRobot.getAngle()), gantryRobot.getX()+gantryRobot.getImageWidth()/2, gantryRobot.getY()+gantryRobot.getImageHeight()/2);
+				gantryRobot.paint(g4);
+				// Draw bin gantryRobot is carrying
+				
+				g4.dispose();
+			}
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {

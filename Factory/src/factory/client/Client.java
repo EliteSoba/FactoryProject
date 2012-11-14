@@ -19,7 +19,7 @@ import javax.swing.Timer;
 
 /*Abstract class used by each client
  * written by Ben Mayeux
- * 
+ * aaaa
  */
 
 
@@ -27,9 +27,7 @@ import javax.swing.Timer;
 public abstract class Client extends JFrame implements ActionListener {
 	
 	public enum Type{//enumeration for the 6 types
-		KITMANAGER, PARTSMANAGER, FACTORYPRODUCTIONMANAGER,
-		KITASSEMBLYMANAGER, LANEMANAGER,
-		GANTRYROBOTMANAGER
+		KRM, PM, LM, FPM, KM, GM, KAM
 	}
 	protected Socket server; //connection to server
 	protected JPanel graphics; //possibly null graphics frame (graphics team)
@@ -75,8 +73,12 @@ public abstract class Client extends JFrame implements ActionListener {
 		try {
 			server = new Socket("127.0.0.1", 12321); //connects to server on localhost
 			input = new BufferedReader(new InputStreamReader(server.getInputStream()));//opens inputStream
-			output = new PrintWriter(new OutputStreamWriter(server.getOutputStream()));//opens outputStream
-			connected = true;
+			output = new PrintWriter(server.getOutputStream(),true);//opens outputStream
+			output.println(this.type.toString());
+			
+			String reply = input.readLine();
+			if(reply == "connected")
+				connected = true;
 			System.out.println("connected to server!");
 		} catch (Exception e) {
 			System.out.println("Host unavailable");

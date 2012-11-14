@@ -25,7 +25,7 @@ public class GraphicKittingStation {
 		kits = new GraphicKit[MAX_KITS];
 		this.GKAM = GKAM;
 		for (int i = 0; i < MAX_KITS; i++)
-			kits[i] = new GraphicKit(0,0);
+			kits[i] = null;
 		check = null;
 	}
 	

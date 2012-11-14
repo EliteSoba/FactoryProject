@@ -94,6 +94,8 @@ class AnimatedObject
 	}
 	public GraphicItem popItem()
 	{
+		if (items.size() == 0)
+			return null;
 		GraphicItem lastItem = items.get(items.size()-1);		// get last item
 		items.remove(items.size()-1);					// remove last item
 		return lastItem;								// return last item

@@ -28,7 +28,7 @@ class GantryRobot
 	}
 	public GantryRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
-		bin = new GraphicBin(new Part("TestItem"));
+		bin = null;
 		hasBin = false;
 		arrived = false;
 		state = -1;		// 0 = moving to nest, 1 = waiting at nest, 2 = waiting for next action, 3 = moving to kitting station, 4 = waiting at kitting station
@@ -125,6 +125,7 @@ class GantryRobot
 			{
 				state = 1;
 				hasBin = true;
+				bin = new GraphicBin(new Part("TestItem"));
 				System.out.println("Arrived at bin pickup point, waiting for bin pickup.");
 			}
 			else if(state == 3)
