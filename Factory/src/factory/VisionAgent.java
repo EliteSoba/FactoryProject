@@ -9,7 +9,7 @@ import java.util.concurrent.Semaphore;
 
 
 import factory.Kit.KitState;
-import factory.graphics.FactoryProductionManager;
+import factory.graphics.GraphicFactoryProductionManager;
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
 
@@ -24,7 +24,7 @@ public class VisionAgent extends Agent implements Vision {
 	PartsRobot partsRobot;
 	Stand stand;
 	Random r = new Random();
-	FactoryProductionManager server;
+	GraphicFactoryProductionManager server;
 	
 
 	Semaphore pictureAllowed = new Semaphore(1);

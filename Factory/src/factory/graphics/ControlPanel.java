@@ -17,7 +17,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	 * Will be removed when integration occurs
 	 */
 
-	FactoryProductionManager am; //The JFrame etc, etc.
+	GraphicFactoryProductionManager am; //The JFrame etc, etc.
 	JLabel[] blank;
 	JButton test;
 	JButton outKit;
@@ -31,7 +31,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton gantryRobotFeeder1;
 	JButton feedLane1;
 	
-	public ControlPanel(FactoryProductionManager fpm) {
+	public ControlPanel(GraphicFactoryProductionManager fpm) {
 		//Constructor
 		am = fpm;
 		inspect1 = new JButton("Kit 1 Complete");
