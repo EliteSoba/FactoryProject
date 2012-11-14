@@ -61,13 +61,11 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 
 	public void paint(Graphics g) {
-		g.setColor(new Color(200, 200, 200));
-		g.fillRect(0, 0, getWidth(), getHeight());
-		if(lane[0] != null && lane[1] != null){
-			lane[0].paintLane(g);
-			lane[1].paintLane(g);
-			lane[2].paintLane(g);
-			lane[3].paintLane(g);
+		super.paint(g);
+		
+		for (int i = 0; i < lane.length; i++) {
+			if (lane[i] != null)
+				lane[i].paintLane(g);
 		}
 
 		belt.paint(g);
@@ -76,15 +74,13 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		
 		// Parts robot client
 		// Draw the nests
-		for(int i = 0; i < nests.size(); i++)
-		{
+		for(int i = 0; i < nests.size(); i++) {
 			Nest currentNest = nests.get(i);
 			currentNest.paint(g);
 		}
 		// Parts robot client
 		// Draw the nests
-		for(int i = 0; i < nests.size(); i++)
-		{
+		for(int i = 0; i < nests.size(); i++) {
 			Nest currentNest = nests.get(i);
 			currentNest.paint(g);
 		}
@@ -95,6 +91,8 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		// Draw items partsRobot is carrying
 		partsRobot.paint(g3);
 		g3.dispose();
+		
+		// Draw the Gantry Robot
 		final Graphics2D g4 = (Graphics2D)g.create();
 		g4.rotate(Math.toRadians(360-gantryRobot.getAngle()), gantryRobot.getX()+gantryRobot.getImageWidth()/2, gantryRobot.getY()+gantryRobot.getImageHeight()/2);
 		gantryRobot.paint(g4);
@@ -170,7 +168,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}*/
 	
 	public void cameraFlash() {
-		
 	}
 	
 	public void moveGantryRobotToPickup(String path) {
@@ -282,7 +279,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		return lane[index];
 	}*/
 	
-	public void actionPerformed(ActionEvent arg0) {
+	public void partsRobotStateCheck() {
 		// Has robot arrived at its destination?
 		//System.out.println(partsRobot.getState());
 		if(partsRobot.getState() == 1)		// partsRobot has arrived at nest
@@ -305,6 +302,9 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		{
 			partsRobotArrivedAtCenter();
 		}
+	}
+	
+	public void gantryRobotStateCheck() {
 		if(gantryRobot.getState() == 1)
 		{
 			gantryRobotArrivedAtPickup();
@@ -315,6 +315,12 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 			lane[gantryRobot.getDestinationFeeder()].binExist = true;
 			gantryRobotArrivedAtFeeder();
 		}
+	}
+	
+	public void actionPerformed(ActionEvent arg0) {
+		partsRobotStateCheck();
+		gantryRobotStateCheck();
+		
 		partsRobot.move();							// Update position and angle of partsRobot
 		gantryRobot.move();
 		belt.moveBelt(5);

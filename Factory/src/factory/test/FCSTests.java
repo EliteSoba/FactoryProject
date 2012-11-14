@@ -34,7 +34,7 @@ public class FCSTests extends TestCase{
 		BinConfig binConfig = new BinConfig(binList);
 		MockGantry gantry = new MockGantry("gantry");
 		MockPartsRobotAgent partsRobot = new MockPartsRobotAgent("parts robot");
-		FCSAgent fcs = new FCSAgent(gantry, partsRobot);
+		FCSAgent fcs = new FCSAgent(gantry, partsRobot, null);
 		
 		//create message for FCS.  Should eventually call gantry.msgChangeGantryBinConfig(this.binConfig);
 		fcs.msgInitialize(binConfig);
@@ -73,7 +73,7 @@ public class FCSTests extends TestCase{
 		KitConfig kitConfig = new KitConfig();
 		MockGantry gantry = new MockGantry("gantry");
 		MockPartsRobotAgent partsRobot = new MockPartsRobotAgent("parts robot");
-		FCSAgent fcs = new FCSAgent(gantry, partsRobot);
+		FCSAgent fcs = new FCSAgent(gantry, partsRobot, null);
 		
 		//create message for FCS.  Should eventually call this.partsRobot.msgMakeKit(mkc.kitConfig);
 		fcs.msgProduceKit(kitConfig);

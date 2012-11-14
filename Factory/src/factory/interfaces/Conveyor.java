@@ -10,5 +10,9 @@ public interface Conveyor {
 
 		public void msgExportKit(Kit k);
 		
+		public Kit getAtConveyor();
+		
+		public void setAtConveyor(Kit k);
+		
 
 }

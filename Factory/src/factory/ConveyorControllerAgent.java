@@ -14,14 +14,12 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	List<Kit> exported_kits = new ArrayList<Kit>();
 	enum Conveyor_State { WANTS_EMPTY_KIT, EMPTY_KIT_SENDING, NO_ACTION };
 	Conveyor_State conveyor_state = Conveyor_State.NO_ACTION;
-	FrameKitAssemblyManager server;
-	
+
 	Timer timer = new Timer();
 	
-	public ConveyorControllerAgent(Conveyor conveyor, FrameKitAssemblyManager server, MasterControl mc) {
+	public ConveyorControllerAgent(Conveyor conveyor, MasterControl mc) {
 		super(mc);
 		this.conveyor = conveyor;
-		this.server = server;
 	}
 	////Messages
 	public void msgConveyorWantsEmptyKit() {
@@ -59,7 +57,7 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		    	//The message to tell the Conveyor about the new kit is Conveyor.msgHeresEmptyKit(new Kit());
 		    	
 		    	// Tell server to do animation of moving empty kit from conveyor to the topSlot of the stand
-				server.sendNewEmptyKit();
+				//server.sendNewEmptyKit();
 				
 				// Wait until the animation is done
 				try {

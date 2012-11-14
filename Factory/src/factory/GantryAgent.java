@@ -11,6 +11,7 @@ import factory.masterControl.MasterControl;
 public class GantryAgent extends Agent implements Gantry {
 	public GantryAgent(MasterControl mc) {
 		super(mc); // needed for the server 
+		
 	}
 
 	public GraphicLaneMenuPanel glmp;
@@ -19,11 +20,11 @@ public class GantryAgent extends Agent implements Gantry {
 
 	enum MyBinState { NEEDED, DELIVERED}
 
-	class MyBin {
+	public class MyBin {
 
-		MyBinState state;
-		Part pt;
-		Feeder fdr;
+		public MyBinState state;
+		public Part pt;
+		public Feeder fdr;
 
 		public MyBin(Part part, Feeder feeder){
 			this.state = MyBinState.NEEDED;
@@ -65,10 +66,12 @@ public class GantryAgent extends Agent implements Gantry {
 	// *** ACTIONS ***
 	private void goFetchTheRequestedBin(MyBin b) {
 		DoPickupPurgeBin(); //animation message
-		DoRefillPurgeBin(binConfig.binList.get(b.pt));
-		DoBringRequestedBin(binConfig.binList.get(b.pt),b.fdr,b.pt);
+		
+//		DoRefillPurgeBin(binConfig.binList.get(b.pt));
+//		DoBringRequestedBin(binConfig.binList.get(b.pt),b.fdr,b.pt);
+		
 		b.fdr.msgHereAreParts(b.pt);
-		b.state = MyBinState.DELIVERED; //is this needed?  Or do I just remove it?
+		b.state = MyBinState.DELIVERED; //is this needed?  Or do I just remove it per the line below?
 		//myBins.remove(b);
 		stateChanged();
 	}

@@ -18,7 +18,8 @@ public class MockFeeder extends MockAgent implements Feeder {
 	@Override
 	public void msgHereAreParts(Part pt) {
 		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent(
+				"Received message msgHereAreParts from the Gantry with part " + pt.name));
 	}
 
 	@Override
