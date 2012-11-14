@@ -485,7 +485,7 @@ public class FeederAgent extends Agent implements Feeder {
 	/** ANIMATIONS 
 	 * @throws InterruptedException **/
 	private void DoStartFeeding(Part part) {
-		//		server.sendCmd("fa fpm cmd startFeeding " + feederSlot + " endcmd");
+//		server.command("fa fpm cmd startFeeding " + feederSlot + " endcmd");
 		debug("Feeder " + feederSlot + " started feeding.");
 		//		try {
 		//			animation.acquire();
@@ -496,7 +496,7 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	private void DoStopFeeding() { 
-		//		server.sendCmd("fa fpm cmd stopFeeding " + feederSlot + " endcmd");
+//		server.command("fa fpm cmd stopFeeding " + feederSlot + " endcmd");
 		debug("stopped feeding.");
 		//		try {
 		//		animation.acquire();
@@ -510,7 +510,7 @@ public class FeederAgent extends Agent implements Feeder {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeFeeder()"));
 
-		//		server.sendCmd("fa fpm cmd purgeFeeder " + feederSlot + " endcmd");
+//		server.command("fa fpm cmd purgeFeeder " + feederSlot + " endcmd");
 		debug("purging feeder.");
 		//		try {
 		//		animation.acquire();
@@ -524,7 +524,7 @@ public class FeederAgent extends Agent implements Feeder {
 		log.add(new LoggedEvent(
 				"Animation DoSwitchLane()"));
 
-		//		server.sendCmd("fa fpm cmd switchLane " + feederSlot + " endcmd");
+//		server.command("fa fpm cmd switchLane " + feederSlot + " endcmd");
 		debug("switching lane");
 		//		try {
 		//		animation.acquire();
@@ -543,7 +543,7 @@ public class FeederAgent extends Agent implements Feeder {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeTopLane()"));
 
-		//		server.sendCmd("fa fpm cmd purgeTopLane " + feederSlot + " endcmd");
+//		server.command("fa fpm cmd purgeTopLane " + feederSlot + " endcmd");
 		debug("purging top lane");
 		//		try {
 		//		animation.acquire();
@@ -557,7 +557,7 @@ public class FeederAgent extends Agent implements Feeder {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeBottomLane()"));
 
-		//		server.sendCmd("fa fpm cmd purgeBottomLane " + feederSlot + " endcmd");
+//		server.command("fa fpm cmd purgeBottomLane " + feederSlot + " endcmd");
 		debug("purging bottom lane");
 		//		try {
 		//		animation.acquire();
