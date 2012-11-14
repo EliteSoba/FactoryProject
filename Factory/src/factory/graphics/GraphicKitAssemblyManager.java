@@ -54,7 +54,7 @@ public class GraphicKitAssemblyManager extends GraphicPanel implements ActionLis
 	 * 			!- HANDLED BY 201 TEAM
 	 */
 	
-	private Client am; //The JFrame that holds this.
+	//private Client am; //The JFrame that holds this.
 	//private GraphicKitBelt belt; //The conveyer belt
 	//private GraphicKittingStation station; //The kitting station
 	//private GraphicKittingRobot robot;

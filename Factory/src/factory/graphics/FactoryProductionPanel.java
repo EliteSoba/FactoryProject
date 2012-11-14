@@ -63,7 +63,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	public void paint(Graphics g) {
 		super.paint(g);
 	}
-
 	
 	public void newEmptyKit() {
 		//Adds a kit into the factory via conveyer belt
@@ -71,9 +70,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 			return;
 		belt.inKit();
 	}
-	/*public void newEmptyKitDone() {
-		//am.newEmptyKitAtConveyor();
-	}*/
 	
 	public void moveEmptyKitToSlot(int target) {
 		//Sends robot to pick up kit from belt and move to designated slot in the station
@@ -82,9 +78,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 			kitRobot.setStationTarget(target);
 		}
 	}
-	/*public void moveEmptyKitToSlotDone() {
-		//am.moveEmptyKitToSlotDone();
-	}*/
 	
 	public void moveKitToInspection(int target) {
 		//Sends robot to move kit from designated slot in the station to inspection station
@@ -93,42 +86,23 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 			kitRobot.setStationTarget(target);
 		}
 	}
-	/*public void moveKitToInspectionDone() {
-		//am.moveKitToInspectionDone();
-	}*/
 	
 	public void takePictureOfInspectionSlot() {
 		//Triggers the camera flash
 		station.checkKit();
 	}
-	/*public void takePictureOfInspectionSlotDone() {
-		//am.takePictureOfInspectionSlotDone();
-	}*/
 	
 	public void dumpKitAtInspection() {
 		//Sends robot to move kit from inspection station to trash
 		if (!kitRobot.kitted() && station.getCheck() != null)
 			kitRobot.setPurgeKit(true);
 	}
-	/*public void dumpKitAtInspectionDone() {
-		//am.dumpKitAtInspectionDone();
-	}*/
 	
 	public void moveKitFromInspectionToConveyor() {
 		//Sends a kit out of the factory via conveyer belt
 		if (station.getCheck() != null && !kitRobot.kitted())
 			kitRobot.setFromCheck(true);
 	}
-	/*public void moveKitFromInspectionToConveyorDone() {
-		//am.moveKitFromInspectionToConveyorDone();
-	}*/
-	
-	/*public void exportKit() {
-		belt.exportKit();
-	}
-	public void exportKitDone() {
-		//am.exportKitDone();
-	}*/
 	
 	public void cameraFlash() {
 	}
@@ -138,18 +112,12 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		gantryRobot.setState(0);
 		gantryRobot.setDestination(WIDTH-100,-100);
 	}
-	/*public void gantryRobotArrivedAtPickup() {
-		System.out.println("DEBUG: ARRIVED AT PICKUP");
-	}*/
 	
 	public void moveGantryRobotToFeeder(int feederIndex) {
 		gantryRobot.setState(3);
 		gantryRobot.setDestinationFeeder(feederIndex);
 		gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
 	}
-	/*public void gantryRobotArrivedAtFeeder() {
-		System.out.println("DEBUG: ARRIVED AT FEEDER");
-	}*/
 	
 	public void movePartsRobotToNest(int nestIndex) {
 		partsRobot.setState(0);
@@ -157,49 +125,37 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		partsRobot.setDestination(nests.get(nestIndex-1).getX()-nests.get(nestIndex-1).getImageWidth()-10,nests.get(nestIndex-1).getY()-15);
 		partsRobot.setDestinationNest(nestIndex);
 	}
-	/*public void partsRobotArrivedAtNest() {
-		System.out.println("Debug:ARRIVED AT NEST");
-	}*/
 	
 	public void movePartsRobotToKit(int kitIndex) {
 		partsRobot.setState(3);
 		partsRobot.setDestination(station.getX()+35,station.getY()-station.getY()%5);
 		partsRobot.setDestinationKit(kitIndex);
 	}
-	/*public void partsRobotArrivedAtStation() {
-		System.out.println("DEBUG: ARRIVED AT STATION");
-	}*/
 	
 	public void movePartsRobotToCenter() {
 		partsRobot.setDestination(WIDTH/2-100, HEIGHT/2);
 	}
-	/*public void partsRobotArrivedAtCenter() {
-		System.out.println("DEBUG: ARRIVED AT CENTER");
-	}*/
 	
-	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 1-8, NOT 0-7
+	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
 		/*//Testing for quick feed
-		lane[(laneNum - 1) / 2].bin = new GraphicBin(new Part("eyes"));
-		lane[(laneNum - 1) / 2].binExist = true;
+		lane[(laneNum) / 2].bin = new GraphicBin(new Part("eyes"));
+		lane[(laneNum) / 2].binExist = true;
 		//end Test*/
-		if(lane[(laneNum - 1) / 2].binExist && lane[(laneNum - 1) / 2].bin.getBinItems().size() > 0){
-			lane[(laneNum - 1) / 2].laneStart = true;
-			lane[(laneNum - 1) / 2].divergeUp = ((laneNum- 1) % 2 == 0);
-			lane[(laneNum - 1) / 2].feederOn = true;
+		if(lane[(laneNum) / 2].binExist && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
+			lane[(laneNum) / 2].laneStart = true;
+			lane[(laneNum) / 2].divergeUp = ((laneNum- 1) % 2 == 0);
+			lane[(laneNum) / 2].feederOn = true;
 		}
-		//System.out.println("bin size " + lane[(laneNum - 1) / 2].bin.getBinItems().size());
+		//System.out.println("bin size " + lane[(laneNum) / 2].bin.getBinItems().size());
 	}
-	/*public void feedLaneDone(int laneNum){
-		//am.feedLaneDone(laneNum);
-	}*/
 	
 	public void startLane(int laneNum){
-		lane[(laneNum - 1) / 2].laneStart = true;
+		lane[(laneNum) / 2].laneStart = true;
 	}
 	
 	public void switchLane(int laneNum){
-		lane[(laneNum - 1) / 2].divergeUp = !lane[(laneNum - 1) / 4].divergeUp;
-		lane[(laneNum - 1) / 2].vY = -(lane[(laneNum - 1) / 4].vY);
+		lane[(laneNum) / 2].divergeUp = !lane[(laneNum) / 4].divergeUp;
+		lane[(laneNum) / 2].vY = -(lane[(laneNum) / 4].vY);
 	}
 	
 	public void switchFeederLane(int feederNum){
@@ -208,15 +164,15 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 	
 	public void stopLane(int laneNum){
-		lane[(laneNum - 1) / 2].laneStart = false;
+		lane[(laneNum) / 2].laneStart = false;
 	}
 	
 	public void turnFeederOnLane(int laneNum){
-		lane[(laneNum - 1) / 2].feederOn = true;
+		lane[(laneNum) / 2].feederOn = true;
 	}
 	
 	public void turnFeederOffLane(int laneNum){
-		lane[(laneNum - 1) / 2].feederOn = false;
+		lane[(laneNum) / 2].feederOn = false;
 	}
 	
 	public void turnFeederOn(int feederNum){
@@ -227,36 +183,23 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		lane[feederNum].feederOn = false;
 	}
 	
-	public void purgeFeeder(int feederNum){ // takes in lane 1 - 4
-		lane[(feederNum - 1)].bin = null;
-		lane[(feederNum - 1)].binExist = false;
-		lane[(feederNum - 1)].feederOn = false;
+	public void purgeFeeder(int feederNum){ // takes in lane 0 - 4
+		lane[(feederNum)].bin = null;
+		lane[(feederNum)].binExist = false;
+		lane[(feederNum)].feederOn = false;
 	}
 	
 	public void purgeLane(int laneNum){
-		if((laneNum - 1) % 2 == 0)
-			lane[(laneNum - 1) / 2].lane1PurgeOn = true;
+		if((laneNum) % 2 == 0)
+			lane[(laneNum) / 2].lane1PurgeOn = true;
 		else
-			lane[(laneNum - 1) / 2].lane2PurgeOn = true;
-		lane[(laneNum - 1) / 2].feederOn = false;
-		lane[(laneNum - 1) / 2].laneStart = false;
+			lane[(laneNum) / 2].lane2PurgeOn = true;
+		lane[(laneNum) / 2].feederOn = false;
+		lane[(laneNum) / 2].laneStart = false;
 	}
 	
 	//MINH, CAN YOU MAKE A PURGETOPLANE(INT FEEDERNUM) AND PURGEBOTTOMLANE(INT FEEDERNUM)
 	// ALSO PLZ MAKE EVERYTHING 0-BASED
-	
-	/*public GraphicKittingStation getStation() {
-		return station;
-	}
-	public GraphicKitBelt getBelt() {
-		return belt;
-	}
-	public ArrayList<Nest> getNest(){
-		return nests;
-	}
-	public GraphicLaneManager getLane(int index) {
-		return lane[index];
-	}*/
 	
 	public void partsRobotStateCheck() {
 		// Has robot arrived at its destination?
