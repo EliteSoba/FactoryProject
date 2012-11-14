@@ -6,7 +6,7 @@ import javax.swing.*;
 import factory.client.*;
 import factory.*;
 
-public class GraphicKitAssemblyManager extends GraphicPanel implements ActionListener{
+public class KitAssemblyPanel extends GraphicPanel implements ActionListener{
 	
 	/*GraphicKitAssemblyManager.java (350x720) - Tobias Lee
 	 * This is the graphical display of the Kit Assembly Manager
@@ -60,7 +60,7 @@ public class GraphicKitAssemblyManager extends GraphicPanel implements ActionLis
 	//private GraphicKittingRobot robot;
 	public static final int WIDTH = 280, HEIGHT = 720;
 	
-	public GraphicKitAssemblyManager(JFrame FKAM) {
+	public KitAssemblyPanel(JFrame FKAM) {
 		//Constructor
 		//x = 0;
 		if (FKAM instanceof Client)
@@ -130,7 +130,7 @@ public class GraphicKitAssemblyManager extends GraphicPanel implements ActionLis
 	
 	public static void main(String args[]) {
 		JFrame f = new JFrame();
-		f.add(new GraphicKitAssemblyManager(null));
+		f.add(new KitAssemblyPanel(null));
 		f.setVisible(true);
 		f.pack();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

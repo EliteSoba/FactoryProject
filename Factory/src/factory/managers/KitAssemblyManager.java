@@ -8,18 +8,18 @@ import java.awt.GridBagLayout;
 import java.util.ArrayList;
 
 import factory.client.Client;
-import factory.graphics.GraphicKitAssemblyManager;
+import factory.graphics.KitAssemblyPanel;
 
 public class KitAssemblyManager extends Client {
 	private static final long serialVersionUID = -4230607892468748490L;
 
-		public KitAssemblyManager( GraphicKitAssemblyManager animation) {
+		public KitAssemblyManager( KitAssemblyPanel animation) {
 			super(Client.Type.KAM, null, animation);
 			setInterface();
 		}
 		public static void main(String[] args){
 		    //KitAssManPanel buttons = new KitAssManPanel(); //to be implemented in V.2
-		    GraphicKitAssemblyManager animation = new GraphicKitAssemblyManager(null);
+		    KitAssemblyPanel animation = new KitAssemblyPanel(null);
 			KitAssemblyManager k = new KitAssemblyManager(animation);
 			//buttons.setManager(k);
 		}
