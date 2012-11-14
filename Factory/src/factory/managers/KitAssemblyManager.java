@@ -16,7 +16,8 @@ public class KitAssemblyManager extends Client {
 	private static final long serialVersionUID = -4230607892468748490L;
 
 		public KitAssemblyManager( KitAssemblyPanel animation) {
-			super(Client.Type.KAM, null, animation);
+			super(Client.Type.KAM, null, null);
+			graphics = new KitAssemblyPanel(this);
 			this.setInterface();
 		}
 		public static void main(String[] args){
