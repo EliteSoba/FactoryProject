@@ -15,7 +15,7 @@ public class KitManager extends Client {
 	private static final long serialVersionUID = -3161852324870948654L;
 
 	public KitManager(JPanel buttons, JPanel animation) {
-		super(Client.Type.KITMANAGER, buttons, animation);
+		super(Client.Type.KM, buttons, animation);
 		setInterface();
 	}
 	public static void main(String[] args){

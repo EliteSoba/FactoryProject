@@ -17,7 +17,7 @@ public class PartsManager extends Client {
 	// Kit Configurations ArrayList
 
 	public PartsManager(JPanel buttons, JPanel animation) {
-		super(Client.Type.PARTSMANAGER, buttons, animation);
+		super(Client.Type.PM, buttons, animation);
 		setInterface();
 	}
 	

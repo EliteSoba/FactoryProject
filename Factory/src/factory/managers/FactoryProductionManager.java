@@ -18,7 +18,7 @@ public class FactoryProductionManager extends Client {
 	static final long serialVersionUID = -2074747328301562732L;
 
 		public FactoryProductionManager(JPanel buttons, FactoryProductionPanel animation) {
-			super(Client.Type.FACTORYPRODUCTIONMANAGER, buttons, animation);
+			super(Client.Type.FPM, buttons, animation);
 			setInterface();
 		}
 		public static void main(String[] args){
