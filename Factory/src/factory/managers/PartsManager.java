@@ -19,6 +19,7 @@ public class PartsManager extends Client {
 	public PartsManager(JPanel buttons, JPanel animation) {
 		super(Client.Type.PM, buttons, animation);
 		setInterface();
+		parts = new ArrayList<String>();
 	}
 	
 	public static void main(String[] args){

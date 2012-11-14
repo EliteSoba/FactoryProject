@@ -29,11 +29,13 @@ public class PartsManPanel extends JPanel{
 	ArrayList<String> parts;
 	PartsManager partsManager;
 	ArrayList<CurrentItem> partsList;
+	JScrollPane currentList;
 	//New Part
 
 	// Methods
 
 	public PartsManPanel(){
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		fileNames = new ArrayList<String>();
 		parts = new ArrayList<String>();
 		fileNames.add("ear");
@@ -44,8 +46,10 @@ public class PartsManPanel extends JPanel{
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("addPanel", addPanel);
 		tabbedPane.addTab("removePanel", removePanel);
-		
+		partsList = new ArrayList<CurrentItem>();
+		currentList = new JScrollPane();
 		this.add(tabbedPane);
+		this.add(currentList);
 		
 	}
 	
@@ -68,7 +72,7 @@ public class PartsManPanel extends JPanel{
 		JTextField itemName;
 		JComboBox imageSelection;
 		JButton saveItem;
-		JScrollPane currentList;
+		
 
 		//Methods
 		
@@ -146,18 +150,19 @@ public class PartsManPanel extends JPanel{
 		public void actionPerformed(ActionEvent ae) {
 			 if (ae.getSource() == saveItem){
 				 boolean nameTaken = false;
-				 for(int i = 0; i < partsManager.getParts().size(); i++){
+				 /*for(int i = 0; i < partsManager.getParts().size(); i++){
 					 if(itemName.getText().equals(partsManager.getParts().get(i)))
 						 nameTaken = true;
-				 }
+				 }*/
 				 if(nameTaken){
 					 itemName.setText("Name taken.");
 				 }else{
 					 System.out.println("I will create a new part and send it to the server.");
-					 partsManager.sendMessage("add", itemName.getText(), (String)imageSelection.getSelectedItem());
+					 //partsManager.sendMessage("add", itemName.getText(), (String)imageSelection.getSelectedItem());
 					 partsList.add(new CurrentItem(new JLabel(itemName.getText()), new JLabel(), new ImageIcon((String)imageSelection.getSelectedItem())));
-					 System.out.println((partsList.get(partsList.size()-1).name.getText()));
-					 partsList.get(partsList.size()-1).addCurrentItem(currentList.getViewport());
+					 //System.out.println((partsList.get(partsList.size()-1).name.getText()));
+					 //partsList.get(partsList.size()-1).addCurrentItem(currentList.getViewport());
+					 partsList.get(partsList.size() - 1).addCurrentItem(currentList.getViewport());
 				 }
 		     }else{
 			 JComboBox cb = (JComboBox)ae.getSource();
@@ -264,9 +269,11 @@ public class PartsManPanel extends JPanel{
 		}
 		
 		public void addCurrentItem(JViewport panel){
-			panel.add(name);
+			JPanel panel1 = new JPanel();
+			panel1.add(name);
 			previewFrame.setIcon(imagePreview);
-			panel.add(previewFrame);
+			panel1.add(previewFrame);
+			panel.add(panel1);
 		}
 		
 	}

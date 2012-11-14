@@ -17,7 +17,7 @@ public class KitAssemblyManager extends Client {
 
 		public KitAssemblyManager( KitAssemblyPanel animation) {
 			super(Client.Type.KAM, null, animation);
-			//this.setInterface();
+			this.setInterface();
 		}
 		public static void main(String[] args){
 		    //KitAssManPanel buttons = new KitAssManPanel(); //to be implemented in V.2
