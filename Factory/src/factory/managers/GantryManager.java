@@ -29,12 +29,13 @@ public class GantryManager extends Client {
 	}
 
 	public void setInterface() {
-		setSize(780, 720);
+		//setSize(780, 720);
 		//setLayout(new GridLayout(1,2));
 
 		add(graphics, BorderLayout.CENTER);
 		
 		add(UI, BorderLayout.LINE_END);
+		pack();
 		setVisible(true);
 		
 	}
