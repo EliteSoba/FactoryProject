@@ -7,7 +7,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import factory.client.*;
 
-public class GraphicPanel extends JPanel implements ActionListener{
+public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	public static final int WIDTH = 1100, HEIGHT = 720;
 	protected Client am; //The Client that holds this
@@ -22,7 +22,7 @@ public class GraphicPanel extends JPanel implements ActionListener{
 	protected GraphicKittingRobot kitRobot;
 	
 	// PARTS MANAGER
-	protected  ArrayList<Nest> nests;
+	protected ArrayList<Nest> nests;
 	protected PartsRobot partsRobot;
 	
 	// GANTRY

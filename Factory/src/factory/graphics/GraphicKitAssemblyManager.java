@@ -59,10 +59,11 @@ public class GraphicKitAssemblyManager extends GraphicPanel implements ActionLis
 	private GraphicKittingRobot robot;
 	public static final int WIDTH = 280, HEIGHT = 720;
 	
-	public GraphicKitAssemblyManager(Client FKAM) {
+	public GraphicKitAssemblyManager(JFrame FKAM) {
 		//Constructor
 		//x = 0;
-		am = FKAM;
+		if (FKAM instanceof Client)
+			am = (Client)FKAM;
 		belt = new GraphicKitBelt(0, 0, this);
 		station = new GraphicKittingStation(200, 191, this);
 		robot = new GraphicKittingRobot(this, 70, 250);
@@ -76,9 +77,6 @@ public class GraphicKitAssemblyManager extends GraphicPanel implements ActionLis
 			return;
 		belt.inKit();
 	}
-	public void newEmptyKitDone() {
-		//am.newEmptyKitAtConveyor();
-	}
 	
 	public void moveEmptyKitToSlot(int target) {
 		//Sends robot to pick up kit from belt and move to designated slot in the station
@@ -86,9 +84,6 @@ public class GraphicKitAssemblyManager extends GraphicPanel implements ActionLis
 			robot.setFromBelt(true);
 			robot.setStationTarget(target);
 		}
-	}
-	public void moveEmptyKitToSlotDone() {
-		//am.moveEmptyKitToSlotDone();
 	}
 	
 	public void moveKitToInspection(int target) {
@@ -98,16 +93,10 @@ public class GraphicKitAssemblyManager extends GraphicPanel implements ActionLis
 			robot.setStationTarget(target);
 		}
 	}
-	public void moveKitToInspectionDone() {
-		//am.moveKitToInspectionDone();
-	}
 	
 	public void takePictureOfInspectionSlot() {
 		//Triggers the camera flash
 		station.checkKit();
-	}
-	public void takePictureOfInspectionSlotDone() {
-		//am.takePictureOfInspectionSlotDone();
 	}
 	
 	public void dumpKitAtInspection() {
@@ -115,48 +104,33 @@ public class GraphicKitAssemblyManager extends GraphicPanel implements ActionLis
 		if (!robot.kitted() && station.getCheck() != null)
 			robot.setPurgeKit(true);
 	}
-	public void dumpKitAtInspectionDone() {
-		//am.dumpKitAtInspectionDone();
-	}
 	
 	public void moveKitFromInspectionToConveyor() {
 		//Sends a kit out of the factory via conveyer belt
 		if (station.getCheck() != null && !robot.kitted())
 			robot.setFromCheck(true);
 	}
-	public void moveKitFromInspectionToConveyorDone() {
-		//am.moveKitFromInspectionToConveyorDone();
-	}
-	
-	public void exportKit() {
-		belt.exportKit();
-	}
-	public void exportKitDone() {
-		//am.exportKitDone();
-	}
 	
 	public void paint(Graphics g) {
 		//Paints all the objects
-		g.setColor(new Color(200, 200, 200));
-		g.fillRect(0, 0, getWidth(), getHeight());
+		super.paint(g);
+		
 		belt.paint(g);
 		station.paint(g);
 		robot.paint(g);
-		
-		belt.moveBelt(5);
-		robot.moveRobot(5);
 	}
 	
 	public GraphicKittingStation getStation() {
 		return station;
 	}
-	
 	public GraphicKitBelt getBelt() {
 		return belt;
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
 		//etc.
+		belt.moveBelt(5);
+		robot.moveRobot(5);
 		repaint();
 	}
 	

@@ -32,11 +32,11 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	
 	public FactoryProductionPanel(JFrame FKAM) {
 		lane = new GraphicLaneManager [4];
-		
 		for (int i = 0; i < lane.length; i++)
 			lane[i] = new GraphicLaneManager(510, 160*i + 50, i, this);
+		
 		if (FKAM instanceof Client)
-		am = (Client)FKAM;
+			am = (Client)FKAM;
 		belt = new GraphicKitBelt(0, 0, this);
 		station = new GraphicKittingStation(200, 191, this);
 		kitRobot = new GraphicKittingRobot(this, 70, 250);
