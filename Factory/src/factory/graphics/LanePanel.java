@@ -15,6 +15,8 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 	public static final int WIDTH = 500, HEIGHT = 720;
 	
 	public LanePanel(JFrame LM) {
+		super();
+		isLaneManager = true;
 		
 		if (LM instanceof Client)
 			am = (Client)LM;

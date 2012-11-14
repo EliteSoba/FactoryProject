@@ -31,6 +31,8 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	GantryRobot gantryRobot;*/
 	
 	public FactoryProductionPanel(JFrame FKAM) {
+		super();
+		isFactoryProductionManager = true;
 		
 		if (FKAM instanceof Client)
 			am = (Client)FKAM;

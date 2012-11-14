@@ -16,6 +16,9 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 	public static final int WIDTH = 400, HEIGHT = 720;
 	
 	public GantryRobotPanel(JFrame GR) {
+		super();
+		isGantryRobotManager = true;
+		
 		if (GR instanceof Client)
 			am = (Client)GR;
 		
