@@ -28,6 +28,7 @@ public class PartsManPanel extends JPanel{
 	ArrayList<String> fileNames;
 	ArrayList<String> parts;
 	PartsManager partsManager;
+	ArrayList<CurrentItem> partsList;
 	//New Part
 
 	// Methods
@@ -67,6 +68,7 @@ public class PartsManPanel extends JPanel{
 		JTextField itemName;
 		JComboBox imageSelection;
 		JButton saveItem;
+		JScrollPane currentList;
 
 		//Methods
 		
@@ -92,7 +94,10 @@ public class PartsManPanel extends JPanel{
 			
 			saveItem = new JButton ("Save Item");
 			saveItem.addActionListener(this);
-	
+			
+			partsList = new ArrayList<CurrentItem>();
+			currentList = new JScrollPane();
+			
 			c.gridx = 0;
 			c.gridy = 0;
 			c.gridwidth = 2;
@@ -150,6 +155,9 @@ public class PartsManPanel extends JPanel{
 				 }else{
 					 System.out.println("I will create a new part and send it to the server.");
 					 partsManager.sendMessage("add", itemName.getText(), (String)imageSelection.getSelectedItem());
+					 partsList.add(new CurrentItem(new JLabel(itemName.getText()), new JLabel(), new ImageIcon((String)imageSelection.getSelectedItem())));
+					 System.out.println((partsList.get(partsList.size()-1).name.getText()));
+					 partsList.get(partsList.size()-1).addCurrentItem(currentList.getViewport());
 				 }
 		     }else{
 			 JComboBox cb = (JComboBox)ae.getSource();
@@ -242,6 +250,25 @@ public class PartsManPanel extends JPanel{
 
 				}
 				
+	}
+	
+	private class CurrentItem{
+		JLabel name;
+		JLabel previewFrame;
+		ImageIcon imagePreview;
+		
+		public CurrentItem(JLabel n, JLabel p, ImageIcon i){
+			name = n;
+			previewFrame = p;
+			imagePreview = i;
+		}
+		
+		public void addCurrentItem(JViewport panel){
+			panel.add(name);
+			previewFrame.setIcon(imagePreview);
+			panel.add(previewFrame);
+		}
+		
 	}
 
 }
