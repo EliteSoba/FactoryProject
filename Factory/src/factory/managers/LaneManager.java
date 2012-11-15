@@ -18,7 +18,7 @@ public class LaneManager extends Client {
 	
 	public LaneManager() {
 		
-		super(Client.Type.LM, null, null); 
+		super(Client.Type.lm, null, null); 
 		lp = new LanePanel(this);
 		graphics = lp;
 		setInterface();
