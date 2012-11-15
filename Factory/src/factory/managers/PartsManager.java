@@ -15,7 +15,7 @@ public class PartsManager extends Client {
 	// Kit Configurations ArrayList
 
 	public PartsManager() {
-		super(Client.Type.pm, null, null);
+		super(Client.Type.PM, null, null);
 		UI = new PartsManPanel();
 		((PartsManPanel) UI).setManager(this);
 		setInterface();

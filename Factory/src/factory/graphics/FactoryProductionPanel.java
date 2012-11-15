@@ -145,13 +145,13 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
-		//Testing for quick feed
+		/*//Testing for quick feed
 		lane[(laneNum) / 2].bin = new GraphicBin(new Part("eyes"));
 		lane[(laneNum) / 2].binExist = true;
-		//end Test
+		//end Test*/
 		if(lane[(laneNum) / 2].binExist && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
 			lane[(laneNum) / 2].laneStart = true;
-			lane[(laneNum) / 2].divergeUp = ((laneNum) % 2 == 0);
+			lane[(laneNum) / 2].divergeUp = ((laneNum- 1) % 2 == 0);
 			lane[(laneNum) / 2].feederOn = true;
 		}
 		//System.out.println("bin size " + lane[(laneNum) / 2].bin.getBinItems().size());
