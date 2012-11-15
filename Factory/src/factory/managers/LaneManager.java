@@ -16,7 +16,7 @@ public class LaneManager extends Client {
 
 	public LaneManager(JPanel animation) {
 		
-		super(Client.Type.LM, null, animation); 
+		super(Client.Type.lm, null, animation); 
 		setInterface();
 	}
 	
