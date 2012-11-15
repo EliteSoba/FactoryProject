@@ -4,7 +4,6 @@
 package factory.managers;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
