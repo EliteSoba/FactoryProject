@@ -1,6 +1,7 @@
 package factory.swing;
 
 
+import factory.Part;
 import factory.managers.*;
 
 import java.awt.*;
@@ -26,7 +27,7 @@ public class PartsManPanel extends JPanel{
 	AddPanel addPanel;
 	RemovePanel removePanel;
 	ArrayList<String> fileNames;
-	ArrayList<String> parts;
+	ArrayList<Part> parts;
 	PartsManager partsManager;
 	ArrayList<CurrentItem> partsList;
 	JScrollPane currentList;
@@ -38,10 +39,16 @@ public class PartsManPanel extends JPanel{
 	public PartsManPanel(){
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		fileNames = new ArrayList<String>();
-		parts = new ArrayList<String>();
+		parts = new ArrayList<Part>();
+		fileNames.add("eye");
+		fileNames.add("body");
+		fileNames.add("hat");
+		fileNames.add("arm");
+		fileNames.add("shoe");
+		fileNames.add("mouth");
+		fileNames.add("nose");
+		fileNames.add("moustache");
 		fileNames.add("ear");
-		fileNames.add("helmet");
-		fileNames.add("circleItem");
 		addPanel = new AddPanel();
 		removePanel = new RemovePanel();
 		tabbedPane = new JTabbedPane();
@@ -96,7 +103,7 @@ public class PartsManPanel extends JPanel{
 			
 			imageSelection.addActionListener(this);
 			previewFrame = new JLabel();
-			ImageIcon imagePreview = new ImageIcon("Images/ear.png");
+			ImageIcon imagePreview = new ImageIcon("Images/" + fileNames.get(0) + ".png");
 			previewFrame.setIcon(imagePreview);
 			
 			saveItem = new JButton ("Save Item");
@@ -203,7 +210,7 @@ public class PartsManPanel extends JPanel{
 					}
 					imageSelection.addActionListener(this);
 					previewFrame = new JLabel();
-					ImageIcon imagePreview = new ImageIcon("Images/ear.png");
+					ImageIcon imagePreview = new ImageIcon("Images/" + fileNames.get(0) + ".png");
 					previewFrame.setIcon(imagePreview);
 					
 					removeItem = new JButton ("Remove Item");

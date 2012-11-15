@@ -19,4 +19,11 @@ public class Part implements Serializable{
 		imagePath = p;
 		nestStabilizationTime = t;
 	}
+	// temporary
+	public Part(String s)
+	{
+		name = s;
+	}
+	
+	public Part(){}
 }

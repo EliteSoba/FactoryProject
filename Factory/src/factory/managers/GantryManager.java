@@ -17,7 +17,7 @@ public class GantryManager extends Client {
 	static final long serialVersionUID = 8492299864169935860L;
 
 	public GantryManager(JPanel buttons, JPanel animation) {
-		super(Client.Type.GM, null, null);
+		super(Client.Type.gm, null, null);
 		UI = new GantryManPanel();
 		graphics = new GantryRobotPanel(this);
 		setInterface();
