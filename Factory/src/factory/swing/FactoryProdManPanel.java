@@ -1,7 +1,7 @@
 /*
 
 author: Joey Huang
-Last edited: 11/14/12 9:49pm
+Last edited: 11/15/12 12:02pm
 */
 package factory.swing;
 import java.util.*;
@@ -132,12 +132,18 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			if (kitNameBox.getSelectedItem() == null)
 				messageBox.append("No kit selected.\n");
 			else {
+				String name = (String)kitNameBox.getSelectedItem();
+				String qnty = spinner.getValue().toString();
 				
 				String set = new String("");
-				set = "fpm fcsa cmd makekits " + (String)spinner.getValue() + " " + (String)kitNameBox.getSelectedItem();	
-				factoryProductionManager.sendCommand(set);
+				set = "fpm fcsa cmd makekits " + qnty + " " + name;	
+			//	factoryProductionManager.sendCommand(set);
 					
-			messageBox.append("Order Submitted.\n     Details: " + spinner.getValue() + " units of " + (String)kitNameBox.getSelectedItem() + "\n" );
+				//Object[] rowData = {i+1,"Kit"+(i+1),"10"};
+				Object[] rowData = {model.getRowCount()+1,name,qnty};
+				model.insertRow(model.getRowCount(),rowData);
+				
+			messageBox.append("Order Submitted.\n     Details: " + qnty + " units of " + name + "\n" );
 			}
 		}
 		else if (ae.getSource() == stopFactory) { // message that initiates factory shutdown
@@ -150,7 +156,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	
 	public void addKit(String kitName) {	//add new kit name (String) to Jcombobox list - received from kit manager
 		kitNameBox.addItem(kitName);	
-		((JComboBox) kitNameBox.getItemAt(kitNameBox.getItemCount()-1)).addActionListener(this);
+		//((JComboBox) kitNameBox.getItemAt(kitNameBox.getItemCount()-1)).addActionListener(this);
 		kitNameBox.setSelectedIndex(0);
 	}
 	

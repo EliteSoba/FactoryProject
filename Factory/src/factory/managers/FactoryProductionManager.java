@@ -1,7 +1,7 @@
 //Contributors: Ben Mayeux,Stephanie Reagle, Joey Huang, Tobias Lee
 //CS 200
 
-// Last edited: 11/15/12 10:12am by Joey Huang
+// Last edited: 11/15/12 12:03 by Joey Huang
 package factory.managers;
 
 import java.awt.BorderLayout;
@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-
+import java.util.Queue;
 import javax.swing.JPanel;
 import factory.client.Client;
 import factory.graphics.FactoryProductionPanel;
@@ -36,6 +36,7 @@ public class FactoryProductionManager extends Client {
 		    FactoryProductionPanel animation = new FactoryProductionPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
 			FactoryProductionManager f = new FactoryProductionManager(buttons, animation);
 			buttons.setManager(f);
+		//	buttons.addKit("empty test kit");
 		}
 
 		public void setInterface() {
