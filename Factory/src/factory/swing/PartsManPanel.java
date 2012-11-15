@@ -30,6 +30,7 @@ public class PartsManPanel extends JPanel{
 	PartsManager partsManager;
 	ArrayList<CurrentItem> partsList;
 	JScrollPane currentList;
+	JPanel currentListPanel;
 	//New Part
 
 	// Methods
@@ -47,7 +48,9 @@ public class PartsManPanel extends JPanel{
 		tabbedPane.addTab("addPanel", addPanel);
 		tabbedPane.addTab("removePanel", removePanel);
 		partsList = new ArrayList<CurrentItem>();
-		currentList = new JScrollPane();
+		currentListPanel = new JPanel();
+		currentListPanel.setLayout(new BoxLayout(currentListPanel, BoxLayout.Y_AXIS));
+		currentList = new JScrollPane(currentListPanel);
 		this.add(tabbedPane);
 		this.add(currentList);
 		
@@ -159,10 +162,10 @@ public class PartsManPanel extends JPanel{
 				 }else{
 					 System.out.println("I will create a new part and send it to the server.");
 					 //partsManager.sendMessage("add", itemName.getText(), (String)imageSelection.getSelectedItem());
-					 partsList.add(new CurrentItem(new JLabel(itemName.getText()), new JLabel(), new ImageIcon((String)imageSelection.getSelectedItem())));
+					 partsList.add(new CurrentItem(new JLabel(itemName.getText()), new JLabel(), (String)imageSelection.getSelectedItem()));
 					 //System.out.println((partsList.get(partsList.size()-1).name.getText()));
 					 //partsList.get(partsList.size()-1).addCurrentItem(currentList.getViewport());
-					 partsList.get(partsList.size() - 1).addCurrentItem(currentList.getViewport());
+					 partsList.get(partsList.size() - 1).addCurrentItem(currentListPanel);
 				 }
 		     }else{
 			 JComboBox cb = (JComboBox)ae.getSource();
@@ -262,18 +265,23 @@ public class PartsManPanel extends JPanel{
 		JLabel previewFrame;
 		ImageIcon imagePreview;
 		
-		public CurrentItem(JLabel n, JLabel p, ImageIcon i){
+		public CurrentItem(JLabel n, JLabel p, String s){
 			name = n;
 			previewFrame = p;
-			imagePreview = i;
+			imagePreview = new ImageIcon("Images/" + s + ".png");
 		}
 		
-		public void addCurrentItem(JViewport panel){
+		public void addCurrentItem(JPanel panel){
 			JPanel panel1 = new JPanel();
+			panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
 			panel1.add(name);
 			previewFrame.setIcon(imagePreview);
 			panel1.add(previewFrame);
 			panel.add(panel1);
+			panel1.setVisible(true);
+			panel.setVisible(true);
+			System.out.println("I'm in");
+			panel.revalidate();
 		}
 		
 	}

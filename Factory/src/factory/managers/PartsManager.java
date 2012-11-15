@@ -17,24 +17,20 @@ public class PartsManager extends Client {
 	ArrayList<String> parts;
 	// Kit Configurations ArrayList
 
-	public PartsManager(JPanel buttons, JPanel animation) {
-		super(Client.Type.PM, buttons, animation);
+	public PartsManager() {
+		super(Client.Type.PM, null, null);
+		UI = new PartsManPanel();
+		((PartsManPanel) UI).setManager(this);
 		setInterface();
 		parts = new ArrayList<String>();
 	}
 	
 	public static void main(String[] args){
-	    PartsManPanel buttons = new PartsManPanel();
-	    JPanel animation = new JPanel(); //TODO where graphics panel goes 
-		PartsManager manager = new PartsManager(buttons, animation);
-		buttons.setManager(manager);
+		PartsManager manager = new PartsManager();
 	}
 	
 	public void setInterface() {
-		setSize(1780, 720);
-		setLayout(new GridLayout(1,2));
-
-		add(graphics);
+		setSize(400, 720);
 		
 		add(UI);
 		setVisible(true);
