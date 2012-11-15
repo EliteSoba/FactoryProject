@@ -2,6 +2,7 @@
 
 package factory.managers;
 
+import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -36,12 +37,10 @@ public class KitManager extends Client {
 	}
 	
 	public void setInterface() {
-		setSize(1780, 720);
-		setLayout(new GridLayout(1,2));
-
-		add(graphics);
+		add(graphics, BorderLayout.CENTER);
 		
-		add(UI);
+		add(UI, BorderLayout.LINE_END);
+		pack();
 		setVisible(true);
 	}
 	
