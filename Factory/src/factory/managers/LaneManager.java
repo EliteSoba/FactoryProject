@@ -3,8 +3,8 @@
 
 package factory.managers;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -12,8 +12,8 @@ import factory.graphics.*;
 import factory.client.Client;
 
 public class LaneManager extends Client {
-	private static final long serialVersionUID = 1L;
 
+	private static final long serialVersionUID = 6767006307991802656L;
 
 	public LaneManager(JPanel animation) {
 		
@@ -48,17 +48,12 @@ public class LaneManager extends Client {
 	}
 	
 	public void setInterface() {
-		setSize(1780, 720);
-		GridBagConstraints c = new GridBagConstraints();
-		setLayout(new GridBagLayout());
+
+		add(graphics, BorderLayout.CENTER);
 		
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 0;
-		add(graphics, c);
+		pack();
 		
-		/*c.gridx = 2;
-		add(UI, c);*/ //to be implemented in V.2
+		//add(UI, BorderLayout.LINE_END);  //to be implemented in V.2
 		setVisible(true);
 	}
 
@@ -101,16 +96,6 @@ public class LaneManager extends Client {
 			 * else if(identifier == confirm2)
 			 * do(confirm2);
 			 */
-		}
-		
-		else if(action.equals("err")){
-			String error;
-			error = new String();
-			for(int i = 1; i<this.parsedCommand.size(); i++)
-				error.concat(parsedCommand.get(i));
-			System.out.println(error);
-		
-			
 		}
 	}
 }

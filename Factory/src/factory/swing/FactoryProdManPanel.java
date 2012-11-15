@@ -1,7 +1,7 @@
 /*
 
 author: Joey Huang
-Last edited: 11/13/12 9:31am
+Last edited: 11/14/12 9:49pm
 */
 package factory.swing;
 import java.util.*;
@@ -114,8 +114,6 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		container.add(scrollPane);
 		schedulePanel.add(container,BorderLayout.CENTER);
 		
-		//javax.swing.Timer timer = new javax.swing.Timer(1000,this);
-		//timer.start();
 		
 		stopFactory = new JButton("Terminate All Operations");
 		stopFactory.addActionListener(this);
@@ -136,16 +134,16 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			else {
 				
 				String set = new String("");
-				set = "fpm fcs cmd makekits " + (String)spinner.getValue() + " " + (String)kitNameBox.getSelectedItem();	
+				set = "fpm fcsa cmd makekits " + (String)spinner.getValue() + " " + (String)kitNameBox.getSelectedItem();	
 				factoryProductionManager.sendCommand(set);
 					
 			messageBox.append("Order Submitted.\n     Details: " + spinner.getValue() + " units of " + (String)kitNameBox.getSelectedItem() + "\n" );
 			}
 		}
-		else if (ae.getSource() == stopFactory) {
+		else if (ae.getSource() == stopFactory) { // message that initiates factory shutdown
 			messageBox.append("Terminating all operations...\n");
 			String set = new String("");
-			set = "";
+			set = "fpm mcs cmd stopfactory";
 			factoryProductionManager.sendCommand(set);
 		}
 	}

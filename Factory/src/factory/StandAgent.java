@@ -287,6 +287,60 @@ public class StandAgent extends Agent implements Stand {
 		state = StandAgentState.KIT_ROBOT;
 		inspectionSlot.state = MySlotState.PROCESSING_ANALYZED_KIT;                    
 	}
- 
+	
+	/**
+	 * Hacks and Misc
+	 */
+	public boolean setSlotKit(String slot, Kit k) {
+		if (slot.equals("topSlot")) {
+			topSlot.kit = k;
+			return true;
+		} else if (slot.equals("bottomSlot")) {
+			bottomSlot.kit = k;
+			return true;
+		} else if (slot.equals("inspectionSlot")) {
+			inspectionSlot.kit = k;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public Kit getSlotKit(String slot) {
+		if (slot.equals("topSlot")) {
+			return topSlot.kit;
+		} else if (slot.equals("bottomSlot")) {
+			return bottomSlot.kit;
+		} else {
+			//assume inspectionSlot 
+			return inspectionSlot.kit;
+		}
+	}
+	
+	public boolean setSlotState(String slot, MySlotState state) {
+		if (slot.equals("topSlot")) {
+			topSlot.state = state;
+			return true;
+		} else if (slot.equals("bottomSlot")) {
+			bottomSlot.state = state;
+			return true;
+		} else if (slot.equals("inspectionSlot")) {
+			inspectionSlot.state = state;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public MySlotState getSlotState(String slot) {
+		if (slot.equals("topSlot")) {
+			return topSlot.state;
+		} else if (slot.equals("bottomSlot")) {
+			return bottomSlot.state;
+		} else {
+			//assume inspectionSlot
+			return inspectionSlot.state;
+		}
+	}
 
 }

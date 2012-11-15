@@ -12,14 +12,15 @@ import java.net.Socket;
 
 public class PartHandler implements Runnable {
 
-Socket mySocket = null;
-PrintWriter out = null;
-BufferedReader in = null;
-boolean haveCMD = false; 
-String cmd = null;
-String message;
-MasterControl master = null;
-String Client_id = null;
+    Socket mySocket = null;
+    PrintWriter out = null;
+    BufferedReader in = null;
+    boolean haveCMD = false;
+    String cmd = null;
+    String message;
+    MasterControl master = null;
+    String Client_id = null;
+    boolean factoryDone;
 
 	public PartHandler(Socket s, BufferedReader b, PrintWriter p, String me, MasterControl mc){
 		//Get all the required variables set so PartHandler can function correctly
@@ -28,24 +29,38 @@ String Client_id = null;
 		in = b;
 		master = mc;
 		Client_id = me;
+        factoryDone = false;
 		//Sets up thread for the partHandler
 		(new Thread(this)).start();
 	}
-	
+
+    public void endClient(){
+        //Need to send a final message to the client
+        String closeCmd = "mcs close";
+        //Send closeCmd to the client
+        //Then set the factoryDone flag to true, allowing the thread to exit.
+
+        out.println(closeCmd);
+
+        factoryDone = true;
+
+    }
+
 	public void run() 
 	{
 	    //This thread loops to get confirmations sent by clients 
 
-	    for(;;) 
-	    {
-		cmd = gotCmd();
-		if(haveCMD)
-		{//if there was a command then call parseCmd and send the cmd to Server to assess
-			master.command(cmd);
-			//sets haveCMD to false because parseCmd notified server
-			haveCMD = false;
-		}
-	    }
+	    for(;;) {
+            cmd = gotCmd();
+            if(haveCMD) {//if there was a command then call parseCmd and send the cmd to Server to assess
+                    master.command(cmd);
+                    //sets haveCMD to false because parseCmd notified server
+                    haveCMD = false;
+            }
+            if(factoryDone){
+                break;
+            }
+        }
 	}
 	
 	public boolean send(String cmd) {

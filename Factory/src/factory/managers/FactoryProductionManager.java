@@ -1,11 +1,10 @@
 //Ben Mayeux and Stephanie Reagle
 //CS 200
 
-// Last edited: 11/11/12 3:27pm by Joey Huang
+// Last edited: 11/14/12 10:07pm by Joey Huang
 package factory.managers;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -29,19 +28,11 @@ public class FactoryProductionManager extends Client {
 		}
 
 		public void setInterface() {
-			setSize(1780, 720);
-			GridBagConstraints c = new GridBagConstraints();
-			setLayout(new GridBagLayout());
+			add(graphics, BorderLayout.CENTER);
 			
-			c.fill = GridBagConstraints.VERTICAL;
-			c.gridx = 0;
-			c.gridy = 0;
-			add(graphics, c);
-			
-			c.gridx = 2;
-			add(UI, c);
+			add(UI, BorderLayout.LINE_END);
+			pack();
 			setVisible(true);
-			
 		}
 
 		
@@ -60,67 +51,78 @@ public class FactoryProductionManager extends Client {
 			/*
 			 * fa fpm cmd startFeeding " + feederSlot + " endcmd
 			 */
-			if (identifier == "startFeeding")
+			if (identifier.equals("startFeeding"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(3));
 				((FactoryProductionPanel) graphics).turnFeederOn(feederSlot);
 			}
-			else if (identifier == "stopFeeding")
+			else if (identifier.equals("stopFeeding"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(3));
 				((FactoryProductionPanel) graphics).turnFeederOff(feederSlot);
 			} 
-			else if (identifier == "purgeFeeder")
+			else if (identifier.equals("purgeFeeder"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(3));
-				((FactoryProductionPanel) graphics).purgeFeederLane(feederSlot);
+				((FactoryProductionPanel) graphics).purgeFeeder(feederSlot);
 			}
-			else if (identifier == "switchLane")
+			else if (identifier.equals("switchLane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(3));
 				((FactoryProductionPanel) graphics).switchFeederLane(feederSlot);
 			}
-			/*if(identifier == command1)
-			 * do(command1);
-			 * else if(identifier == command2)
-			 * do(command2);
-			 */
-
-// add kit
-// remove kit
-// modify kit
-// add part
-// remove part
-// update kit
+			else if (identifier.equals("addkitname")) {		// add new kit configuration to kit configuration list
+		
+			}
+			else if (identifier.equals("rmkitname")) {		// remove kit configuration from kit configuration list
+				
+			}
+			else if (identifier.equals("addpartname")) {	// add new part to parts list
+				
+			}
+			else if (identifier.equals("rmpartname")) {		// remove part from parts list
+				
+			}
 		}
-		else if(action == "req"){
-			/*if(identifier == request1)
+		else if(action.equals("req")){
+			/*if(identifier.equals(request1))
 			 * do(request1);
-			 * else if(identifier == request2)
+			 * else if(identifier.equals(request2))
 			 * do(request2);
 			 */
 		}
-		else if(action == "get"){
-			/*if(identifier == get1)
+		else if(action.equals("get")){
+			/*if(identifier.equals(get1))
 			 * do(get1);
-			 * else if(identifier == get2)
+			 * else if(identifier.equals(get2))
 			 * do(get2);
 			 */
 		}
-		else if(action == "set"){
-			/*if(identifier == set1)
-			 * do(set1);
-			 * else if(identifier == set2)
-			 * do(set2);
-			 */
+		else if(action.equals("set")){
+			if (identifier.equals("kitcontent")) { 			// modify content of a kit
+
+			}
+			else if (identifier.equals("kitsproduced")) { // updates number of kits produced for schedule
+				
+			}
 		}
-		else if(action == "cnf"){
-			/*if(identifier == confirm1)
+		else if(action.equals("cnf")){
+			/*if(identifier.equals(confirm1))
 			 * do(confirm1);
-			 * else if(identifier == confirm2)
+			 * else if(identifier.equals(confirm2))
 			 * do(confirm2);
 			 */
 		}
+	   else if(action.equals("err")){
+			String error;
+			error = new String();
+			for(int i = 1; i<this.parsedCommand.size(); i++)
+				error.concat(parsedCommand.get(i));
+			System.out.println(error);
+		
+			
+		}
+	
 	}
 
 }

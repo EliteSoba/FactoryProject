@@ -2,11 +2,9 @@
 //CS 200
 package factory.managers;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 
-import javax.swing.JPanel;
 import factory.client.Client;
 import factory.swing.PartsManPanel;
 
@@ -16,30 +14,23 @@ public class PartsManager extends Client {
 	ArrayList<String> parts;
 	// Kit Configurations ArrayList
 
-	public PartsManager(JPanel buttons, JPanel animation) {
-		super(Client.Type.PM, buttons, animation);
+	public PartsManager() {
+		super(Client.Type.PM, null, null);
+		UI = new PartsManPanel();
+		((PartsManPanel) UI).setManager(this);
 		setInterface();
+		parts = new ArrayList<String>();
 	}
 	
 	public static void main(String[] args){
-	    PartsManPanel buttons = new PartsManPanel();
-	    JPanel animation = new JPanel(); //TODO where graphics panel goes 
-		PartsManager manager = new PartsManager(buttons, animation);
-		buttons.setManager(manager);
+		PartsManager manager = new PartsManager();
 	}
 	
 	public void setInterface() {
-		setSize(1780, 720);
-		GridBagConstraints c = new GridBagConstraints();
-		setLayout(new GridBagLayout());
+		add(graphics, BorderLayout.CENTER);
 		
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 0;
-		add(graphics, c);
-		
-		c.gridx = 2;
-		add(UI, c);
+		add(UI, BorderLayout.LINE_END);
+		pack();
 		setVisible(true);
 	}
 	
