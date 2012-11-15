@@ -23,19 +23,21 @@ public class FactoryProductionManager extends Client {
 	ArrayList<Part> partsList;
 	FactoryProdManPanel swingPanel;
 	
-		public FactoryProductionManager(JPanel buttons, FactoryProductionPanel animation) {
-			super(Client.Type.fpm, buttons, animation);
+		public FactoryProductionManager() {
+			super(Client.Type.fpm, null, null);
 			setInterface();
 			
-			swingPanel = (FactoryProdManPanel)buttons;
+			UI = new FactoryProdManPanel();
+			((FactoryProdManPanel)UI).setManager(this);
+			graphics = new FactoryProductionPanel(this);
 			kitConfigList = new ArrayList<KitConfig>();
 			loadParts();
 		}
 		public static void main(String[] args){
-		    FactoryProdManPanel buttons = new FactoryProdManPanel();
-		    FactoryProductionPanel animation = new FactoryProductionPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
-			FactoryProductionManager f = new FactoryProductionManager(buttons, animation);
-			buttons.setManager(f);
+		    //FactoryProdManPanel buttons = new FactoryProdManPanel();
+		    //FactoryProductionPanel animation = new FactoryProductionPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
+			FactoryProductionManager f = new FactoryProductionManager();
+			//buttons.setManager(f);
 		//	buttons.addKit("empty test kit");
 		}
 

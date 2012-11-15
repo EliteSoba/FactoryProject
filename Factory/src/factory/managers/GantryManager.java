@@ -19,7 +19,7 @@ public class GantryManager extends Client {
 		
 		buttons = new GantryManPanel();
 		buttons.setManager(this);
-		animation = new GantryRobotPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
+		animation = new GantryRobotPanel(this); //TODO does not currently work but will by 11/13 -->Tobi
 		
 		setInterface();
 	}
