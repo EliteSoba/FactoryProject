@@ -64,8 +64,23 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			belt.exportKit();
 	}
 	
-	public void sendMessage(String message) {
-		//am.sendCommand(message);
+	public void sendMessage(String command) {
+		if (am == null)
+			return;
+		
+		String message;
+		if (isLaneManager)
+			message = "lm";
+		else if (isGantryRobotManager)
+			message = "grm";
+		else if (isKitAssemblyManager)
+			message = "kam";
+		else if (isFactoryProductionManager)
+			message = "fpm";
+		else
+			return;
+		
+		am.sendCommand(message + command);
 	}
 	
 	public void newEmptyKitDone() {
@@ -77,7 +92,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 
 	public void moveKitToInspectionDone() {
-		sendMessage("FILLER");
+		sendMessage("kra cnf");
 	}
 	
 	public void takePictureOfInspectionSlotDone() {
