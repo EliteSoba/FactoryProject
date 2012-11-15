@@ -45,9 +45,9 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 
 
 	protected void setUp() {
-		top = new LaneAgent();
+		//top = new LaneAgent();
 		top.startThread();
-		bottom = new LaneAgent();
+		//bottom = new LaneAgent();
 		bottom.startThread();
 		//gantry = new GantryAgent();
 		gantry.glmp = this;
@@ -60,7 +60,7 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		vision.startThread();
 		feeder.vision = vision;
 
-		n0 = new NestAgent();
+		/*n0 = new NestAgent();
 		n0.startThread();
 		n1 = new NestAgent();
 		n1.startThread();
@@ -69,7 +69,7 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		n2.startThread();
 
 		n3 = new NestAgent();
-		n3.startThread();
+		n3.startThread();*/
 
 		p0 = new Part("ear");
 		//p0.averageDelayTime = 15; // it takes 20 seconds for this part to go all the way down the lane and then 

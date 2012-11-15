@@ -112,7 +112,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	
 	public void cameraFlash(int nestIndex) {
 		flashCounter = 10;
-		flashNestIndex = nestIndex;
+		flashFeederIndex = nestIndex;
 	}
 	
 	public void moveGantryRobotToPickup(String path) {
