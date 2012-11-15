@@ -6,12 +6,12 @@ import agent.Agent;
 import factory.interfaces.Feeder;
 import factory.interfaces.Lane;
 import factory.interfaces.Nest;
+import factory.masterControl.MasterControl;
 
 public class LaneAgent extends Agent implements Lane {
 
-	public LaneAgent() {
-		super(Agent.Type.LANEAGENT);
-		// TODO Auto-generated constructor stub
+	public LaneAgent(MasterControl mc) {
+		super(mc);
 	}
 
 	/** DATA **/
@@ -156,6 +156,7 @@ public class LaneAgent extends Agent implements Lane {
 	public void setFeeder(Feeder f) {
 		myFeeder = f;
 	}
+
 	
 
 }

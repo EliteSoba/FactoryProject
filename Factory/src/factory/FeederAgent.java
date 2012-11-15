@@ -17,9 +17,12 @@ import factory.masterControl.MasterControl;
 import factory.test.mock.EventLog;
 import factory.test.mock.LoggedEvent;
 
+
+
 public class FeederAgent extends Agent implements Feeder {
 
 	/** DATA **/
+	private static int kOK_TO_PURGE_TIME = 10;
 	public GraphicLaneMenuPanel glmp;
 	private String name;
 	public int feederSlot;
@@ -125,7 +128,11 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	public void msgNestWasDumped(Lane la) {
-		debug("received msgNestWasDumped("+ la.getName() + ")");
+		String laneStr = "Top Lane";
+		if (bottomLane.lane == la)
+			laneStr = "Bottom Lane";
+		
+		debug("received msgNestWasDumped("+ laneStr + ")");
 		if (topLane.lane == la)
 		{
 			topLane.state = MyLaneState.NEST_SUCCESSFULLY_DUMPED;
@@ -138,7 +145,11 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	public void msgLaneNeedsPart(Part part, Lane lane) {
-		debug("received msgLaneNeedsPart("+part.name + "," + lane.getName() + ")");
+		String laneStr = "Top Lane";
+		if (bottomLane.lane == lane)
+			laneStr = "Bottom Lane";
+
+		debug("received msgLaneNeedsPart("+part.name + "," + laneStr + ")");
 		requestedParts.add(new MyPartRequest(part, lane));
 		stateChanged();
 	}
@@ -251,7 +262,11 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** ACTIONS **/
 	private void nestWasDumped(MyLane la) {
-		debug("has dumped nest of lane " + la.lane.getName() + ".");
+		String laneStr = "Top Lane";
+		if (bottomLane == la)
+			laneStr = "Bottom Lane";
+
+		debug("has dumped nest of lane " + laneStr + ".");
 		if (this.state == FeederState.CONTAINS_PARTS)
 		{
 			// only if the feeder is actually feeding
@@ -266,7 +281,11 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	private void dumpNest(MyLane la) {
-		debug("Go dump nest of lane "+la.lane.getName() + ".");
+		String laneStr = "Top Lane";
+		if (bottomLane == la)
+			laneStr = "Bottom Lane";
+
+		debug("Go dump nest of lane "+ laneStr + ".");
 		DoStopFeeding();
 		la.state = MyLaneState.TOLD_NEST_TO_DUMP;
 		la.lane.msgDumpNest();
@@ -429,13 +448,13 @@ public class FeederAgent extends Agent implements Feeder {
 				debug("it is now okay to purge this feeder.");
 				stateChanged();
 			}
-		},(long) (currentPart.averageDelayTime / 2) * 1000); // okay to purge after this many seconds
+		},(long) kOK_TO_PURGE_TIME * 1000); // okay to purge after this many seconds
 
 		feederEmptyTimer.schedule(new TimerTask(){
 			public void run(){		    
 				partResettleTimer.schedule(new TimerTask() {
 					public void run() {
-						debug(currentLane.lane.getName() + " is ready for a picture.");
+						debug("A lane is ready for a picture.");
 						currentLane.readyForPicture = true;
 
 						if (bottomLane.readyForPicture == true && topLane.readyForPicture == true)
@@ -449,7 +468,7 @@ public class FeederAgent extends Agent implements Feeder {
 					}
 				}, 3000); // 3 seconds to resettle in the nest
 			}
-		}, (long) (currentPart.averageDelayTime / 2) * 1000); // time it takes the part to move down the lane and fill a nest 
+		}, (long) kOK_TO_PURGE_TIME * 1000); // time it takes the part to move down the lane and fill a nest 
 
 		//	Timer.new(30000, { state = FeederState.OK_TO_PURGE; });
 		//		Timer.new(currentPart.averageDelayTime,{vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this) });
