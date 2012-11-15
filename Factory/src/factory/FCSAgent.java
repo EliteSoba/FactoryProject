@@ -9,7 +9,7 @@ import java.util.Queue;
 import agent.Agent;
 import java.util.*;
 
-import factory.KitConfig.MyPart;
+//import factory.KitConfig.MyPart;
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
 import factory.test.mock.MockGantry;
@@ -26,6 +26,8 @@ public class FCSAgent extends Agent implements FCS{
 	   public boolean passBinConfigurationToGantry = false;
 	   public boolean freeToMakeKit = true;
 //	   public Queue<Map> myKitConfigs = new LinkedList<Map>();
+	   public List<Part> partsList = new ArrayList<Part>();
+	   public Map<String, KitConfig> kitRecipes = new HashMap<String, KitConfig>();
 	   
 	   enum KitProductionState { PENDING, PRODUCING, FINISHED, PURGING }
 	   KitProductionState state = KitProductionState.PENDING;
@@ -47,8 +49,10 @@ public class FCSAgent extends Agent implements FCS{
 		}
 	   
 		//msg from Panel to produce a kit
-	   public void msgProduceKit(KitConfig kitConfig) {
-		   myKitConfigs.add(kitConfig);
+	   public void msgProduceKit(String name, int quantity) {
+		   KitConfig recipe = kitRecipes.get(name);
+		   recipe.quantity = quantity;
+		   myKitConfigs.add(recipe);
 		   stateChanged();
 		}
 	   
@@ -104,6 +108,31 @@ public class FCSAgent extends Agent implements FCS{
 		   this.state = KitProductionState.PENDING;
 		   stateChanged();
 	   }
-	    
 	   
+	   
+	// *** OTHER METHODS ***
+	   public void addPartType(String name, double nestStabilizationTime, String description, int id, String imagePath){
+		   Part part = new Part();
+		   part.name = name;
+		   part.nestStabilizationTime = nestStabilizationTime;
+		   part.description = description;
+		   part.id = id;
+		   part.imagePath = imagePath;
+		   partsList.add(part);
+	   }
+	   
+	   public void addKitRecipe(String name, List<String> kitConfig){
+		   KitConfig temp = new KitConfig();
+		   if (kitConfig.size() != 0){
+			   for (String p: kitConfig){
+				   for (int i=0; i < partsList.size(); i++){
+					   if (partsList.get(i).name.equals(p)){
+						   temp.listOfParts.add(partsList.get(i));
+						   break;
+					   }
+				   }
+			   }
+		   }
+		   kitRecipes.put(name, temp);
+	   }	   
 }
