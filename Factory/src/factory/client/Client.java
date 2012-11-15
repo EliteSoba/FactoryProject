@@ -27,7 +27,7 @@ import javax.swing.Timer;
 public abstract class Client extends JFrame implements ActionListener {
 	
 	public enum Type{//enumeration for the 6 types
-		KRM, PM, LM, FPM, KM, GM, KAM
+		 fpm, gm, kam, km, lm, pm;
 	}
 	protected Socket server; //connection to server
 	protected JPanel graphics; //possibly null graphics frame (graphics team)
@@ -81,6 +81,9 @@ public abstract class Client extends JFrame implements ActionListener {
 			if(reply == "connected")
 				connected = true;
 			System.out.println("connected to server!");
+			System.out.println("waiting for agents to start...");
+			input.readLine();
+			System.out.println("Factory Started....yo!");
 		} catch (Exception e) {
 			System.out.println("Host unavailable");
 		} 	
