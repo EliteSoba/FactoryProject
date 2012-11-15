@@ -50,7 +50,14 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		isGantryRobotManager = false;
 		isKitAssemblyManager = false;
 		isFactoryProductionManager = false;
+		
+		flashImage = Toolkit.getDefaultToolkit().getImage("Images/flash3x3.png");
 	}
+	
+	// CAMERA
+	protected int flashCounter;
+	protected int flashNestIndex;
+	protected static Image flashImage;
 	
 	public void exportKit() {
 		belt.exportKit();
@@ -152,6 +159,18 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		for(int i = 0; i < nests.size(); i++) {
 			Nest currentNest = nests.get(i);
 			currentNest.paint(g);
+		}
+		
+		if(isLaneManager || isFactoryProductionManager) {
+			System.out.println("or");
+			if(flashCounter >= 0)
+			{
+				int flashX = nests.get(flashNestIndex).getX();
+				int flashY = nests.get(flashNestIndex).getY();
+				//System.out.println("==="+flashX+" "+flashY);
+				g.drawImage(flashImage, flashX, flashY, null);
+				flashCounter --;
+			}
 		}
 		
 		// Draw the parts robot

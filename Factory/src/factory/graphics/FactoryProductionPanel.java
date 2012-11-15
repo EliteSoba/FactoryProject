@@ -109,7 +109,9 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 			kitRobot.setFromCheck(true);
 	}
 	
-	public void cameraFlash() {
+	public void cameraFlash(int nestIndex) {
+		flashCounter = 10;
+		flashNestIndex = nestIndex;
 	}
 	
 	public void moveGantryRobotToPickup(String path) {
