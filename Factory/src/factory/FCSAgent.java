@@ -17,6 +17,7 @@ import factory.test.mock.MockPartsRobotAgent;
 
 //test commit/push
 public class FCSAgent extends Agent implements FCS{
+	//change this to orders class later
 	 public Queue<KitConfig> myKitConfigs = new LinkedList<KitConfig>(); //added this queue for kits
 //	 List<MyKitConfig> myKitConfigs = new ArrayList<MyKitConfig>();
 	   PartsRobot partsRobot;
