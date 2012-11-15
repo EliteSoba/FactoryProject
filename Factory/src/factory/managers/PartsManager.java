@@ -11,20 +11,28 @@ import java.util.ArrayList;
 
 import factory.Part;
 import factory.client.Client;
+import factory.graphics.KitAssemblyPanel;
+import factory.swing.KitAssManPanel;
+import factory.swing.KitManPanel;
 import factory.swing.PartsManPanel;
 
-public class PartsManager extends Client implements WindowListener{
+public class PartsManager extends Client {
+	
 	private static final long serialVersionUID = -205350261062308096L;
 	
-	ArrayList<Part> parts;
+	PartsManPanel buttons;
+	
+	ArrayList<String> parts;
 	// Kit Configurations ArrayList
 
 	public PartsManager() {
 		super(Client.Type.pm, null, null);
-		UI = new PartsManPanel();
-		((PartsManPanel) UI).setManager(this);
+
+		PartsManPanel buttons = new PartsManPanel();
+		buttons.setManager(this);
+		
 		setInterface();
-		parts = new ArrayList<Part>();
+		parts = new ArrayList<String>();
 		/*parts.add(new Part("Eye",1,"This is used to see.","Images/eye.png",1));
 		parts.add(new Part("Body",2,"This is used as the base.","Images/body.png",5));
 		parts.add(new Part("Hat",3,"This is used to cover the head.","Images/hat.png",2));
@@ -36,15 +44,15 @@ public class PartsManager extends Client implements WindowListener{
 		parts.add(new Part("Ear",9,"This is used to hear.","Images/ear.png",2));
 		*/
 		//loadData();
-		this.addWindowListener(this);
+		//this.addWindowListener(this);
 	}
 	
 	public static void main(String[] args){
-		PartsManager manager = new PartsManager();
+		PartsManager p = new PartsManager();
 	}
 	
 	public void setInterface() {
-		//add(graphics, BorderLayout.CENTER);
+		UI = buttons;
 		
 		add(UI, BorderLayout.LINE_END);
 		pack();
@@ -118,50 +126,8 @@ public class PartsManager extends Client implements WindowListener{
 		}
 	}
 	
-	public ArrayList<Part> getParts(){
+	public ArrayList<String> getParts(){
 		return parts;
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		
-		
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
-				saveData();
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	public void saveData(){
@@ -188,11 +154,11 @@ public class PartsManager extends Client implements WindowListener{
 		try{    // loads previously saved player data
 			f = new FileInputStream("InitialData/initialParts.ser");
 			o = new ObjectInputStream(f);
-			parts = (ArrayList<Part>) o.readObject();
+			parts = (ArrayList<String>) o.readObject();
 		}catch(IOException e){
-			parts = new ArrayList<Part>();
+			parts = new ArrayList<String>();
 		} catch(ClassNotFoundException c){
-			parts = new ArrayList<Part>();
+			parts = new ArrayList<String>();
 		}
 	}
 }

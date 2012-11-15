@@ -8,12 +8,14 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import factory.graphics.*;
+import factory.swing.LaneManPanel;
 import factory.client.Client;
 
 public class LaneManager extends Client {
 
 	private static final long serialVersionUID = 6767006307991802656L;
 	
+<<<<<<< HEAD
 	LanePanel lp;
 	
 	public LaneManager() {
@@ -21,15 +23,32 @@ public class LaneManager extends Client {
 		super(Client.Type.lm, null, null); 
 		lp = new LanePanel(this);
 		graphics = lp;
+=======
+	LaneManPanel buttons;
+	LanePanel animation;
+	
+	public LaneManager() {
+		super(Client.Type.LM, null, null); 
+		
+		//LaneManPanel buttons = new LaneManPanel(); //to be implemented in V.2
+		//buttons.setManager(l);  //to be implemented in V.2
+		
+		animation = new LanePanel(this);
+		
+>>>>>>> cleaning up code, fixing constructors, integration of gantry graphics
 		setInterface();
 	}
 	
 	public static void main(String[] args){
+<<<<<<< HEAD
 		//LaneManPanel buttons = new LaneManPanel(); //to be implemented in V.2
 		//JPanel animation = new FactoryProductionPanel(null);
 		LaneManager l = new LaneManager(); //to be implemented in V.2
 		//buttons.setManager(l);  //to be implemented in V.2
 		
+=======
+		LaneManager l = new LaneManager(); 
+>>>>>>> cleaning up code, fixing constructors, integration of gantry graphics
 	}
 	
 	public void sendMessage(int lane, int setting, String message){
@@ -51,6 +70,8 @@ public class LaneManager extends Client {
 	}
 	
 	public void setInterface() {
+		graphics = animation;
+		UI = buttons;
 
 		add(graphics, BorderLayout.CENTER);
 		
