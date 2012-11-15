@@ -56,7 +56,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	// CAMERA
 	protected int flashCounter;
-	protected int flashNestIndex;
+	protected int flashFeederIndex;
 	protected static Image flashImage;
 	
 	public void exportKit() {
@@ -162,12 +162,14 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 		
 		if(isLaneManager || isFactoryProductionManager) {
-			System.out.println("or");
 			if(flashCounter >= 0)
 			{
-				int flashX = nests.get(flashNestIndex).getX();
-				int flashY = nests.get(flashNestIndex).getY();
+				int flashX = nests.get(flashFeederIndex*2).getX();
+				int flashY = nests.get(flashFeederIndex*2).getY();
 				//System.out.println("==="+flashX+" "+flashY);
+				g.drawImage(flashImage, flashX, flashY, null);
+				flashX = nests.get(flashFeederIndex*2+1).getX();
+				flashY = nests.get(flashFeederIndex*2+1).getY();
 				g.drawImage(flashImage, flashX, flashY, null);
 				flashCounter --;
 			}

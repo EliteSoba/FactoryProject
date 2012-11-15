@@ -122,9 +122,8 @@ public class GraphicFactoryProductionManager extends JFrame {
 		panel.moveGantryRobotToFeeder(0);
 	}
 	
-	public void takePictureNest1()
+	public void takePictureFeeder1()
 	{
-		System.out.println("GFPM");
 		panel.cameraFlash(0);
 	}
 	

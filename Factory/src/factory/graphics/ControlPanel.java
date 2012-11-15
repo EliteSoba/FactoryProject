@@ -129,8 +129,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 			am.getBin();
 		else if(source == gantryRobotFeeder1)
 			am.moveGantryToFeeder1();
-		else if(source == cameraFlash){
-			am.takePictureNest1(); System.out.println("CP"); }
+		else if(source == cameraFlash)
+			am.takePictureFeeder1();
 	}
 
 }
