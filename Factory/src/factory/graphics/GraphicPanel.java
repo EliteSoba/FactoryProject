@@ -60,7 +60,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected static Image flashImage;
 	
 	public void exportKit() {
-		belt.exportKit();
+		if (isKitAssemblyManager || isFactoryProductionManager)
+			belt.exportKit();
 	}
 	
 	public void sendMessage(String message) {
