@@ -21,7 +21,7 @@ public class KitAssemblyManager extends Client {
 			
 			buttons = new KitAssManPanel();
 			buttons.setManager(this);
-			animation = new KitAssemblyPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
+			animation = new KitAssemblyPanel(this); //TODO does not currently work but will by 11/13 -->Tobi
 			
 			this.setInterface();
 		}

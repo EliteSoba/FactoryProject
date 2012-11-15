@@ -231,7 +231,7 @@ public class GraphicKittingRobot {
 			if (moveToBelt(v)) {
 				toBelt = false;
 				belt.outKit(unkit());
-				GKAM.exportKitDone();
+				GKAM.moveKitFromInspectionToConveyorDone();
 			}
 		}
 		

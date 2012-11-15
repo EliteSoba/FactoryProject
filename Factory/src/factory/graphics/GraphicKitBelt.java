@@ -130,7 +130,7 @@ public class GraphicKitBelt {
 		
 		//Moves the outgoing kit along a path
 		//TODO: NO MORE PATH
-		if (kitout()) {
+		if (kitout() && export) {
 			/*if (kitOut.getY() <= y+370)
 				kitOut.moveY(v);
 			else if (kitOut.getY() <= y+400){
@@ -149,7 +149,7 @@ public class GraphicKitBelt {
 			if (kitOut.getY() >= y+height) {
 				kitOut = null;
 				export = false;
-				GKAM.exportKit();
+				GKAM.exportKitDone();
 			}
 		}
 	}

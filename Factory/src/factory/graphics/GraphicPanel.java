@@ -60,35 +60,54 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected static Image flashImage;
 	
 	public void exportKit() {
-		belt.exportKit();
+		if (isKitAssemblyManager || isFactoryProductionManager)
+			belt.exportKit();
 	}
 	
-	public void sendMessage(String message) {
-		//am.sendCommand(message);
+	public void sendMessage(String command) {
+		//if (am == null)
+			//return;
+		
+		String message;
+		if (isLaneManager)
+			message = "lm ";
+		else if (isGantryRobotManager)
+			message = "grm ";
+		else if (isKitAssemblyManager)
+			message = "kam ";
+		else if (isFactoryProductionManager)
+			message = "fpm ";
+		else
+			return;
+		
+		if (am != null)
+			am.sendCommand(message + command);
+		else
+			System.out.println(message + command);
 	}
 	
 	public void newEmptyKitDone() {
-		sendMessage("FILLER");
+		sendMessage("cca cnf");
 	}
 	
 	public void moveEmptyKitToSlotDone() {
-		sendMessage("FILLER");
+		sendMessage("kra cnf");
 	}
 
 	public void moveKitToInspectionDone() {
-		sendMessage("FILLER");
+		sendMessage("kra cnf");
 	}
 	
 	public void takePictureOfInspectionSlotDone() {
-		sendMessage("FILLER");
+		sendMessage("va cnf");
 	}
 
 	public void dumpKitAtInspectionDone() {
-		sendMessage("FILLER");
+		sendMessage("kra cnf");
 	}
 
 	public void moveKitFromInspectionToConveyorDone() {
-		sendMessage("FILLER");
+		sendMessage("kra cnf");
 	}
 
 	public void exportKitDone() {
@@ -148,8 +167,15 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		
 		if (isLaneManager || isFactoryProductionManager) {
 			for (int i = 0; i < lane.length; i++) {
-				if (lane[i] != null)
-					lane[i].paintLane(g);
+				//if (lane[i] != null)
+				lane[i].paintLane(g);
+			}
+		}
+		
+		if (isLaneManager || isFactoryProductionManager || isGantryRobotManager) {
+			for (int i = 0; i < lane.length; i++) {
+				//if (lane[i] != null)
+				lane[i].paintFeeder(g);
 			}
 		}
 		
