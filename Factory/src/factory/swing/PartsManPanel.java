@@ -28,11 +28,15 @@ public class PartsManPanel extends JPanel{
 	ArrayList<String> fileNames;
 	ArrayList<String> parts;
 	PartsManager partsManager;
+	ArrayList<CurrentItem> partsList;
+	JScrollPane currentList;
+	JPanel currentListPanel;
 	//New Part
 
 	// Methods
 
 	public PartsManPanel(){
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		fileNames = new ArrayList<String>();
 		parts = new ArrayList<String>();
 		fileNames.add("ear");
@@ -43,8 +47,12 @@ public class PartsManPanel extends JPanel{
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("addPanel", addPanel);
 		tabbedPane.addTab("removePanel", removePanel);
-		
+		partsList = new ArrayList<CurrentItem>();
+		currentListPanel = new JPanel();
+		currentListPanel.setLayout(new BoxLayout(currentListPanel, BoxLayout.Y_AXIS));
+		currentList = new JScrollPane(currentListPanel);
 		this.add(tabbedPane);
+		this.add(currentList);
 		
 	}
 	
@@ -67,6 +75,7 @@ public class PartsManPanel extends JPanel{
 		JTextField itemName;
 		JComboBox imageSelection;
 		JButton saveItem;
+		
 
 		//Methods
 		
@@ -92,7 +101,10 @@ public class PartsManPanel extends JPanel{
 			
 			saveItem = new JButton ("Save Item");
 			saveItem.addActionListener(this);
-	
+			
+			partsList = new ArrayList<CurrentItem>();
+			currentList = new JScrollPane();
+			
 			c.gridx = 0;
 			c.gridy = 0;
 			c.gridwidth = 2;
@@ -141,15 +153,19 @@ public class PartsManPanel extends JPanel{
 		public void actionPerformed(ActionEvent ae) {
 			 if (ae.getSource() == saveItem){
 				 boolean nameTaken = false;
-				 for(int i = 0; i < partsManager.getParts().size(); i++){
+				 /*for(int i = 0; i < partsManager.getParts().size(); i++){
 					 if(itemName.getText().equals(partsManager.getParts().get(i)))
 						 nameTaken = true;
-				 }
+				 }*/
 				 if(nameTaken){
 					 itemName.setText("Name taken.");
 				 }else{
 					 System.out.println("I will create a new part and send it to the server.");
-					 partsManager.sendMessage("add", itemName.getText(), (String)imageSelection.getSelectedItem());
+					 //partsManager.sendMessage("add", itemName.getText(), (String)imageSelection.getSelectedItem());
+					 partsList.add(new CurrentItem(new JLabel(itemName.getText()), new JLabel(), (String)imageSelection.getSelectedItem()));
+					 //System.out.println((partsList.get(partsList.size()-1).name.getText()));
+					 //partsList.get(partsList.size()-1).addCurrentItem(currentList.getViewport());
+					 partsList.get(partsList.size() - 1).addCurrentItem(currentListPanel);
 				 }
 		     }else{
 			 JComboBox cb = (JComboBox)ae.getSource();
@@ -242,6 +258,32 @@ public class PartsManPanel extends JPanel{
 
 				}
 				
+	}
+	
+	private class CurrentItem{
+		JLabel name;
+		JLabel previewFrame;
+		ImageIcon imagePreview;
+		
+		public CurrentItem(JLabel n, JLabel p, String s){
+			name = n;
+			previewFrame = p;
+			imagePreview = new ImageIcon("Images/" + s + ".png");
+		}
+		
+		public void addCurrentItem(JPanel panel){
+			JPanel panel1 = new JPanel();
+			panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
+			panel1.add(name);
+			previewFrame.setIcon(imagePreview);
+			panel1.add(previewFrame);
+			panel.add(panel1);
+			panel1.setVisible(true);
+			panel.setVisible(true);
+			System.out.println("I'm in");
+			panel.revalidate();
+		}
+		
 	}
 
 }

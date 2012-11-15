@@ -1,4 +1,5 @@
 //Minh La
+//NOTE: DO NOT RUN THIS IT WILL NOT WORK. IT WAS A TESTING GROUND FOR AGENTS IN THE PAST, BUT NO MORE
 
 package factory.graphics;
 import java.awt.Dimension;
@@ -48,10 +49,10 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		top.startThread();
 		bottom = new LaneAgent();
 		bottom.startThread();
-		gantry = new GantryAgent();
+		//gantry = new GantryAgent();
 		gantry.glmp = this;
 		gantry.startThread();
-		feeder = new FeederAgent("feeder",0,top,bottom,gantry);
+		//feeder = new FeederAgent("feeder",0,top,bottom,gantry);
 		feeder.startThread();
 		feeder.glmp = this;
 		
@@ -71,12 +72,12 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 		n3.startThread();
 
 		p0 = new Part("ear");
-		p0.averageDelayTime = 15; // it takes 20 seconds for this part to go all the way down the lane and then 
+		//p0.averageDelayTime = 15; // it takes 20 seconds for this part to go all the way down the lane and then 
 		// start stacking up.  after 20 seconds, the feeder should stop feeding.
 		p1 = new Part("helmet");
-		p1.averageDelayTime = 12; 
+		//p1.averageDelayTime = 12; 
 		p2 = new Part("ear");
-		p2.averageDelayTime = 10;
+		//p2.averageDelayTime = 10;
 
 		n0.setLane(top);
 		top.setNest(n0);
@@ -375,13 +376,13 @@ public class GraphicLaneMenuPanel extends JPanel implements ActionListener {
 	}
 
 	public void doBringRequestedBin(Integer integer, Feeder f, Part p) {
-		if(!lane.placedBin){
+		/*if(!lane.placedBin){
 			GraphicBin b = new GraphicBin(p);
 			lane.bin = b;
 			lane.currentItemCount = 0;
 			lane.placedBin = true;
 			lane.binExist = true;
-		}
+		}*/
 	}
 
 	public void doPurgeTopLane(int feederSlot) {

@@ -18,10 +18,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 public class MasterControl {
 
@@ -29,10 +26,18 @@ public class MasterControl {
 
     TreeMap<String, PartHandler> partHandlers;
     TreeMap<String, Boolean> partOccupied;
-    private static final List<String> clients = Arrays.asList("krm", "pm", "lm", "fpm", "km");
-    private static final List<String> agents = Arrays.asList("kra", "lma");
+    private static final List<String> clients = Arrays.asList("fpm", "gm", "kam", "km", "lm", "pm", "multi");
+    private static final List<String> agents = Arrays.asList("ca", "cca", "fcsa", "fa", "ga", "kra", "la", "na", "pra", "sa", "va");
     private static final List<String> cmdTypes = Arrays.asList("cmd", "req", "get", "set", "cnf");
-    private static final List<String> cmds = Arrays.asList("makekits", "addkitname", "rmkitname", "addpartame", "rmpartname", "lanepowertoggle", "vibration", "kitcontent");
+    private static final List<String> cmds = Arrays.asList( "makekits", "addkitname", "rmkitname", "addpartame",
+                                                            "rmpartname", "lanepowertoggle", "vibration", "kitcontent",
+                                                            "startfeeding", "stopfeeding", "purgefeeder", "switchlane",
+                                                            "purgetoplane", "purgebottomlane", "stopfactory");
+
+    // The following are lists of commands that are to be received by multiple clients.
+
+    private static final List<String> partCmds = Arrays.asList("addpartname", "rmpartname");
+    private static final List<String> kitCmds = Arrays.asList("kitcontent", "addkitname", "addpartname");
 
 
     ServerSocket myServerSocket;
@@ -70,6 +75,10 @@ public class MasterControl {
         //Start all of the agents!!!!!
     }
 
+    private void closeAgents() {
+        //Close all of the agents!!!!!!
+    }
+
     // parseDst is called by Clients and Agents and determines whether to
     // call methods locally to Agents, or to send them through to a Client
 
@@ -79,12 +88,36 @@ public class MasterControl {
         // Call either agentCmd() or clientCmd()
         ArrayList <String> parsedCommand = new ArrayList<String>(Arrays.asList(cmd.split(" "))); //puts string into array list
 
+
+
         if(clients.contains(parsedCommand.get(1))){
             return clientCmd(parsedCommand);
-        } else {
+        } else if(agents.contains(parsedCommand.get(1))) {
             return agentCmd(parsedCommand);
+        } else if(parsedCommand.get(1).equals("mcs")) {
+            // This is a message specifically meant for the server.
+            // Currently, there is only one of these : end the factory
+            // If more need to be implemented, I'll add them here.
+            endAll();
+            return true;
+        } else {
+            return false;
         }
 
+
+
+    }
+
+    private void endAll(){
+
+        //First, end all of the Client threads.
+        for(Map.Entry<String,PartHandler> x : partHandlers.entrySet()){
+            x.getValue().endClient();
+        }
+
+        // Now, end all of the Agent threads.
+
+        closeAgents();
 
 
     }
@@ -94,6 +127,8 @@ public class MasterControl {
     // what method to call on what agent.
 
     public boolean agentCmd(ArrayList<String> cmd){
+
+
         //If...
             //If
             //Else if...
@@ -113,16 +148,19 @@ public class MasterControl {
     public boolean clientCmd(ArrayList<String> cmd){
         String s = checkCmd(cmd);
         String a = cmd.get(0); // Source
-        String b = cmd.get(1); // Destination
-        String c = cmd.get(2); // CommandType
-        String d = "";
+
         PartHandler sourcePH = determinePH(a);
-        PartHandler destinationPH = determinePH(b);
+
+
 
         if(s != null){
             sourcePH.send("err failed to parse command XXX log "+s);
             return false;
         }
+
+        String b = cmd.get(1); // Destination
+        String c = cmd.get(2); // CommandType
+        String d = "";
 
         for(int i = 3; i < cmd.size(); i++){  // Command
             d+= cmd.get(i)+" ";
@@ -133,9 +171,47 @@ public class MasterControl {
         System.out.println("Server received ... "+cmd+" from "+a);
         System.out.println("Server is about to send ... "+fullCmd);
 
-        return sendCmd(destinationPH, fullCmd);
+        if(b.equals("multi")){
+            ArrayList<PartHandler> destinations = getDestinations(cmd.get(3));
+            if(destinations == null){
+                sourcePH.send("err failed to parse command XXX log this is not an accurate multi recipient command");
+                return false;
+            } else {
+
+                for(PartHandler x : destinations){
+                    if(!sendCmd(x, fullCmd)){
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+
+        } else {
+            PartHandler destinationPH = determinePH(b);
+            return sendCmd(destinationPH, fullCmd);
+
+        }
+
 
     }
+
+    // getDestinations parses the command and determines which Clients need to receive it.
+
+    private ArrayList<PartHandler> getDestinations(String myCmd){
+
+
+
+        if(partCmds.contains(myCmd)){
+            return new ArrayList<PartHandler>(Arrays.asList(partHandlers.get("km"), partHandlers.get("fpm")));
+        } else if(kitCmds.contains(myCmd) ){
+            return new ArrayList<PartHandler>(Arrays.asList(partHandlers.get("fpm"), partHandlers.get("pm")));
+        } else {
+            return null;
+        }
+
+    }
+
 
 
     // envelopeCmd is called by parseCmd with the details of the message
