@@ -1,3 +1,5 @@
+//NOTE: DO NOT RUN THIS IT WILL NOT WORK. IT WAS A TESTING GROUND FOR AGENTS IN THE PAST, BUT NO MORE
+
 package factory.graphics;
 import java.awt.*;
 import javax.swing.*;
@@ -19,21 +21,21 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	// These are for v.0
 	PartsRobotAgent partsRobot = new PartsRobotAgent();
-	StandAgent stand = new StandAgent(null, null, partsRobot);
+	/*StandAgent stand = new StandAgent(null, null, partsRobot);
 	VisionAgent vision = new VisionAgent(null, stand, this);
 	KitRobotAgent kitRobot = new KitRobotAgent(stand, this, null);
 	ConveyorAgent conveyor = new ConveyorAgent(this, kitRobot);
-	ConveyorControllerAgent conveyorController = new ConveyorControllerAgent(conveyor, this);
+	ConveyorControllerAgent conveyorController = new ConveyorControllerAgent(conveyor, this);*/
 	
 	public FrameKitAssemblyManager() {
 		//Constructor. BorderLayout
 		GKAM = new KitAssemblyPanel(this);
 		this.add(GKAM, BorderLayout.CENTER);
-		CP = new ControlPanel(this);
+		//CP = new ControlPanel(this);
 		this.add(CP, BorderLayout.LINE_END);
 		
 		// v.0 stuff
-		stand.vision = vision;
+		/*stand.vision = vision;
 		stand.kitRobot = kitRobot;
 		kitRobot.conveyor = conveyor;
 		conveyor.conveyorController = conveyorController;
@@ -42,7 +44,7 @@ public class FrameKitAssemblyManager extends JFrame{
 		vision.startThread();
 		partsRobot.startThread();
 		kitRobot.startThread();
-		stand.startThread();
+		stand.startThread();*/
 	}
 	
 	public void moveEmptyKitToSlot(int slot){
@@ -71,13 +73,13 @@ public class FrameKitAssemblyManager extends JFrame{
 	public void kitToCheck(int slot) {
 		if(slot == 0){
 			System.out.println("Kit at topSlot is compete!");
-			stand.topSlot.kit.state = KitState.COMPLETE;
-			stand.stateChanged();
+			//stand.topSlot.kit.state = KitState.COMPLETE;
+			//stand.stateChanged();
 		}
 		else {
 			System.out.println("Kit at bottomSlot is compete!");
-			stand.bottomSlot.kit.state = KitState.COMPLETE;
-			stand.stateChanged();
+			//stand.bottomSlot.kit.state = KitState.COMPLETE;
+			//stand.stateChanged();
 		}
 		//GKAM.checkKit(slot);
 	}
@@ -93,37 +95,37 @@ public class FrameKitAssemblyManager extends JFrame{
 	public void newEmptyKitAtConveyor(){
 		System.out.println("New Empty Kit Arrived!");
 		//Should call conveyorController.msgAnimationDone() when animation is complete
-		conveyorController.msgAnimationDone();
+		//conveyorController.msgAnimationDone();
 	}
 	
 	public void moveEmptyKitToSlotDone() {
 		System.out.println("Kit sent to Kitting Station!");
-		kitRobot.msgAnimationDone();
+		//kitRobot.msgAnimationDone();
 	}
 	
 	public void moveKitToInspectionDone() {
 		System.out.println("Kit sent to Inspection Station!");
-		kitRobot.msgAnimationDone();
+		//kitRobot.msgAnimationDone();
 	}
 	
 	public void takePictureOfInspectionSlotDone() {
 		System.out.println("Picture taken!");
-		vision.msgAnimationDone();
+		//vision.msgAnimationDone();
 	}
 	
 	public void dumpKitAtInspectionDone() {
 		System.out.println("Kit has been dumped!");
-		kitRobot.msgAnimationDone();
+		//kitRobot.msgAnimationDone();
 	}
 	
 	public void moveKitFromInspectionToConveyorDone() {
 		System.out.println("Kit sent to Conveyor Belt!");
-		kitRobot.msgAnimationDone();
+		//kitRobot.msgAnimationDone();
 	}
 	
 	public void exportKitDone() {
 		System.out.println("Kit has left the building!");
-		kitRobot.msgAnimationDone();
+		//kitRobot.msgAnimationDone();
 	}
 	
 	public static void main(String args[]) {

@@ -40,6 +40,8 @@ public class PartHandler implements Runnable {
         //Send closeCmd to the client
         //Then set the factoryDone flag to true, allowing the thread to exit.
 
+        out.println(closeCmd);
+
         factoryDone = true;
 
     }

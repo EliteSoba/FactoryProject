@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import agent.Agent;
 import factory.interfaces.Lane;
 import factory.interfaces.Nest;
+import factory.masterControl.MasterControl;
 
 public class NestAgent extends Agent implements Nest {
-	public NestAgent() {
-		super(Agent.Type.NESTAGENT); // needed for the server 
 	
+	public NestAgent(MasterControl mc) {
+		super(mc); // needed for the server 
 	}
 
 

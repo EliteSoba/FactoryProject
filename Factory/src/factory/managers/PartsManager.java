@@ -2,12 +2,9 @@
 //CS 200
 package factory.managers;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 
-import javax.swing.JPanel;
 import factory.client.Client;
 import factory.swing.PartsManPanel;
 
@@ -30,9 +27,10 @@ public class PartsManager extends Client {
 	}
 	
 	public void setInterface() {
-		setSize(400, 720);
+		add(graphics, BorderLayout.CENTER);
 		
-		add(UI);
+		add(UI, BorderLayout.LINE_END);
+		pack();
 		setVisible(true);
 	}
 	
