@@ -17,40 +17,40 @@ import factory.swing.FactoryProdManPanel;
 public class FactoryProductionManager extends Client {
 	static final long serialVersionUID = -2074747328301562732L;
 
-		public FactoryProductionManager(JPanel buttons, FactoryProductionPanel animation) {
-			super(Client.Type.FPM, buttons, animation);
-			setInterface();
-		}
-		public static void main(String[] args){
-		    FactoryProdManPanel buttons = new FactoryProdManPanel();
-		    FactoryProductionPanel animation = new FactoryProductionPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
-			FactoryProductionManager f = new FactoryProductionManager(buttons, animation);
-			buttons.setManager(f);
-		}
+	public FactoryProductionManager(JPanel buttons, FactoryProductionPanel animation) {
+		super(Client.Type.FPM, buttons, animation);
+		setInterface();
+	}
+	public static void main(String[] args){
+		FactoryProdManPanel buttons = new FactoryProdManPanel();
+		FactoryProductionPanel animation = new FactoryProductionPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
+		FactoryProductionManager f = new FactoryProductionManager(buttons, animation);
+		buttons.setManager(f);
+	}
 
-		public void setInterface() {
-			setSize(1780, 720);
-			GridBagConstraints c = new GridBagConstraints();
-			setLayout(new GridBagLayout());
-			
-			c.fill = GridBagConstraints.VERTICAL;
-			c.gridx = 0;
-			c.gridy = 0;
-			add(graphics, c);
-			
-			c.gridx = 2;
-			add(UI, c);
-			setVisible(true);
-			
-		}
+	public void setInterface() {
+		setSize(1780, 720);
+		GridBagConstraints c = new GridBagConstraints();
+		setLayout(new GridBagLayout());
 
-		
-		public void sendDone(String process) { //sends message out from graphics (Tobi's Function)
-			//Process changes depending on previous command
-			sendCommand(process);
-		}
-		
-			@Override
+		c.fill = GridBagConstraints.VERTICAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		add(graphics, c);
+
+		c.gridx = 2;
+		add(UI, c);
+		setVisible(true);
+
+	}
+
+
+	public void sendDone(String process) { //sends message out from graphics (Tobi's Function)
+		//Process changes depending on previous command
+		sendCommand(process);
+	}
+
+	@Override
 	public void doCommand(ArrayList<String> pCmd) {
 		int size = pCmd.size();
 		//parameters lay between i = 2 and i = size - 2
@@ -86,12 +86,12 @@ public class FactoryProductionManager extends Client {
 			 * do(command2);
 			 */
 
-// add kit
-// remove kit
-// modify kit
-// add part
-// remove part
-// update kit
+			// add kit
+			// remove kit
+			// modify kit
+			// add part
+			// remove part
+			// update kit
 		}
 		else if(action == "req"){
 			/*if(identifier == request1)
