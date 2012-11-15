@@ -3,38 +3,37 @@
 
 package factory.managers;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 
 import factory.client.Client;
 import factory.graphics.KitAssemblyPanel;
+import factory.swing.KitAssManPanel;
 
 public class KitAssemblyManager extends Client {
 	private static final long serialVersionUID = -4230607892468748490L;
 
-		public KitAssemblyManager( KitAssemblyPanel animation) {
+		public KitAssemblyManager() {
 			super(Client.Type.KAM, null, null);
 			graphics = new KitAssemblyPanel(this);
+			UI = new KitAssManPanel();
+			((KitAssManPanel)UI).setManager(this);
 			this.setInterface();
 		}
 		public static void main(String[] args){
-		    //KitAssManPanel buttons = new KitAssManPanel(); //to be implemented in V.2
-		    KitAssemblyPanel animation = new KitAssemblyPanel(null);
-			KitAssemblyManager k = new KitAssemblyManager(animation);
-			//buttons.setManager(k);
+			KitAssemblyManager k = new KitAssemblyManager();
 		}
 
 		public void setInterface() {
 			setSize(1780, 720);
-			setLayout(new GridLayout(1,2));
-
-			add(graphics);
+			setLayout(new BorderLayout());
 			
-			//add(UI); //to be implemented in V.2
+
+			add(graphics, BorderLayout.CENTER);
+			
+			//add(UI, BorderLayout.LINE_END); //to be implemented in V.2
 			setVisible(true);
 
 		}
