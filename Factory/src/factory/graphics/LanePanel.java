@@ -40,8 +40,9 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		this.setVisible(true);
 	}
 	
-	public void cameraFlash() {
-		
+	public void cameraFlash(int nestIndex) {
+		flashCounter = 10;
+		flashFeederIndex = nestIndex;
 	}
 	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
