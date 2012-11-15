@@ -20,10 +20,24 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
+import factory.*;
+
 public class MasterControl {
-
+	
+	// Agents
+	KitRobotAgent kitRobot;
+	ConveyorAgent conveyor;
+	ConveyorControllerAgent conveyorController;
+	FeederAgent f0, f1, f2, f3;
+	LaneAgent l0t, l0b, l1t, l1b, l2t, l2b, l3t, l3b;
+	NestAgent n0t, n0b, n1t, n1b, n2t, n2b, n3t, n3b;
+	GantryAgent gantry;
+	PartsRobotAgent partsRobot;
+	StandAgent stand;
+	VisionAgent vision;
+	
     // Data Members
-
+	
     TreeMap<String, PartHandler> partHandlers;
     TreeMap<String, Boolean> partOccupied;
     private static final List<String> clients = Arrays.asList("fpm", "gm", "kam", "km", "lm", "pm", "multi");
@@ -73,6 +87,22 @@ public class MasterControl {
 
     private void startAgents(){
         //Start all of the agents!!!!!
+    	
+    	//Agent Constructing
+    	conveyorController = new ConveyorControllerAgent(this);
+    	conveyor = new ConveyorAgent(this, conveyorController);
+    	conveyorController.setConveyor(conveyor);
+    	kitRobot = new KitRobotAgent(this, conveyor);
+    	conveyor.setKitRobot(kitRobot);
+    	
+  
+    	
+    	kitRobot.setStand(stand);
+    	
+    	//Starting threads
+    	conveyorController.startThread();
+    	conveyor.startThread();
+    	kitRobot.startThread();
     }
 
     private void closeAgents() {

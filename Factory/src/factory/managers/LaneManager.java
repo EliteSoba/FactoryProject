@@ -4,7 +4,6 @@
 package factory.managers;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -14,17 +13,21 @@ import factory.client.Client;
 public class LaneManager extends Client {
 
 	private static final long serialVersionUID = 6767006307991802656L;
-
-	public LaneManager(JPanel animation) {
+	
+	LanePanel lp;
+	
+	public LaneManager() {
 		
-		super(Client.Type.LM, null, animation); 
+		super(Client.Type.LM, null, null); 
+		lp = new LanePanel(this);
+		graphics = lp;
 		setInterface();
 	}
 	
 	public static void main(String[] args){
 		//LaneManPanel buttons = new LaneManPanel(); //to be implemented in V.2
-		JPanel animation = new FactoryProductionPanel(null);
-		LaneManager l = new LaneManager(animation); //to be implemented in V.2
+		//JPanel animation = new FactoryProductionPanel(null);
+		LaneManager l = new LaneManager(); //to be implemented in V.2
 		//buttons.setManager(l);  //to be implemented in V.2
 		
 	}

@@ -32,10 +32,9 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		super(null);
 	}
 	
-	public KitRobotAgent(StandAgent stand, ConveyorAgent conveyor, MasterControl mc){
+	public KitRobotAgent(MasterControl mc, Conveyor c){
 		super(mc);
-		this.conveyor = conveyor;
-		this.stand = stand;
+		this.conveyor = c;
 	}
 	
 	////Messages
@@ -304,12 +303,11 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stand.setSlotState("inspectionSlot", MySlotState.KIT_JUST_PLACED_AT_INSPECTION);
 		stand.setSlotState(pos, MySlotState.EMPTY);
 		
-		
 		stand.msgKitRobotNoLongerUsingStand();
 	}
 	
 	//Hacks / MISC
-	public void setConveyor(Conveyor conveyor) {
-		this.conveyor = conveyor;
+	public void setStand(Stand s) {
+		this.stand = s;
 	}
 }

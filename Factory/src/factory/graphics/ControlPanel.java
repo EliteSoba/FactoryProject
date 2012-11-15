@@ -30,6 +30,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton gantryRobotGetBin;
 	JButton gantryRobotFeeder1;
 	JButton feedLane1;
+	JButton cameraFlash;
 	
 	public ControlPanel(GraphicFactoryProductionManager fpm) {
 		//Constructor
@@ -39,13 +40,14 @@ public class ControlPanel extends JPanel implements ActionListener{
 		outKit = new JButton("Send Kit Out");
 		dumpKit = new JButton("Dump Kit");
 		test = new JButton("Quit");
-		blank = new JLabel[10];
+		blank = new JLabel[20];
 		partsRobotNest1 = new JButton("Nest 1 Full");
 		partsRobotStation = new JButton("Station");
 		gantryRobotGetBin = new JButton("Fetch a Bin");
 		gantryRobotFeeder1 = new JButton("Feeder 1 Dump");
 		feedLane1 = new JButton("Feed Lane 1");
-		for (int i = 0; i < 10; i++) {
+		cameraFlash = new JButton("Camera Flash Nest 1");
+		for (int i = 0; i < 20; i++) {
 			blank[i] = new JLabel("   ");
 			blank[i].setPreferredSize(new Dimension(150, 10));
 		}
@@ -73,6 +75,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.add(gantryRobotGetBin);
 		this.add(blank[9]);
 		this.add(gantryRobotFeeder1);
+		this.add(blank[10]);
+		this.add(cameraFlash);
 		this.setPreferredSize(new Dimension(200, 720));
 		outKit.addActionListener(this);
 		outKit.setPreferredSize(new Dimension(170, 50));
@@ -96,6 +100,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 		gantryRobotFeeder1.setPreferredSize(new Dimension(170,50));
 		feedLane1.addActionListener(this);
 		feedLane1.setPreferredSize(new Dimension(170, 50));
+		cameraFlash.addActionListener(this);
+		cameraFlash.setPreferredSize(new Dimension(170,50));
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -123,6 +129,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 			am.getBin();
 		else if(source == gantryRobotFeeder1)
 			am.moveGantryToFeeder1();
+		else if(source == cameraFlash)
+			am.takePictureFeeder1();
 	}
 
 }

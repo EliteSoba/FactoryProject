@@ -43,7 +43,7 @@ public class StandAgent extends Agent implements Stand {
 	 * @param vision
 	 * @param kitRobot
 	 * @param partsRobot
-	 */
+	 */	
 	public StandAgent(Vision vision, KitRobot kitRobot, PartsRobot partsRobot, MasterControl mc){
 		super(mc);
 		this.vision = vision;

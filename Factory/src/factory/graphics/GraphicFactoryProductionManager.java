@@ -122,6 +122,11 @@ public class GraphicFactoryProductionManager extends JFrame {
 		panel.moveGantryRobotToFeeder(0);
 	}
 	
+	public void takePictureFeeder1()
+	{
+		panel.cameraFlash(0);
+	}
+	
 	//Lane Manager Messages
 	public void feedLaneDone(int laneNum) {
 		System.out.println("Lane " + (laneNum + 1) + " has finished feeding.");
