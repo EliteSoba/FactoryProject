@@ -2,16 +2,10 @@
 package factory.managers;
 
 import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.util.ArrayList;
-
-import javax.swing.JPanel;
 
 import factory.graphics.*;
 import factory.client.Client;
-import factory.swing.FactoryProdManPanel;
 import factory.swing.GantryManPanel;
 
 public class GantryManager extends Client {

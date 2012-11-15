@@ -7,8 +7,6 @@ package factory.managers;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 
-import javax.swing.JPanel;
-
 import factory.client.Client;
 import factory.graphics.FactoryProductionPanel;
 import factory.swing.FactoryProdManPanel;

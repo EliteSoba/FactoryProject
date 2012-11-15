@@ -4,12 +4,9 @@ package factory.managers;
 
 
 import java.awt.BorderLayout;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.*;
 import java.util.ArrayList;
 
-import factory.Part;
 import factory.client.Client;
 import factory.swing.PartsManPanel;
 

@@ -6,14 +6,8 @@ package factory.managers;
 import java.awt.*;
 import java.util.ArrayList;
 
-import javax.swing.BoxLayout;
-
 import factory.client.Client;
-import factory.graphics.FactoryProductionPanel;
-import factory.graphics.GantryRobotPanel;
 import factory.graphics.KitAssemblyPanel;
-import factory.swing.FactoryProdManPanel;
-import factory.swing.GantryManPanel;
 import factory.swing.KitAssManPanel;
 
 public class KitAssemblyManager extends Client {
