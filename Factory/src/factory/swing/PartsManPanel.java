@@ -1,6 +1,7 @@
 package factory.swing;
 
 
+import factory.Part;
 import factory.managers.*;
 
 import java.awt.*;
@@ -26,7 +27,6 @@ public class PartsManPanel extends JPanel{
 	AddPanel addPanel;
 	RemovePanel removePanel;
 	ArrayList<String> fileNames;
-	ArrayList<String> parts;
 	PartsManager partsManager;
 	ArrayList<CurrentItem> partsList;
 	JScrollPane currentList;
@@ -35,19 +35,25 @@ public class PartsManPanel extends JPanel{
 
 	// Methods
 
-	public PartsManPanel(){
+	public PartsManPanel(PartsManager p){
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		partsManager = p;
 		fileNames = new ArrayList<String>();
-		parts = new ArrayList<String>();
+		fileNames.add("eye");
+		fileNames.add("body");
+		fileNames.add("hat");
+		fileNames.add("arm");
+		fileNames.add("shoe");
+		fileNames.add("mouth");
+		fileNames.add("nose");
+		fileNames.add("moustache");
 		fileNames.add("ear");
-		fileNames.add("helmet");
-		fileNames.add("circleItem");
+		partsList = new ArrayList<CurrentItem>();
 		addPanel = new AddPanel();
 		removePanel = new RemovePanel();
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("addPanel", addPanel);
 		tabbedPane.addTab("removePanel", removePanel);
-		partsList = new ArrayList<CurrentItem>();
 		currentListPanel = new JPanel();
 		currentListPanel.setLayout(new BoxLayout(currentListPanel, BoxLayout.Y_AXIS));
 		currentList = new JScrollPane(currentListPanel);
@@ -96,7 +102,7 @@ public class PartsManPanel extends JPanel{
 			
 			imageSelection.addActionListener(this);
 			previewFrame = new JLabel();
-			ImageIcon imagePreview = new ImageIcon("Images/ear.png");
+			ImageIcon imagePreview = new ImageIcon("Images/" + fileNames.get(0) + ".png");
 			previewFrame.setIcon(imagePreview);
 			
 			saveItem = new JButton ("Save Item");
@@ -198,12 +204,12 @@ public class PartsManPanel extends JPanel{
 					title.setFont(new Font("Serif", Font.BOLD, 16));
 					label1 = new JLabel ("Item : ");
 					imageSelection = new JComboBox();
-					for(int i = 0; i < fileNames.size(); i++){
-						imageSelection.addItem(fileNames.get(i));
+					for(int i = 0; i < partsManager.getParts().size(); i++){
+						imageSelection.addItem(partsManager.getParts().get(i).name);
 					}
 					imageSelection.addActionListener(this);
 					previewFrame = new JLabel();
-					ImageIcon imagePreview = new ImageIcon("Images/ear.png");
+					ImageIcon imagePreview = new ImageIcon(partsManager.getParts().get(0).imagePath);
 					previewFrame.setIcon(imagePreview);
 					
 					removeItem = new JButton ("Remove Item");

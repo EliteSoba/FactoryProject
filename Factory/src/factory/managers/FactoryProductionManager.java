@@ -4,33 +4,54 @@
 // Last edited: 11/11/12 3:27pm by Joey Huang
 package factory.managers;
 
+import java.awt.BorderLayout;
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
 
 import factory.client.Client;
+import factory.graphics.FactoryProductionPanel;
 import factory.swing.FactoryProdManPanel;
 
 public class FactoryProductionManager extends Client {
 	static final long serialVersionUID = -2074747328301562732L;
-
-		public FactoryProductionManager(JPanel buttons) {
-			super(Client.Type.FACTORYPRODUCTIONMANAGER, buttons, null);
+	
+	FactoryProdManPanel buttons;
+	FactoryProductionPanel animation;
+	
+		public FactoryProductionManager() {
+			super(Client.Type.fpm, null, null);
+			
+			buttons = new FactoryProdManPanel();
+			buttons.setManager(this);
+			animation = new FactoryProductionPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
+			
 			setInterface();
 		}
 		public static void main(String[] args){
-		    FactoryProdManPanel buttons = new FactoryProdManPanel();
-			FactoryProductionManager f = new FactoryProductionManager(buttons);
+		   FactoryProductionManager f = new FactoryProductionManager();
+		   
 		}
 
 		@Override
 		public void setInterface() {
-			this.setSize(800, 800);
-			this.add(UI);
-			this.setVisible(true);
+			graphics = animation;
+			UI = buttons;
 			
+			add(graphics, BorderLayout.CENTER);
+			add(UI, BorderLayout.LINE_END);
+			
+			pack();
+			setVisible(true);
 		}
 
 		public void sendOrder(String kitname, String quantity) { // request to server to send order to kitmanager
 			output.println("fpm km cmd makekits " + quantity + " " + kitname);		
+		}
+		@Override
+		public void doCommand(ArrayList<String> pCmd) {
+			// TODO Auto-generated method stub
+			
 		}
 		
 		/*public void populateKitList(ArrayList<String> kitList) {

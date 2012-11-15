@@ -20,6 +20,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
+import agent.Agent;
 import factory.*;
 
 public class MasterControl {
@@ -29,13 +30,18 @@ public class MasterControl {
 	ConveyorAgent conveyor;
 	ConveyorControllerAgent conveyorController;
 	FeederAgent f0, f1, f2, f3;
+    List<FeederAgent> feederAgents = Arrays.asList(f0, f1, f2, f3);
 	LaneAgent l0t, l0b, l1t, l1b, l2t, l2b, l3t, l3b;
-	NestAgent n0t, n0b, n1t, n1b, n2t, n2b, n3t, n3b;
-	GantryAgent gantry;
+    TreeMap<String, LaneAgent> laneAgentTreeMap;
+    NestAgent n0t, n0b, n1t, n1b, n2t, n2b, n3t, n3b;
+    TreeMap<String, NestAgent> nestAgentTreeMap;
+    GantryAgent gantry;
 	PartsRobotAgent partsRobot;
 	StandAgent stand;
 	VisionAgent vision;
-	
+
+    TreeMap<String, Agent> agentTreeMap;
+
     // Data Members
 	
     TreeMap<String, PartHandler> partHandlers;
@@ -62,6 +68,35 @@ public class MasterControl {
     public MasterControl(boolean debug){
         partHandlers = new TreeMap<String, PartHandler>();
         partOccupied = new TreeMap<String, Boolean>();
+        agentTreeMap = new TreeMap<String, Agent>();
+
+
+        agentTreeMap.put("ca", conveyor);
+        agentTreeMap.put("cca", conveyorController);
+        agentTreeMap.put("ga", gantry );
+        agentTreeMap.put("kra", kitRobot);
+        agentTreeMap.put("pra", partsRobot);
+        agentTreeMap.put("sa", stand);
+        agentTreeMap.put("va", vision);
+
+        laneAgentTreeMap.put("l0t", l0t);
+        laneAgentTreeMap.put("l0b", l0b);
+        laneAgentTreeMap.put("l1t", l1t);
+        laneAgentTreeMap.put("l1b", l1b);
+        laneAgentTreeMap.put("l2t", l2t);
+        laneAgentTreeMap.put("l2b", l2b);
+        laneAgentTreeMap.put("l3t", l3t);
+        laneAgentTreeMap.put("l3b", l3b);
+
+        nestAgentTreeMap.put("n0t", n0t);
+        nestAgentTreeMap.put("n0b", n0b);
+        nestAgentTreeMap.put("n1t", n1t);
+        nestAgentTreeMap.put("n1b", n1b);
+        nestAgentTreeMap.put("n2t", n2t);
+        nestAgentTreeMap.put("n2b", n2b);
+        nestAgentTreeMap.put("n3t", n3t);
+        nestAgentTreeMap.put("n3b", n3b);
+
         try{
             myServerSocket = new ServerSocket(12321);
         } catch(Exception e){
@@ -157,7 +192,50 @@ public class MasterControl {
     // what method to call on what agent.
 
     public boolean agentCmd(ArrayList<String> cmd){
+        // 0 = Source
+        // 1 = Destination
+        // 2 = CmdType
+        // 3 = Cmd OR if cnf, this would be optional identifier
+        // 4+ = Parameters
 
+        if(cmd.get(2).equals("cnf")){
+
+            Agent destination;
+
+            if(agentTreeMap.containsKey(cmd.get(1))){
+
+                destination = agentTreeMap.get(cmd.get(1));
+
+            } else {
+
+                if(cmd.get(1).equals("na")){            // Nest
+
+                    destination = nestAgentTreeMap.get(cmd.get(3));
+
+                } else if(cmd.get(1).equals("la")){     // Lane
+
+                    destination = laneAgentTreeMap.get(cmd.get(3));
+
+                } else if(cmd.get(1).equals("fa")){     // Feeder
+
+                    destination = feederAgents.get(Integer.valueOf(cmd.get(3)));
+
+                } else {
+                    return false;
+                }
+            }
+
+            destination.msgAnimationDone();
+            return true;
+
+
+        } else if( cmd.get(2).equals("set")){
+
+
+        } else if( cmd.get(2).equals("cmd")){
+
+
+        }
 
         //If...
             //If
@@ -325,8 +403,6 @@ public class MasterControl {
         if(!cmds.contains(pCmd.get(3))){
             return "this is not a valid command please check wiki documentation for correct syntax.";
         }
-
-        // TODO Once a larger number of commands are created... Need to use command identifier to check parameters.
 
         return null;
 

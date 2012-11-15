@@ -14,17 +14,21 @@ import factory.client.Client;
 import factory.swing.KitManPanel;
 
 public class KitManager extends Client {
+	
 	private static final long serialVersionUID = -3161852324870948654L;
+	
+	KitManPanel buttons;
 
-	public KitManager(JPanel buttons, JPanel animation) {
-		super(Client.Type.KM, buttons, animation);
+	public KitManager() {
+		super(Client.Type.km, null, null);
+		
+	    KitManPanel buttons = new KitManPanel();
+		buttons.setManager(this);
+
 		setInterface();
 	}
 	public static void main(String[] args){
-	    KitManPanel buttons = new KitManPanel();
-	    JPanel animation = new JPanel();
-		KitManager k = new KitManager(buttons, animation);
-		buttons.setManager(k);
+		KitManager k = new KitManager();
 	}
 
 	public void sendMessage(String kitname, int setting, String message){
@@ -37,7 +41,7 @@ public class KitManager extends Client {
 	}
 	
 	public void setInterface() {
-		add(graphics, BorderLayout.CENTER);
+		UI = buttons;
 		
 		add(UI, BorderLayout.LINE_END);
 		pack();
