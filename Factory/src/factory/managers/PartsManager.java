@@ -6,10 +6,7 @@ package factory.managers;
 import java.awt.BorderLayout;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 
 import factory.Part;
@@ -28,7 +25,7 @@ public class PartsManager extends Client implements WindowListener{
 		((PartsManPanel) UI).setManager(this);
 		setInterface();
 		parts = new ArrayList<Part>();
-		parts.add(new Part("Eye",1,"This is used to see.","Images/eye.png",1));
+		/*parts.add(new Part("Eye",1,"This is used to see.","Images/eye.png",1));
 		parts.add(new Part("Body",2,"This is used as the base.","Images/body.png",5));
 		parts.add(new Part("Hat",3,"This is used to cover the head.","Images/hat.png",2));
 		parts.add(new Part("Arm",4,"This is used to grab things.","Images/arm.png",2));
@@ -37,6 +34,8 @@ public class PartsManager extends Client implements WindowListener{
 		parts.add(new Part("Nose",7,"This is used to smell.","Images/nose.png",1));
 		parts.add(new Part("Moustache",8,"This is used to look cool.","Images/moustache.png",1));
 		parts.add(new Part("Ear",9,"This is used to hear.","Images/ear.png",2));
+		*/
+		//loadData();
 		this.addWindowListener(this);
 	}
 	
@@ -138,21 +137,7 @@ public class PartsManager extends Client implements WindowListener{
 	@Override
 	public void windowClosing(WindowEvent e) {
 		// TODO Auto-generated method stub
-				FileOutputStream f;
-				ObjectOutputStream o;
-				try {    // uses output stream to serialize and save array of Players
-					
-					f = new FileOutputStream("InitialData/initialParts.ser");
-					o = new ObjectOutputStream(f);
-					o.writeObject(parts);
-					o.close();
-					System.out.println("It worked");
-					
-				} catch (FileNotFoundException ex) {
-					ex.printStackTrace();
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
+				saveData();
 	}
 
 	@Override
@@ -177,5 +162,37 @@ public class PartsManager extends Client implements WindowListener{
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void saveData(){
+		FileOutputStream f;
+		ObjectOutputStream o;
+		try {    // uses output stream to serialize and save array of Players
+			
+			f = new FileOutputStream("InitialData/initialParts.ser");
+			o = new ObjectOutputStream(f);
+			o.writeObject(parts);
+			o.close();
+			System.out.println("It worked");
+			
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	public void loadData(){
+		FileInputStream f;
+		ObjectInputStream o;
+		try{    // loads previously saved player data
+			f = new FileInputStream("InitialData/initialParts.ser");
+			o = new ObjectInputStream(f);
+			parts = (ArrayList<Part>) o.readObject();
+		}catch(IOException e){
+			parts = new ArrayList<Part>();
+		} catch(ClassNotFoundException c){
+			parts = new ArrayList<Part>();
+		}
 	}
 }
