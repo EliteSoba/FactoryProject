@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 import factory.client.*;
 import factory.Part;
@@ -25,9 +26,6 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 		lane = new GraphicLaneManager [4];
 		for (int i = 0; i < lane.length; i++)
 			lane[i] = new GraphicLaneManager(-200, 160*i + 50, i, this);
-		
-		lane[0].setBin(new GraphicBin(new Part("TestItem")));
-		lane[0].binExist = true;
 		
 		gantryRobot = new GantryRobot(WIDTH-150,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
 		
@@ -60,7 +58,7 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 		}
 	}
 	
-	public void paint(Graphics g) {
+	/*public void paint(Graphics g) {
 		g.setColor(new Color(200, 200, 200));
 		g.fillRect(0, 0, getWidth(), getHeight());
 		if (lane != null)
@@ -69,8 +67,13 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 					lane[i].paintFeeder(g);
 			}
 		
-		gantryRobot.paint(g);
-	}
+		final Graphics2D g4 = (Graphics2D)g.create();
+		g4.rotate(Math.toRadians(360-gantryRobot.getAngle()), gantryRobot.getX()+gantryRobot.getImageWidth()/2, gantryRobot.getY()+gantryRobot.getImageHeight()/2);
+		gantryRobot.paint(g4);
+		// Draw bin gantryRobot is carrying
+		
+		g4.dispose();
+	}*/
 	
 	public void actionPerformed(ActionEvent arg0) {
 		gantryRobotStateCheck();
@@ -86,6 +89,19 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 		f.setVisible(true);
 		f.pack();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Scanner kbr = new Scanner(System.in);
+		String command;
+		do {
+			command = kbr.nextLine();
+			switch (command.charAt(0)) {
+			case 'n': gr.moveGantryRobotToPickup("IMAGE PATH"); break;
+			case '1': gr.moveGantryRobotToFeeder(0); break;
+			case '2': gr.moveGantryRobotToFeeder(1); break;
+			case '3': gr.moveGantryRobotToFeeder(2); break;
+			case '4': gr.moveGantryRobotToFeeder(3); break;
+			case 'q': System.exit(0); break;
+			}
+		} while(command.charAt(0) != 'q');
 	}
 
 }

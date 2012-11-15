@@ -128,7 +128,7 @@ public class GraphicLaneManager{
 		*/
 		
 		// Draw feeder
-		paintFeeder(g2);
+		//paintFeeder(g2);
 		//g2.drawImage(nest1.getImage(),lane_xPos,lane_yPos,null);
 		//g2.drawImage(nest2.getImage(),lane_xPos,lane_yPos + 80,null);
 		//g2.drawImage(nest1Icon.getImage(), lane_xPos, lane_yPos, null);

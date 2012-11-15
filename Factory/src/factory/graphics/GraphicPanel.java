@@ -149,8 +149,15 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		
 		if (isLaneManager || isFactoryProductionManager) {
 			for (int i = 0; i < lane.length; i++) {
-				if (lane[i] != null)
-					lane[i].paintLane(g);
+				//if (lane[i] != null)
+				lane[i].paintLane(g);
+			}
+		}
+		
+		if (isLaneManager || isFactoryProductionManager || isGantryRobotManager) {
+			for (int i = 0; i < lane.length; i++) {
+				//if (lane[i] != null)
+				lane[i].paintFeeder(g);
 			}
 		}
 		
