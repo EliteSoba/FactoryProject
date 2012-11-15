@@ -8,5 +8,4 @@ public interface KitRobot {
 	//public void msgInspectionAreaStatus(int status);
 	public void msgComeProcessAnalyzedKitAtInspectionSlot();
 	
-	
 }

@@ -1,6 +1,5 @@
 package factory;
 
-import factory.graphics.FrameKitAssemblyManager;
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
 import agent.Agent;
@@ -17,9 +16,9 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	ConveyorState state = ConveyorState.NO_ACTION;
 	
 	/** Public Constructor **/
-	public ConveyorAgent(KitRobot kr, MasterControl mc) {
+	public ConveyorAgent(MasterControl mc, ConveyorController cc) {
 		super(mc);
-		this.kitRobot = kr;
+		conveyorController = cc;
 	}
 	
 	/** MESSAGES **/
@@ -103,11 +102,6 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	
 	public void setAtConveyor(Kit k) {
 		this.kitAtConveyor = k;
-	}
-	
-	
-	public void setConveyorController(ConveyorController cc) {
-		conveyorController = cc;
 	}
 	
 	public void setKitRobot(KitRobot kr) {

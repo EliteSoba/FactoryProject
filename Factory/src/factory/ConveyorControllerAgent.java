@@ -17,10 +17,10 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 
 	Timer timer = new Timer();
 	
-	public ConveyorControllerAgent(Conveyor conveyor, MasterControl mc) {
+	public ConveyorControllerAgent(MasterControl mc) {
 		super(mc);
-		this.conveyor = conveyor;
 	}
+	
 	////Messages
 	public void msgConveyorWantsEmptyKit() {
 		if (!conveyor_state.equals(Conveyor_State.WANTS_EMPTY_KIT) && !conveyor_state.equals(Conveyor_State.EMPTY_KIT_SENDING)) {
@@ -72,6 +72,11 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		    }
 		}, delivery_time);
 		stateChanged();
+	}
+	
+	// Hacks / MISC
+	public void setConveyor(Conveyor c) {
+		this.conveyor = c;
 	}
 
 }

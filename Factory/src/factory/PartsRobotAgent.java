@@ -14,13 +14,11 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		return false;
 	}
 
-	@Override
 	public void msgBuildKitAtSlot(String slot) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void msgDeliverKitParts() {
 		// TODO Auto-generated method stub
 		
