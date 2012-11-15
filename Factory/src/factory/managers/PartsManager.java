@@ -11,29 +11,20 @@ import java.util.ArrayList;
 
 import factory.Part;
 import factory.client.Client;
-import factory.graphics.KitAssemblyPanel;
-import factory.swing.KitAssManPanel;
-import factory.swing.KitManPanel;
 import factory.swing.PartsManPanel;
 
-public class PartsManager extends Client {
-	
+public class PartsManager extends Client implements WindowListener{
 	private static final long serialVersionUID = -205350261062308096L;
 	
-	PartsManPanel buttons;
-	
-	ArrayList<String> parts;
+	ArrayList<Part> parts;
 	// Kit Configurations ArrayList
 
 	public PartsManager() {
 		super(Client.Type.pm, null, null);
-
-		PartsManPanel buttons = new PartsManPanel();
-		buttons.setManager(this);
+		//loadData();
 		
-		setInterface();
-		parts = new ArrayList<String>();
-		/*parts.add(new Part("Eye",1,"This is used to see.","Images/eye.png",1));
+		parts = new ArrayList<Part>();
+		parts.add(new Part("Eye",1,"This is used to see.","Images/eye.png",1));
 		parts.add(new Part("Body",2,"This is used as the base.","Images/body.png",5));
 		parts.add(new Part("Hat",3,"This is used to cover the head.","Images/hat.png",2));
 		parts.add(new Part("Arm",4,"This is used to grab things.","Images/arm.png",2));
@@ -42,17 +33,18 @@ public class PartsManager extends Client {
 		parts.add(new Part("Nose",7,"This is used to smell.","Images/nose.png",1));
 		parts.add(new Part("Moustache",8,"This is used to look cool.","Images/moustache.png",1));
 		parts.add(new Part("Ear",9,"This is used to hear.","Images/ear.png",2));
-		*/
-		//loadData();
-		//this.addWindowListener(this);
+		UI = new PartsManPanel(this);
+		setInterface();
+		
+		this.addWindowListener(this);
 	}
 	
 	public static void main(String[] args){
-		PartsManager p = new PartsManager();
+		PartsManager manager = new PartsManager();
 	}
 	
 	public void setInterface() {
-		UI = buttons;
+		//add(graphics, BorderLayout.CENTER);
 		
 		add(UI, BorderLayout.LINE_END);
 		pack();
@@ -126,8 +118,50 @@ public class PartsManager extends Client {
 		}
 	}
 	
-	public ArrayList<String> getParts(){
+	public ArrayList<Part> getParts(){
 		return parts;
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+				saveData();
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public void saveData(){
@@ -154,11 +188,12 @@ public class PartsManager extends Client {
 		try{    // loads previously saved player data
 			f = new FileInputStream("InitialData/initialParts.ser");
 			o = new ObjectInputStream(f);
-			parts = (ArrayList<String>) o.readObject();
+			parts = (ArrayList<Part>) o.readObject();
+			System.out.println("Good");
 		}catch(IOException e){
-			parts = new ArrayList<String>();
+			parts = new ArrayList<Part>();
 		} catch(ClassNotFoundException c){
-			parts = new ArrayList<String>();
+			parts = new ArrayList<Part>();
 		}
 	}
 }
