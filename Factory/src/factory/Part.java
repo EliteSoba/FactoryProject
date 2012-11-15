@@ -24,4 +24,6 @@ public class Part implements Serializable{
 	{
 		name = s;
 	}
+	
+	public Part(){}
 }
