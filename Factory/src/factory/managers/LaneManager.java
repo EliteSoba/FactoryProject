@@ -97,15 +97,5 @@ public class LaneManager extends Client {
 			 * do(confirm2);
 			 */
 		}
-		
-		else if(action.equals("err")){
-			String error;
-			error = new String();
-			for(int i = 1; i<this.parsedCommand.size(); i++)
-				error.concat(parsedCommand.get(i));
-			System.out.println(error);
-		
-			
-		}
 	}
 }
