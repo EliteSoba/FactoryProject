@@ -89,7 +89,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	
 	private void addButton(JButton button) {
 		this.add(button);
-		this.add(blank[blanki++]);
+		//this.add(blank[blanki++]);
 		button.addActionListener(this);
 		button.setPreferredSize(new Dimension(170, 20));
 	}
