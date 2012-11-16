@@ -70,7 +70,6 @@ public class MasterControl {
         partOccupied = new TreeMap<String, Boolean>();
         agentTreeMap = new TreeMap<String, Agent>();
 
-
         agentTreeMap.put("ca", conveyor);
         agentTreeMap.put("cca", conveyorController);
         agentTreeMap.put("ga", gantry );
@@ -96,6 +95,15 @@ public class MasterControl {
         nestAgentTreeMap.put("n2b", n2b);
         nestAgentTreeMap.put("n3t", n3t);
         nestAgentTreeMap.put("n3b", n3b);
+        
+    	//Agent Constructing
+    	conveyorController = new ConveyorControllerAgent(this);
+    	conveyor = new ConveyorAgent(this, conveyorController);
+    	conveyorController.setConveyor(conveyor);
+    	kitRobot = new KitRobotAgent(this, conveyor);
+    	conveyor.setKitRobot(kitRobot);
+    	kitRobot.setStand(stand);
+
 
         try{
             myServerSocket = new ServerSocket(12321);
@@ -123,28 +131,39 @@ public class MasterControl {
     private void startAgents(){
         //Start all of the agents!!!!!
     	
-    	//Agent Constructing
-    	conveyorController = new ConveyorControllerAgent(this);
-    	conveyor = new ConveyorAgent(this, conveyorController);
-    	conveyorController.setConveyor(conveyor);
-    	kitRobot = new KitRobotAgent(this, conveyor);
-    	conveyor.setKitRobot(kitRobot);
+    	//Starting all agent threads in agentTreeMap
+    	for (Map.Entry<String, Agent> agentMap : agentTreeMap.entrySet()) {
+    		agentMap.getValue().startThread();
+    	}
     	
-  
+    	//Starting all lane agent threads in laneAgentTreeMap
+    	for (Map.Entry<String, LaneAgent> laneAgentMap : laneAgentTreeMap.entrySet()) {
+    		laneAgentMap.getValue().startThread();
+    	}
     	
-    	kitRobot.setStand(stand);
-    	
-    	//Starting threads
-    	conveyorController.startThread();
-    	conveyor.startThread();
-    	kitRobot.startThread();
+    	//Starting all nest agent threads in nestAgentTreeMap
+    	for (Map.Entry<String, NestAgent> nestAgentMap : nestAgentTreeMap.entrySet()) {
+    		nestAgentMap.getValue().startThread();
+    	}
     }
 
     private void closeAgents() {
         //Close all of the agents!!!!!!
-    	conveyorController.stopThread();
-    	conveyor.stopThread();
-    	kitRobot.stopThread();
+    	
+    	//Stopping all agent threads in agentTreeMap
+    	for (Map.Entry<String, Agent> agentMap : agentTreeMap.entrySet()) {
+    		agentMap.getValue().stopThread();
+    	}
+    	
+    	//Stopping all lane agent threads in laneAgentTreeMap
+    	for (Map.Entry<String, LaneAgent> laneAgentMap : laneAgentTreeMap.entrySet()) {
+    		laneAgentMap.getValue().stopThread();
+    	}
+    	
+    	//Stopping all nest agent threads in nestAgentTreeMap
+    	for (Map.Entry<String, NestAgent> nestAgentMap : nestAgentTreeMap.entrySet()) {
+    		nestAgentMap.getValue().stopThread();
+    	}
     }
 
     // parseDst is called by Clients and Agents and determines whether to
