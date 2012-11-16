@@ -6,9 +6,9 @@ import factory.Part;
 import factory.interfaces.Nest;
 import factory.interfaces.PartsRobot;
 
-public class MockPartsRobotAgent extends MockAgent implements PartsRobot {
+public class MockPartsRobot extends MockAgent implements PartsRobot {
 
-	public MockPartsRobotAgent(String name) {
+	public MockPartsRobot(String name) {
 		super(name);
 		// TODO Auto-generated constructor stub
 	}
