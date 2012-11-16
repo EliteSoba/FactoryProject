@@ -127,10 +127,11 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
 	}
 	
+	//CHANGE TO 0 BASE
 	public void movePartsRobotToNest(int nestIndex) {
 		partsRobot.setState(0);
 		partsRobot.adjustShift(5);
-		partsRobot.setDestination(nests.get(nestIndex-1).getX()-nests.get(nestIndex-1).getImageWidth()-10,nests.get(nestIndex-1).getY()-15);
+		partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-10,nests.get(nestIndex).getY()-15);
 		partsRobot.setDestinationNest(nestIndex);
 	}
 	
@@ -169,8 +170,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 	
 	public void switchFeederLane(int feederNum){
-		// MINH, CAN YOU MAKE THIS LIKE THE FUNCTION ABOVE, BUT BASED ON THE FEEDER NUMBER?
-		// thanks
 		lane[feederNum].divergeUp = !lane[feederNum].divergeUp;
 		lane[feederNum].vY = -(lane[feederNum].vY);
 	}
@@ -213,9 +212,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		lane[feederNum].feederOn = false;
 		lane[feederNum].laneStart = true;
 	}
-	
-	//MINH, CAN YOU MAKE A PURGETOPLANE(INT FEEDERNUM) AND PURGEBOTTOMLANE(INT FEEDERNUM)
-	// ALSO PLZ MAKE EVERYTHING 0-BASED
 	
 	public void partsRobotStateCheck() {
 		// Has robot arrived at its destination?
