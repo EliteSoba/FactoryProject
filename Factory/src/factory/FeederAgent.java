@@ -193,15 +193,6 @@ public class FeederAgent extends Agent implements Feeder {
 			}
 		}
 
-		for (MyPartRequest p : requestedParts) 
-		{
-			if (p.state == MyPartRequestState.DELIVERED)
-			{
-				processFeederParts(p);
-				return true;
-			}
-		}
-
 		if (state == FeederState.SHOULD_START_FEEDING) 
 		{ 
 			//			log.add(new LoggedEvent(
@@ -225,6 +216,15 @@ public class FeederAgent extends Agent implements Feeder {
 					StartFeeding();
 					return true;
 				}
+			}
+		}
+		
+		for (MyPartRequest p : requestedParts) 
+		{
+			if (p.state == MyPartRequestState.DELIVERED)
+			{
+				processFeederParts(p);
+				return true;
 			}
 		}
 
