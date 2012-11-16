@@ -91,7 +91,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.add(button);
 		this.add(blank[blanki++]);
 		button.addActionListener(this);
-		button.setPreferredSize(new Dimension(170, 30));
+		button.setPreferredSize(new Dimension(170, 20));
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -110,9 +110,9 @@ public class ControlPanel extends JPanel implements ActionListener{
 		else if (source == dumpKit)
 			am.dumpKit();
 		else if(source == partsRobotNest1)
-			am.moveRobotToNest(1);
+			am.moveRobotToNest(0);
 		else if(source == partsRobotNest2)
-			am.moveRobotToNest(2);
+			am.moveRobotToNest(1);
 		else if(source == partsRobotGoToCenter)
 			am.moveRobotToCenter();
 		else if(source == partsRobotStation)

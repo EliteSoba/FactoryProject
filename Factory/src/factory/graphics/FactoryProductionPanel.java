@@ -226,9 +226,9 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 			// Give item to partsRobot
 			if(partsRobot.getSize() < 4)
 			{
-				if (nests.get(partsRobot.getDestinationNest()-1).hasItem())
-					partsRobot.addItem(nests.get(partsRobot.getDestinationNest()-1).popItem());
-				partsRobot.setState(0);
+				if (nests.get(partsRobot.getDestinationNest()).hasItem())
+					partsRobot.addItem(nests.get(partsRobot.getDestinationNest()).popItem());
+				partsRobot.setState(2);
 			}
 			partsRobotArrivedAtNest();
 		}
