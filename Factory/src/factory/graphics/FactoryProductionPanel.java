@@ -114,16 +114,49 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		flashFeederIndex = nestIndex;
 	}
 	
-	public void moveGantryRobotToPickup(String path) {
-		//System.out.println("Moving");
+	public void moveGantryRobotToPickup(String path)
+	{
 		gantryRobot.setState(1);
 		gantryRobot.setDestination(WIDTH-100,-100);
 	}
 	
-	public void moveGantryRobotToFeeder(int feederIndex) {
-		gantryRobot.setState(3);
-		gantryRobot.setDestinationFeeder(feederIndex);
-		gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
+	public void moveGantryRobotToFeederForPickup(int feederIndex)
+	{
+		if(!lane[feederIndex].hasBin())
+		{
+			System.err.println("Can't pickup: no bin at feeder " + feederIndex + " (0-based index)!");
+			gantryRobotArrivedAtFeederForPickup();
+		}
+		else
+		{
+			gantryRobot.setState(3);
+			gantryRobot.setDestinationFeeder(feederIndex);
+			gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
+		}
+	}
+	
+	public void moveGantryRobotToFeederForDropoff(int feederIndex)
+	{
+		if(lane[feederIndex].hasBin())
+		{
+			//System.out.println("1");
+			System.err.println("Can't dropoff: feeder " + feederIndex + " (0-based index) already has a bin!");
+			gantryRobotArrivedAtFeederForDropoff();
+		}
+		else if(!gantryRobot.hasBin())
+		{
+			//System.out.println("2");
+			System.err.println("Can't dropoff: gantry robot does not have a bin!");
+			gantryRobotArrivedAtFeederForDropoff();
+		}
+		else
+		{
+			//System.out.println("3");
+			gantryRobot.setState(5);
+			gantryRobot.setDestinationFeeder(feederIndex);
+			gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
+			gantryRobotArrivedAtFeederForDropoff();
+		}
 	}
 	
 	//CHANGE TO 0 BASE
@@ -151,7 +184,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		lane[(laneNum) / 2].binExist = true;
 		//end Test*/
 		if(!lane[(laneNum) / 2].lane1PurgeOn){	//If purging is on, cannot feed!
-			if(lane[(laneNum) / 2].binExist && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
+			if(lane[(laneNum) / 2].hasBin() && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
 				lane[(laneNum) / 2].laneStart = true;
 				lane[(laneNum) / 2].divergeUp = ((laneNum) % 2 == 0);
 				lane[(laneNum) / 2].feederOn = true;
@@ -191,19 +224,10 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	
 	public void purgeFeeder(int feederNum){ // takes in lane 0 - 4
 		lane[(feederNum)].bin = null;
-		lane[(feederNum)].binExist = false;
+		lane[(feederNum)].binExists = false;
 		lane[(feederNum)].feederOn = false;
 		
 	}
-	
-	/*public void purgeLane(int laneNum){
-		if((laneNum) % 2 == 0)
-			lane[(laneNum) / 2].lane1PurgeOn = true;
-		else
-			lane[(laneNum) / 2].lane2PurgeOn = true;
-		lane[(laneNum) / 2].feederOn = false;
-		lane[(laneNum) / 2].laneStart = false;
-	}*/
 	
 	public void purgeTopLane(int feederNum){
 		lane[feederNum].lane1PurgeOn = true;
@@ -251,18 +275,24 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 	
 	public void gantryRobotStateCheck() {
-		if(gantryRobot.getState() == 2)
+		if(gantryRobot.getState() == 2)				// gantry robot reached bin pickup point
 		{
 			gantryRobot.setState(0);
 			// Give gantry robot a bin
 			gantryRobot.giveBin(new GraphicBin(new Part("Test Item")));
 			gantryRobotArrivedAtPickup();
 		}
-		else if(gantryRobot.getState() == 4)
+		else if(gantryRobot.getState() == 4)		// gantry robot reached feeder for dropoff
 		{
 			gantryRobot.setState(0);
-			lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.takeBin());
-			gantryRobotArrivedAtFeeder();
+			lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.popBin());
+			gantryRobotArrivedAtFeederForDropoff();
+		}
+		else if(gantryRobot.getState() == 6)		// gantry robot reached feeder for pickup
+		{
+			gantryRobot.setState(0);
+			gantryRobot.giveBin(lane[gantryRobot.getDestinationFeeder()].popBin());
+			gantryRobotArrivedAtFeederForPickup();
 		}
 	}
 	

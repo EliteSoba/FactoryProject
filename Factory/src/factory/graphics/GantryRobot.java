@@ -31,7 +31,8 @@ class GantryRobot
 		bin = null;
 		hasBin = false;
 		arrived = false;
-		state = 0;					// 0 = idle, 1 = going to bin pickup, 2 = arrived at bin pickup, 3 = going to feeder, 4 = arrived at feeder
+		state = 0;					// 0 = idle, 1 = going to bin pickup, 2 = arrived at bin pickup, 3 = going to feeder (dropoff), 4 = arrived at feeder (dropoff),
+									// 5 = arrived at feeder (pickup), 6 = arrived at feeder (pickup)
 		destinationFeeder = -1;
 		x = init_x;
 		y = init_y;
@@ -110,37 +111,26 @@ class GantryRobot
 	{
 		return imageHeight;
 	}
+	public boolean hasBin()
+	{
+		return hasBin;
+	}
 	public void giveBin(GraphicBin init_bin)
 	{
 		bin = init_bin;
 		hasBin = true;
 	}
-	public GraphicBin takeBin()
+	public GraphicBin popBin()
 	{
 		hasBin = false;
 		return bin;
 	}
 	public void move()
 	{
-		//System.out.println(fx + " " + fy);
 		if(y == fy && x == fx)	// robot has arrived at destination
 		{
 			if(state % 2 == 1)
 				state += 1;
-			/*
-			if(state == 0)
-			{
-				state = 1;
-				hasBin = true;
-				bin = new GraphicBin(new Part("TestItem"));
-				System.out.println("Arrived at bin pickup point, waiting for bin pickup.");
-			}
-			else if(state == 4)
-			{
-				state = 5;
-				System.out.println("Arrived at feeder, waiting for feeder dumping.");
-			}
-			*/
 		}
 		else if(x < fx)
 		{
@@ -180,6 +170,5 @@ class GantryRobot
 		}
 		if(theta < 0) theta = 360;
 		else if(theta > 360) theta = 0;
-		//System.out.println(theta);
 	}
 }

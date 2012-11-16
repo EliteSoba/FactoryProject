@@ -37,7 +37,8 @@ public class FactoryProductionManager extends Client {
 			partsList = new HashMap<String,Part>(); //Local version
 			kitConfigList = new HashMap<String,KitConfig>(); //Local version
 			
-//			loadData();
+			loadData();
+			populatePanelList();
 		}
 		public static void main(String[] args){
 		    FactoryProductionManager f = new FactoryProductionManager();
@@ -54,11 +55,6 @@ public class FactoryProductionManager extends Client {
 			setVisible(true);
 		}
 
-	public void sendCommand(String cmd){
-		//Swing Commands 
-		//Graphics Commands in Panel
-		
-	}
 		
 	public void doCommand(ArrayList<String> pCmd) {
 		int size = pCmd.size();
@@ -70,6 +66,8 @@ public class FactoryProductionManager extends Client {
 		System.out.println(identifier);
 		if(action.equals("cmd")){
 			//Graphics Receive Commands
+			
+			// Commands from FeederAgent
 			if (identifier.equals("startfeeding"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
@@ -87,12 +85,18 @@ public class FactoryProductionManager extends Client {
 			}
 			else if (identifier.equals("switchlane"))
 			{
-				System.out.println("1");
 				int feederSlot = Integer.valueOf(pCmd.get(2));
 				System.out.println("feederslot = " + feederSlot);
 				if (graphics == null)
 					System.out.println("Thisisatest");
 				((FactoryProductionPanel) graphics).switchFeederLane(feederSlot);
+			}
+			
+			// Commands from GantryAgent:
+			else if (identifier.equals("pickupbin"))
+			{
+				String desiredPartImagePath = pCmd.get(2); 
+				((FactoryProductionPanel) graphics).moveGantryRobotToPickup(desiredPartImagePath);
 			}
 			//Swing Receive Commands
 			else if (identifier.equals("addkitname")) {		// add new kit configuration to kit configuration list
@@ -186,7 +190,16 @@ public class FactoryProductionManager extends Client {
         c.printStackTrace();
     }
 }
-			
+		
+    public void populatePanelList() {
+    	Iterator itr = kitConfigList.entrySet().iterator(); 
+    	while(itr.hasNext()) { 
+    		Map.Entry pairs = (Map.Entry)itr.next(); 
+    		String kitName= (String)pairs.getKey();
+    		((FactoryProdManPanel)UI).addKit(kitName);
+    	}
+    }
+
 // To search a list of kit configurations for kits containing a certain part
  //returns ArrayList<String> kitNames;
      public ArrayList<String> kitConfigsContainingPart(String str) {

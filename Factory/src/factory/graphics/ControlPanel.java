@@ -33,7 +33,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton partsRobotGoToCenter;
 	JButton gantryRobotGoToStart;
 	JButton gantryRobotGetBin;
-	JButton gantryRobotFeeder1;
+	JButton gantryRobotFeeder1Dropoff, gantryRobotFeeder1Pickup;
 	JButton cameraFlash;
 	JButton feedLane1, feedLane2, purgeLane1, purgeLane2, purgeFeeder;
 	
@@ -52,7 +52,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 		partsRobotStation = new JButton("Station");
 		gantryRobotGoToStart = new JButton("Go to Start");
 		gantryRobotGetBin = new JButton("Fetch a Bin");
-		gantryRobotFeeder1 = new JButton("Feeder 1 Dump");
+		gantryRobotFeeder1Dropoff = new JButton("Feeder 1 Dropoff");
+		gantryRobotFeeder1Pickup = new JButton("Feeder 1 Pickup");
 		partsRobotGoToCenter = new JButton("Part Go to Center");
 		feedLane1 = new JButton("Feed Lane 1");
 		feedLane2 = new JButton("Feed Lane 2");
@@ -82,7 +83,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.addButton(purgeFeeder);
 		this.addButton(gantryRobotGoToStart);
 		this.addButton(gantryRobotGetBin);
-		this.addButton(gantryRobotFeeder1);
+		this.addButton(gantryRobotFeeder1Dropoff);
+		this.addButton(gantryRobotFeeder1Pickup);
 		this.addButton(cameraFlash);
 		this.setPreferredSize(new Dimension(200, 720));
 	}
@@ -129,8 +131,10 @@ public class ControlPanel extends JPanel implements ActionListener{
 			am.purgeFeeder(0);
 		else if(source == gantryRobotGetBin)
 			am.getBin();
-		else if(source == gantryRobotFeeder1)
-			am.moveGantryToFeeder1();
+		else if(source == gantryRobotFeeder1Dropoff)
+			am.moveGantryToFeeder1Dropoff();
+		else if(source == gantryRobotFeeder1Pickup)
+			am.moveGantryToFeeder1Pickup();
 		else if(source == cameraFlash)
 			am.takePictureFeeder1();
 	}
