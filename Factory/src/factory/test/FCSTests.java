@@ -105,6 +105,10 @@ public class FCSTests extends TestCase{
 //		assertTrue("Parts Robot should have gotten a message to make a kit.", );
 	}
 	
+	public void testImports(){
+		FCSAgent fcs = new FCSAgent(null);
+	}
+	
 	public void testAddingAndFinishingKitConfig(){
 		
 		//this test tests the fcs robot handling incoming orders.  It takes in 2 initial orders, and simulates
@@ -115,6 +119,8 @@ public class FCSTests extends TestCase{
 		KitConfig kit1 = new KitConfig();
 		KitConfig kit2 = new KitConfig();
 		FCSAgent fcs = new FCSAgent(null);
+		
+		fcs.kitRecipes.clear();
 		
 		fcs.kitRecipes.put("typeA", kit1);
 		fcs.kitRecipes.put("typeB", kit2);

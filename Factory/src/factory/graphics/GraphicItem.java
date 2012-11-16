@@ -18,7 +18,7 @@ public class GraphicItem {
 		vx = 0;
 		vy = 0;
 		image = new ImageIcon(imagepath);
-		stepX = 19;
+		stepX = 20;
 		stepY = 5;
 		
 		

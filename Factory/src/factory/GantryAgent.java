@@ -32,9 +32,6 @@ public class GantryAgent extends Agent implements Gantry {
 		}
 	}
 
-
-
-
 	// *** MESSAGES ***
 
 	public void msgFeederNeedsPart(Part part, Feeder feeder) {
@@ -66,6 +63,7 @@ public class GantryAgent extends Agent implements Gantry {
 	private void goFetchTheRequestedBin(MyBin b) {
 		DoPickupPurgeBin(b); //animation message
 		
+		
 //		DoRefillPurgeBin(binConfig.binList.get(b.pt));
 //		DoBringRequestedBin(binConfig.binList.get(b.pt),b.fdr,b.pt);
 		
@@ -79,13 +77,21 @@ public class GantryAgent extends Agent implements Gantry {
 	private void DoPickupPurgeBin(MyBin b) {
 		print("Picking up Purge Bin");
 		server.command("ga fpm cmd pickupbin " + b.pt.imagePath);
-		
 		try{
 			animation.acquire();
 		}
 		catch (InterruptedException e){
 			e.printStackTrace();
 		}
+		
+	}
+
+	
+	// *** OTHER METHODS ***
+	/**
+	 * This is a temporary message to test executing an animation from swing
+	 */
+	public void msgTestGetPart() {
 		
 	}
 
