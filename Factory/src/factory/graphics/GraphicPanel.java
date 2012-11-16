@@ -20,7 +20,6 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected boolean isFactoryProductionManager;
 	
 	// LANE MANAGER
-	protected GraphicLaneManagerClient client;
 	protected GraphicLaneManager [] lane;
 	
 	// KIT MANAGER
@@ -37,7 +36,6 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	public GraphicPanel() {
 		am = null;
-		client = null;
 		lane = null;
 		belt = null;
 		station = null;
@@ -111,7 +109,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 
 	public void exportKitDone() {
-		sendMessage("FILLER");
+		sendMessage("ca cnf");
 	}
 	
 	public void cameraFlashDone() {

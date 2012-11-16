@@ -16,13 +16,16 @@ import factory.swing.PartsManPanel;
 public class PartsManager extends Client implements WindowListener{
 	private static final long serialVersionUID = -205350261062308096L;
 	
-	HashMap<String, Part> parts;
+	public HashMap<String, Part> parts;
 	// Kit Configurations ArrayList
 
 	public PartsManager() {
 		super(Client.Type.pm, null, null);
 		
+		parts = new HashMap<String, Part>();
 		loadData();
+		//parts = new HashMap<String, Part>();
+		//parts.put("Part", new Part("Part",1,"Hey","Image",2));
 		System.out.println(parts.size());
 		/*
 		parts.add(new Part("Eye",1,"This is used to see.","Images/eye.png",1));
@@ -52,73 +55,22 @@ public class PartsManager extends Client implements WindowListener{
 		setVisible(true);
 	}
 	
-	public void sendMessage(String option, String itemName, String filePath){
+	public void sendMessage(String option, Part p){
 		String message = null;
 		
 		if(option.equals("add")){
-			message = "pm km cmd addpartname " + itemName + " " + filePath;
+			message = "pm multi cmd addpartname " + p.name + " " + p.id + " " + p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
 		}
 		
 		else if (option.equals("remove")){
-			message = "pm km cmd rmpartname " + itemName + " " + filePath;
+			message = "pm multi cmd rmpartname " + p.name + " endcmd"; 
 		}
 		
 		sendCommand(message);
 		
 	}
 
-	@Override
-	public void doCommand(ArrayList<String> pCmd) {
-		int size = pCmd.size();
-	//parameters lay between i = 2 and i = size - 2
-		String action = pCmd.get(0);
-		String identifier = pCmd.get(1);
-		if(action.equals("cmd")){
-			/*if(identifier.equals(command1))
-			 * do(command1);
-			 * else if(identifier.equals(command2))
-			 * do(command2);
-			 */
-		}
-		else if(action.equals("req")){
-			/*if(identifier.equals(request1))
-			 * do(request1);
-			 * else if(identifier.equals(request2))
-			 * do(request2);
-			 */
-		}
-		else if(action.equals("get")){
-			/*if(identifier.equals(get1))
-			 * do(get1);
-			 * else if(identifier.equals(get2))
-			 * do(get2);
-			 */
-		}
-		else if(action.equals("set")){
-			/*if(identifier.equals(set1))
-			 * do(set1);
-			 * else if(identifier.equals(set2))
-			 * do(set2);
-			 */
-		}
-		else if(action.equals("cnf")){
-			/*if(identifier.equals(confirm1))
-			 * do(confirm1);
-			 * else if(identifier.equals(confirm2))
-			 * do(confirm2);
-			 */
-		}
-		else if(action.equals("err")){
-			String error;
-			error = new String();
-			for(int i = 1; i<this.parsedCommand.size(); i++)
-				error.concat(parsedCommand.get(i));
-			System.out.println(error);
 		
-			
-		}
-	}
-	
 	public HashMap<String, Part> getParts(){
 		return parts;
 	}
@@ -192,9 +144,17 @@ public class PartsManager extends Client implements WindowListener{
 			parts = (HashMap<String, Part>) o.readObject();
 			System.out.println("Good");
 		}catch(IOException e){
+			e.printStackTrace();
 			parts = new HashMap<String, Part>();
 		} catch(ClassNotFoundException c){
+			c.printStackTrace();
 			parts = new HashMap<String, Part>();
 		}
+	}
+
+	@Override
+	public void doCommand(ArrayList<String> pCmd) {
+		// TODO Auto-generated method stub
+		
 	}
 }

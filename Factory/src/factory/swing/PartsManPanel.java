@@ -73,7 +73,6 @@ public class PartsManPanel extends JPanel{
 	private class AddPanel extends JPanel implements ActionListener{
 
 		// Data
-		PartsManager partsManager;
 		JLabel title;
 		JLabel label1;
 		JLabel label2;
@@ -167,11 +166,14 @@ public class PartsManPanel extends JPanel{
 					 itemName.setText("Name taken.");
 				 }else{
 					 System.out.println("I will create a new part and send it to the server.");
-					 //partsManager.sendMessage("add", itemName.getText(), (String)imageSelection.getSelectedItem());
+					 
 					 partsList.add(new CurrentItem(new JLabel(itemName.getText()), new JLabel(), (String)imageSelection.getSelectedItem()));
-					 //System.out.println((partsList.get(partsList.size()-1).name.getText()));
-					 //partsList.get(partsList.size()-1).addCurrentItem(currentList.getViewport());
 					 partsList.get(partsList.size() - 1).addCurrentItem(currentListPanel);
+					 System.out.println("parts size : " + partsManager.parts.size());
+					 Part p = new Part(itemName.getText(), 2, "This is a test.","Images/" + (String)imageSelection.getSelectedItem() + ".png", 2);
+					 
+					 //partsManager.parts.put(p.name, p);
+					 //partsManager.sendMessage("add", partsManager.getParts().get((String)imageSelection.getSelectedItem()));
 				 }
 		     }else{
 			 JComboBox cb = (JComboBox)ae.getSource();
@@ -212,11 +214,12 @@ public class PartsManPanel extends JPanel{
 						it.remove();
 					}*/
 					for ( Part p : partsManager.getParts().values()){
-						imageSelection.addItem(p.imagePath);
+						imageSelection.addItem(p.name);
+						System.out.println(p.name);
 					}
 					imageSelection.addActionListener(this);
 					previewFrame = new JLabel();
-					System.out.println((String)imageSelection.getItemAt(0));
+					System.out.println("Hey " + (String)imageSelection.getItemAt(0));
 					//ImageIcon imagePreview = new ImageIcon((String)imageSelection.getItemAt(0));
 					//previewFrame.setIcon(imagePreview);
 					
@@ -253,8 +256,8 @@ public class PartsManPanel extends JPanel{
 
 				}
 				
-				public void updatePicture(String item){
-					ImageIcon imagePreview = new ImageIcon("Images/" + item + ".png");
+				public void updatePicture(Part p){
+					ImageIcon imagePreview = new ImageIcon(p.imagePath);
 					previewFrame.setIcon(imagePreview);
 				}
 
@@ -262,12 +265,13 @@ public class PartsManPanel extends JPanel{
 					 
 				     if (ae.getSource() == removeItem){
 				    	 System.out.println("I will remove a part and update the server.");
-				    	 partsManager.sendMessage("remove", (String)imageSelection.getSelectedItem(), null);
+				    	 partsManager.sendMessage("remove", partsManager.getParts().get((String)imageSelection.getSelectedItem()));
+				    	 partsManager.parts.remove((String)imageSelection.getSelectedItem());
 				    	 
 				     }else{
 				    	 JComboBox cb = (JComboBox)ae.getSource();
 					     String petName = (String)cb.getSelectedItem();
-					     updatePicture(petName);
+					     updatePicture(partsManager.parts.get(petName));
 				     }
 
 				}

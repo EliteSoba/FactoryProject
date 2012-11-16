@@ -509,12 +509,12 @@ public class FeederAgent extends Agent implements Feeder {
 	private void DoStartFeeding(Part part) {
 		server.command("fa fpm cmd startfeeding " + feederSlot);
 		debug("Feeder " + feederSlot + " started feeding.");
-		//		try {
-		//			animation.acquire();
-		//		} catch (InterruptedException e) {
-		//			// TODO Auto-generated catch block
-		//			e.printStackTrace();
-		//		}
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void DoStopFeeding() { 
@@ -546,14 +546,14 @@ public class FeederAgent extends Agent implements Feeder {
 		log.add(new LoggedEvent(
 				"Animation DoSwitchLane()"));
 
-//		server.command("fa fpm cmd switchlane " + feederSlot);
+		server.command("fa fpm cmd switchlane " + feederSlot);
 		debug("switching lane");
-		//		try {
-		//		animation.acquire();
-		//	} catch (InterruptedException e) {
-		//		// TODO Auto-generated catch block
-		//		e.printStackTrace();
-		//	}
+				try {
+				animation.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 	private void DoContinueFeeding(Part part) {

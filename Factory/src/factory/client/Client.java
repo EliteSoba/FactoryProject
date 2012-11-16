@@ -43,10 +43,13 @@ public abstract class Client extends JFrame implements ActionListener {
 	
 	Runnable independentInput = new Runnable(){
 		public void run(){
-			for(;;){
+			while(true){
+//				System.out.println("1");
 				if(connected)
 				try {
+					System.out.println("2");
 					currentCommand = input.readLine(); //reads from input each time there is a new string
+					System.out.println(currentCommand + ".");
 					parseInput();
 					doCommand(parsedCommand);
 				} catch (Exception e) {
@@ -63,6 +66,7 @@ public abstract class Client extends JFrame implements ActionListener {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		graphics = Animation;
 		connect(); //connects to server
+		System.out.println(connected);
 		//updater = new Timer(1000/30, this); //sets timer to update graphics
 		//updater.start();
 		//setInterface(); //to be implemented...set size, layout, add UI etc...
@@ -75,11 +79,14 @@ public abstract class Client extends JFrame implements ActionListener {
 			server = new Socket("127.0.0.1", 12321); //connects to server on localhost
 			input = new BufferedReader(new InputStreamReader(server.getInputStream()));//opens inputStream
 			output = new PrintWriter(server.getOutputStream(),true);//opens outputStream
+			System.out.println(this.type.toString());
 			output.println(this.type.toString());
 			
 			String reply = input.readLine();
-			if(reply == "connected")
+			System.out.println(reply);
+			if(reply.equals("connected")){
 				connected = true;
+			}
 			System.out.println("connected to server!");
 			System.out.println("waiting for agents to start...");
 			input.readLine();

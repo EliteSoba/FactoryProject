@@ -19,10 +19,9 @@ public class LaneManager extends Client {
 	
 	public LaneManager() {
 		super(Client.Type.lm, null, null); 
-		
 		//LaneManPanel buttons = new LaneManPanel(); //to be implemented in V.2
-		//buttons.setManager(l);  //to be implemented in V.2
 		
+		buttons = new LaneManPanel(this);
 		animation = new LanePanel(this);
 		
 		setInterface();
@@ -32,23 +31,6 @@ public class LaneManager extends Client {
 		LaneManager l = new LaneManager(); 
 	}
 	
-	public void sendMessage(int lane, int setting, String message){
-		String set = new String("");
-		/*
-		if (message == "power"){
-			set = "lm lma lanepowertoggle "+ lane;
-		}
-		else if (message == "red"){
-			set = "lm lma set lanevibration "+ lane + " " + setting;
-		}
-		else if (message == "yellow"){
-			set = "lm lma set lanevibration "+ lane + " " + setting;
-		}
-		else if (message == "green"){
-			set = "lm lma set lanevibration "+ lane + " " + setting;
-		}*/ // to be implemented in V.2
-		sendCommand(set); 
-	}
 	
 	public void setInterface() {
 		graphics = animation;
@@ -68,39 +50,19 @@ public class LaneManager extends Client {
 		String action = pCmd.get(0);
 		String identifier = pCmd.get(1);
 		if(action == "cmd"){
-			/*if(identifier == command1)
-			 * do(command1);
-			 * else if(identifier == command2)
-			 * do(command2);
-			 */
+
 		}
 		else if(action == "req"){
-			/*if(identifier == request1)
-			 * do(request1);
-			 * else if(identifier == request2)
-			 * do(request2);
-			 */
+
 		}
 		else if(action == "get"){
-			/*if(identifier == get1)
-			 * do(get1);
-			 * else if(identifier == get2)
-			 * do(get2);
-			 */
+
 		}
 		else if(action == "set"){
-			/*if(identifier == set1)
-			 * do(set1);
-			 * else if(identifier == set2)
-			 * do(set2);
-			 */
+
 		}
 		else if(action == "cnf"){
-			/*if(identifier == confirm1)
-			 * do(confirm1);
-			 * else if(identifier == confirm2)
-			 * do(confirm2);
-			 */
+
 		}
 	}
 }

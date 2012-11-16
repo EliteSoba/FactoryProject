@@ -22,6 +22,8 @@ import java.util.*;
 
 import agent.Agent;
 import factory.*;
+import factory.interfaces.Gantry;
+import factory.interfaces.Lane;
 
 public class MasterControl {
 	
@@ -29,9 +31,7 @@ public class MasterControl {
 	KitRobotAgent kitRobot;
 	ConveyorAgent conveyor;
 	ConveyorControllerAgent conveyorController;
-	FeederAgent f0, f1, f2, f3;
-    List<FeederAgent> feederAgents = Arrays.asList(f0, f1, f2, f3);
-	LaneAgent l0t, l0b, l1t, l1b, l2t, l2b, l3t, l3b;
+	public LaneAgent l0t, l0b, l1t, l1b, l2t, l2b, l3t, l3b;
     TreeMap<String, LaneAgent> laneAgentTreeMap;
     NestAgent n0t, n0b, n1t, n1b, n2t, n2b, n3t, n3b;
     TreeMap<String, NestAgent> nestAgentTreeMap;
@@ -40,6 +40,10 @@ public class MasterControl {
 	StandAgent stand;
 	VisionAgent vision;
 	FCSAgent fcs;
+	
+	public FeederAgent f0, f1, f2, f3;
+    List<FeederAgent> feederAgents = Arrays.asList(f0, f1, f2, f3);
+
 
     TreeMap<String, Agent> agentTreeMap;
 
@@ -70,16 +74,101 @@ public class MasterControl {
         partHandlers = new TreeMap<String, PartHandler>();
         partOccupied = new TreeMap<String, Boolean>();
         agentTreeMap = new TreeMap<String, Agent>();
+        laneAgentTreeMap = new TreeMap<String, LaneAgent>();
+        nestAgentTreeMap = new TreeMap<String, NestAgent>();
 
-        agentTreeMap.put("ca", conveyor);
-        agentTreeMap.put("cca", conveyorController);
-        agentTreeMap.put("ga", gantry );
-        agentTreeMap.put("kra", kitRobot);
-        agentTreeMap.put("pra", partsRobot);
-        agentTreeMap.put("sa", stand);
-        agentTreeMap.put("va", vision);
-        agentTreeMap.put("fcsa", fcs);
 
+        
+   
+
+        
+    	
+
+
+        try{
+            myServerSocket = new ServerSocket(12321);
+        } catch(Exception e){
+
+            e.printStackTrace();
+
+        }
+        connectAllSockets(debug); // This waits for every client to start up before moving on.
+        // At this point, all of the sockets are connected, PartHandlers have been created
+        // The TreeMaps are updated with all of the relevant data, and the Factory can go.
+        startAgents();
+        laneAgentTreeMap.put("l0t", l0t); //tmp for testing.
+        String singleD = (debug? partHandlers.firstKey(): null);
+        sendConfirm(singleD);
+        // At this point, all of the parts have been notified that
+        // the connections have been made, and therefore, the
+        // Factory simulation can begin.
+
+    }
+
+    // Member Methods
+
+    private void startAgents(){
+        //Instantiate all of the agents!!!!!!
+
+    	
+    	// Instantiate the Nests
+    	n0t = new NestAgent(this);
+    	n0b = new NestAgent(this);
+    	n1t = new NestAgent(this);
+    	n1b = new NestAgent(this);
+    	n2t = new NestAgent(this);
+    	n2b = new NestAgent(this);
+    	n3t = new NestAgent(this);
+    	n3b = new NestAgent(this);
+    	
+    	
+    	// Instantiate the Lanes
+    	l0t = new LaneAgent(this);
+    	l0b = new LaneAgent(this);
+    	l1t = new LaneAgent(this);
+    	l1b = new LaneAgent(this);
+    	l2t = new LaneAgent(this);
+    	l2b = new LaneAgent(this);
+    	l3t = new LaneAgent(this);
+    	l3b = new LaneAgent(this);
+
+    	// Instantiate the Gantry
+    	gantry = new GantryAgent(this);
+    	
+    	// Instantiate the Feeders
+    	f0 = new FeederAgent("f0",0,l0t,l0b,gantry,this);
+    	f1 = new FeederAgent("f1",1,l1t,l1b,gantry,this);
+    	f2 = new FeederAgent("f2",2,l2t,l2b,gantry,this);
+    	f3 = new FeederAgent("f3",3,l3t,l3b,gantry,this);
+    	
+    	
+    	// Instantiate the Conveyor and related Agents
+    	conveyor = new ConveyorAgent();
+    	conveyorController = new ConveyorControllerAgent();
+    	    	
+        // Instantiate the KitRobot
+    	kitRobot = new KitRobotAgent(this,conveyor);
+    	
+    	// Instantiate the PartsRobot
+    	//partsRobot = new PartsRobotAgent(); // bad code
+    	
+    	// Instantiate the Stand
+    	//stand = new StandAgent(); // bad code
+    	
+    	// Instantiate the Vision
+    	vision = new VisionAgent(partsRobot,stand,this);
+    	
+    	// Instantiate the FCS
+    	fcs = new FCSAgent(this);
+    	
+    
+    	// SET A FEW THINGS
+    	conveyor.setKitRobot(kitRobot);
+    	kitRobot.setStand(stand);
+    	conveyor.setFCS(fcs);
+
+    	
+    	// Set up the TreeMaps
         laneAgentTreeMap.put("l0t", l0t);
         laneAgentTreeMap.put("l0b", l0b);
         laneAgentTreeMap.put("l1t", l1t);
@@ -97,43 +186,23 @@ public class MasterControl {
         nestAgentTreeMap.put("n2b", n2b);
         nestAgentTreeMap.put("n3t", n3t);
         nestAgentTreeMap.put("n3b", n3b);
-        
-    	//Agent Constructing
-    	conveyorController = new ConveyorControllerAgent(this);
-    	conveyor = new ConveyorAgent(this, conveyorController);
-    	conveyorController.setConveyor(conveyor);
-    	kitRobot = new KitRobotAgent(this, conveyor);
-    	conveyor.setKitRobot(kitRobot);
-    	kitRobot.setStand(stand);
-    	conveyor.setFCS(fcs);
-
-
-        try{
-            myServerSocket = new ServerSocket(12321);
-        } catch(Exception e){
-
-            e.printStackTrace();
-
-        }
-        connectAllSockets(debug); // This waits for every client to start up before moving on.
-
-        // At this point, all of the sockets are connected, PartHandlers have been created
-        // The TreeMaps are updated with all of the relevant data, and the Factory can go.
-
-        startAgents();
-
-        sendConfirm();
-        // At this point, all of the parts have been notified that
-        // the connections have been made, and therefore, the
-        // Factory simulation can begin.
-
-    }
-
-    // Member Methods
-
-    private void startAgents(){
-        //Start all of the agents!!!!!
     	
+        agentTreeMap.put("ca", conveyor);
+        agentTreeMap.put("cca", conveyorController);
+        agentTreeMap.put("ga", gantry );
+        agentTreeMap.put("kra", kitRobot);
+//        agentTreeMap.put("pra", partsRobot);
+//        agentTreeMap.put("sa", stand);
+        agentTreeMap.put("va", vision);
+        agentTreeMap.put("fcsa", fcs);
+        
+    	
+        // Start the FeederAgent
+        f0.startThread();
+        f1.startThread();
+        f2.startThread();
+        f3.startThread();
+                
     	//Starting all agent threads in agentTreeMap
     	for (Map.Entry<String, Agent> agentMap : agentTreeMap.entrySet()) {
     		agentMap.getValue().startThread();
@@ -176,6 +245,8 @@ public class MasterControl {
         // Split into array
         // Figure out destination
         // Call either agentCmd() or clientCmd()
+    	
+    	System.out.println(cmd);
         ArrayList <String> parsedCommand = new ArrayList<String>(Arrays.asList(cmd.split(" "))); //puts string into array list
 
 
@@ -288,6 +359,7 @@ public class MasterControl {
 
     public boolean clientCmd(ArrayList<String> cmd){
         String s = checkCmd(cmd);
+        System.out.println(s);
         String a = cmd.get(0); // Source
         if(s != null){
         	if(clients.contains(a)){
@@ -325,9 +397,13 @@ public class MasterControl {
 
 
         } else {
+        	System.out.println("1");
             PartHandler destinationPH = determinePH(b);
-            return sendCmd(destinationPH, fullCmd);
-
+            System.out.println("2");
+            boolean result = sendCmd(destinationPH, fullCmd);
+            System.out.println("3");
+            System.out.println(result);
+            return result;
         }
 
 
@@ -417,7 +493,7 @@ public class MasterControl {
 
         // Check that the destination is not currently busy
 
-        if(!partOccupied.get(pCmd.get(1))){
+        if(partOccupied.get(pCmd.get(1))){
             return "destination is busy cannot send message.";
         }
 
@@ -444,7 +520,6 @@ public class MasterControl {
     private void connectAllSockets(boolean debugmode){
         int numConnected = 0;
         int numToConnect = (debugmode ? 1 : clients.size());
-
         while(numConnected != numToConnect){
             try{
                 Socket s = myServerSocket.accept();
@@ -469,18 +544,33 @@ public class MasterControl {
     // sendConfirm() is the function responsible for sending a confirmation through each socket
     // this confirms that every connection has been made, and therefore, the factory sim can begin.
 
-    private void sendConfirm(){
-
-        for(String p : clients){
-            PartHandler ph = partHandlers.get(p);
+    private void sendConfirm(String singleDest){
+    	if(singleDest != null){
+    		PartHandler ph = partHandlers.get(singleDest);
             ph.send("mcs start");
-        }
-
+    		
+    	} else {
+	        for(String p : clients){
+	            PartHandler ph = partHandlers.get(p);
+	            ph.send("mcs start");
+	        }
+    	}
     }
 
     public static void main(String args[]){
        // boolean debug = Boolean.getBoolean(args[0]);
         MasterControl mc = new MasterControl(true);
+        
+        //This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
+        long timeToQuit = System.currentTimeMillis() + 5000;
+        while (System.currentTimeMillis() < timeToQuit);
+        
+        Part p0 = new Part("Ear");
+                
+		// request a part for the lane
+		mc.f0.msgLaneNeedsPart(p0, mc.l0t);		
+		// should make the gantry go get a bin of parts
+		// should call DoSwitchLane() and then DoStartFeeding()
     }
 
 }
