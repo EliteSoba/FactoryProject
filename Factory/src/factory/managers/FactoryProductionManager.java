@@ -37,7 +37,8 @@ public class FactoryProductionManager extends Client {
 			partsList = new HashMap<String,Part>(); //Local version
 			kitConfigList = new HashMap<String,KitConfig>(); //Local version
 			
-//			loadData();
+			loadData();
+			populatePanelList();
 		}
 		public static void main(String[] args){
 		    FactoryProductionManager f = new FactoryProductionManager();
@@ -54,11 +55,6 @@ public class FactoryProductionManager extends Client {
 			setVisible(true);
 		}
 
-	public void sendCommand(String cmd){
-		//Swing Commands 
-		//Graphics Commands in Panel
-		
-	}
 		
 	public void doCommand(ArrayList<String> pCmd) {
 		int size = pCmd.size();
@@ -99,7 +95,6 @@ public class FactoryProductionManager extends Client {
 			// Commands from GantryAgent:
 			else if (identifier.equals("pickupbin"))
 			{
-				System.out.println("gantry blah blah"); //debugging
 				String desiredPartImagePath = pCmd.get(2); 
 				((FactoryProductionPanel) graphics).moveGantryRobotToPickup(desiredPartImagePath);
 			}
@@ -195,7 +190,16 @@ public class FactoryProductionManager extends Client {
         c.printStackTrace();
     }
 }
-			
+		
+    public void populatePanelList() {
+    	Iterator itr = kitConfigList.entrySet().iterator(); 
+    	while(itr.hasNext()) { 
+    		Map.Entry pairs = (Map.Entry)itr.next(); 
+    		String kitName= (String)pairs.getKey();
+    		((FactoryProdManPanel)UI).addKit(kitName);
+    	}
+    }
+
 // To search a list of kit configurations for kits containing a certain part
  //returns ArrayList<String> kitNames;
      public ArrayList<String> kitConfigsContainingPart(String str) {

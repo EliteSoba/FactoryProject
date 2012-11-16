@@ -44,27 +44,22 @@ public class NestAgent extends Agent implements Nest {
 
 	/** SCHEDULER **/
 	public boolean pickAndExecuteAnAction() {
-		debug("here?");
 		if (nestState == NestState.NEEDS_TO_DUMP)
 		{
-			debug("1?");
 			dump();
 			return true;
 		}
 		for(MyPart p : myParts)
 		{
-			debug("2?");
 
 			if (p.state == MyPartState.NEEDED)
 			{
-				debug("3?");
 
 				askLaneToSendParts(p);
 				return true;
 			}
 		}
 		
-		debug("4?");
 
 		return false;
 	}

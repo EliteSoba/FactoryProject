@@ -47,13 +47,11 @@ public abstract class Client extends JFrame implements ActionListener {
 //				System.out.println("1");
 				if(connected)
 				try {
-					System.out.println("2");
 					currentCommand = input.readLine(); //reads from input each time there is a new string
-					System.out.println(currentCommand + ".");
 					parseInput();
 					doCommand(parsedCommand);
 				} catch (Exception e) {
-					System.out.println("inputStream not open");
+					//System.out.println("inputStream not open"); // not necessary 
 				}
 			}//end for
 		}//end run
@@ -100,6 +98,7 @@ public abstract class Client extends JFrame implements ActionListener {
 		parsedCommand = new ArrayList<String>(Arrays.asList(currentCommand.split(" "))); //puts string into array list   
     }
 	public void sendCommand(String cmd){
+		System.out.println("Client - sendCommand = " + cmd);
 		output.println(cmd);
 	}
 
