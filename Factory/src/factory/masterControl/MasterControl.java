@@ -142,6 +142,9 @@ public class MasterControl {
 
     private void closeAgents() {
         //Close all of the agents!!!!!!
+    	conveyorController.stopThread();
+    	conveyor.stopThread();
+    	kitRobot.stopThread();
     }
 
     // parseDst is called by Clients and Agents and determines whether to
