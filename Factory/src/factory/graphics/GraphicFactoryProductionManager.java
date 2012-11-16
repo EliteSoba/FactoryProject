@@ -98,14 +98,18 @@ public class GraphicFactoryProductionManager extends JFrame {
 		//kitRobot.msgAnimationDone();
 	}
 	
-	public void moveRobotToNest1()
+	public void moveRobotToNest(int nestNum)
 	{
-		panel.movePartsRobotToNest(1);
+		panel.movePartsRobotToNest(nestNum);
 	}
 	
 	public void moveRobotToStation()
 	{
 		panel.movePartsRobotToKit(0);
+	}
+	
+	public void moveRobotToCenter(){
+		panel.movePartsRobotToCenter();
 	}
 	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 1-8, NOT 0-7
