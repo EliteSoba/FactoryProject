@@ -1,7 +1,7 @@
 //Contributors: Ben Mayeux,Stephanie Reagle, Joey Huang, Tobias Lee, Ryan Cleary
 //CS 200
 
-// Last edited: 11/15/12 7:55pm by Joey Huang
+// Last edited: 11/16/12 10:12am by Joey Huang
 package factory.managers;
 
 import java.awt.BorderLayout;
@@ -118,12 +118,11 @@ public class FactoryProductionManager extends Client {
 			}
 			else if (identifier.equals("addpartname")) {	// add new part to parts list
 				Part part = new Part(pCmd.get(3),Integer.parseInt(pCmd.get(4)),pCmd.get(7),pCmd.get(5),Double.parseDouble(pCmd.get(6)));
-				// server message sequence		Part part = new Part(pCmd.get(3),Integer.parseInt(pCmd.get(4)),pCmd.get(5),Double.parseDouble(pCmd.get(6)),pCmd.get(7));
 				partsList.put(pCmd.get(3),part);
 			}
 			else if (identifier.equals("rmpartname")) {		// remove part from parts list
 				partsList.remove(pCmd.get(2));
-				// need to check kits affected
+				// check kits affected and remove them
 				partsList.remove(pCmd.get(2));
 				ArrayList<String> affectedKits = kitConfigsContainingPart(pCmd.get(2));
 				for (String kit:affectedKits) {
@@ -141,7 +140,9 @@ public class FactoryProductionManager extends Client {
 		
 		else if(action.equals("set")){
 			if (identifier.equals("kitcontent")) { 			// modify content of a kit
-				
+				KitConfig kit = kitConfigList.get(pCmd.get(2));
+				String partName = pCmd.get(3);
+				kit.listOfParts.set(pCmd.get(3),partsList.get(partName));
 			}
 			else if (identifier.equals("kitsproduced")) { // updates number of kits produced for schedule
 				((FactoryProdManPanel) UI).kitProduced();
@@ -162,12 +163,12 @@ public class FactoryProductionManager extends Client {
 	}
 			
 
-// Load Data - remember to import the file - FOR EVERYONE
+// Load parts list and kit configuration list from file
     @SuppressWarnings("unchecked")
 	public void loadData(){
     FileInputStream f;
     ObjectInputStream o;
-    try{    // loads previously saved player data
+    try{    // parts
         f = new FileInputStream("InitialData/initialParts.ser");
         o = new ObjectInputStream(f);
         partsList = (HashMap<String,Part>) o.readObject();
@@ -178,7 +179,7 @@ public class FactoryProductionManager extends Client {
     } catch(ClassNotFoundException c){
         c.printStackTrace();
     }
-    try{    // loads previously saved player data
+    try{    // kit configurations
         f = new FileInputStream("InitialData/initialKitConfigs.ser");
         o = new ObjectInputStream(f);
         kitConfigList = (HashMap<String,KitConfig>) o.readObject();
@@ -191,7 +192,7 @@ public class FactoryProductionManager extends Client {
     }
 }
 		
-    public void populatePanelList() {
+    public void populatePanelList() { // adds list to panel display
     	Iterator itr = kitConfigList.entrySet().iterator(); 
     	while(itr.hasNext()) { 
     		Map.Entry pairs = (Map.Entry)itr.next(); 
@@ -211,7 +212,6 @@ public class FactoryProductionManager extends Client {
          Iterator itr = kitConfigList.entrySet().iterator(); 
          while(itr.hasNext()) {                  
              Map.Entry pairs = (Map.Entry)itr.next();    
-             //String kitName = (String)pairs.getKey();
              kitConfig = (KitConfig)pairs.getValue();
              for (Part p:kitConfig.listOfParts) {
                  if (p.name.equals(str)) {
