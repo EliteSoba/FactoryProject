@@ -128,9 +128,9 @@ class GantryRobot
 				bin = new GraphicBin(new Part("TestItem"));
 				System.out.println("Arrived at bin pickup point, waiting for bin pickup.");
 			}
-			else if(state == 3)
+			else if(state == 4)
 			{
-				state = 4;
+				state = 5;
 				System.out.println("Arrived at feeder, waiting for feeder dumping.");
 			}
 		}

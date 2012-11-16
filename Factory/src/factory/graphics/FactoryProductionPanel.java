@@ -129,7 +129,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	
 	//CHANGE TO 0 BASE
 	public void movePartsRobotToNest(int nestIndex) {
-		partsRobot.setState(0);
+		partsRobot.setState(1);
 		partsRobot.adjustShift(5);
 		partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-10,nests.get(nestIndex).getY()-15);
 		partsRobot.setDestinationNest(nestIndex);
@@ -142,7 +142,8 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 	
 	public void movePartsRobotToCenter() {
-		partsRobot.setDestination(WIDTH/2-100, HEIGHT/2);
+		partsRobot.setState(5);
+		partsRobot.setDestination(WIDTH/2-200, HEIGHT/2);
 	}
 	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
@@ -220,25 +221,32 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	public void partsRobotStateCheck() {
 		// Has robot arrived at its destination?
 		//System.out.println(partsRobot.getState());
-		if(partsRobot.getState() == 1)		// partsRobot has arrived at nest
+		if(partsRobot.getState() == 2)		// partsRobot has arrived at nest
 		{
 			// Give item to partsRobot
 			if(partsRobot.getSize() < 4)
 			{
 				if (nests.get(partsRobot.getDestinationNest()-1).hasItem())
 					partsRobot.addItem(nests.get(partsRobot.getDestinationNest()-1).popItem());
-				partsRobot.setState(2);
+				partsRobot.setState(0);
 			}
-				partsRobotArrivedAtNest();
+			partsRobotArrivedAtNest();
 		}
 		else if(partsRobot.getState() == 4)	// partsRobot has arrived at kitting station
 		{
-			for(int i = 0; i < partsRobot.getSize(); i++)
+			System.out.println("Size:"+partsRobot.getSize());
+			int numberOfParts = partsRobot.getSize();
+			for(int i = 0; i < numberOfParts; i++)
+			{
+				System.out.println("Adding part to kit: " + i);
 				station.addItem(partsRobot.popItem(),partsRobot.getDestinationKit());
+			}
+			partsRobot.setState(0);
 			partsRobotArrivedAtStation();
 		}
 		else if(partsRobot.getState() == 6)
 		{
+			partsRobot.setState(0);
 			partsRobotArrivedAtCenter();
 		}
 	}
@@ -246,6 +254,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	public void gantryRobotStateCheck() {
 		if(gantryRobot.getState() == 1)
 		{
+			gantryRobot.setState(3);
 			gantryRobotArrivedAtPickup();
 		}
 		else if(gantryRobot.getState() == 4)

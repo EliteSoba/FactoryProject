@@ -204,13 +204,21 @@ public class PartsManPanel extends JPanel{
 					title.setFont(new Font("Serif", Font.BOLD, 16));
 					label1 = new JLabel ("Item : ");
 					imageSelection = new JComboBox();
-					for(int i = 0; i < partsManager.getParts().size(); i++){
-						imageSelection.addItem(partsManager.getParts().get(i).name);
+					/*Iterator it = partsManager.getParts().entrySet().iterator();
+					
+					while(it.hasNext()){
+						Map.Entry keyPair = (Map.Entry)it.next();
+						imageSelection.addItem(keyPair.getValue().imagePath);
+						it.remove();
+					}*/
+					for ( Part p : partsManager.getParts().values()){
+						imageSelection.addItem(p.imagePath);
 					}
 					imageSelection.addActionListener(this);
 					previewFrame = new JLabel();
-					ImageIcon imagePreview = new ImageIcon(partsManager.getParts().get(0).imagePath);
-					previewFrame.setIcon(imagePreview);
+					System.out.println((String)imageSelection.getItemAt(0));
+					//ImageIcon imagePreview = new ImageIcon((String)imageSelection.getItemAt(0));
+					//previewFrame.setIcon(imagePreview);
 					
 					removeItem = new JButton ("Remove Item");
 					removeItem.addActionListener(this);
