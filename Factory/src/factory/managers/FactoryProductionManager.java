@@ -5,12 +5,8 @@
 package factory.managers;
 
 import java.awt.BorderLayout;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.JPanel;
 import factory.client.Client;
 import factory.graphics.FactoryProductionPanel;
 import factory.swing.FactoryProdManPanel;
@@ -21,15 +17,18 @@ public class FactoryProductionManager extends Client {
 	static final long serialVersionUID = -2074747328301562732L;
 	HashMap<String,Part> partsList;
 	HashMap<String,KitConfig> kitConfigList;
-	FactoryProdManPanel swingPanel;
+
+	FactoryProdManPanel buttons;
+	FactoryProductionPanel animation;
 	
 		public FactoryProductionManager() {
 			super(Client.Type.fpm, null, null);
-			setInterface();
 			
-			UI = new FactoryProdManPanel();
-			((FactoryProdManPanel)UI).setManager(this);
-			graphics = new FactoryProductionPanel(this);
+			buttons = new FactoryProdManPanel(this);
+			
+			animation = new FactoryProductionPanel(this);
+			
+			setInterface();
 			
 			partsList = new HashMap<String,Part>();
 			kitConfigList = new HashMap<String,KitConfig>();
@@ -37,14 +36,13 @@ public class FactoryProductionManager extends Client {
 			//loadParts();
 		}
 		public static void main(String[] args){
-		    //FactoryProdManPanel buttons = new FactoryProdManPanel();
-		    //FactoryProductionPanel animation = new FactoryProductionPanel(null); //TODO does not currently work but will by 11/13 -->Tobi
-			FactoryProductionManager f = new FactoryProductionManager();
-			//buttons.setManager(f);
-		//	buttons.addKit("empty test kit");
+		    FactoryProductionManager f = new FactoryProductionManager();
 		}
 
 		public void setInterface() {
+			graphics = animation;
+			UI = buttons;
+			
 			add(graphics, BorderLayout.CENTER);
 			
 			add(UI, BorderLayout.LINE_END);
@@ -68,22 +66,22 @@ public class FactoryProductionManager extends Client {
 			/*
 			 * fa fpm cmd startFeeding " + feederSlot + " endcmd
 			 */
-			if (identifier.equals("startFeeding"))
+			if (identifier.equals("startfeeding"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(3));
 				((FactoryProductionPanel) graphics).turnFeederOn(feederSlot);
 			}
-			else if (identifier.equals("stopFeeding"))
+			else if (identifier.equals("stopfeeding"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(3));
 				((FactoryProductionPanel) graphics).turnFeederOff(feederSlot);
 			} 
-			else if (identifier.equals("purgeFeeder"))
+			else if (identifier.equals("purgefeeder"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(3));
 				((FactoryProductionPanel) graphics).purgeFeeder(feederSlot);
 			}
-			else if (identifier.equals("switchLane"))
+			else if (identifier.equals("switchlane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(3));
 				((FactoryProductionPanel) graphics).switchFeederLane(feederSlot);
@@ -98,11 +96,11 @@ public class FactoryProductionManager extends Client {
 					count++;
 				}
 				kitConfigList.put(newKit.kitName,newKit); 
-				swingPanel.addKit(newKit.kitName);
+				((FactoryProdManPanel) UI).addKit(newKit.kitName);
 			}
 			else if (identifier.equals("rmkitname")) {		// remove kit configuration from kit configuration list
 				kitConfigList.remove(pCmd.get(2));
-				swingPanel.removeKit(pCmd.get(2));
+				((FactoryProdManPanel) UI).removeKit(pCmd.get(2));
 			}
 			else if (identifier.equals("addpartname")) {	// add new part to parts list
 				Part part = new Part(pCmd.get(3),Integer.parseInt(pCmd.get(4)),pCmd.get(7),pCmd.get(5),Double.parseDouble(pCmd.get(6)));
@@ -133,7 +131,7 @@ public class FactoryProductionManager extends Client {
 				
 			}
 			else if (identifier.equals("kitsproduced")) { // updates number of kits produced for schedule
-				swingPanel.kitProduced();
+				((FactoryProdManPanel) UI).kitProduced();
 			}
 		}
 		else if(action.equals("cnf")){
