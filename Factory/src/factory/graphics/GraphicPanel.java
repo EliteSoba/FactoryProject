@@ -142,8 +142,28 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		sendMessage("FILLER");
 	}
 	
-	public void purgeLaneDone() {
-		sendMessage("fa cnf");
+	public void purgeTopLaneDone(int feederNum) {
+		sendMessage("fa cnf " + feederNum);
+	}
+	
+	public void purgeBottomLaneDone(int feederNum) {
+		sendMessage("fa cnf " + feederNum);
+	}
+	
+	public void purgeFeederDone(int feederNum) {
+		sendMessage("fa cnf " + feederNum);
+	}
+	
+	public void startFeederDone(int feederNum) {
+		sendMessage("fa cnf " + feederNum);
+	}
+	
+	public void stopFeederDone(int feederNum) {
+		sendMessage("fa cnf " + feederNum);
+	}
+	
+	public void switchFeederLaneDone(int feederNum) {
+		sendMessage("fa cnf " + feederNum);
 	}
 	
 	public GraphicKittingStation getStation() {

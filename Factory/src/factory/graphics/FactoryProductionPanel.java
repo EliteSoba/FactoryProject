@@ -169,10 +169,9 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 	
 	public void switchFeederLane(int feederNum){
-		// MINH, CAN YOU MAKE THIS LIKE THE FUNCTION ABOVE, BUT BASED ON THE FEEDER NUMBER?
-		// thanks
 		lane[feederNum].divergeUp = !lane[feederNum].divergeUp;
 		lane[feederNum].vY = -(lane[feederNum].vY);
+		switchFeederLaneDone(feederNum);
 	}
 	
 	public void stopLane(int laneNum){
@@ -181,16 +180,19 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	
 	public void turnFeederOn(int feederNum){
 		lane[feederNum].feederOn = true;
+		startFeederDone(feederNum);
 	}
 
 	public void turnFeederOff(int feederNum){
 		lane[feederNum].feederOn = false;
+		stopFeederDone(feederNum);
 	}
 	
 	public void purgeFeeder(int feederNum){ // takes in lane 0 - 4
 		lane[(feederNum)].bin = null;
 		lane[(feederNum)].binExist = false;
 		lane[(feederNum)].feederOn = false;
+		
 	}
 	
 	/*public void purgeLane(int laneNum){
