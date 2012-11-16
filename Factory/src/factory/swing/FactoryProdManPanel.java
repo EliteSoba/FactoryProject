@@ -141,12 +141,12 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 				String set = new String("");
 				set = "fpm fcsa cmd makekits " + qnty + " " + name;	
 				factoryProductionManager.sendCommand(set);
-					
+				
 				//Object[] rowData = {i+1,"Kit"+(i+1),"10"};
 				Object[] rowData = {model.getRowCount()+1,name,qnty};
 				model.insertRow(model.getRowCount(),rowData);
 				
-			messageBox.append("Order Submitted.\n     Details: " + qnty + " units of " + name + "\n" );
+				messageBox.append("Order Submitted.\n     Details: " + qnty + " units of " + name + "\n" );
 			}
 		}
 		else if (ae.getSource() == stopFactory) { // message that initiates factory shutdown
@@ -154,17 +154,18 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			String set = new String("");
 			set = "fpm mcs cmd stopfactory";
 			factoryProductionManager.sendCommand(set);
+			//do we need a confirmation here?...maybe
 		}
 	}
 	
 	public void addKit(String kitName) {	//add new kit name (String) to Jcombobox list - received from kit manager
 		kitNameBox.addItem(kitName);	
 		//((JComboBox) kitNameBox.getItemAt(kitNameBox.getItemCount()-1)).addActionListener(this);
-		kitNameBox.setSelectedIndex(0);
+		kitNameBox.setSelectedIndex(0); //sending back updated kit list to agents
 	}
 	
 	public void removeKit(String kitName) { // remove kit from list - received from kit manager
-		kitNameBox.removeItem(kitName);
+		kitNameBox.removeItem(kitName); //sending back updated kit list to agents
 	}
 	
 	public void kitProduced() { // update kits remaining
