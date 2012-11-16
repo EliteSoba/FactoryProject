@@ -74,16 +74,105 @@ public class MasterControl {
         partHandlers = new TreeMap<String, PartHandler>();
         partOccupied = new TreeMap<String, Boolean>();
         agentTreeMap = new TreeMap<String, Agent>();
+        laneAgentTreeMap = new TreeMap<String, LaneAgent>();
+        nestAgentTreeMap = new TreeMap<String, NestAgent>();
 
-        agentTreeMap.put("ca", conveyor);
-        agentTreeMap.put("cca", conveyorController);
-        agentTreeMap.put("ga", gantry );
-        agentTreeMap.put("kra", kitRobot);
-        agentTreeMap.put("pra", partsRobot);
-        agentTreeMap.put("sa", stand);
-        agentTreeMap.put("va", vision);
-        agentTreeMap.put("fcsa", fcs);
 
+        
+   
+
+        
+    	
+
+
+        try{
+            myServerSocket = new ServerSocket(12321);
+        } catch(Exception e){
+
+            e.printStackTrace();
+
+        }
+        System.out.println("1.1");
+        connectAllSockets(debug); // This waits for every client to start up before moving on.
+        System.out.println("1.2");
+        // At this point, all of the sockets are connected, PartHandlers have been created
+        // The TreeMaps are updated with all of the relevant data, and the Factory can go.
+        startAgents();
+        System.out.println("1.3");
+        laneAgentTreeMap.put("l0t", l0t); //tmp for testing.
+        sendConfirm();
+        System.out.println("1.4");
+        // At this point, all of the parts have been notified that
+        // the connections have been made, and therefore, the
+        // Factory simulation can begin.
+
+    }
+
+    // Member Methods
+
+    private void startAgents(){
+        //Instantiate all of the agents!!!!!!
+
+    	
+    	// Instantiate the Nests
+    	n0t = new NestAgent(this);
+    	n0b = new NestAgent(this);
+    	n1t = new NestAgent(this);
+    	n1b = new NestAgent(this);
+    	n2t = new NestAgent(this);
+    	n2b = new NestAgent(this);
+    	n3t = new NestAgent(this);
+    	n3b = new NestAgent(this);
+    	
+    	
+    	// Instantiate the Lanes
+    	l0t = new LaneAgent(this);
+    	l0b = new LaneAgent(this);
+    	l1t = new LaneAgent(this);
+    	l1b = new LaneAgent(this);
+    	l2t = new LaneAgent(this);
+    	l2b = new LaneAgent(this);
+    	l3t = new LaneAgent(this);
+    	l3b = new LaneAgent(this);
+
+    	
+    	// Instantiate the Feeders
+    	f0 = new FeederAgent("f0",0,l0t,l0b,gantry,this);
+    	f1 = new FeederAgent("f1",1,l1t,l1b,gantry,this);
+    	f2 = new FeederAgent("f2",2,l2t,l2b,gantry,this);
+    	f3 = new FeederAgent("f3",3,l3t,l3b,gantry,this);
+    	
+    	
+    	// Instantiate the Conveyor and related Agents
+    	conveyor = new ConveyorAgent();
+    	conveyorController = new ConveyorControllerAgent();
+    	
+    	// Instantiate the Gantry
+    	gantry = new GantryAgent(this);
+    	
+        // Instantiate the KitRobot
+    	kitRobot = new KitRobotAgent(this,conveyor);
+    	
+    	// Instantiate the PartsRobot
+    	//partsRobot = new PartsRobotAgent(); // bad code
+    	
+    	// Instantiate the Stand
+    	//stand = new StandAgent(); // bad code
+    	
+    	// Instantiate the Vision
+    	vision = new VisionAgent(partsRobot,stand,this);
+    	
+    	// Instantiate the FCS
+    	fcs = new FCSAgent(this);
+    	
+    
+    	// SET A FEW THINGS
+    	conveyor.setKitRobot(kitRobot);
+    	kitRobot.setStand(stand);
+    	conveyor.setFCS(fcs);
+
+    	
+    	// Set up the TreeMaps
         laneAgentTreeMap.put("l0t", l0t);
         laneAgentTreeMap.put("l0b", l0b);
         laneAgentTreeMap.put("l1t", l1t);
@@ -101,46 +190,16 @@ public class MasterControl {
         nestAgentTreeMap.put("n2b", n2b);
         nestAgentTreeMap.put("n3t", n3t);
         nestAgentTreeMap.put("n3b", n3b);
-        
-    	//Agent Constructing
-    	conveyorController = new ConveyorControllerAgent(this);
-    	conveyor = new ConveyorAgent(this, conveyorController);
-    	conveyorController.setConveyor(conveyor);
-    	kitRobot = new KitRobotAgent(this, conveyor);
-    	conveyor.setKitRobot(kitRobot);
-    	kitRobot.setStand(stand);
-    	conveyor.setFCS(fcs);
-
     	
-    	// make agents
-    	f0 = new FeederAgent("f0",0,l0t,l0b,gantry,this);
-
-
-        try{
-            myServerSocket = new ServerSocket(12321);
-        } catch(Exception e){
-
-            e.printStackTrace();
-
-        }
-        connectAllSockets(debug); // This waits for every client to start up before moving on.
-
-        // At this point, all of the sockets are connected, PartHandlers have been created
-        // The TreeMaps are updated with all of the relevant data, and the Factory can go.
-
-        startAgents();
-
-        sendConfirm();
-        // At this point, all of the parts have been notified that
-        // the connections have been made, and therefore, the
-        // Factory simulation can begin.
-
-    }
-
-    // Member Methods
-
-    private void startAgents(){
-        //Start all of the agents!!!!!
+        agentTreeMap.put("ca", conveyor);
+        agentTreeMap.put("cca", conveyorController);
+        agentTreeMap.put("ga", gantry );
+        agentTreeMap.put("kra", kitRobot);
+//        agentTreeMap.put("pra", partsRobot);
+//        agentTreeMap.put("sa", stand);
+        agentTreeMap.put("va", vision);
+        agentTreeMap.put("fcsa", fcs);
+        
     	
     	//Starting all agent threads in agentTreeMap
     	for (Map.Entry<String, Agent> agentMap : agentTreeMap.entrySet()) {
@@ -452,13 +511,15 @@ public class MasterControl {
     private void connectAllSockets(boolean debugmode){
         int numConnected = 0;
         int numToConnect = (debugmode ? 1 : clients.size());
-
+        System.out.println("1.1.0 ");
         while(numConnected != numToConnect){
             try{
                 Socket s = myServerSocket.accept();
+                System.out.println("1.1.1");
                 PrintWriter pw = new PrintWriter( s.getOutputStream(), true );
                 BufferedReader br = new BufferedReader( new InputStreamReader( s.getInputStream() ) );
                 String name = br.readLine();
+                System.out.println("1.1.2");
                 while(name == null){
                     name = br.readLine();
                 }

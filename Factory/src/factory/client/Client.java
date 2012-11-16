@@ -71,10 +71,12 @@ public abstract class Client extends JFrame implements ActionListener {
 	}
 	
 	public void connect(){
+		System.out.println("1.1.1.1");
 		try {
 			server = new Socket("127.0.0.1", 12321); //connects to server on localhost
 			input = new BufferedReader(new InputStreamReader(server.getInputStream()));//opens inputStream
 			output = new PrintWriter(server.getOutputStream(),true);//opens outputStream
+			System.out.println(this.type.toString());
 			output.println(this.type.toString());
 			
 			String reply = input.readLine();
