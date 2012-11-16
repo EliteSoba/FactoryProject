@@ -142,8 +142,8 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 				set = "fpm fcsa cmd makekits " + qnty + " " + name;	
 				factoryProductionManager.sendCommand(set);
 				
-				//Object[] rowData = {i+1,"Kit"+(i+1),"10"};
-				Object[] rowData = {model.getRowCount()+1,name,qnty};
+				
+				Object[] rowData = {model.getRowCount()+1,name,qnty}; // add to production schedule
 				model.insertRow(model.getRowCount(),rowData);
 				
 				messageBox.append("Order Submitted.\n     Details: " + qnty + " units of " + name + "\n" );
@@ -168,7 +168,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		kitNameBox.removeItem(kitName); //sending back updated kit list to agents
 	}
 	
-	public void kitProduced() { // update kits remaining
+	public void kitProduced() { // update kits remaining - decrement by one
 		String numstr = (String)model.getValueAt(0,2);
 		int num = Integer.parseInt(numstr);
 		if(num >0) {
@@ -186,6 +186,12 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	}
 
 		public void removePart(String partName,ArrayList<String> affectedKits) {
-	
+			messageBox.append("Parts Manager has removed a part : " + partName + ".\n");
+			messageBox.append("Affected kits will be removed : \n");
+			for (String str: affectedKits) {
+				kitNameBox.removeItem(str);
+				messageBox.append("\t"+str+"\n");
+			}
+			
 	}
 }
