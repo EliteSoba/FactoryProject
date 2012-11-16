@@ -22,6 +22,8 @@ import java.util.*;
 
 import agent.Agent;
 import factory.*;
+import factory.interfaces.Gantry;
+import factory.interfaces.Lane;
 
 public class MasterControl {
 	
@@ -29,9 +31,7 @@ public class MasterControl {
 	KitRobotAgent kitRobot;
 	ConveyorAgent conveyor;
 	ConveyorControllerAgent conveyorController;
-	public FeederAgent f0, f1, f2, f3;
-    List<FeederAgent> feederAgents = Arrays.asList(f0, f1, f2, f3);
-	LaneAgent l0t, l0b, l1t, l1b, l2t, l2b, l3t, l3b;
+	public LaneAgent l0t, l0b, l1t, l1b, l2t, l2b, l3t, l3b;
     TreeMap<String, LaneAgent> laneAgentTreeMap;
     NestAgent n0t, n0b, n1t, n1b, n2t, n2b, n3t, n3b;
     TreeMap<String, NestAgent> nestAgentTreeMap;
@@ -39,7 +39,11 @@ public class MasterControl {
 	PartsRobotAgent partsRobot;
 	StandAgent stand;
 	VisionAgent vision;
-	//FCSAgent fcs;
+	FCSAgent fcs;
+	
+	public FeederAgent f0, f1, f2, f3;
+    List<FeederAgent> feederAgents = Arrays.asList(f0, f1, f2, f3);
+
 
     TreeMap<String, Agent> agentTreeMap;
 
@@ -78,7 +82,7 @@ public class MasterControl {
         agentTreeMap.put("pra", partsRobot);
         agentTreeMap.put("sa", stand);
         agentTreeMap.put("va", vision);
-//        agentTreeMap.put("fcsa", fcs);
+        agentTreeMap.put("fcsa", fcs);
 
         laneAgentTreeMap.put("l0t", l0t);
         laneAgentTreeMap.put("l0b", l0b);
@@ -105,7 +109,11 @@ public class MasterControl {
     	kitRobot = new KitRobotAgent(this, conveyor);
     	conveyor.setKitRobot(kitRobot);
     	kitRobot.setStand(stand);
-//    	conveyor.setFCS(fcs);
+    	conveyor.setFCS(fcs);
+
+    	
+    	// make agents
+    	f0 = new FeederAgent("f0",0,l0t,l0b,gantry,this);
 
 
         try{
