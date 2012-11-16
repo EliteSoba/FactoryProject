@@ -10,10 +10,9 @@ import factory.managers.*;
 import javax.swing.*;
 
 public class LaneManPanel extends JPanel implements ActionListener {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -4485912622490446254L;
+	
 	String [] stringLanes = { "1", "2", "3", "4", "5", "6", "7", "8"};
 	JComboBox lane = new JComboBox(stringLanes);
 	//ImageIcon red = new ImageIcon("red.png");
@@ -24,7 +23,8 @@ public class LaneManPanel extends JPanel implements ActionListener {
 	
 	LaneManager laneManager;
 
-	public LaneManPanel(){
+	public LaneManPanel(LaneManager l){
+		laneManager = l;
 		powerButton.addActionListener(this); 
 		redButton.addActionListener(this); 
 		yellowButton.addActionListener(this); 
@@ -58,34 +58,24 @@ public class LaneManPanel extends JPanel implements ActionListener {
 		return (Integer) lane.getSelectedItem();
 		
 	}
-	 //main method used for testing
-	//do not delete just comment out
-	/*
-	public static void main (String[] args){
-		LaneManPanel l = new LaneManPanel();
-		l.repaint();
-		l.setVisible(true);
-		l.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		l.setSize(400,450);
-		l.repaint(); 
-	}
-	*/
-	public void setManager(LaneManager l){
-		laneManager=l;
-	}
 	
 	public void actionPerformed(ActionEvent ae) {
+		String set = new String (" ");
 		if (ae.getSource() == powerButton){
-			laneManager.sendMessage(this.getSelectedLane(), 0, "power");
+			set = "lm la lanepowertoggle " + getSelectedLane() + " " + "power";
+			laneManager.sendCommand(set);
 		}
 		else if (ae.getSource() == redButton){
-			laneManager.sendMessage(this.getSelectedLane(), 1, "red");
+			set = "lm lma set lanevibration "+ getSelectedLane() + " 1";
+			laneManager.sendCommand(set);
 		}
 		else if (ae.getSource() == yellowButton){
-			laneManager.sendMessage(this.getSelectedLane(), 2, "yellow");
+			set = "lm lma set lanevibration "+ getSelectedLane() + " 2";
+			laneManager.sendCommand(set);
 		}
 		else if (ae.getSource() == greenButton){
-			laneManager.sendMessage(this.getSelectedLane(), 3, "green");
+			set = "lm lma set lanevibration "+ getSelectedLane() + " 3";
+			laneManager.sendCommand(set);
 		}
 	}	
 }
