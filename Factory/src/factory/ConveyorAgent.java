@@ -85,7 +85,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 
 	private void exportKit() {
 		debug("Exporting Kit");
-		//server.exportKit(); //Animation for moving the kit out of the cell on the conveyor
+		server.command("ca fpm cmd exportKitFromCell");
 		
 		/**
 		  try {
@@ -96,7 +96,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 		}
 		 */
 		debug("Export Animation Completed");
-	    fcs.msgKitExported(kitAtConveyor);
+	    fcs.msgKitIsExported(kitAtConveyor);
 		kitAtConveyor = null;
 		stateChanged();
 	}
