@@ -18,8 +18,7 @@ class PartsRobot extends AnimatedObject
 	{
 		items = new ArrayList<GraphicItem>();
 		arrived = false;
-		state = -1;		// 0 = moving to nest, 1 = waiting at nest, 2 = waiting for next action, 3 = moving to kitting station, 4 = waiting at kitting station
-						// 5 = moving to center, 6 = arrived at center
+		state = 0;		// 0 = idle, 1 = going to nest, 2 = arrived at nest, 3 = going to station, 4 = arrived at station, 5 = going to center, 6 = arrived at center
 		destinationNest = -1;
 		destinationKit = -1;
 		x = init_x;
@@ -88,31 +87,8 @@ class PartsRobot extends AnimatedObject
 		//System.out.println(fx + " " + fy);
 		if(y == fy && x == fx)	// robot has arrived at destination
 		{
-			//if(theta % 90 == 0)
-			//{
-				if(state == 0)
-				{
-					state = 1;
-					System.out.println("Arrived at nest, waiting for item pickup.");
-				}
-				else if(state == 3)
-				{
-					state = 4;
-					System.out.println("Arrived at kitting station, waiting for item dropoff.");
-				}
-				else if(state == 5)		// going towards station
-				{
-					state = 6;
-					System.out.println("Arrived at center.");
-				}
-			//}
-			//else
-			//{
-			//	if(state == 0)
-			//		theta += 10;
-			//	else if(state == 3)
-			//		theta -= 10;
-			//}
+			if(state % 2 == 1)
+				state += 1;
 		}
 		else if(y > fy)
 		{

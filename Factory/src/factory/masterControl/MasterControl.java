@@ -78,7 +78,7 @@ public class MasterControl {
         agentTreeMap.put("pra", partsRobot);
         agentTreeMap.put("sa", stand);
         agentTreeMap.put("va", vision);
-        agentTreeMap.put("fcs", fcs);
+        agentTreeMap.put("fcsa", fcs);
 
         laneAgentTreeMap.put("l0t", l0t);
         laneAgentTreeMap.put("l0b", l0b);
@@ -258,7 +258,15 @@ public class MasterControl {
 
 
         } else if( cmd.get(2).equals("cmd")){
-
+        	// cmd.get(2) is CmdType
+        	// cmd.get(3) is Command
+        	// cmd.get(4+) are parameters
+        	Agent destination;
+        	
+//        	if(cmd.get(3).equals("startfeeding")){
+//        		destination = feederAgents.get(Integer.valueOf(cmd.get(4)));
+//        		destination.someMethod();
+//        	}
 
         }
 
@@ -281,14 +289,12 @@ public class MasterControl {
     public boolean clientCmd(ArrayList<String> cmd){
         String s = checkCmd(cmd);
         String a = cmd.get(0); // Source
-
-        PartHandler sourcePH = determinePH(a);
-
-
-
         if(s != null){
-            sourcePH.send("err failed to parse command XXX log "+s);
-            return false;
+        	if(clients.contains(a)){
+        		PartHandler sourcePH = determinePH(a);
+        		sourcePH.send("err failed to parse command XXX log "+s);
+        	}
+    		return false;
         }
 
         String b = cmd.get(1); // Destination
@@ -307,10 +313,8 @@ public class MasterControl {
         if(b.equals("multi")){
             ArrayList<PartHandler> destinations = getDestinations(cmd.get(3));
             if(destinations == null){
-                sourcePH.send("err failed to parse command XXX log this is not an accurate multi recipient command");
                 return false;
             } else {
-
                 for(PartHandler x : destinations){
                     if(!sendCmd(x, fullCmd)){
                         return false;

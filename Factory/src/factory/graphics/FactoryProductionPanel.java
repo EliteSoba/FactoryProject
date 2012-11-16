@@ -127,10 +127,11 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
 	}
 	
+	//CHANGE TO 0 BASE
 	public void movePartsRobotToNest(int nestIndex) {
-		partsRobot.setState(0);
+		partsRobot.setState(1);
 		partsRobot.adjustShift(5);
-		partsRobot.setDestination(nests.get(nestIndex-1).getX()-nests.get(nestIndex-1).getImageWidth()-10,nests.get(nestIndex-1).getY()-15);
+		partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-10,nests.get(nestIndex).getY()-15);
 		partsRobot.setDestinationNest(nestIndex);
 	}
 	
@@ -141,7 +142,8 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 	
 	public void movePartsRobotToCenter() {
-		partsRobot.setDestination(WIDTH/2-100, HEIGHT/2);
+		partsRobot.setState(5);
+		partsRobot.setDestination(WIDTH/2-200, HEIGHT/2);
 	}
 	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
@@ -169,10 +171,9 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 	
 	public void switchFeederLane(int feederNum){
-		// MINH, CAN YOU MAKE THIS LIKE THE FUNCTION ABOVE, BUT BASED ON THE FEEDER NUMBER?
-		// thanks
 		lane[feederNum].divergeUp = !lane[feederNum].divergeUp;
 		lane[feederNum].vY = -(lane[feederNum].vY);
+		switchFeederLaneDone(feederNum);
 	}
 	
 	public void stopLane(int laneNum){
@@ -181,16 +182,19 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	
 	public void turnFeederOn(int feederNum){
 		lane[feederNum].feederOn = true;
+		startFeederDone(feederNum);
 	}
 
 	public void turnFeederOff(int feederNum){
 		lane[feederNum].feederOn = false;
+		stopFeederDone(feederNum);
 	}
 	
 	public void purgeFeeder(int feederNum){ // takes in lane 0 - 4
 		lane[(feederNum)].bin = null;
 		lane[(feederNum)].binExist = false;
 		lane[(feederNum)].feederOn = false;
+		
 	}
 	
 	/*public void purgeLane(int laneNum){
@@ -214,31 +218,35 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		lane[feederNum].laneStart = true;
 	}
 	
-	//MINH, CAN YOU MAKE A PURGETOPLANE(INT FEEDERNUM) AND PURGEBOTTOMLANE(INT FEEDERNUM)
-	// ALSO PLZ MAKE EVERYTHING 0-BASED
-	
 	public void partsRobotStateCheck() {
 		// Has robot arrived at its destination?
 		//System.out.println(partsRobot.getState());
-		if(partsRobot.getState() == 1)		// partsRobot has arrived at nest
+		if(partsRobot.getState() == 2)		// partsRobot has arrived at nest
 		{
 			// Give item to partsRobot
 			if(partsRobot.getSize() < 4)
 			{
 				if (nests.get(partsRobot.getDestinationNest()-1).hasItem())
 					partsRobot.addItem(nests.get(partsRobot.getDestinationNest()-1).popItem());
-				partsRobot.setState(2);
+				partsRobot.setState(0);
 			}
-				partsRobotArrivedAtNest();
+			partsRobotArrivedAtNest();
 		}
 		else if(partsRobot.getState() == 4)	// partsRobot has arrived at kitting station
 		{
-			for(int i = 0; i < partsRobot.getSize(); i++)
+			System.out.println("Size:"+partsRobot.getSize());
+			int numberOfParts = partsRobot.getSize();
+			for(int i = 0; i < numberOfParts; i++)
+			{
+				System.out.println("Adding part to kit: " + i);
 				station.addItem(partsRobot.popItem(),partsRobot.getDestinationKit());
+			}
+			partsRobot.setState(0);
 			partsRobotArrivedAtStation();
 		}
 		else if(partsRobot.getState() == 6)
 		{
+			partsRobot.setState(0);
 			partsRobotArrivedAtCenter();
 		}
 	}
@@ -246,6 +254,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	public void gantryRobotStateCheck() {
 		if(gantryRobot.getState() == 1)
 		{
+			gantryRobot.setState(3);
 			gantryRobotArrivedAtPickup();
 		}
 		else if(gantryRobot.getState() == 4)

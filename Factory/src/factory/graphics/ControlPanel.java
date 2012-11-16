@@ -28,7 +28,10 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton inspect2;
 	JButton dumpKit;
 	JButton partsRobotNest1;
+	JButton partsRobotNest2;
 	JButton partsRobotStation;
+	JButton partsRobotGoToCenter;
+	JButton gantryRobotGoToStart;
 	JButton gantryRobotGetBin;
 	JButton gantryRobotFeeder1;
 	JButton cameraFlash;
@@ -45,9 +48,12 @@ public class ControlPanel extends JPanel implements ActionListener{
 		test = new JButton("Quit");
 		blank = new JLabel[20];
 		partsRobotNest1 = new JButton("Nest 1 Full");
+		partsRobotNest2 = new JButton("Nest 2 Full");
 		partsRobotStation = new JButton("Station");
+		gantryRobotGoToStart = new JButton("Go to Start");
 		gantryRobotGetBin = new JButton("Fetch a Bin");
 		gantryRobotFeeder1 = new JButton("Feeder 1 Dump");
+		partsRobotGoToCenter = new JButton("Part Go to Center");
 		feedLane1 = new JButton("Feed Lane 1");
 		feedLane2 = new JButton("Feed Lane 2");
 		purgeLane1 = new JButton("purge Lane 1");
@@ -66,12 +72,15 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.add(dumpKit);*/
 		this.addButton(test);
 		this.addButton(partsRobotNest1);
+		this.addButton(partsRobotNest2);
 		this.addButton(partsRobotStation);
+		this.addButton(partsRobotGoToCenter);
 		this.addButton(feedLane1);
 		this.addButton(feedLane2);
 		this.addButton(purgeLane1);
 		this.addButton(purgeLane2);
 		this.addButton(purgeFeeder);
+		this.addButton(gantryRobotGoToStart);
 		this.addButton(gantryRobotGetBin);
 		this.addButton(gantryRobotFeeder1);
 		this.addButton(cameraFlash);
@@ -101,7 +110,11 @@ public class ControlPanel extends JPanel implements ActionListener{
 		else if (source == dumpKit)
 			am.dumpKit();
 		else if(source == partsRobotNest1)
-			am.moveRobotToNest1();
+			am.moveRobotToNest(1);
+		else if(source == partsRobotNest2)
+			am.moveRobotToNest(2);
+		else if(source == partsRobotGoToCenter)
+			am.moveRobotToCenter();
 		else if(source == partsRobotStation)
 			am.moveRobotToStation();
 		else if(source == feedLane1)

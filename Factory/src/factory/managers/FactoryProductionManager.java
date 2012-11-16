@@ -5,6 +5,9 @@
 package factory.managers;
 
 import java.awt.BorderLayout;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import factory.client.Client;
@@ -25,15 +28,14 @@ public class FactoryProductionManager extends Client {
 			super(Client.Type.fpm, null, null);
 			
 			buttons = new FactoryProdManPanel(this);
-			
 			animation = new FactoryProductionPanel(this);
 			
 			setInterface();
 			
-			partsList = new HashMap<String,Part>();
-			kitConfigList = new HashMap<String,KitConfig>();
+			partsList = new HashMap<String,Part>(); //Local version
+			kitConfigList = new HashMap<String,KitConfig>(); //Local version
 			
-			//loadParts();
+			loadData();
 		}
 		public static void main(String[] args){
 		    FactoryProductionManager f = new FactoryProductionManager();
@@ -50,22 +52,20 @@ public class FactoryProductionManager extends Client {
 			setVisible(true);
 		}
 
+	public void sendCommand(String cmd){
+		//Swing Commands 
+		//Graphics Commands in Panel
 		
-		public void sendDone(String process) { //sends message out from graphics (Tobi's Function)
-			//Process changes depending on previous command
-			sendCommand(process);
-		}
+	}
 		
-			@Override
 	public void doCommand(ArrayList<String> pCmd) {
 		int size = pCmd.size();
 		//parameters lay between i = 2 and i = size - 2
 		String action = pCmd.get(0);
 		String identifier = pCmd.get(1);
+		
 		if(action == "cmd"){
-			/*
-			 * fa fpm cmd startFeeding " + feederSlot + " endcmd
-			 */
+			//Graphics Receive Commands
 			if (identifier.equals("startfeeding"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(3));
@@ -86,6 +86,7 @@ public class FactoryProductionManager extends Client {
 				int feederSlot = Integer.valueOf(pCmd.get(3));
 				((FactoryProductionPanel) graphics).switchFeederLane(feederSlot);
 			}
+			//Swing Receive Commands
 			else if (identifier.equals("addkitname")) {		// add new kit configuration to kit configuration list
 				KitConfig newKit = new KitConfig(pCmd.get(2));
 				int count = 3;
@@ -95,6 +96,7 @@ public class FactoryProductionManager extends Client {
 					newKit.listOfParts.add(partsList.get(partName));		
 					count++;
 				}
+				
 				kitConfigList.put(newKit.kitName,newKit); 
 				((FactoryProdManPanel) UI).addKit(newKit.kitName);
 			}
@@ -104,28 +106,21 @@ public class FactoryProductionManager extends Client {
 			}
 			else if (identifier.equals("addpartname")) {	// add new part to parts list
 				Part part = new Part(pCmd.get(3),Integer.parseInt(pCmd.get(4)),pCmd.get(7),pCmd.get(5),Double.parseDouble(pCmd.get(6)));
-		// server message sequence		Part part = new Part(pCmd.get(3),Integer.parseInt(pCmd.get(4)),pCmd.get(5),Double.parseDouble(pCmd.get(6)),pCmd.get(7));
+				// server message sequence		Part part = new Part(pCmd.get(3),Integer.parseInt(pCmd.get(4)),pCmd.get(5),Double.parseDouble(pCmd.get(6)),pCmd.get(7));
 				partsList.put(pCmd.get(3),part);
 			}
 			else if (identifier.equals("rmpartname")) {		// remove part from parts list
 				partsList.remove(pCmd.get(2));
-						// need to check kits affected
+				// need to check kits affected
 			}
 		}
+		
 		else if(action.equals("req")){
-			/*if(identifier.equals(request1))
-			 * do(request1);
-			 * else if(identifier.equals(request2))
-			 * do(request2);
-			 */
 		}
+		
 		else if(action.equals("get")){
-			/*if(identifier.equals(get1))
-			 * do(get1);
-			 * else if(identifier.equals(get2))
-			 * do(get2);
-			 */
 		}
+		
 		else if(action.equals("set")){
 			if (identifier.equals("kitcontent")) { 			// modify content of a kit
 				
@@ -134,43 +129,49 @@ public class FactoryProductionManager extends Client {
 				((FactoryProdManPanel) UI).kitProduced();
 			}
 		}
+		
 		else if(action.equals("cnf")){
-			/*if(identifier.equals(confirm1))
-			 * do(confirm1);
-			 * else if(identifier.equals(confirm2))
-			 * do(confirm2);
-			 */
 		}
+		
 	   else if(action.equals("err")){
 			String error;
 			error = new String();
 			for(int i = 1; i<this.parsedCommand.size(); i++)
 				error.concat(parsedCommand.get(i));
 			System.out.println(error);
-		
-			
-		}
+	   }
 	
 	}
 			
 
-		/*	public void loadParts(){
-				FileInputStream f;
-				ObjectInputStream o;
-				try{    // loads previously saved player data
-					f = new FileInputStream("InitialData/initialParts.ser");
-					o = new ObjectInputStream(f);
-					partsList = (ArrayList<Part>) o.readObject();
-					System.out.println("Good");
-					for (int i = 0; i < partsList.size();i++) {
-						System.out.println(partsList.get(i).name);
-					}
-				}catch(IOException e){
-					partsList = new ArrayList<Part>();
-				} catch(ClassNotFoundException c){
-					partsList = new ArrayList<Part>();
-				}
-			}*/
+// Load Data - remember to import the file - FOR EVERYONE
+    @SuppressWarnings("unchecked")
+	public void loadData(){
+    FileInputStream f;
+    ObjectInputStream o;
+    try{    // loads previously saved player data
+        f = new FileInputStream("InitialData/initialParts.ser");
+        o = new ObjectInputStream(f);
+        partsList = (HashMap<String,Part>) o.readObject();
+        System.out.println("Good");
+        o.close();
+    }catch(IOException e){
+        e.printStackTrace();
+    } catch(ClassNotFoundException c){
+        c.printStackTrace();
+    }
+    try{    // loads previously saved player data
+        f = new FileInputStream("InitialData/initialKitConfigs.ser");
+        o = new ObjectInputStream(f);
+        kitConfigList = (HashMap<String,KitConfig>) o.readObject();
+        System.out.println("Good");
+        o.close();
+    }catch(IOException e){
+        e.printStackTrace();
+    } catch(ClassNotFoundException c){
+        c.printStackTrace();
+    }
+}
 			
 			
 

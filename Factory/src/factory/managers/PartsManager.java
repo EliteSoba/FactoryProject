@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import factory.Part;
 import factory.client.Client;
@@ -15,14 +16,15 @@ import factory.swing.PartsManPanel;
 public class PartsManager extends Client implements WindowListener{
 	private static final long serialVersionUID = -205350261062308096L;
 	
-	ArrayList<Part> parts;
+	HashMap<String, Part> parts;
 	// Kit Configurations ArrayList
 
 	public PartsManager() {
 		super(Client.Type.pm, null, null);
-		//loadData();
 		
-		parts = new ArrayList<Part>();
+		loadData();
+		System.out.println(parts.size());
+		/*
 		parts.add(new Part("Eye",1,"This is used to see.","Images/eye.png",1));
 		parts.add(new Part("Body",2,"This is used as the base.","Images/body.png",5));
 		parts.add(new Part("Hat",3,"This is used to cover the head.","Images/hat.png",2));
@@ -31,7 +33,7 @@ public class PartsManager extends Client implements WindowListener{
 		parts.add(new Part("Mouth",6,"This is used to talk.","Images/mouth.png",1));
 		parts.add(new Part("Nose",7,"This is used to smell.","Images/nose.png",1));
 		parts.add(new Part("Moustache",8,"This is used to look cool.","Images/moustache.png",1));
-		parts.add(new Part("Ear",9,"This is used to hear.","Images/ear.png",2));
+		parts.add(new Part("Ear",9,"This is used to hear.","Images/ear.png",2));*/
 		UI = new PartsManPanel(this);
 		setInterface();
 		
@@ -117,7 +119,7 @@ public class PartsManager extends Client implements WindowListener{
 		}
 	}
 	
-	public ArrayList<Part> getParts(){
+	public HashMap<String, Part> getParts(){
 		return parts;
 	}
 
@@ -136,7 +138,7 @@ public class PartsManager extends Client implements WindowListener{
 	@Override
 	public void windowClosing(WindowEvent e) {
 		// TODO Auto-generated method stub
-				saveData();
+				//saveData();
 	}
 
 	@Override
@@ -162,7 +164,7 @@ public class PartsManager extends Client implements WindowListener{
 		// TODO Auto-generated method stub
 		
 	}
-	
+	/*
 	public void saveData(){
 		FileOutputStream f;
 		ObjectOutputStream o;
@@ -179,7 +181,7 @@ public class PartsManager extends Client implements WindowListener{
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-	}
+	}*/
 	
 	public void loadData(){
 		FileInputStream f;
@@ -187,12 +189,12 @@ public class PartsManager extends Client implements WindowListener{
 		try{    // loads previously saved player data
 			f = new FileInputStream("InitialData/initialParts.ser");
 			o = new ObjectInputStream(f);
-			parts = (ArrayList<Part>) o.readObject();
+			parts = (HashMap<String, Part>) o.readObject();
 			System.out.println("Good");
 		}catch(IOException e){
-			parts = new ArrayList<Part>();
+			parts = new HashMap<String, Part>();
 		} catch(ClassNotFoundException c){
-			parts = new ArrayList<Part>();
+			parts = new HashMap<String, Part>();
 		}
 	}
 }
