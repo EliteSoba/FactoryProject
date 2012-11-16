@@ -111,7 +111,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 
 	public void exportKitDone() {
-		sendMessage("FILLER");
+		sendMessage("ca cnf");
 	}
 	
 	public void cameraFlashDone() {

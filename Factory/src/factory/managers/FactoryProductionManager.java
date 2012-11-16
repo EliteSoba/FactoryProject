@@ -15,6 +15,8 @@ import factory.graphics.FactoryProductionPanel;
 import factory.swing.FactoryProdManPanel;
 import factory.Part;
 import factory.KitConfig;
+import java.util.Iterator;
+import java.util.Map;
 
 public class FactoryProductionManager extends Client {
 	static final long serialVersionUID = -2074747328301562732L;
@@ -112,6 +114,12 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("rmpartname")) {		// remove part from parts list
 				partsList.remove(pCmd.get(2));
 				// need to check kits affected
+				partsList.remove(pCmd.get(2));
+				ArrayList<String> affectedKits = kitConfigsContainingPart(pCmd.get(2));
+				for (String kit:affectedKits) {
+					kitConfigList.remove(kit);
+				}
+				((FactoryProdManPanel)UI).removePart(pCmd.get(2),affectedKits);
 			}
 		}
 		
@@ -173,6 +181,28 @@ public class FactoryProductionManager extends Client {
     }
 }
 			
-			
+// To search a list of kit configurations for kits containing a certain part
+ //returns ArrayList<String> kitNames;
+     public ArrayList<String> kitConfigsContainingPart(String str) {
+         KitConfig kitConfig = new KitConfig();
+         String kitName = new String();
+         ArrayList<String> affectedKits = new ArrayList<String>();
+
+
+         Iterator itr = kitConfigList.entrySet().iterator(); 
+         while(itr.hasNext()) {                  
+             Map.Entry pairs = (Map.Entry)itr.next();    
+             //String kitName = (String)pairs.getKey();
+             kitConfig = (KitConfig)pairs.getValue();
+             for (Part p:kitConfig.listOfParts) {
+                 if (p.name.equals(str)) {
+                     affectedKits.add((String)pairs.getKey());
+                     break;
+                 }
+             }
+         }
+         return affectedKits;
+
+     }		
 
 }

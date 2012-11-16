@@ -184,4 +184,8 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			table.revalidate();
 		}
 	}
+
+		public void removePart(String partName,ArrayList<String> affectedKits) {
+	
+	}
 }
