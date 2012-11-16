@@ -39,9 +39,9 @@ public class KitRobotTests extends TestCase {
 		//Calling KitRobot Scheduler
 		kitrobot.pickAndExecuteAnAction();
 		
-		//assertEquals("Conveyor_State should now be ConveyorStatus.GETTING_KIT, instead it is "+kitrobot.conveyor_state, kitrobot.conveyor_state, ConveyorStatus.GETTING_KIT);
+		assertEquals("Conveyor_State should now be ConveyorStatus.GETTING_KIT, instead it is "+kitrobot.conveyor_state, kitrobot.conveyor_state, ConveyorStatus.GETTING_KIT);
 		
-		//kitrobot.msgEmptyKitOnConveyor(); //Simulating the empty kit coming to the conveyor
+		kitrobot.msgEmptyKitOnConveyor(); //Simulating the empty kit coming to the conveyor
 		
 	}
 

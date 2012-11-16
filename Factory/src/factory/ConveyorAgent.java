@@ -15,6 +15,11 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	
 	ConveyorState state = ConveyorState.NO_ACTION;
 	
+	//UnitTesting Constructor
+	public ConveyorAgent() {
+		super(null);
+	}
+	
 	/** Public Constructor **/
 	public ConveyorAgent(MasterControl mc, ConveyorController cc) {
 		super(mc);
@@ -105,7 +110,10 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	}
 	
 	public void setKitRobot(KitRobot kr) {
-		kitRobot = kr;
+		this.kitRobot = kr;
+	}
+	public void setConveyorControll(ConveyorController cc) {
+		this.conveyorController = cc;
 	}
 }
 

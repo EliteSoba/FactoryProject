@@ -6,7 +6,7 @@ public class StandTests extends TestCase {
 
 	StandAgent stand;
 	MockVisionAgent visionMock;
-	MockKitRobotAgent kitRobotMock;
+	MockKitRobot kitRobotMock;
 	MockPartsRobotAgent partsRobotMock;
 	MockConveyor conveyorMock;
 	

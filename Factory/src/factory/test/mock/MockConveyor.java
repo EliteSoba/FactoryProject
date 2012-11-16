@@ -1,8 +1,7 @@
 package factory.test.mock;
 
 import factory.Kit;
-import factory.interfaces.Conveyor;
-import factory.interfaces.KitRobot;
+import factory.interfaces.*;
 
 public class MockConveyor extends MockAgent implements Conveyor {
 	
@@ -32,6 +31,20 @@ public class MockConveyor extends MockAgent implements Conveyor {
 		log.add(new LoggedEvent("received msgExportKit() from the KitRobot to export kit "+ k));
 		
 	}
+
+	@Override
+	public Kit getAtConveyor() {
+		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("the Kit on the Conveyor was requested"));
+		return null;
+	}
+
+	@Override
+	public void setAtConveyor(Kit k) {
+		log.add(new LoggedEvent("the Kit on the Conveyor was set to"+ k));
+		
+	}
+
 
 
 }

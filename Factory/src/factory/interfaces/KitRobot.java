@@ -7,5 +7,5 @@ public interface KitRobot {
 	public void msgEmptyKitOnConveyor();
 	//public void msgInspectionAreaStatus(int status);
 	public void msgComeProcessAnalyzedKitAtInspectionSlot();
-	
+	public void msgClearTheStandOff();
 }

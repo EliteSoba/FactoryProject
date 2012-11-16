@@ -17,19 +17,26 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 
 	Timer timer = new Timer();
 	
+	//UnitTesting Constructor
+	public ConveyorControllerAgent() {
+		super(null);
+	}
+	
 	public ConveyorControllerAgent(MasterControl mc) {
 		super(mc);
 	}
 	
 	////Messages
 	public void msgConveyorWantsEmptyKit() {
-		if (!conveyor_state.equals(Conveyor_State.WANTS_EMPTY_KIT) && !conveyor_state.equals(Conveyor_State.EMPTY_KIT_SENDING)) {
+		debug("received msgConveyorWantsEmptyKit() from the Conveyor");
+		if (conveyor_state.equals(Conveyor_State.NO_ACTION)) {
 			conveyor_state = Conveyor_State.WANTS_EMPTY_KIT;
 			stateChanged();
 		}
 	}
 	
 	public void msgKitExported(Kit k) {
+		debug("received msgKitExported() for Kit "+ k);
 		exported_kits.add(k);
 		stateChanged();
 	}
