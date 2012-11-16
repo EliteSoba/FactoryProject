@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import agent.Agent;
 import java.util.*;
 
-import factory.graphics.GraphicLaneMenuPanel;
+
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
 //test commit
@@ -14,7 +14,6 @@ public class GantryAgent extends Agent implements Gantry {
 		
 	}
 
-	public GraphicLaneMenuPanel glmp;
 	public ArrayList<MyBin> myBins = new ArrayList<MyBin>();   
 	BinConfig binConfig;
 
@@ -65,7 +64,7 @@ public class GantryAgent extends Agent implements Gantry {
 
 	// *** ACTIONS ***
 	private void goFetchTheRequestedBin(MyBin b) {
-		DoPickupPurgeBin(); //animation message
+		DoPickupPurgeBin(b); //animation message
 		
 //		DoRefillPurgeBin(binConfig.binList.get(b.pt));
 //		DoBringRequestedBin(binConfig.binList.get(b.pt),b.fdr,b.pt);
@@ -76,18 +75,17 @@ public class GantryAgent extends Agent implements Gantry {
 		stateChanged();
 	}
 
-	private void DoBringRequestedBin(Integer integer,Feeder f,Part p) {
-		print("Bringing requested bin");
-		glmp.doBringRequestedBin(integer,f,p);
-	}
 
-	private void DoRefillPurgeBin(Integer integer) {
-		print("Refilling Purge Bin");
-		
-	}
-
-	private void DoPickupPurgeBin() {
+	private void DoPickupPurgeBin(MyBin b) {
 		print("Picking up Purge Bin");
+		server.command("ga fpm cmd pickupbin " + b.pt.imagePath);
+		
+		try{
+			animation.acquire();
+		}
+		catch (InterruptedException e){
+			e.printStackTrace();
+		}
 		
 	}
 

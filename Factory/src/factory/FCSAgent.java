@@ -29,7 +29,7 @@ public class FCSAgent extends Agent implements FCS{
 	   public enum KitProductionState { PENDING, PRODUCING, FINISHED, PURGING }
 	   public KitProductionState state = KitProductionState.PENDING;
 
-	   public int kitsExported = 0;
+	   public int kitsExportedCount = 0;
 	   
 	   //this is temporarily used for testing purposes.  Constructor will likely change.
 	   public FCSAgent(Gantry gantry, PartsRobot partsRobot, MasterControl mc) {
@@ -54,6 +54,7 @@ public class FCSAgent extends Agent implements FCS{
 		   KitConfig recipe = new KitConfig();
 		   recipe = kitRecipes.get(name);
 		   recipe.quantity = quantity;
+		   recipe.kitName = name;
 		   orders.add(recipe);
 		   stateChanged();
 		}
@@ -65,8 +66,8 @@ public class FCSAgent extends Agent implements FCS{
 	   }
 	   
 	   public void msgKitIsExported(Kit kit){
-		   kitsExported++;
-		   if(kitsExported >= orders.peek().quantity){
+		   kitsExportedCount++;
+		   if(kitsExportedCount >= orders.peek().quantity){
 			   this.state = KitProductionState.FINISHED;
 		   }
 		   //send message to manager to say that kit is exported
@@ -110,7 +111,7 @@ public class FCSAgent extends Agent implements FCS{
 	   private void sendKitConfigToPartRobot() { 
 	      this.partsRobot.msgMakeKit(orders.peek());
 	      this.state = KitProductionState.PRODUCING;
-	      this.kitsExported = orders.peek().quantity;
+		  kitsExportedCount = 0;
 	      stateChanged();
 	   }
 	   
@@ -140,6 +141,7 @@ public class FCSAgent extends Agent implements FCS{
 				   Part part = new Part();
 				   part = partsList.get(p);
 				   recipe.listOfParts.add(part);
+				   recipe.kitName = name;
 			   }
 		   }
 		   kitRecipes.put(name, recipe);

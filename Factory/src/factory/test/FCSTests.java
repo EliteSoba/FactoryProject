@@ -107,8 +107,11 @@ public class FCSTests extends TestCase{
 	
 	public void testAddingAndFinishingKitConfig(){
 		
+		//this test tests the fcs robot handling incoming orders.  It takes in 2 initial orders, and simulates
+		//the factory producing a kit.
 		KitProductionState stateFinished = KitProductionState.FINISHED;
 		KitProductionState statePending = KitProductionState.PENDING;
+		KitProductionState stateProducing = KitProductionState.PRODUCING;
 		KitConfig kit1 = new KitConfig();
 		KitConfig kit2 = new KitConfig();
 		FCSAgent fcs = new FCSAgent(null);
@@ -130,37 +133,121 @@ public class FCSTests extends TestCase{
 				, 2, fcs.orders.size());
 		
 		//is the number of kits exported 0?
-		assertEquals("The kits exported should be 0, but instead is: " + fcs.kitsExported
-				, 0, fcs.kitsExported);
+		assertEquals("The kits exported should be 0, but instead is: " + fcs.kitsExportedCount
+				, 0, fcs.kitsExportedCount);
 		
 		
-		//is the state 
+		//the state of the FCS should be PENDING
 		assertEquals("The FCS state should be PENDING, but instead is: " + fcs.state
 				, statePending, fcs.state);
 		
+		//the first order in the list should be for typeA
+		assertEquals("The first order in the order list should be for kitConfig typeA, but instead is: " 
+				+ fcs.orders.peek().kitName, "typeA", fcs.orders.peek().kitName);
+		
+		//tell fcs to change states
 		fcs.pickAndExecuteAnAction();
+		
+		//export a kit
 		fcs.msgKitIsExported(null);
 		
+		//the state of the FCS should be PROUDUCING 
+		assertEquals("The FCS state should be PRODUCING, but instead is: " + fcs.state
+				, stateProducing, fcs.state);
+		
 		//is the number of kits exported 1?
-		assertEquals("The kits exported should be 1, but instead is: " + fcs.kitsExported
-				, 1, fcs.kitsExported);
+		assertEquals("The kits exported should be 1, but instead is: " + fcs.kitsExportedCount
+				, 1, fcs.kitsExportedCount);
 		
-		//the state of the FCS should still be PENDING 
-		assertEquals("The FCS state should be PENDING, but instead is: " + fcs.state
-				, statePending, fcs.state);
+		//the first order in the list should still be for typeA
+		assertEquals("The first order in the order list should be for kitConfig typeA, but instead is: " 
+				+ fcs.orders.peek().kitName, "typeA", fcs.orders.peek().kitName);
 		
+		//export a kit
 		fcs.msgKitIsExported(null);
 		
 		//is the number of kits exported 2?
-		assertEquals("The kits exported should be 2, but instead is: " + fcs.kitsExported
-				, 2, fcs.kitsExported);
+		assertEquals("The kits exported should be 2, but instead is: " + fcs.kitsExportedCount
+				, 2, fcs.kitsExportedCount);
 		
 		assertEquals("The FCS state should be FINISHED, but instead is: " + fcs.state
 				, stateFinished, fcs.state);
 		
+		//the first order in the list should still be for typeA
+		assertEquals("The first order in the order list should be for kitConfig typeA, but instead is: " 
+				+ fcs.orders.peek().kitName, "typeA", fcs.orders.peek().kitName);
 		
+		fcs.pickAndExecuteAnAction();
 		
+		//check the state of the fcs
+		assertEquals("The FCS state should be PENDING, but instead is: " + fcs.state
+				, statePending, fcs.state);
 		
+		//the first order in the list should now be for typeB
+		assertEquals("The first order in the order list should be for kitConfig typeB, but instead is: " 
+				+ fcs.orders.peek().kitName, "typeB", fcs.orders.peek().kitName);
+		
+		//FCS should have removed an order
+		assertEquals("The FCS orders list should have 1 order, but instead has: " + fcs.orders.size()
+				, 1, fcs.orders.size());
+		
+		fcs.pickAndExecuteAnAction();
+		
+		//check the FCS state (should be PRODUCING)
+		assertEquals("The FCS state should be PRODUCING, but instead is: " + fcs.state
+				, stateProducing, fcs.state);
+		
+		//is the number of kits exported 0?
+		assertEquals("The kits exported should be 0, but instead is: " + fcs.kitsExportedCount
+				, 0, fcs.kitsExportedCount);
+		
+		//the first order in the list should still be for typeB
+		assertEquals("The first order in the order list should be for kitConfig typeB, but instead is: " 
+				+ fcs.orders.peek().kitName, "typeB", fcs.orders.peek().kitName);
+		
+		fcs.msgKitIsExported(null);
+		
+		//check the FCS state (should be PRODUCING)
+		assertEquals("The FCS state should be PRODUCING, but instead is: " + fcs.state
+				, stateProducing, fcs.state);
+		
+		//is the number of kits exported 1?
+		assertEquals("The kits exported should be 1, but instead is: " + fcs.kitsExportedCount
+				, 1, fcs.kitsExportedCount);
+		
+		//the first order in the list should still be for typeB
+		assertEquals("The first order in the order list should be for kitConfig typeB, but instead is: " 
+				+ fcs.orders.peek().kitName, "typeB", fcs.orders.peek().kitName);
+		
+		fcs.msgKitIsExported(null);
+		
+		//is the number of kits exported 2?
+		assertEquals("The kits exported should be 2, but instead is: " + fcs.kitsExportedCount
+				, 2, fcs.kitsExportedCount);
+		
+		//the first order in the list should still be for typeB
+		assertEquals("The first order in the order list should be for kitConfig typeB, but instead is: " 
+				+ fcs.orders.peek().kitName, "typeB", fcs.orders.peek().kitName);
+		
+		//check the FCS state (should be PRODUCING)
+		assertEquals("The FCS state should be FINISHED, but instead is: " + fcs.state
+				, stateFinished, fcs.state);
+		
+		fcs.pickAndExecuteAnAction();
+		
+		//check the FCS state (should be PENDING)
+		assertEquals("The FCS state should be PENDING, but instead is: " + fcs.state
+				, statePending, fcs.state);
+		
+		//the FCS should have removed its last order because it finished it
+		assertEquals("The orders list should have no orders in it, but instead, has: " + fcs.orders.size()
+				, 0, fcs.orders.size());
+		
+		fcs.pickAndExecuteAnAction();
+		
+		//check the FCS state (should be PENDING)
+		assertEquals("The FCS state should be PENDING because there are no orders left, but instead is: " + fcs.state
+				, statePending, fcs.state);
 	}
 	
 	public Map<String, Part> createPartsList(){

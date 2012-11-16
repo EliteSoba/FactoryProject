@@ -31,7 +31,6 @@ public class GantryTests extends TestCase{
 		//feeder should get the message here.
 		assertTrue("Feeder should have gotten a message to change bin config.", feeder.log
 				.containsString("msgHereAreParts"));
-		
 	}
 	
 	public void testMultiplePartsRequestOneFeeder() {
