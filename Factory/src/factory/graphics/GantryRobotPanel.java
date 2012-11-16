@@ -53,8 +53,8 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 		}
 		else if(gantryRobot.getState() == 4)
 		{
-			lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.takeBin());
-			gantryRobotArrivedAtFeeder();
+			lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.popBin());
+			gantryRobotArrivedAtFeederForDropoff();
 		}
 	}
 	

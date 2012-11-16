@@ -56,7 +56,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		lane[(laneNum) / 2].bin = new GraphicBin(new Part("eyes"));
 		lane[(laneNum) / 2].binExist = true;
 		//end Test*/
-		if(lane[(laneNum) / 2].binExist && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
+		if(lane[(laneNum) / 2].binExists && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
 			lane[(laneNum) / 2].laneStart = true;
 			lane[(laneNum) / 2].divergeUp = ((laneNum) % 2 == 0);
 			lane[(laneNum) / 2].feederOn = true;
@@ -100,7 +100,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 	
 	public void purgeFeeder(int feederNum){ // takes in lane 0 - 3
 		lane[(feederNum)].bin = null;
-		lane[(feederNum)].binExist = false;
+		lane[(feederNum)].binExists = false;
 		lane[(feederNum)].feederOn = false;
 	}
 	
