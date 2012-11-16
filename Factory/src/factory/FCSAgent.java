@@ -122,7 +122,7 @@ public class FCSAgent extends Agent implements FCS{
 	private void sendKitConfigToPartRobot() { 
 		
 		/**THIS IS TEMPORARY, //TODO for now send message to gantry instead of parts robot to test swing->agent->animation**/
-		this.gantry.msgTestGetPart();
+		this.gantry.msgFeederNeedsPart(partsList.get("Shoe"), null);
 //		this.partsRobot.msgMakeKit(orders.peek()); //TODO uncomment this for v1 implementation
 		this.state = KitProductionState.PRODUCING;
 		kitsExportedCount = 0;
