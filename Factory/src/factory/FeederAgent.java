@@ -6,8 +6,6 @@ import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
 import agent.Agent;
-import factory.graphics.GraphicLaneManagerClient;
-import factory.graphics.GraphicLaneMenuPanel;
 import factory.interfaces.Feeder;
 import factory.interfaces.Gantry;
 import factory.interfaces.Lane;
@@ -23,7 +21,6 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** DATA **/
 	private static int kOK_TO_PURGE_TIME = 10;
-	public GraphicLaneMenuPanel glmp;
 	private String name;
 	public int feederSlot;
 	public ArrayList<MyPartRequest> requestedParts = new ArrayList<MyPartRequest>();   

@@ -70,6 +70,8 @@ public class FactoryProductionManager extends Client {
 		System.out.println(identifier);
 		if(action.equals("cmd")){
 			//Graphics Receive Commands
+			
+			// Commands from FeederAgent
 			if (identifier.equals("startfeeding"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
@@ -87,12 +89,19 @@ public class FactoryProductionManager extends Client {
 			}
 			else if (identifier.equals("switchlane"))
 			{
-				System.out.println("1");
 				int feederSlot = Integer.valueOf(pCmd.get(2));
 				System.out.println("feederslot = " + feederSlot);
 				if (graphics == null)
 					System.out.println("Thisisatest");
 				((FactoryProductionPanel) graphics).switchFeederLane(feederSlot);
+			}
+			
+			// Commands from GantryAgent:
+			else if (identifier.equals("pickupbin"))
+			{
+				System.out.println("gantry blah blah"); //debugging
+				String desiredPartImagePath = pCmd.get(2); 
+				((FactoryProductionPanel) graphics).moveGantryRobotToPickup(desiredPartImagePath);
 			}
 			//Swing Receive Commands
 			else if (identifier.equals("addkitname")) {		// add new kit configuration to kit configuration list
