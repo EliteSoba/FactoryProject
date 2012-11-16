@@ -154,7 +154,7 @@ public class MasterControl {
 		vision = new VisionAgent(partsRobot,stand,this);
 
 		// Instantiate the FCS
-		fcs = new FCSAgent(this);
+		fcs = new FCSAgent(gantry,partsRobot,this);
 
 
 		// SET A FEW THINGS
@@ -570,10 +570,10 @@ public class MasterControl {
 		long timeToQuit = System.currentTimeMillis() + 5000;
 		while (System.currentTimeMillis() < timeToQuit);
 
-		//Part p0 = new Part("Ear");
+//		Part p0 = new Part("Ear");
 
 		// request a part for the lane
-		//mc.f0.msgLaneNeedsPart(p0, mc.l0t);		
+//		mc.f0.msgLaneNeedsPart(p0, mc.l0t);		
 		// should make the gantry go get a bin of parts
 		// should call DoSwitchLane() and then DoStartFeeding()
 	}

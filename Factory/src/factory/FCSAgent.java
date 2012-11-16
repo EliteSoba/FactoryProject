@@ -34,9 +34,11 @@ public class FCSAgent extends Agent implements FCS{
 
 	public int kitsExportedCount = 0;
 
+	public MasterControl masterControl;
 	//this is temporarily used for testing purposes.  Constructor will likely change.
 	public FCSAgent(Gantry gantry, PartsRobot partsRobot, MasterControl mc) {
 		super(mc);
+		this.masterControl = mc; // for testing purposes
 		this.gantry = gantry;
 		this.partsRobot = partsRobot;
 		loadData();
@@ -44,6 +46,7 @@ public class FCSAgent extends Agent implements FCS{
 	}
 	public FCSAgent(MasterControl mc){
 		super (mc);
+		this.masterControl = mc;
 		loadData();
 		testImport();
 
@@ -122,7 +125,7 @@ public class FCSAgent extends Agent implements FCS{
 	private void sendKitConfigToPartRobot() { 
 		
 		/**THIS IS TEMPORARY, //TODO for now send message to gantry instead of parts robot to test swing->agent->animation**/
-		this.gantry.msgFeederNeedsPart(partsList.get("Shoe"), null);
+		this.gantry.msgFeederNeedsPart(partsList.get("Shoe"), this.masterControl.f0);
 //		this.partsRobot.msgMakeKit(orders.peek()); //TODO uncomment this for v1 implementation
 		this.state = KitProductionState.PRODUCING;
 		kitsExportedCount = 0;
