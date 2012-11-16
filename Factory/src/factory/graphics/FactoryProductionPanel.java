@@ -196,15 +196,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		
 	}
 	
-	/*public void purgeLane(int laneNum){
-		if((laneNum) % 2 == 0)
-			lane[(laneNum) / 2].lane1PurgeOn = true;
-		else
-			lane[(laneNum) / 2].lane2PurgeOn = true;
-		lane[(laneNum) / 2].feederOn = false;
-		lane[(laneNum) / 2].laneStart = false;
-	}*/
-	
 	public void purgeTopLane(int feederNum){
 		lane[feederNum].lane1PurgeOn = true;
 		lane[feederNum].feederOn = false;
