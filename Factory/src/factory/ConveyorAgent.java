@@ -10,6 +10,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	
 	public KitRobot kitRobot;
 	public ConveyorController conveyorController;
+	public FCS fcs;
 	
 	public Kit kitAtConveyor;  //Supposed to represent what is on the ConveyorAgent
 	
@@ -95,7 +96,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 		}
 		 */
 		debug("Export Animation Completed");
-	    conveyorController.msgKitExported(kitAtConveyor);
+	    fcs.msgKitExported(kitAtConveyor);
 		kitAtConveyor = null;
 		stateChanged();
 	}
@@ -114,6 +115,9 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	}
 	public void setConveyorControll(ConveyorController cc) {
 		this.conveyorController = cc;
+	}
+	public void setFCS(FCS fcs) {
+		this.fcs = fcs;
 	}
 }
 

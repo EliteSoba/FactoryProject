@@ -14,7 +14,7 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	List<Kit> exported_kits = new ArrayList<Kit>();
 	enum Conveyor_State { WANTS_EMPTY_KIT, EMPTY_KIT_SENDING, NO_ACTION };
 	Conveyor_State conveyor_state = Conveyor_State.NO_ACTION;
-
+	
 	Timer timer = new Timer();
 	
 	//UnitTesting Constructor
@@ -33,12 +33,6 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 			conveyor_state = Conveyor_State.WANTS_EMPTY_KIT;
 			stateChanged();
 		}
-	}
-	
-	public void msgKitExported(Kit k) {
-		debug("received msgKitExported() for Kit "+ k);
-		exported_kits.add(k);
-		stateChanged();
 	}
 	
 	
