@@ -98,7 +98,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		lane[feederNum].feederOn = false;
 	}
 	
-	public void purgeFeeder(int feederNum){ // takes in lane 0 - 4
+	public void purgeFeeder(int feederNum){ // takes in lane 0 - 3
 		lane[(feederNum)].bin = null;
 		lane[(feederNum)].binExist = false;
 		lane[(feederNum)].feederOn = false;
@@ -153,6 +153,22 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 			case 'y': lp.feedLane(5); break;
 			case 'u': lp.feedLane(6); break;
 			case 'i': lp.feedLane(7); break;
+			case '!':
+			case '@': lp.cameraFlash(0); break;
+			case '#':
+			case '$': lp.cameraFlash(1); break;
+			case '%':
+			case '^': lp.cameraFlash(2); break;
+			case '&':
+			case '*': lp.cameraFlash(3); break;
+			case 'Q': lp.purgeLane(0); break;
+			case 'W': lp.purgeLane(1); break;
+			case 'E': lp.purgeLane(2); break;
+			case 'R': lp.purgeLane(3); break;
+			case 'T': lp.purgeLane(4); break;
+			case 'Y': lp.purgeLane(5); break;
+			case 'U': lp.purgeLane(6); break;
+			case 'I': lp.purgeLane(7); break;
 			case '`': System.exit(0); break;
 			}
 		} while(command.charAt(0) != '`');

@@ -112,6 +112,30 @@ public class GraphicFactoryProductionManager extends JFrame {
 		panel.feedLane(laneNum);
 	}
 	
+	public void startLane(int laneNum){
+		panel.startLane(laneNum);
+	}
+	
+	public void switchLane(int laneNum){
+		panel.switchLane(laneNum);
+	}
+	
+	public void switchFeederLane(int feederNum){
+		panel.switchFeederLane(feederNum);
+	}
+	
+	public void purgeFeeder(int feederNum){
+		panel.purgeFeeder(feederNum);
+	}
+	
+	public void purgeTopLane(int feederNum){
+		panel.purgeTopLane(feederNum);
+	}
+	
+	public void purgeBottomLane(int feederNum){
+		panel.purgeBottomLane(feederNum);
+	}
+	
 	public void getBin()
 	{
 		panel.moveGantryRobotToPickup("IMAGE FILE PATH GOES HERE LATER");

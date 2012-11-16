@@ -149,7 +149,7 @@ public class GraphicKitBelt {
 			if (kitOut.getY() >= y+height) {
 				kitOut = null;
 				export = false;
-				GKAM.exportKit();
+				GKAM.exportKitDone();
 			}
 		}
 	}

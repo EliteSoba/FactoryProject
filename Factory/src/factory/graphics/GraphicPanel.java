@@ -65,30 +65,33 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void sendMessage(String command) {
-		if (am == null)
-			return;
+		//if (am == null)
+			//return;
 		
 		String message;
 		if (isLaneManager)
-			message = "lm";
+			message = "lm ";
 		else if (isGantryRobotManager)
-			message = "grm";
+			message = "grm ";
 		else if (isKitAssemblyManager)
-			message = "kam";
+			message = "kam ";
 		else if (isFactoryProductionManager)
-			message = "fpm";
+			message = "fpm ";
 		else
 			return;
 		
-		am.sendCommand(message + command);
+		if (am != null)
+			am.sendCommand(message + command);
+		else
+			System.out.println(message + command);
 	}
 	
 	public void newEmptyKitDone() {
-		sendMessage("FILLER");
+		sendMessage("cca cnf");
 	}
 	
 	public void moveEmptyKitToSlotDone() {
-		sendMessage("FILLER");
+		sendMessage("kra cnf");
 	}
 
 	public void moveKitToInspectionDone() {
@@ -96,15 +99,15 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void takePictureOfInspectionSlotDone() {
-		sendMessage("FILLER");
+		sendMessage("va cnf");
 	}
 
 	public void dumpKitAtInspectionDone() {
-		sendMessage("FILLER");
+		sendMessage("kra cnf");
 	}
 
 	public void moveKitFromInspectionToConveyorDone() {
-		sendMessage("FILLER");
+		sendMessage("kra cnf");
 	}
 
 	public void exportKitDone() {
