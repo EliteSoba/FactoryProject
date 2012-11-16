@@ -1,7 +1,7 @@
-//Contributors: Ben Mayeux,Stephanie Reagle, Joey Huang, Tobias Lee
+//Contributors: Ben Mayeux,Stephanie Reagle, Joey Huang, Tobias Lee, Ryan Cleary
 //CS 200
 
-// Last edited: 11/15/12 12:03 by Joey Huang
+// Last edited: 11/15/12 7:55pm by Joey Huang
 package factory.managers;
 
 import java.awt.BorderLayout;
@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.Queue;
+import java.util.HashMap;
 import javax.swing.JPanel;
 import factory.client.Client;
 import factory.graphics.FactoryProductionPanel;
@@ -19,8 +19,8 @@ import factory.KitConfig;
 
 public class FactoryProductionManager extends Client {
 	static final long serialVersionUID = -2074747328301562732L;
-	ArrayList<KitConfig> kitConfigList;
-	ArrayList<Part> partsList;
+	HashMap<String,Part> partsList;
+	HashMap<String,KitConfig> kitConfigList;
 	FactoryProdManPanel swingPanel;
 	
 		public FactoryProductionManager() {
@@ -30,8 +30,11 @@ public class FactoryProductionManager extends Client {
 			UI = new FactoryProdManPanel();
 			((FactoryProdManPanel)UI).setManager(this);
 			graphics = new FactoryProductionPanel(this);
-			kitConfigList = new ArrayList<KitConfig>();
-			loadParts();
+			
+			partsList = new HashMap<String,Part>();
+			kitConfigList = new HashMap<String,KitConfig>();
+			
+			//loadParts();
 		}
 		public static void main(String[] args){
 		    //FactoryProdManPanel buttons = new FactoryProdManPanel();
@@ -90,28 +93,25 @@ public class FactoryProductionManager extends Client {
 				int count = 3;
 				
 				while(!pCmd.get(count).equals("endcmd")) {
-					String partName = pCmd.get(3);
-					for (Part part:partsList) {
-						if (part.name.equals(partName))
-							newKit.listOfParts.add(part);
-							break;
-					}
-			
+					String partName = pCmd.get(count);
+					newKit.listOfParts.add(partsList.get(partName));		
 					count++;
 				}
-				kitConfigList.add(newKit); 
+				kitConfigList.put(newKit.kitName,newKit); 
 				swingPanel.addKit(newKit.kitName);
 			}
 			else if (identifier.equals("rmkitname")) {		// remove kit configuration from kit configuration list
-				
+				kitConfigList.remove(pCmd.get(2));
+				swingPanel.removeKit(pCmd.get(2));
 			}
 			else if (identifier.equals("addpartname")) {	// add new part to parts list
 				Part part = new Part(pCmd.get(3),Integer.parseInt(pCmd.get(4)),pCmd.get(7),pCmd.get(5),Double.parseDouble(pCmd.get(6)));
 		// server message sequence		Part part = new Part(pCmd.get(3),Integer.parseInt(pCmd.get(4)),pCmd.get(5),Double.parseDouble(pCmd.get(6)),pCmd.get(7));
-				partsList.add(part);
+				partsList.put(pCmd.get(3),part);
 			}
 			else if (identifier.equals("rmpartname")) {		// remove part from parts list
-				
+				partsList.remove(pCmd.get(2));
+						// need to check kits affected
 			}
 		}
 		else if(action.equals("req")){
@@ -130,10 +130,10 @@ public class FactoryProductionManager extends Client {
 		}
 		else if(action.equals("set")){
 			if (identifier.equals("kitcontent")) { 			// modify content of a kit
-
+				
 			}
 			else if (identifier.equals("kitsproduced")) { // updates number of kits produced for schedule
-				
+				swingPanel.kitProduced();
 			}
 		}
 		else if(action.equals("cnf")){
@@ -156,7 +156,7 @@ public class FactoryProductionManager extends Client {
 	}
 			
 
-			public void loadParts(){
+		/*	public void loadParts(){
 				FileInputStream f;
 				ObjectInputStream o;
 				try{    // loads previously saved player data
@@ -172,7 +172,7 @@ public class FactoryProductionManager extends Client {
 				} catch(ClassNotFoundException c){
 					partsList = new ArrayList<Part>();
 				}
-			}
+			}*/
 			
 			
 
