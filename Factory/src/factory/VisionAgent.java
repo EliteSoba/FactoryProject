@@ -25,7 +25,6 @@ public class VisionAgent extends Agent implements Vision {
 	Stand stand;
 	Random r = new Random();
 	GraphicFactoryProductionManager server;
-	
 
 	Semaphore pictureAllowed = new Semaphore(1);
 	
