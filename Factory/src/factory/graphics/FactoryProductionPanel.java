@@ -147,10 +147,10 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
-		//Testing for quick feed
+		/*//Testing for quick feed
 		lane[(laneNum) / 2].bin = new GraphicBin(new Part("eyes"));
 		lane[(laneNum) / 2].binExist = true;
-		//end Test
+		//end Test*/
 		if(!lane[(laneNum) / 2].lane1PurgeOn){	//If purging is on, cannot feed!
 			if(lane[(laneNum) / 2].binExist && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
 				lane[(laneNum) / 2].laneStart = true;
@@ -171,7 +171,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 	
 	public void switchFeederLane(int feederNum){
-		System.out.println("!123123");
 		lane[feederNum].divergeUp = !lane[feederNum].divergeUp;
 		lane[feederNum].vY = -(lane[feederNum].vY);
 		switchFeederLaneDone(feederNum);
@@ -229,7 +228,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 			{
 				if (nests.get(partsRobot.getDestinationNest()).hasItem())
 					partsRobot.addItem(nests.get(partsRobot.getDestinationNest()).popItem());
-				partsRobot.setState(2);
+				partsRobot.setState(0);
 			}
 			partsRobotArrivedAtNest();
 		}
