@@ -38,8 +38,7 @@ public class GraphicLaneManager{
 	private int vibrationAmplitude;
 	int laneManagerID;					//lane Manager Number
 	boolean feederOn;			//Feeder on/off
-	boolean binExist;			
-	boolean feederHasItems;		//Check to see if feeder has item to. If does, then paint the image
+	boolean binExists;			
 	boolean lane1PurgeOn;
 	boolean lane2PurgeOn;
 
@@ -59,8 +58,7 @@ public class GraphicLaneManager{
 		laneStart = false;
 		divergeUp = false;
 		feederOn = false;
-		binExist = false;
-		feederHasItems = false;
+		binExists = false;
 		lane1PurgeOn = false;		//Nest purge is off unless turned on
 		lane2PurgeOn = false;		//Nest purge is off unless turned on
 		timerCount = 1; binItemCount = 0; vibrationCount = 0; vibrationAmplitude = 2;
@@ -80,13 +78,26 @@ public class GraphicLaneManager{
 	public void setBin(GraphicBin bin){
 		this.bin = bin;
 		if (bin != null)
-			binExist = true;
+			binExists = true;
 	}
 
 	public GraphicBin getBin(){
 		return bin;
 	}
-
+	
+	public boolean hasBin()
+	{
+		return binExists;
+	}
+	
+	public GraphicBin popBin()
+	{
+		GraphicBin binCopy = bin;
+		bin = null;
+		binExists = false;
+		return binCopy;
+	}
+	
 	public void paintLane(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
 
@@ -103,13 +114,13 @@ public class GraphicLaneManager{
 	} // END Paint function
 
 	public void paintFeeder(Graphics g) {
-		if(binExist)
+		if(binExists)
 			g.drawImage(bin.getBinImage().getImage(), feederX + 50, feederY+15, null);
 		g.drawImage(feederIcon.getImage(), feederX, feederY, null);
 	}
 
 	public void moveLane() {
-		if(binExist){
+		if(binExists){
 			if(laneStart){
 				if(feederOn){
 					if(timerCount % 10 == 0){		//Put an item on lane on a timed interval

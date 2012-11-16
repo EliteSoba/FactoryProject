@@ -145,9 +145,14 @@ public class GraphicFactoryProductionManager extends JFrame {
 		panel.moveGantryRobotToPickup("IMAGE FILE PATH GOES HERE LATER");
 	}
 	
-	public void moveGantryToFeeder1()
+	public void moveGantryToFeeder1Pickup()
 	{
-		panel.moveGantryRobotToFeeder(0);
+		panel.moveGantryRobotToFeederForPickup(0);
+	}
+
+	public void moveGantryToFeeder1Dropoff()
+	{
+		panel.moveGantryRobotToFeederForDropoff(0);
 	}
 	
 	public void takePictureFeeder1()

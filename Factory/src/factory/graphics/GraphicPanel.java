@@ -117,13 +117,18 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 
 	public void gantryRobotArrivedAtPickup() {
-		sendMessage("FILLER");
+		sendMessage("ga cnf");
 	}
 
-	public void gantryRobotArrivedAtFeeder() {
-		sendMessage("FILLER");
+	public void gantryRobotArrivedAtFeederForDropoff() {
+		sendMessage("ga cnf");
 	}
 
+	public void gantryRobotArrivedAtFeederForPickup()
+	{
+		sendMessage("ga cnf");
+	}
+	
 	public void partsRobotArrivedAtNest() {
 		sendMessage("FILLER");
 	}
