@@ -27,16 +27,7 @@ public class PartsManager extends Client implements WindowListener{
 		//parts = new HashMap<String, Part>();
 		//parts.put("Part", new Part("Part",1,"Hey","Image",2));
 		System.out.println(parts.size());
-		/*
-		parts.add(new Part("Eye",1,"This is used to see.","Images/eye.png",1));
-		parts.add(new Part("Body",2,"This is used as the base.","Images/body.png",5));
-		parts.add(new Part("Hat",3,"This is used to cover the head.","Images/hat.png",2));
-		parts.add(new Part("Arm",4,"This is used to grab things.","Images/arm.png",2));
-		parts.add(new Part("Shoe",5,"This is used to walk.","Images/shoe.png",2));
-		parts.add(new Part("Mouth",6,"This is used to talk.","Images/mouth.png",1));
-		parts.add(new Part("Nose",7,"This is used to smell.","Images/nose.png",1));
-		parts.add(new Part("Moustache",8,"This is used to look cool.","Images/moustache.png",1));
-		parts.add(new Part("Ear",9,"This is used to hear.","Images/ear.png",2));*/
+
 		UI = new PartsManPanel(this);
 		setInterface();
 		
@@ -60,13 +51,14 @@ public class PartsManager extends Client implements WindowListener{
 		
 		if(option.equals("add")){
 			message = "pm multi cmd addpartname " + p.name + " " + p.id + " " + p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
+			System.out.println(message);
 		}
 		
 		else if (option.equals("remove")){
 			message = "pm multi cmd rmpartname " + p.name + " endcmd"; 
 		}
 		
-		sendCommand(message);
+		//sendCommand(message);
 		
 	}
 
