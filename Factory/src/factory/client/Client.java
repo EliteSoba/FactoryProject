@@ -98,7 +98,6 @@ public abstract class Client extends JFrame implements ActionListener {
 		parsedCommand = new ArrayList<String>(Arrays.asList(currentCommand.split(" "))); //puts string into array list   
     }
 	public void sendCommand(String cmd){
-		System.out.println("Client - sendCommand = " + cmd);
 		output.println(cmd);
 	}
 
