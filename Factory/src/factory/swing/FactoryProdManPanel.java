@@ -140,7 +140,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 				
 				String set = new String("");
 				set = "fpm fcsa cmd makekits " + qnty + " " + name;	
-			//	factoryProductionManager.sendCommand(set);
+				factoryProductionManager.sendCommand(set);
 					
 				//Object[] rowData = {i+1,"Kit"+(i+1),"10"};
 				Object[] rowData = {model.getRowCount()+1,name,qnty};
