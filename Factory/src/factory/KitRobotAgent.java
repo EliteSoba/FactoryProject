@@ -188,6 +188,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		//action for dumping a bad kit
 		debug("KitRobot dumping bad kit");
 		//server.dumpKit();
+		server.command("kra fpm cmd dumpKitAtSlot inspectionSlot");
 
 		// Wait until the animation is done
 		try {
@@ -221,7 +222,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		}
 		
 		holding = stand.getSlotKit("inspectionSlot");
-		//server.exportKit(); //This should be the call for the animation for hte KitRobot to take the Kit at the inspection slot and put it on the conveyor
+		server.command("kra fpm cmd putInspectionKitOnConveyor");
 		
 		// Wait until the animation is done
 		try {
@@ -267,11 +268,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		conveyor.setAtConveyor(null);
 		
 		//Here do the animation for picking up the kit from the conveyor
-		if(pos.equals("topSlot")) {
-			//server.moveEmptyKitToSlot(0); //Animation for hte kit robot to go to the conveyor and pick up the kit
-		}  else if (pos.equals("bottomSlot")) {
-			//server.moveEmptyKitToSlot(1); //Animation for hte kit robot to go to the conveyor and pick up the kit
-		}
+		server.command("kra fpm cmd putEmptyKitAtSlot "+pos);
 
 		try {
 			debug("Kit robot is taking empty kit from conveyor");
@@ -299,6 +296,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		if (stand.getSlotKit("topSlot") != null) {
 			if (stand.getSlotKit("topSlot").state.equals(KitState.INCOMPLETE)) {
 				//do animation of dumping topSlot
+				server.command("kra fpm cmd dumpKitAtSlot topSlot");
 				
 				// Wait until the animation is done
 				try {
@@ -314,6 +312,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		if (stand.getSlotKit("bottomSlot") != null) {
 			if (stand.getSlotKit("bottomSlot").state.equals(KitState.INCOMPLETE)) {
 				//do animation of dumping bottomSlot
+				server.command("kra fpm cmd dumpKitAtSlot bottomSlot");
 				
 				// Wait until the animation is done
 				try {
@@ -346,13 +345,8 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		//method for KitRobot moving a kit to the inspection slot
 		//Can assume that has exclusive access to the Stand during this
 		debug("Executing moveToInspectionSpot for the" + pos);
-		int slot;
-		if (pos.equals("topSlot")) {
-			slot = 0;
-		} else {
-			slot = 1;
-		}
-		//server.moveKitFromSlotToInspection(slot);
+
+		server.command("kra fpm cmd moveKitToInspectionSlot " + pos);
 		
 		// Wait until the animation is done
 		try {
