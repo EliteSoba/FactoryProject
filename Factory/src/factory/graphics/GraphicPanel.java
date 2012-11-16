@@ -67,7 +67,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void sendMessage(String command) {
 		//if (am == null)
 			//return;
-		
+		//asdfasd
 		String message;
 		if (isLaneManager)
 			message = "lm ";
