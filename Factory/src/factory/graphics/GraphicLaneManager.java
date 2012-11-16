@@ -255,7 +255,8 @@ public class GraphicLaneManager{
 					}
 				}
 				if(lane1Items.size() == 0){
-					lane1PurgeOn = false;
+					lane1PurgeOn = false; //This is where the purgewalk ends
+					graphicPanel.purgeLaneDone();
 				}
 				continue;
 			} // end of purge statements
@@ -448,6 +449,7 @@ public class GraphicLaneManager{
 				}
 				if(lane2Items.size() == 0){
 					lane2PurgeOn = false;
+					graphicPanel.purgeLaneDone();
 				}
 				continue;
 			}
