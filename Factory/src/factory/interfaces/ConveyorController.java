@@ -6,6 +6,4 @@ public interface ConveyorController {
 	
 	public void msgConveyorWantsEmptyKit();
 	
-	public void msgKitExported(Kit k);
-	
 }
