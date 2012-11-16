@@ -282,7 +282,7 @@ public class GraphicLaneManager{
 					lane1Items.get(i).setVY(0);
 					lane1Items.get(i).setVX(vX);
 				}
-			}/*
+			}
 			//Queue entering Nests
 			if(graphicPanel.getNest().get(laneManagerID * 2).getSize() < 9){
 				for(int j = 0; j <lane1Items.size();j++){
@@ -314,6 +314,7 @@ public class GraphicLaneManager{
 				}
 
 				System.out.println(" " + lane1QueueTaken.size());
+				//IT IS THIS LINE
 				if(lane1Items.get(i).getStepX() == 4){
 					//Queue is full, delete crashing Items
 					if(lane1QueueTaken.size() > 17){ // To be changed according to size of lane
@@ -329,7 +330,7 @@ public class GraphicLaneManager{
 						lane1QueueTaken.add(new Boolean(true));
 					}
 				}
-			}*/
+			}
 			//Lane items move horizontally
 			if(lane1Items.get(i).getVX() == vX){
 				lane1Items.get(i).setStepX(lane1Items.get(i).getStepX() - 1);
