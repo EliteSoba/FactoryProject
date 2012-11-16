@@ -23,9 +23,9 @@ public class PartsManager extends Client implements WindowListener{
 		super(Client.Type.pm, null, null);
 		
 		
-		//loadData();
-		parts = new HashMap<String, Part>();
-		parts.put("Part", new Part("Part",1,"Hey","Image",2));
+		loadData();
+		//parts = new HashMap<String, Part>();
+		//parts.put("Part", new Part("Part",1,"Hey","Image",2));
 		System.out.println(parts.size());
 		/*
 		parts.add(new Part("Eye",1,"This is used to see.","Images/eye.png",1));
@@ -144,8 +144,10 @@ public class PartsManager extends Client implements WindowListener{
 			parts = (HashMap<String, Part>) o.readObject();
 			System.out.println("Good");
 		}catch(IOException e){
+			e.printStackTrace();
 			parts = new HashMap<String, Part>();
 		} catch(ClassNotFoundException c){
+			c.printStackTrace();
 			parts = new HashMap<String, Part>();
 		}
 	}
