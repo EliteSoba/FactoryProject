@@ -144,7 +144,6 @@ public class GraphicLaneManager{
 							if(bin.getBinItems().size() == 0){
 								feederOn = false;
 								graphicPanel.feedLaneDone(laneManagerID * 2 + ((divergeUp)?0:1));
-								System.out.println("Done feeding");
 							}
 						}
 					}
@@ -282,7 +281,6 @@ public class GraphicLaneManager{
 					}
 				}
 				else{
-					System.out.println(" " + lane1QueueTaken.size() + " stepx = " + lane1Items.get(i).getStepX());
 					for(int j = 0; j <lane1Items.size();j++){
 						if(lane1Items.get(j).getStepX() < lane1QueueTaken.size() + 1){
 							lane1Items.get(j).setVX(0);
@@ -542,8 +540,6 @@ public class GraphicLaneManager{
 								i--;
 							}
 							else{
-								//System.out.print(" " + lane.nestItems.size());
-								//System.out.println(" zero");
 								lane2Items.get(i).setVX(0);
 								lane2QueueTaken.add(new Boolean(true));
 							}

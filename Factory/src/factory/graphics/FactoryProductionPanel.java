@@ -120,21 +120,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		gantryRobot.setDestination(WIDTH-100,-100);
 	}
 	
-	public void moveGantryRobotToFeederForPickup(int feederIndex)
-	{
-		if(!lane[feederIndex].hasBin())
-		{
-			System.err.println("Can't pickup: no bin at feeder " + feederIndex + " (0-based index)!");
-			gantryRobotArrivedAtFeederForPickup();
-		}
-		else
-		{
-			gantryRobot.setState(3);
-			gantryRobot.setDestinationFeeder(feederIndex);
-			gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
-		}
-	}
-	
 	public void moveGantryRobotToFeederForDropoff(int feederIndex)
 	{
 		if(lane[feederIndex].hasBin())
@@ -152,10 +137,25 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		else
 		{
 			//System.out.println("3");
-			gantryRobot.setState(5);
+			gantryRobot.setState(3);
 			gantryRobot.setDestinationFeeder(feederIndex);
 			gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
 			gantryRobotArrivedAtFeederForDropoff();
+		}
+	}
+	
+	public void moveGantryRobotToFeederForPickup(int feederIndex)
+	{
+		if(!lane[feederIndex].hasBin())
+		{
+			System.err.println("Can't pickup: no bin at feeder " + feederIndex + " (0-based index)!");
+			gantryRobotArrivedAtFeederForPickup();
+		}
+		else
+		{
+			gantryRobot.setState(5);
+			gantryRobot.setDestinationFeeder(feederIndex);
+			gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
 		}
 	}
 	

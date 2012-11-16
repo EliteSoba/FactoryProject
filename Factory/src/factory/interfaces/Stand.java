@@ -13,6 +13,8 @@ public interface Stand {
 	void msgPartRobotWantsToPlaceParts();
 	void msgKitRobotWantsToExportKit();
 	
+	public void msgClearStand();
+	
 	public boolean setSlotKit(String slot, Kit k);
 	public Kit getSlotKit(String slot);
 	

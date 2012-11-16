@@ -154,7 +154,7 @@ public class MasterControl {
 		vision = new VisionAgent(partsRobot,stand,this);
 
 		// Instantiate the FCS
-		fcs = new FCSAgent(gantry,partsRobot,this);
+		fcs = new FCSAgent(gantry,partsRobot, this);
 
 
 		// SET A FEW THINGS
@@ -282,7 +282,7 @@ public class MasterControl {
 	// agentCmd is the giant parser that figures out
 	// what method to call on what agent.
 
-	public boolean agentCmd(ArrayList<String> cmd){
+	public boolean agentCmd(ArrayList<String> cmd){ 		//THIS
 		// 0 = Source
 		// 1 = Destination
 		// 2 = CmdType
@@ -342,6 +342,20 @@ public class MasterControl {
 				}
 				//more fcsagent commands
 			}
+			//MCS Commands:
+	
+			if (cmd.get(1).equals("mcs"))
+			{
+				destination = agentTreeMap.get(cmd.get(1));
+				
+				//fpm mcs cmd stopfactory
+				if(cmd.get(3).equals("stopfactory")){
+					System.out.println("HAPPY");
+					//method for stopping factory?
+					//this.closeAgents();
+				}
+				//more fcsagent commands
+			}
 			
 
 		}
@@ -362,7 +376,7 @@ public class MasterControl {
 	// and then sends it.
 
 
-	public boolean clientCmd(ArrayList<String> cmd){
+	public boolean clientCmd(ArrayList<String> cmd){	
 		String s = checkCmd(cmd);
 		System.out.println(s);
 		String a = cmd.get(0); // Source

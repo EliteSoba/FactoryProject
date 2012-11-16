@@ -6,9 +6,9 @@ import factory.Kit;
 import factory.interfaces.Nest;
 import factory.interfaces.Vision;
 
-public class MockVisionAgent extends MockAgent implements Vision {
+public class MockVision extends MockAgent implements Vision {
 
-	public MockVisionAgent(String name) {
+	public MockVision(String name) {
 		super(name);
 		// TODO Auto-generated constructor stub
 	}
