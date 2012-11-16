@@ -254,6 +254,7 @@ public class MasterControl {
 			// This is a message specifically meant for the server.
 			// Currently, there is only one of these : end the factory
 			// If more need to be implemented, I'll add them here.
+			System.out.println("HAPPY");
 			endAll();
 			return true;
 		} else {
@@ -282,7 +283,7 @@ public class MasterControl {
 	// agentCmd is the giant parser that figures out
 	// what method to call on what agent.
 
-	public boolean agentCmd(ArrayList<String> cmd){ 		//THIS
+	public boolean agentCmd(ArrayList<String> cmd){ 		//GO HERE
 		// 0 = Source
 		// 1 = Destination
 		// 2 = CmdType
@@ -342,6 +343,7 @@ public class MasterControl {
 				}
 				//more fcsagent commands
 			}
+			/*
 			//MCS Commands:
 	
 			if (cmd.get(1).equals("mcs"))
@@ -350,12 +352,12 @@ public class MasterControl {
 				
 				//fpm mcs cmd stopfactory
 				if(cmd.get(3).equals("stopfactory")){
-					System.out.println("HAPPY");
+					
 					//method for stopping factory?
 					//this.closeAgents();
 				}
 				//more fcsagent commands
-			}
+			}*/
 			
 
 		}
