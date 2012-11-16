@@ -117,7 +117,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	
 	public void moveGantryRobotToPickup(String path) {
 		//System.out.println("Moving");
-		gantryRobot.setState(0);
+		gantryRobot.setState(1);
 		gantryRobot.setDestination(WIDTH-100,-100);
 	}
 	
@@ -252,13 +252,16 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 	
 	public void gantryRobotStateCheck() {
-		if(gantryRobot.getState() == 1)
+		if(gantryRobot.getState() == 2)
 		{
-			gantryRobot.setState(3);
+			gantryRobot.setState(0);
+			// Give gantry robot a bin
+			gantryRobot.giveBin(new GraphicBin(new Part("Test Item")));
 			gantryRobotArrivedAtPickup();
 		}
 		else if(gantryRobot.getState() == 4)
 		{
+			gantryRobot.setState(0);
 			lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.takeBin());
 			gantryRobotArrivedAtFeeder();
 		}
