@@ -1,3 +1,4 @@
+package factory;
 import java.util.*;
 import java.io.*;
 import java.io.Serializable;
@@ -48,7 +49,7 @@ public class LoadTest {
 		lt.loadData();
 		lt.print();
 		
-		ArrayList<String> kits = lt.kitConfigsContainingPart("Moustache");
+		ArrayList<String> kits = lt.kitConfigsContainingPart("Eye");
 		
 		System.out.println(kits);
 	}

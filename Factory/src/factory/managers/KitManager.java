@@ -17,8 +17,7 @@ public class KitManager extends Client {
 	public KitManager() {
 		super(Client.Type.km, null, null);
 		
-	    KitManPanel buttons = new KitManPanel();
-		buttons.setManager(this);
+	    KitManPanel buttons = new KitManPanel(this);
 
 		setInterface();
 	}
@@ -45,7 +44,6 @@ public class KitManager extends Client {
 	
 	
 	public void doCommand(ArrayList<String> pCmd) {
-		// TODO Auto-generated method stub
 		
 	}
 }
