@@ -1,3 +1,5 @@
+package factory;
+
 import java.util.*;
 import java.io.*;
 import java.io.Serializable;
@@ -41,13 +43,6 @@ public class SaveTest {
 			newKitConfig.listOfParts.add(partsList.get("Arm"));
 			kitConfigList.put(newKitConfig.kitName,newKitConfig);
 			
-			newKitConfig = new KitConfig("Probopass");
-			newKitConfig.listOfParts.add(partsList.get("Body"));	
-			newKitConfig.listOfParts.add(partsList.get("Nose"));
-			newKitConfig.listOfParts.add(partsList.get("Moustache"));
-			newKitConfig.listOfParts.add(partsList.get("Hat"));
-			newKitConfig.listOfParts.add(partsList.get("Eye"));
-			kitConfigList.put(newKitConfig.kitName,newKitConfig);
 			
 	}
 	public void saveData() {

@@ -22,7 +22,7 @@ public class PartsManager extends Client implements WindowListener{
 	public PartsManager() {
 		super(Client.Type.pm, null, null);
 		
-		
+		parts = new HashMap<String, Part>();
 		loadData();
 		//parts = new HashMap<String, Part>();
 		//parts.put("Part", new Part("Part",1,"Hey","Image",2));
