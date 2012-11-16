@@ -72,9 +72,8 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	
 	public void newEmptyKit() {
 		//Adds a kit into the factory via conveyer belt
-		if (belt.kitin())
-			return;
-		belt.inKit();
+		if (!belt.kitin())
+			belt.inKit();
 	}
 	
 	public void moveEmptyKitToSlot(int target) {
