@@ -151,7 +151,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		//end Test*/
 		if(lane[(laneNum) / 2].binExist && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
 			lane[(laneNum) / 2].laneStart = true;
-			lane[(laneNum) / 2].divergeUp = ((laneNum- 1) % 2 == 0);
+			lane[(laneNum) / 2].divergeUp = ((laneNum) % 2 == 0);
 			lane[(laneNum) / 2].feederOn = true;
 		}
 		//System.out.println("bin size " + lane[(laneNum) / 2].bin.getBinItems().size());
