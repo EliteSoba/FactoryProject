@@ -265,24 +265,12 @@ public class GraphicLaneManager{
 				}
 			}
 			else{
-				/*
-				if(lane1Items.get(i).getStepX() == 0){
-					//TO BE CHANGED
-					lane1Items.get(i).setVY(0);
-					lane1Items.get(i).setVX(0);
-					lane1Items.get(i).setX(lane_xPos + 3 + 25 * (int)(graphicPanel.getNest().get(laneManagerID * 2).getSize() / 3));
-					boolean testDiverge = lane1Items.get(i).getDivergeUp();
-					lane1Items.get(i).setY(lane_yPos + 3 + 25 * (graphicPanel.getNest().get(laneManagerID * 2).getSize() % 3) + 80 * ((testDiverge)?0:1));
-					graphicPanel.getNest().get(laneManagerID * 2).addItem(lane1Items.get(i));
-					if(lane1QueueTaken.size() > 0)
-						lane1QueueTaken.remove(0);
-					lane1Items.remove(i);
-					i--;
-					lane1QueueTaken.add(new Boolean(true));
-					continue;
-				}*/
-
-				//System.out.println(" " + lane1QueueTaken.size());
+				System.out.println(" " + lane1QueueTaken.size() + " stepx = " + lane1Items.get(i).getStepX());
+				for(int j = 0; j <lane1Items.size();j++){
+					if(lane1Items.get(j).getStepX() < lane1QueueTaken.size() + 1){
+						lane1Items.get(j).setVX(0);
+					}
+				}
 				if(lane1Items.get(i).getStepX() == lane1QueueTaken.size() + 1){		//IT IS THIS LINE TO FIX
 					//Queue is full, delete crashing Items
 					if(lane1QueueTaken.size() > 17){ // To be changed according to size of lane
@@ -317,7 +305,7 @@ public class GraphicLaneManager{
 						lane1Items.get(i).setY(lane1Items.get(i).getY() - vibrationAmplitude);
 				}
 				
-				System.out.println(" lol " + lane1QueueTaken.size());
+				//System.out.println(" lol " + lane1QueueTaken.size());
 				if(graphicPanel.getNest().get(laneManagerID * 2).getSize() >= 9){
 					if(lane1Items.get(i).getStepX() == lane1QueueTaken.size() + 1){
 						//Queue is full, delete crashing Items
