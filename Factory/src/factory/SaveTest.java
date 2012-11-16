@@ -20,7 +20,11 @@ public class SaveTest {
 		partsList.put("Nose",new Part("Nose",7,"This is used to smell.","Images/nose.png",1));
 		partsList.put("Moustache",new Part("Moustache",8,"This is used to look cool.","Images/moustache.png",1));
 		partsList.put("Ear",new Part("Ear",9,"This is used to hear.","Images/ear.png",2));
-		
+		partsList.put("Cane",new Part("Cane",10,"A stylish cane.","Images/cane.png",2));
+		partsList.put("Sword",new Part("Sword",11,"Vampiric Broadsword of Frost +10.","Images/sword.png",3));
+		partsList.put("Tentacle",new Part("Tentacle",12,"A sticky appendage.","Images/tentacle.png",1));
+		partsList.put("Wing",new Part("Wing",13,"A dragon's wing.","Images/wing.png",5));
+
 		
 			kitConfigList = new HashMap<String,KitConfig>();
 			   
