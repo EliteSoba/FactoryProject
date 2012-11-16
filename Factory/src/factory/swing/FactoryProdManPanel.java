@@ -15,6 +15,8 @@ import factory.managers.*;
 
 
 public class FactoryProdManPanel extends JPanel implements ActionListener {
+	private static final long serialVersionUID = -1621739724552837187L;
+	
 	JComboBox kitNameBox; // contain String names of saved kit configurations
 	JSpinner spinner; // quantity of kits to produce
 	JButton submitButton; // submit order
@@ -29,7 +31,8 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	JTable table;
 	JButton stopFactory; // terminate all factory operations - close program
 	
-	public FactoryProdManPanel() { 
+	public FactoryProdManPanel(FactoryProductionManager fpm) { 
+		factoryProductionManager = fpm;
 		newOrderPanel = new JPanel();
 		kitNameBox = new JComboBox();
 		kitNameBox.setPreferredSize(new Dimension(225,25));
@@ -162,10 +165,6 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	
 	public void removeKit(String kitName) { // remove kit from list - received from kit manager
 		kitNameBox.removeItem(kitName);
-	}
-
-	public void setManager(FactoryProductionManager fpm) {
-		factoryProductionManager = fpm;
 	}
 	
 	public void kitProduced() { // update kits remaining
