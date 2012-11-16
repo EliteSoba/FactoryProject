@@ -134,6 +134,15 @@ class GantryRobot
 				System.out.println("Arrived at feeder, waiting for feeder dumping.");
 			}
 		}
+		else if(x < fx)
+		{
+			if(theta <= 180 && theta > 0)
+				theta -= dtheta;
+			else if(theta > 180 && theta < 360)
+				theta += dtheta;
+			else
+				x += dx;
+		}
 		else if(y > fy)
 		{
 			if(theta > 90 && theta < 270)
@@ -160,15 +169,6 @@ class GantryRobot
 				theta -= dtheta;
 			else
 				x -= dx;
-		}
-		else if(x < fx)
-		{
-			if(theta < 180 && theta > 0)
-				theta -= dtheta;
-			else if(theta > 180 && theta < 360)
-				theta += dtheta;
-			else
-				x += dx;
 		}
 		if(theta < 0) theta = 360;
 		else if(theta > 360) theta = 0;

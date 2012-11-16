@@ -2,12 +2,7 @@
 package factory.managers;
 
 import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.util.ArrayList;
-
-import javax.swing.JPanel;
 
 import factory.graphics.*;
 import factory.client.Client;
@@ -15,29 +10,33 @@ import factory.swing.GantryManPanel;
 
 public class GantryManager extends Client {
 	static final long serialVersionUID = 8492299864169935860L;
-
-	public GantryManager(JPanel buttons, JPanel animation) {
+	
+	GantryManPanel buttons;
+	GantryRobotPanel animation;
+	
+	public GantryManager() {
 		super(Client.Type.gm, null, null);
-		UI = new GantryManPanel();
-		graphics = new GantryRobotPanel(this);
+		
+		buttons = new GantryManPanel();
+		buttons.setManager(this);
+		animation = new GantryRobotPanel(this); //TODO does not currently work but will by 11/13 -->Tobi
+		
 		setInterface();
 	}
+	
 	public static void main(String[] args){
-	    GantryManPanel buttons = new GantryManPanel();
-	    JPanel animation = new JPanel(); //TODO where graphics panel goes 
-		GantryManager k = new GantryManager(buttons, animation);
+		GantryManager k = new GantryManager();
 	}
 
 	public void setInterface() {
-		//setSize(780, 720);
-		//setLayout(new GridLayout(1,2));
+		graphics = animation;
+		UI = buttons;
 
 		add(graphics, BorderLayout.CENTER);
 		
 		add(UI, BorderLayout.LINE_END);
 		pack();
 		setVisible(true);
-		
 	}
 	
 	public void sendMessage (String kitname, String quantity, String message) { // sends message out from swing

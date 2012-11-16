@@ -7,8 +7,10 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 import factory.client.*;
+import factory.*;
 
 public class LanePanel extends GraphicPanel implements ActionListener{
 	
@@ -40,8 +42,13 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		this.setVisible(true);
 	}
 	
-	public void cameraFlash() {
-		
+	public void cameraFlash(int nestIndex) {
+		flashCounter = 10;
+		flashFeederIndex = nestIndex;
+	}
+	
+	public void loadLane(int laneNum, GraphicBin bin) {
+		lane[laneNum].setBin(bin);
 	}
 	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
@@ -51,7 +58,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		//end Test*/
 		if(lane[(laneNum) / 2].binExist && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
 			lane[(laneNum) / 2].laneStart = true;
-			lane[(laneNum) / 2].divergeUp = ((laneNum- 1) % 2 == 0);
+			lane[(laneNum) / 2].divergeUp = ((laneNum) % 2 == 0);
 			lane[(laneNum) / 2].feederOn = true;
 		}
 		//System.out.println("bin size " + lane[(laneNum) / 2].bin.getBinItems().size());
@@ -91,7 +98,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		lane[feederNum].feederOn = false;
 	}
 	
-	public void purgeFeeder(int feederNum){ // takes in lane 0 - 4
+	public void purgeFeeder(int feederNum){ // takes in lane 0 - 3
 		lane[(feederNum)].bin = null;
 		lane[(feederNum)].binExist = false;
 		lane[(feederNum)].feederOn = false;
@@ -124,5 +131,46 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		f.setVisible(true);
 		f.pack();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//For testing
+		Scanner kbr = new Scanner(System.in);
+		String command;
+		do {
+			command = kbr.nextLine();
+			switch (command.charAt(0)) {
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8': lp.loadLane((command.charAt(0)-'1')/2, new GraphicBin(new Part("Test"))); break;
+			case 'q': lp.feedLane(0); break;
+			case 'w': lp.feedLane(1); break;
+			case 'e': lp.feedLane(2); break;
+			case 'r': lp.feedLane(3); break;
+			case 't': lp.feedLane(4); break;
+			case 'y': lp.feedLane(5); break;
+			case 'u': lp.feedLane(6); break;
+			case 'i': lp.feedLane(7); break;
+			case '!':
+			case '@': lp.cameraFlash(0); break;
+			case '#':
+			case '$': lp.cameraFlash(1); break;
+			case '%':
+			case '^': lp.cameraFlash(2); break;
+			case '&':
+			case '*': lp.cameraFlash(3); break;
+			case 'Q': lp.purgeLane(0); break;
+			case 'W': lp.purgeLane(1); break;
+			case 'E': lp.purgeLane(2); break;
+			case 'R': lp.purgeLane(3); break;
+			case 'T': lp.purgeLane(4); break;
+			case 'Y': lp.purgeLane(5); break;
+			case 'U': lp.purgeLane(6); break;
+			case 'I': lp.purgeLane(7); break;
+			case '`': System.exit(0); break;
+			}
+		} while(command.charAt(0) != '`');
 	}
 }

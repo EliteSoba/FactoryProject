@@ -6,20 +6,23 @@ package factory.managers;
 import java.awt.*;
 import java.util.ArrayList;
 
-import javax.swing.BoxLayout;
-
 import factory.client.Client;
 import factory.graphics.KitAssemblyPanel;
 import factory.swing.KitAssManPanel;
 
 public class KitAssemblyManager extends Client {
 	private static final long serialVersionUID = -4230607892468748490L;
+	
+	KitAssManPanel buttons;
+	KitAssemblyPanel animation;
 
 		public KitAssemblyManager() {
-			super(Client.Type.KAM, null, null);
-			graphics = new KitAssemblyPanel(this);
-			UI = new KitAssManPanel();
-			((KitAssManPanel)UI).setManager(this);
+			super(Client.Type.kam, null, null);
+			
+			buttons = new KitAssManPanel();
+			buttons.setManager(this);
+			animation = new KitAssemblyPanel(this); //TODO does not currently work but will by 11/13 -->Tobi
+			
 			this.setInterface();
 		}
 		public static void main(String[] args){
@@ -27,11 +30,13 @@ public class KitAssemblyManager extends Client {
 		}
 
 		public void setInterface() {
-			setSize(1780, 720);
-			setLayout(new BorderLayout());
+			graphics = animation;
+			UI = buttons;
 			
+			setLayout(new BorderLayout());
 
 			add(graphics, BorderLayout.CENTER);
+			pack();
 			
 			//add(UI, BorderLayout.LINE_END); //to be implemented in V.2
 			setVisible(true);

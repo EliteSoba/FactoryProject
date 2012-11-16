@@ -1,7 +1,7 @@
 /*
 
 author: Joey Huang
-Last edited: 11/14/12 9:49pm
+Last edited: 11/15/12 12:02pm
 */
 package factory.swing;
 import java.util.*;
@@ -15,6 +15,8 @@ import factory.managers.*;
 
 
 public class FactoryProdManPanel extends JPanel implements ActionListener {
+	private static final long serialVersionUID = -1621739724552837187L;
+	
 	JComboBox kitNameBox; // contain String names of saved kit configurations
 	JSpinner spinner; // quantity of kits to produce
 	JButton submitButton; // submit order
@@ -29,7 +31,8 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	JTable table;
 	JButton stopFactory; // terminate all factory operations - close program
 	
-	public FactoryProdManPanel() { 
+	public FactoryProdManPanel(FactoryProductionManager fpm) { 
+		factoryProductionManager = fpm;
 		newOrderPanel = new JPanel();
 		kitNameBox = new JComboBox();
 		kitNameBox.setPreferredSize(new Dimension(225,25));
@@ -132,12 +135,18 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			if (kitNameBox.getSelectedItem() == null)
 				messageBox.append("No kit selected.\n");
 			else {
+				String name = (String)kitNameBox.getSelectedItem();
+				String qnty = spinner.getValue().toString();
 				
 				String set = new String("");
-				set = "fpm fcsa cmd makekits " + (String)spinner.getValue() + " " + (String)kitNameBox.getSelectedItem();	
-				factoryProductionManager.sendCommand(set);
+				set = "fpm fcsa cmd makekits " + qnty + " " + name;	
+			//	factoryProductionManager.sendCommand(set);
 					
-			messageBox.append("Order Submitted.\n     Details: " + spinner.getValue() + " units of " + (String)kitNameBox.getSelectedItem() + "\n" );
+				//Object[] rowData = {i+1,"Kit"+(i+1),"10"};
+				Object[] rowData = {model.getRowCount()+1,name,qnty};
+				model.insertRow(model.getRowCount(),rowData);
+				
+			messageBox.append("Order Submitted.\n     Details: " + qnty + " units of " + name + "\n" );
 			}
 		}
 		else if (ae.getSource() == stopFactory) { // message that initiates factory shutdown
@@ -150,16 +159,12 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	
 	public void addKit(String kitName) {	//add new kit name (String) to Jcombobox list - received from kit manager
 		kitNameBox.addItem(kitName);	
-		((JComboBox) kitNameBox.getItemAt(kitNameBox.getItemCount()-1)).addActionListener(this);
+		//((JComboBox) kitNameBox.getItemAt(kitNameBox.getItemCount()-1)).addActionListener(this);
 		kitNameBox.setSelectedIndex(0);
 	}
 	
 	public void removeKit(String kitName) { // remove kit from list - received from kit manager
 		kitNameBox.removeItem(kitName);
-	}
-
-	public void setManager(FactoryProductionManager fpm) {
-		factoryProductionManager = fpm;
 	}
 	
 	public void kitProduced() { // update kits remaining

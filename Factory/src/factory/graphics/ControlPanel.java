@@ -19,6 +19,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 
 	GraphicFactoryProductionManager am; //The JFrame etc, etc.
 	JLabel[] blank;
+	int blanki;
+	
 	JButton test;
 	JButton outKit;
 	JButton fromBelt;
@@ -29,12 +31,13 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton partsRobotStation;
 	JButton gantryRobotGetBin;
 	JButton gantryRobotFeeder1;
-	JButton feedLane1;
 	JButton cameraFlash;
+	JButton feedLane1, feedLane2, purgeLane1, purgeLane2, purgeFeeder;
 	
 	public ControlPanel(GraphicFactoryProductionManager fpm) {
 		//Constructor
 		am = fpm;
+		blanki = 0;
 		inspect1 = new JButton("Kit 1 Complete");
 		inspect2 = new JButton("Kit 2 Complete");
 		outKit = new JButton("Send Kit Out");
@@ -46,62 +49,40 @@ public class ControlPanel extends JPanel implements ActionListener{
 		gantryRobotGetBin = new JButton("Fetch a Bin");
 		gantryRobotFeeder1 = new JButton("Feeder 1 Dump");
 		feedLane1 = new JButton("Feed Lane 1");
+		feedLane2 = new JButton("Feed Lane 2");
+		purgeLane1 = new JButton("purge Lane 1");
+		purgeLane2 = new JButton("Purge Lane 2");
+		purgeFeeder = new JButton("purge Feeder");
 		cameraFlash = new JButton("Camera Flash Nest 1");
 		for (int i = 0; i < 20; i++) {
 			blank[i] = new JLabel("   ");
 			blank[i].setPreferredSize(new Dimension(150, 10));
 		}
 		this.setLayout(new FlowLayout());
-		//this.add(blank[0]);
-		//this.add(blank[1]);
 		//this.add(fromBelt);
-		this.add(blank[2]);
-		this.add(inspect1);
-		this.add(blank[3]);
-		this.add(inspect2);
-		this.add(blank[4]);
+		this.addButton(inspect1);
+		this.addButton(inspect2);
 		/*this.add(outKit);
-		this.add(blank[5]);
-		this.add(dumpKit);
-		this.add(blank[6]);*/
-		this.add(test);
-		this.add(blank[5]);
-		this.add(partsRobotNest1);
-		this.add(blank[6]);
-		this.add(partsRobotStation);
-		this.add(blank[7]);
-		this.add(feedLane1);
-		this.add(blank[8]);
-		this.add(gantryRobotGetBin);
-		this.add(blank[9]);
-		this.add(gantryRobotFeeder1);
-		this.add(blank[10]);
-		this.add(cameraFlash);
+		this.add(dumpKit);*/
+		this.addButton(test);
+		this.addButton(partsRobotNest1);
+		this.addButton(partsRobotStation);
+		this.addButton(feedLane1);
+		this.addButton(feedLane2);
+		this.addButton(purgeLane1);
+		this.addButton(purgeLane2);
+		this.addButton(purgeFeeder);
+		this.addButton(gantryRobotGetBin);
+		this.addButton(gantryRobotFeeder1);
+		this.addButton(cameraFlash);
 		this.setPreferredSize(new Dimension(200, 720));
-		outKit.addActionListener(this);
-		outKit.setPreferredSize(new Dimension(170, 50));
-		//fromBelt.addActionListener(this);
-		//fromBelt.setPreferredSize(new Dimension(170, 50));
-		inspect1.addActionListener(this);
-		inspect1.setPreferredSize(new Dimension(170, 50));
-		inspect2.addActionListener(this);
-		inspect2.setPreferredSize(new Dimension(170, 50));
-		dumpKit.addActionListener(this);
-		dumpKit.setPreferredSize(new Dimension(170, 50));
-		test.addActionListener(this);
-		test.setPreferredSize(new Dimension(170, 50));
-		partsRobotNest1.addActionListener(this);
-		partsRobotNest1.setPreferredSize(new Dimension(170, 50));
-		partsRobotStation.addActionListener(this);
-		partsRobotStation.setPreferredSize(new Dimension(170,50));
-		gantryRobotGetBin.addActionListener(this);
-		gantryRobotGetBin.setPreferredSize(new Dimension(170,50));
-		gantryRobotFeeder1.addActionListener(this);
-		gantryRobotFeeder1.setPreferredSize(new Dimension(170,50));
-		feedLane1.addActionListener(this);
-		feedLane1.setPreferredSize(new Dimension(170, 50));
-		cameraFlash.addActionListener(this);
-		cameraFlash.setPreferredSize(new Dimension(170,50));
+	}
+	
+	private void addButton(JButton button) {
+		this.add(button);
+		this.add(blank[blanki++]);
+		button.addActionListener(this);
+		button.setPreferredSize(new Dimension(170, 30));
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -124,7 +105,15 @@ public class ControlPanel extends JPanel implements ActionListener{
 		else if(source == partsRobotStation)
 			am.moveRobotToStation();
 		else if(source == feedLane1)
-			am.feedLane(1);	//FEEDS THE LANE! Lane 1-8, NOT 0-7
+			am.feedLane(0);	//FEEDS THE LANE! Lane 1-8, NOT 0-7
+		else if(source == feedLane2)
+			am.feedLane(1);
+		else if(source == purgeLane1)
+			am.purgeTopLane(0);
+		else if(source == purgeLane2)
+			am.purgeBottomLane(0);
+		else if(source == purgeFeeder)
+			am.purgeFeeder(0);
 		else if(source == gantryRobotGetBin)
 			am.getBin();
 		else if(source == gantryRobotFeeder1)

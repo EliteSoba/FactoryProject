@@ -1,3 +1,4 @@
+
 //Minh La
 
 package factory.graphics;
@@ -148,10 +149,12 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		lane[(laneNum) / 2].bin = new GraphicBin(new Part("eyes"));
 		lane[(laneNum) / 2].binExist = true;
 		//end Test*/
-		if(lane[(laneNum) / 2].binExist && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
-			lane[(laneNum) / 2].laneStart = true;
-			lane[(laneNum) / 2].divergeUp = ((laneNum- 1) % 2 == 0);
-			lane[(laneNum) / 2].feederOn = true;
+		if(!lane[(laneNum) / 2].lane1PurgeOn){	//If purging is on, cannot feed!
+			if(lane[(laneNum) / 2].binExist && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
+				lane[(laneNum) / 2].laneStart = true;
+				lane[(laneNum) / 2].divergeUp = ((laneNum) % 2 == 0);
+				lane[(laneNum) / 2].feederOn = true;
+			}
 		}
 		//System.out.println("bin size " + lane[(laneNum) / 2].bin.getBinItems().size());
 	}
@@ -161,25 +164,19 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 	
 	public void switchLane(int laneNum){
-		lane[(laneNum) / 2].divergeUp = !lane[(laneNum) / 4].divergeUp;
-		lane[(laneNum) / 2].vY = -(lane[(laneNum) / 4].vY);
+		lane[(laneNum) / 2].divergeUp = !lane[(laneNum) / 2].divergeUp;
+		lane[(laneNum) / 2].vY = -(lane[(laneNum) / 2].vY);
 	}
 	
 	public void switchFeederLane(int feederNum){
 		// MINH, CAN YOU MAKE THIS LIKE THE FUNCTION ABOVE, BUT BASED ON THE FEEDER NUMBER?
 		// thanks
+		lane[feederNum].divergeUp = !lane[feederNum].divergeUp;
+		lane[feederNum].vY = -(lane[feederNum].vY);
 	}
 	
 	public void stopLane(int laneNum){
 		lane[(laneNum) / 2].laneStart = false;
-	}
-	
-	public void turnFeederOnLane(int laneNum){
-		lane[(laneNum) / 2].feederOn = true;
-	}
-	
-	public void turnFeederOffLane(int laneNum){
-		lane[(laneNum) / 2].feederOn = false;
 	}
 	
 	public void turnFeederOn(int feederNum){
@@ -196,13 +193,25 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		lane[(feederNum)].feederOn = false;
 	}
 	
-	public void purgeLane(int laneNum){
+	/*public void purgeLane(int laneNum){
 		if((laneNum) % 2 == 0)
 			lane[(laneNum) / 2].lane1PurgeOn = true;
 		else
 			lane[(laneNum) / 2].lane2PurgeOn = true;
 		lane[(laneNum) / 2].feederOn = false;
 		lane[(laneNum) / 2].laneStart = false;
+	}*/
+	
+	public void purgeTopLane(int feederNum){
+		lane[feederNum].lane1PurgeOn = true;
+		lane[feederNum].feederOn = false;
+		lane[feederNum].laneStart = true;
+	}
+	
+	public void purgeBottomLane(int feederNum){
+		lane[feederNum].lane2PurgeOn = true;
+		lane[feederNum].feederOn = false;
+		lane[feederNum].laneStart = true;
 	}
 	
 	//MINH, CAN YOU MAKE A PURGETOPLANE(INT FEEDERNUM) AND PURGEBOTTOMLANE(INT FEEDERNUM)
@@ -265,5 +274,4 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		repaint();		
 	}
 }
-	
 	

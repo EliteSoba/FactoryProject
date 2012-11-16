@@ -10,10 +10,16 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	
 	public KitRobot kitRobot;
 	public ConveyorController conveyorController;
+	public FCS fcs;
 	
 	public Kit kitAtConveyor;  //Supposed to represent what is on the ConveyorAgent
 	
 	ConveyorState state = ConveyorState.NO_ACTION;
+	
+	//UnitTesting Constructor
+	public ConveyorAgent() {
+		super(null);
+	}
 	
 	/** Public Constructor **/
 	public ConveyorAgent(MasterControl mc, ConveyorController cc) {
@@ -90,7 +96,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 		}
 		 */
 		debug("Export Animation Completed");
-	    conveyorController.msgKitExported(kitAtConveyor);
+	    fcs.msgKitExported(kitAtConveyor);
 		kitAtConveyor = null;
 		stateChanged();
 	}
@@ -105,7 +111,13 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	}
 	
 	public void setKitRobot(KitRobot kr) {
-		kitRobot = kr;
+		this.kitRobot = kr;
+	}
+	public void setConveyorControll(ConveyorController cc) {
+		this.conveyorController = cc;
+	}
+	public void setFCS(FCS fcs) {
+		this.fcs = fcs;
 	}
 }
 

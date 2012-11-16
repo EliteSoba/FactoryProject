@@ -27,7 +27,6 @@ public class PartsManPanel extends JPanel{
 	AddPanel addPanel;
 	RemovePanel removePanel;
 	ArrayList<String> fileNames;
-	ArrayList<Part> parts;
 	PartsManager partsManager;
 	ArrayList<CurrentItem> partsList;
 	JScrollPane currentList;
@@ -36,10 +35,10 @@ public class PartsManPanel extends JPanel{
 
 	// Methods
 
-	public PartsManPanel(){
+	public PartsManPanel(PartsManager p){
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		partsManager = p;
 		fileNames = new ArrayList<String>();
-		parts = new ArrayList<Part>();
 		fileNames.add("eye");
 		fileNames.add("body");
 		fileNames.add("hat");
@@ -49,12 +48,12 @@ public class PartsManPanel extends JPanel{
 		fileNames.add("nose");
 		fileNames.add("moustache");
 		fileNames.add("ear");
+		partsList = new ArrayList<CurrentItem>();
 		addPanel = new AddPanel();
 		removePanel = new RemovePanel();
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("addPanel", addPanel);
 		tabbedPane.addTab("removePanel", removePanel);
-		partsList = new ArrayList<CurrentItem>();
 		currentListPanel = new JPanel();
 		currentListPanel.setLayout(new BoxLayout(currentListPanel, BoxLayout.Y_AXIS));
 		currentList = new JScrollPane(currentListPanel);
@@ -205,12 +204,12 @@ public class PartsManPanel extends JPanel{
 					title.setFont(new Font("Serif", Font.BOLD, 16));
 					label1 = new JLabel ("Item : ");
 					imageSelection = new JComboBox();
-					for(int i = 0; i < fileNames.size(); i++){
-						imageSelection.addItem(fileNames.get(i));
+					for(int i = 0; i < partsManager.getParts().size(); i++){
+						imageSelection.addItem(partsManager.getParts().get(i).name);
 					}
 					imageSelection.addActionListener(this);
 					previewFrame = new JLabel();
-					ImageIcon imagePreview = new ImageIcon("Images/" + fileNames.get(0) + ".png");
+					ImageIcon imagePreview = new ImageIcon(partsManager.getParts().get(0).imagePath);
 					previewFrame.setIcon(imagePreview);
 					
 					removeItem = new JButton ("Remove Item");
