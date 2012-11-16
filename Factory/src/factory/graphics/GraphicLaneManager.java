@@ -16,7 +16,6 @@ public class GraphicLaneManager{
 	//Image Icons
 	ImageIcon lane1Icon, lane2Icon;
 	ImageIcon divergeLaneIcon;
-	ImageIcon nest1Icon, nest2Icon;
 	ImageIcon feederIcon;
 	GraphicBin bin;
 	
@@ -93,8 +92,6 @@ public class GraphicLaneManager{
 		lane1Icon = new ImageIcon("Images/lane.png");
 		lane2Icon = new ImageIcon("Images/lane.png");
 		divergeLaneIcon = new ImageIcon("Images/divergeLane.png");
-		nest1Icon = new ImageIcon("Images/nest3x3.png");
-		nest2Icon = new ImageIcon("Images/nest3x3.png");
 		feederIcon = new ImageIcon("Images/feeder.png");
 
 	
@@ -154,8 +151,8 @@ public class GraphicLaneManager{
 	
 	public void paintFeeder(Graphics g) {
 		if(binExist)
-			g.drawImage(bin.getBinImage().getImage(),lane_xPos+300, feederY+15, null);
-		g.drawImage(feederIcon.getImage(), lane_xPos+250, lane_yPos+15, null);
+			g.drawImage(bin.getBinImage().getImage(), feederX, feederY+15, null);
+		g.drawImage(feederIcon.getImage(), feederX, feederY, null);
 	}
 	
 	public void moveLane() {
