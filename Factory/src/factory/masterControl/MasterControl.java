@@ -29,7 +29,7 @@ public class MasterControl {
 	KitRobotAgent kitRobot;
 	ConveyorAgent conveyor;
 	ConveyorControllerAgent conveyorController;
-	FeederAgent f0, f1, f2, f3;
+	public FeederAgent f0, f1, f2, f3;
     List<FeederAgent> feederAgents = Arrays.asList(f0, f1, f2, f3);
 	LaneAgent l0t, l0b, l1t, l1b, l2t, l2b, l3t, l3b;
     TreeMap<String, LaneAgent> laneAgentTreeMap;
@@ -39,7 +39,7 @@ public class MasterControl {
 	PartsRobotAgent partsRobot;
 	StandAgent stand;
 	VisionAgent vision;
-	FCSAgent fcs;
+	//FCSAgent fcs;
 
     TreeMap<String, Agent> agentTreeMap;
 
@@ -78,7 +78,7 @@ public class MasterControl {
         agentTreeMap.put("pra", partsRobot);
         agentTreeMap.put("sa", stand);
         agentTreeMap.put("va", vision);
-        agentTreeMap.put("fcsa", fcs);
+//        agentTreeMap.put("fcsa", fcs);
 
         laneAgentTreeMap.put("l0t", l0t);
         laneAgentTreeMap.put("l0b", l0b);
@@ -105,7 +105,7 @@ public class MasterControl {
     	kitRobot = new KitRobotAgent(this, conveyor);
     	conveyor.setKitRobot(kitRobot);
     	kitRobot.setStand(stand);
-    	conveyor.setFCS(fcs);
+//    	conveyor.setFCS(fcs);
 
 
         try{
