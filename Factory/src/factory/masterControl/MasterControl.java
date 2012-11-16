@@ -92,16 +92,13 @@ public class MasterControl {
             e.printStackTrace();
 
         }
-        System.out.println("1.1");
         connectAllSockets(debug); // This waits for every client to start up before moving on.
-        System.out.println("1.2");
         // At this point, all of the sockets are connected, PartHandlers have been created
         // The TreeMaps are updated with all of the relevant data, and the Factory can go.
         startAgents();
-        System.out.println("1.3");
         laneAgentTreeMap.put("l0t", l0t); //tmp for testing.
-        sendConfirm();
-        System.out.println("1.4");
+        String singleD = (debug? partHandlers.firstKey(): null);
+        sendConfirm(singleD);
         // At this point, all of the parts have been notified that
         // the connections have been made, and therefore, the
         // Factory simulation can begin.
@@ -135,6 +132,8 @@ public class MasterControl {
     	l3t = new LaneAgent(this);
     	l3b = new LaneAgent(this);
 
+    	// Instantiate the Gantry
+    	gantry = new GantryAgent(this);
     	
     	// Instantiate the Feeders
     	f0 = new FeederAgent("f0",0,l0t,l0b,gantry,this);
@@ -146,10 +145,7 @@ public class MasterControl {
     	// Instantiate the Conveyor and related Agents
     	conveyor = new ConveyorAgent();
     	conveyorController = new ConveyorControllerAgent();
-    	
-    	// Instantiate the Gantry
-    	gantry = new GantryAgent(this);
-    	
+    	    	
         // Instantiate the KitRobot
     	kitRobot = new KitRobotAgent(this,conveyor);
     	
@@ -201,6 +197,12 @@ public class MasterControl {
         agentTreeMap.put("fcsa", fcs);
         
     	
+        // Start the FeederAgent
+        f0.startThread();
+        f1.startThread();
+        f2.startThread();
+        f3.startThread();
+                
     	//Starting all agent threads in agentTreeMap
     	for (Map.Entry<String, Agent> agentMap : agentTreeMap.entrySet()) {
     		agentMap.getValue().startThread();
@@ -243,6 +245,8 @@ public class MasterControl {
         // Split into array
         // Figure out destination
         // Call either agentCmd() or clientCmd()
+    	
+    	System.out.println(cmd);
         ArrayList <String> parsedCommand = new ArrayList<String>(Arrays.asList(cmd.split(" "))); //puts string into array list
 
 
@@ -355,6 +359,7 @@ public class MasterControl {
 
     public boolean clientCmd(ArrayList<String> cmd){
         String s = checkCmd(cmd);
+        System.out.println(s);
         String a = cmd.get(0); // Source
         if(s != null){
         	if(clients.contains(a)){
@@ -392,9 +397,13 @@ public class MasterControl {
 
 
         } else {
+        	System.out.println("1");
             PartHandler destinationPH = determinePH(b);
-            return sendCmd(destinationPH, fullCmd);
-
+            System.out.println("2");
+            boolean result = sendCmd(destinationPH, fullCmd);
+            System.out.println("3");
+            System.out.println(result);
+            return result;
         }
 
 
@@ -484,7 +493,7 @@ public class MasterControl {
 
         // Check that the destination is not currently busy
 
-        if(!partOccupied.get(pCmd.get(1))){
+        if(partOccupied.get(pCmd.get(1))){
             return "destination is busy cannot send message.";
         }
 
@@ -511,15 +520,12 @@ public class MasterControl {
     private void connectAllSockets(boolean debugmode){
         int numConnected = 0;
         int numToConnect = (debugmode ? 1 : clients.size());
-        System.out.println("1.1.0 ");
         while(numConnected != numToConnect){
             try{
                 Socket s = myServerSocket.accept();
-                System.out.println("1.1.1");
                 PrintWriter pw = new PrintWriter( s.getOutputStream(), true );
                 BufferedReader br = new BufferedReader( new InputStreamReader( s.getInputStream() ) );
                 String name = br.readLine();
-                System.out.println("1.1.2");
                 while(name == null){
                     name = br.readLine();
                 }
@@ -538,18 +544,33 @@ public class MasterControl {
     // sendConfirm() is the function responsible for sending a confirmation through each socket
     // this confirms that every connection has been made, and therefore, the factory sim can begin.
 
-    private void sendConfirm(){
-
-        for(String p : clients){
-            PartHandler ph = partHandlers.get(p);
+    private void sendConfirm(String singleDest){
+    	if(singleDest != null){
+    		PartHandler ph = partHandlers.get(singleDest);
             ph.send("mcs start");
-        }
-
+    		
+    	} else {
+	        for(String p : clients){
+	            PartHandler ph = partHandlers.get(p);
+	            ph.send("mcs start");
+	        }
+    	}
     }
 
     public static void main(String args[]){
        // boolean debug = Boolean.getBoolean(args[0]);
         MasterControl mc = new MasterControl(true);
+        
+        //This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
+        long timeToQuit = System.currentTimeMillis() + 5000;
+        while (System.currentTimeMillis() < timeToQuit);
+        
+        Part p0 = new Part("Ear");
+                
+		// request a part for the lane
+		mc.f0.msgLaneNeedsPart(p0, mc.l0t);		
+		// should make the gantry go get a bin of parts
+		// should call DoSwitchLane() and then DoStartFeeding()
     }
 
 }

@@ -37,7 +37,7 @@ public class FactoryProductionManager extends Client {
 			partsList = new HashMap<String,Part>(); //Local version
 			kitConfigList = new HashMap<String,KitConfig>(); //Local version
 			
-			loadData();
+//			loadData();
 		}
 		public static void main(String[] args){
 		    FactoryProductionManager f = new FactoryProductionManager();
@@ -65,27 +65,33 @@ public class FactoryProductionManager extends Client {
 		//parameters lay between i = 2 and i = size - 2
 		String action = pCmd.get(0);
 		String identifier = pCmd.get(1);
-		
-		if(action == "cmd"){
+		System.out.println("Got command");
+		System.out.println(action);
+		System.out.println(identifier);
+		if(action.equals("cmd")){
 			//Graphics Receive Commands
 			if (identifier.equals("startfeeding"))
 			{
-				int feederSlot = Integer.valueOf(pCmd.get(3));
+				int feederSlot = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).turnFeederOn(feederSlot);
 			}
 			else if (identifier.equals("stopfeeding"))
 			{
-				int feederSlot = Integer.valueOf(pCmd.get(3));
+				int feederSlot = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).turnFeederOff(feederSlot);
 			} 
 			else if (identifier.equals("purgefeeder"))
 			{
-				int feederSlot = Integer.valueOf(pCmd.get(3));
+				int feederSlot = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).purgeFeeder(feederSlot);
 			}
 			else if (identifier.equals("switchlane"))
 			{
-				int feederSlot = Integer.valueOf(pCmd.get(3));
+				System.out.println("1");
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				System.out.println("feederslot = " + feederSlot);
+				if (graphics == null)
+					System.out.println("Thisisatest");
 				((FactoryProductionPanel) graphics).switchFeederLane(feederSlot);
 			}
 			//Swing Receive Commands

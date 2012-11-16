@@ -171,6 +171,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	}
 	
 	public void switchFeederLane(int feederNum){
+		System.out.println("!123123");
 		lane[feederNum].divergeUp = !lane[feederNum].divergeUp;
 		lane[feederNum].vY = -(lane[feederNum].vY);
 		switchFeederLaneDone(feederNum);
