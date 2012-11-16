@@ -507,7 +507,7 @@ public class FeederAgent extends Agent implements Feeder {
 	/** ANIMATIONS 
 	 * @throws InterruptedException **/
 	private void DoStartFeeding(Part part) {
-//		server.command("fa fpm cmd startfeeding " + feederSlot);
+		server.command("fa fpm cmd startfeeding " + feederSlot);
 		debug("Feeder " + feederSlot + " started feeding.");
 		//		try {
 		//			animation.acquire();
