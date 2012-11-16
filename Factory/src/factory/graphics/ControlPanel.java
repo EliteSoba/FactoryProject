@@ -68,6 +68,10 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.addButton(partsRobotNest1);
 		this.addButton(partsRobotStation);
 		this.addButton(feedLane1);
+		this.addButton(feedLane2);
+		this.addButton(purgeLane1);
+		this.addButton(purgeLane2);
+		this.addButton(purgeFeeder);
 		this.addButton(gantryRobotGetBin);
 		this.addButton(gantryRobotFeeder1);
 		this.addButton(cameraFlash);
@@ -78,7 +82,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.add(button);
 		this.add(blank[blanki++]);
 		button.addActionListener(this);
-		button.setPreferredSize(new Dimension(170, 50));
+		button.setPreferredSize(new Dimension(170, 30));
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
