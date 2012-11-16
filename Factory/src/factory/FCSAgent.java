@@ -17,8 +17,8 @@ import factory.test.mock.MockPartsRobotAgent;
 
 //test commit/push
 public class FCSAgent extends Agent implements FCS{
-	 public Queue<KitConfig> myKitConfigs = new LinkedList<KitConfig>(); //added this queue for kits
-	   PartsRobot partsRobot;
+	 public Queue<KitConfig> orders = new LinkedList<KitConfig>(); //added this queue for kits
+	   public PartsRobot partsRobot;
 	   Gantry gantry;
 	   BinConfig binConfig; //no need for this the way CS200 is designing the bins?
 	   public boolean passBinConfigurationToGantry = false;
@@ -26,10 +26,10 @@ public class FCSAgent extends Agent implements FCS{
 	   public Map<String, Part> partsList = new HashMap<String, Part>();
 	   public Map<String, KitConfig> kitRecipes = new HashMap<String, KitConfig>();
 	   
-	   enum KitProductionState { PENDING, PRODUCING, FINISHED, PURGING }
-	   KitProductionState state = KitProductionState.PENDING;
+	   public enum KitProductionState { PENDING, PRODUCING, FINISHED, PURGING }
+	   public KitProductionState state = KitProductionState.PENDING;
 
-	   public int kitLimit = 0;
+	   public int kitsExported = 0;
 	   
 	   //this is temporarily used for testing purposes.  Constructor will likely change.
 	   public FCSAgent(Gantry gantry, PartsRobot partsRobot, MasterControl mc) {
@@ -37,6 +37,9 @@ public class FCSAgent extends Agent implements FCS{
 		this.gantry = gantry;
 		this.partsRobot = partsRobot;
 	}
+	   public FCSAgent(MasterControl mc){
+		   super (mc);
+	   }
 
 	// *** MESSAGES ***
 	   
@@ -47,11 +50,11 @@ public class FCSAgent extends Agent implements FCS{
 		}
 	   
 		//msg from Panel to produce a kit
-	   public void msgProduceKit(String name, int quantity) {
+	   public void msgProduceKit(int quantity, String name) {
 		   KitConfig recipe = new KitConfig();
 		   recipe = kitRecipes.get(name);
 		   recipe.quantity = quantity;
-		   myKitConfigs.add(recipe);
+		   orders.add(recipe);
 		   stateChanged();
 		}
 	   
@@ -62,10 +65,11 @@ public class FCSAgent extends Agent implements FCS{
 	   }
 	   
 	   public void msgKitIsExported(Kit kit){
-		   kitLimit++;
-		   if(kitLimit >= myKitConfigs.peek().quantity){
+		   kitsExported++;
+		   if(kitsExported >= orders.peek().quantity){
 			   this.state = KitProductionState.FINISHED;
 		   }
+		   //send message to manager to say that kit is exported
 		   stateChanged();
 	   }
 	   
@@ -83,7 +87,7 @@ public class FCSAgent extends Agent implements FCS{
 			   return true;
 		   }
 
-		   if (this.state == KitProductionState.PENDING && !myKitConfigs.isEmpty()){ //added freeToMakeKit
+		   if (this.state == KitProductionState.PENDING && !orders.isEmpty()){ //added freeToMakeKit
 			   sendKitConfigToPartRobot();
 			   return true;
 		   }
@@ -104,15 +108,15 @@ public class FCSAgent extends Agent implements FCS{
 	    * Passes down the new Kit Configuration to the PartsRobot Agent
 	    */
 	   private void sendKitConfigToPartRobot() { 
-	      this.partsRobot.msgMakeKit(myKitConfigs.peek());
+	      this.partsRobot.msgMakeKit(orders.peek());
 	      this.state = KitProductionState.PRODUCING;
-	      this.kitLimit = myKitConfigs.peek().quantity;
+	      this.kitsExported = orders.peek().quantity;
 	      stateChanged();
 	   }
 	   
 	   //added this action
 	   private void startProducingNextKit(){
-		   myKitConfigs.remove();
+		   orders.remove();
 		   this.state = KitProductionState.PENDING;
 		   stateChanged();
 	   }
@@ -139,5 +143,6 @@ public class FCSAgent extends Agent implements FCS{
 			   }
 		   }
 		   kitRecipes.put(name, recipe);
-	   } 
+	   }
+
 }

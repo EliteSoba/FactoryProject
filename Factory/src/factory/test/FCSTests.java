@@ -14,8 +14,11 @@ import org.junit.Test;
 import factory.Bin;
 import factory.FCSAgent;
 import factory.KitConfig;
+import factory.Part;
+import factory.interfaces.PartsRobot;
 import factory.test.mock.*;
 import factory.BinConfig;
+import factory.FCSAgent.KitProductionState;;
 
 
 
@@ -71,12 +74,15 @@ public class FCSTests extends TestCase{
 	{
 		
 		KitConfig kitConfig = new KitConfig();
+		
 		MockGantry gantry = new MockGantry("gantry");
 		MockPartsRobotAgent partsRobot = new MockPartsRobotAgent("parts robot");
 		FCSAgent fcs = new FCSAgent(gantry, partsRobot, null);
+		fcs.kitRecipes.put("typeA", kitConfig);
+//		fcs.partsList = createPartsList();
 		
 		//create message for FCS.  Should eventually call this.partsRobot.msgMakeKit(mkc.kitConfig);
-		fcs.msgProduceKit(kitConfig);
+		fcs.msgProduceKit(5, "typeA");
 		
 		//test to see that the parts robot has not been given a message before the scheduler is called.
 		//Its log should be empty.
@@ -86,7 +92,7 @@ public class FCSTests extends TestCase{
 		
 		//test to see if parts robot added a kitConfig to its list.  The list shouldn't be empty after msgProduceKit()
 		assertFalse("Parts robot should have a kitConfig to its list of kit configs, but it is empty", 
-					fcs.myKitConfigs.isEmpty());
+					fcs.orders.isEmpty());
 		
 		//call the fcs scheduler
 		fcs.pickAndExecuteAnAction();
@@ -97,7 +103,82 @@ public class FCSTests extends TestCase{
 		
 		//tests to see if the kit config state changed from PENDING to PRODUCING
 //		assertTrue("Parts Robot should have gotten a message to make a kit.", );
+	}
+	
+	public void testAddingAndFinishingKitConfig(){
 		
+		KitProductionState stateFinished = KitProductionState.FINISHED;
+		KitProductionState statePending = KitProductionState.PENDING;
+		KitConfig kit1 = new KitConfig();
+		KitConfig kit2 = new KitConfig();
+		FCSAgent fcs = new FCSAgent(null);
+		
+		fcs.kitRecipes.put("typeA", kit1);
+		fcs.kitRecipes.put("typeB", kit2);
+		fcs.partsRobot = new MockPartsRobotAgent("name");
+		
+		//test to see if fcs has 2 recipe types.
+		assertEquals("FCS should have 2 recipes of kits, but instead has: " + fcs.kitRecipes.size()
+				, 2, fcs.kitRecipes.size());
+		
+		fcs.msgProduceKit(2, "typeA");
+		fcs.msgProduceKit(2, "typeB");
+		
+		
+		//does the FCS has 2 orders pending?
+		assertEquals("FCS should have 2 orders in its list, but instead has: " + fcs.orders.size()
+				, 2, fcs.orders.size());
+		
+		//is the number of kits exported 0?
+		assertEquals("The kits exported should be 0, but instead is: " + fcs.kitsExported
+				, 0, fcs.kitsExported);
+		
+		
+		//is the state 
+		assertEquals("The FCS state should be PENDING, but instead is: " + fcs.state
+				, statePending, fcs.state);
+		
+		fcs.pickAndExecuteAnAction();
+		fcs.msgKitIsExported(null);
+		
+		//is the number of kits exported 1?
+		assertEquals("The kits exported should be 1, but instead is: " + fcs.kitsExported
+				, 1, fcs.kitsExported);
+		
+		//the state of the FCS should still be PENDING 
+		assertEquals("The FCS state should be PENDING, but instead is: " + fcs.state
+				, statePending, fcs.state);
+		
+		fcs.msgKitIsExported(null);
+		
+		//is the number of kits exported 2?
+		assertEquals("The kits exported should be 2, but instead is: " + fcs.kitsExported
+				, 2, fcs.kitsExported);
+		
+		assertEquals("The FCS state should be FINISHED, but instead is: " + fcs.state
+				, stateFinished, fcs.state);
+		
+		
+		
+		
+	}
+	
+	public Map<String, Part> createPartsList(){
+		 Map<String, Part> partsList = new HashMap<String, Part>();
+		 Part p1 = new Part("nose", 1, "nose of potato", "jpg", 5);
+		 Part p2 = new Part("ears", 1, "ears of potato", "jpg", 5);
+		 Part p3 = new Part("arm", 1, "arm of potato", "jpg", 5);
+		 Part p4 = new Part("hat", 1, "hat of potato", "jpg", 5);
+		 Part p5 = new Part("leg", 1, "leg of potato", "jpg", 5);
+		 Part p6 = new Part("mouth", 1, "mouth of potato", "jpg", 5);
+		 partsList.put(p1.name, p1);
+		 partsList.put(p2.name, p2);
+		 partsList.put(p3.name, p3);
+		 partsList.put(p4.name, p4);
+		 partsList.put(p5.name, p5);
+		 partsList.put(p6.name, p6);
+		 
+		 return partsList;
 		
 	}
 
