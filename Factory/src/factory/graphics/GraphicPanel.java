@@ -181,6 +181,15 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		partsRobot.setDestination(WIDTH/2-200, HEIGHT/2);
 	}
 	
+	public void feedFeeder(int feederNum) {
+		if(!lane[feederNum].lane1PurgeOn){	//If purging is on, cannot feed!
+			if(lane[feederNum].hasBin() && lane[feederNum].bin.getBinItems().size() > 0){
+				lane[feederNum].laneStart = true;
+				lane[feederNum].feederOn = true;
+			}
+		}
+	}
+	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
 		/*//Testing for quick feed
 		lane[(laneNum) / 2].bin = new GraphicBin(new Part("eyes"));
