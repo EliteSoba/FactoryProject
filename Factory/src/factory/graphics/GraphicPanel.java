@@ -22,6 +22,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	// LANE MANAGER
 	protected GraphicLaneManager [] lane;
 	
+	// CAMERA
+	protected int flashCounter;
+	protected int flashFeederIndex;
+	protected static Image flashImage;
+	
 	// KIT MANAGER
 	protected GraphicKitBelt belt; //The conveyer belt
 	protected GraphicKittingStation station; //The kitting station
@@ -52,10 +57,51 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		flashImage = Toolkit.getDefaultToolkit().getImage("Images/flash3x3.png");
 	}
 	
-	// CAMERA
-	protected int flashCounter;
-	protected int flashFeederIndex;
-	protected static Image flashImage;
+	public void newEmptyKit() {
+		//Adds a kit into the factory via conveyer belt
+		//if (!belt.kitin())
+		if (isKitAssemblyManager || isFactoryProductionManager)
+			belt.inKit();
+	}
+	
+	public void moveEmptyKitToSlot(int target) {
+		//Sends robot to pick up kit from belt and move to designated slot in the station
+		//if (belt.pickUp() && !kitRobot.kitted() && station.getKit(target) == null) {
+		if (isKitAssemblyManager || isFactoryProductionManager) {
+			kitRobot.setFromBelt(true);
+			kitRobot.setStationTarget(target);
+		}
+	}
+	
+	public void moveKitToInspection(int target) {
+		//Sends robot to move kit from designated slot in the station to inspection station
+		//if (!kitRobot.kitted() && station.getKit(target) != null) {
+		if (isKitAssemblyManager || isFactoryProductionManager) {
+			kitRobot.setCheckKit(true);
+			kitRobot.setStationTarget(target);
+		}
+	}
+	
+	public void takePictureOfInspectionSlot() {
+		//Triggers the camera flash
+		//if (station.hasCheck())
+		if (isKitAssemblyManager || isFactoryProductionManager)
+			station.checkKit();
+	}
+	
+	public void dumpKitAtInspection() {
+		//Sends robot to move kit from inspection station to trash
+		//if (!kitRobot.kitted() && station.getCheck() != null)
+		if (isKitAssemblyManager || isFactoryProductionManager)
+			kitRobot.setPurgeKit(true);
+	}
+	
+	public void moveKitFromInspectionToConveyor() {
+		//Sends a kit out of the factory via conveyer belt
+		//if (station.getCheck() != null && !kitRobot.kitted())
+		if (isKitAssemblyManager || isFactoryProductionManager)
+			kitRobot.setFromCheck(true);
+	}
 	
 	public void exportKit() {
 		if (isKitAssemblyManager || isFactoryProductionManager)
@@ -246,6 +292,22 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			
 			g4.dispose();
 		}
+	}
+	
+	public boolean isKitAssemblyManager() {
+		return isKitAssemblyManager;
+	}
+	
+	public boolean isLaneManager() {
+		return isLaneManager;
+	}
+	
+	public boolean isGantryRobotManager() {
+		return isGantryRobotManager;
+	}
+	
+	public boolean isFactoryProductionManager() {
+		return isFactoryProductionManager;
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {

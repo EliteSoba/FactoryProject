@@ -20,7 +20,7 @@ public class FrameKitAssemblyManager extends JFrame{
 	
 	
 	// These are for v.0
-	PartsRobotAgent partsRobot = new PartsRobotAgent();
+	/*PartsRobotAgent partsRobot = new PartsRobotAgent();
 	/*StandAgent stand = new StandAgent(null, null, partsRobot);
 	VisionAgent vision = new VisionAgent(null, stand, this);
 	KitRobotAgent kitRobot = new KitRobotAgent(stand, this, null);

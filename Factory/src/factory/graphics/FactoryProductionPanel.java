@@ -70,45 +70,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		super.paint(g);
 	}
 	
-	public void newEmptyKit() {
-		//Adds a kit into the factory via conveyer belt
-		//if (!belt.kitin())
-			belt.inKit();
-	}
-	
-	public void moveEmptyKitToSlot(int target) {
-		//Sends robot to pick up kit from belt and move to designated slot in the station
-		//if (belt.pickUp() && !kitRobot.kitted() && station.getKit(target) == null) {
-			kitRobot.setFromBelt(true);
-			kitRobot.setStationTarget(target);
-		//}
-	}
-	
-	public void moveKitToInspection(int target) {
-		//Sends robot to move kit from designated slot in the station to inspection station
-		//if (!kitRobot.kitted() && station.getKit(target) != null) {
-			kitRobot.setCheckKit(true);
-			kitRobot.setStationTarget(target);
-		//}
-	}
-	
-	public void takePictureOfInspectionSlot() {
-		//Triggers the camera flash
-		station.checkKit();
-	}
-	
-	public void dumpKitAtInspection() {
-		//Sends robot to move kit from inspection station to trash
-		//if (!kitRobot.kitted() && station.getCheck() != null)
-			kitRobot.setPurgeKit(true);
-	}
-	
-	public void moveKitFromInspectionToConveyor() {
-		//Sends a kit out of the factory via conveyer belt
-		//if (station.getCheck() != null && !kitRobot.kitted())
-			kitRobot.setFromCheck(true);
-	}
-	
 	public void cameraFlash(int nestIndex) {
 		flashCounter = 10;
 		flashFeederIndex = nestIndex;
