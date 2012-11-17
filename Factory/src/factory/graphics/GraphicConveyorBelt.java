@@ -2,23 +2,34 @@ package factory.graphics;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ * @author Tobias Lee <br>
+ * <b>{@code GraphicConveyorBelt.java}</b> (50x720) <br>
+ * This displays and animates the conveyer belts,
+ * as well as any kits entering/exiting the factory (1 of each)
+ */
+
 public class GraphicConveyorBelt {
-	
-	/**
-	 * @author Tobias Lee
-	 * GraphicConveyorBelt.java (50x720)
-	 * This displays and animates the conveyer belts,
-	 * as well as any kits entering/exiting the factory (1 of each)
-	 */
-	
-	private int x, y; //Coordinates where belt is to be drawn
-	private int t; //Time for animation purposes
-	private GraphicKit kitIn; //The Kit entering the factory
-	private GraphicKit kitOut; //The Kit exiting the factory
-	private boolean pickUp; //When a Kit has arrived
-	private boolean export; //When a Kit is leaving
-	private GraphicPanel GP; //The GraphicPanel for intercomponent communication
-	public static int width = 50, height = FactoryProductionPanel.HEIGHT; //The width and height of this component
+	/**The x value of the Conveyor Belt*/
+	private int x;
+	/**The y value of the Conveyor Belt*/
+	private int y;
+	/**The current time in the animation*/
+	private int t;
+	/**The Kit entering the Factory*/
+	private GraphicKit kitIn;
+	/**The Kit exiting the Factory*/
+	private GraphicKit kitOut;
+	/**If a Kit is ready to be picked up or not*/
+	private boolean pickUp;
+	/**If a Kit is being exported out*/
+	private boolean export;
+	/**The GraphicPanel for intercomponent communication*/
+	private GraphicPanel GP;
+	/**The width of the Conveyor Belt*/
+	public static int width = 50;
+	/**The height of the Conveyor Belt*/
+	public static int height = FactoryProductionPanel.HEIGHT;
 	
 	/**
 	 * Creates a Conveyor Belt at the given x and y coordinates
