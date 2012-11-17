@@ -71,7 +71,7 @@ public class FactoryProductionManager extends Client {
 			if (identifier.equals("startfeeding"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((FactoryProductionPanel) graphics).turnFeederOn(feederSlot);
+				((FactoryProductionPanel) graphics).feedFeeder(feederSlot);
 			}
 			else if (identifier.equals("stopfeeding"))
 			{

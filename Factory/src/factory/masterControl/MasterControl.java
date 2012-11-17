@@ -593,11 +593,14 @@ public class MasterControl {
 
 
 		// TEMPORARY, FOR TESTING PURPOSES:
-		Part p0 = new Part("Shoe");
+		Part p0 = new Part("Eye");
+		Part p1 = new Part("Shoe");
 
 		mc.f0.msgLaneNeedsPart(p0,mc.l0t); // request a part for the lane
 
-
+		mc.f0.msgLaneNeedsPart(p1,mc.l0b); // request a new part for the other lane
+		
+		
 		//		mc.f0.msgLaneNeedsPart(p0, mc.l0t);		
 		// should make the gantry go get a bin of parts
 		// should call DoSwitchLane() and then DoStartFeeding()
