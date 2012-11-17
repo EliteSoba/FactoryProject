@@ -86,10 +86,17 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("switchlane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				System.out.println("feederslot = " + feederSlot);
-				if (graphics == null)
-					System.out.println("Thisisatest");
 				((FactoryProductionPanel) graphics).switchFeederLane(feederSlot);
+			}
+			else if (identifier.equals("purgetoplane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).purgeTopLane(feederSlot);
+			}
+			else if (identifier.equals("purgebottomlane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).purgeBottomLane(feederSlot);
 			}
 			
 			// Commands from GantryAgent:

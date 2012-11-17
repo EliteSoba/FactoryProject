@@ -131,11 +131,14 @@ public class MasterControl {
 		// Instantiate the Gantry
 		gantry = new GantryAgent(this);
 
+		// Instantiate the Vision
+		vision = new VisionAgent(partsRobot,stand,this);
+
 		// Instantiate the Feeders
-		f0 = new FeederAgent("f0",0,l0t,l0b,gantry,this);
-		f1 = new FeederAgent("f1",1,l1t,l1b,gantry,this);
-		f2 = new FeederAgent("f2",2,l2t,l2b,gantry,this);
-		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,this);
+		f0 = new FeederAgent("f0",0,l0t,l0b,gantry,vision,this);
+		f1 = new FeederAgent("f1",1,l1t,l1b,gantry,vision,this);
+		f2 = new FeederAgent("f2",2,l2t,l2b,gantry,vision,this);
+		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,vision,this);
 		feederAgents = Arrays.asList(f0, f1, f2, f3);
 
 
@@ -152,8 +155,6 @@ public class MasterControl {
 		// Instantiate the Stand
 		//stand = new StandAgent(); // bad code
 
-		// Instantiate the Vision
-		vision = new VisionAgent(partsRobot,stand,this);
 
 		// Instantiate the FCS
 		fcs = new FCSAgent(gantry,partsRobot, this);
@@ -596,10 +597,10 @@ public class MasterControl {
 		Part p0 = new Part("Eye");
 		Part p1 = new Part("Shoe");
 
-		mc.f0.msgLaneNeedsPart(p0,mc.l0t); // request a part for the lane
+		mc.f0.msgLaneNeedsPart(p1,mc.l0t); // request a part for the lane
 
-		mc.f0.msgLaneNeedsPart(p1,mc.l0b); // request a new part for the other lane
-		
+		mc.f0.msgLaneNeedsPart(p0,mc.l0t); // request a new part for the other lane
+
 		
 		//		mc.f0.msgLaneNeedsPart(p0, mc.l0t);		
 		// should make the gantry go get a bin of parts

@@ -12,7 +12,7 @@ import factory.client.*;
 public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	public static final int WIDTH = 1100, HEIGHT = 720;
-	public static final int delay = 50;
+	public static final int delay = 10;
 	
 	protected Client am; //The Client that holds this
 	
@@ -235,10 +235,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void purgeFeeder(int feederNum){ // takes in lane 0 - 4
-		lane[(feederNum)].bin = null;
-		lane[(feederNum)].binExists = false;
+		// The following 2 lines were causing the bin to disappear, which is undesirable	
+//		lane[(feederNum)].bin = null;
+//		lane[(feederNum)].binExists = false;
 		lane[(feederNum)].feederOn = false;
-		
+		purgeFeederDone(feederNum); // send the confirmation
 	}
 	
 	public void purgeTopLane(int feederNum){

@@ -88,11 +88,12 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 
-	public FeederAgent(String nameStr,int slot, Lane top, Lane bottom, Gantry g, MasterControl mc) {
+	public FeederAgent(String nameStr,int slot, Lane top, Lane bottom, Gantry g, Vision v, MasterControl mc) {
 		super(mc);
 		this.topLane = new MyLane(top);
 		this.bottomLane = new MyLane(bottom);
 		this.gantry = g;
+		this.vision = v;
 		this.name = "f"+slot;
 		this.feederNumber = slot;
 	}
@@ -182,6 +183,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
 		{
+			//MAKE THIS SYNCHRONIZED
 			for (MyPartRequest p : requestedParts)
 			{
 				if (p.state == MyPartRequestState.NEEDED)
@@ -313,6 +315,7 @@ public class FeederAgent extends Agent implements Feeder {
 		// This first if statement makes sure that the feeder doesn't unnecessarily purge itself
 		if (this.currentPart == partRequested.pt && state != FeederState.EMPTY)
 		{
+			debug("feeder doesn't need to purge.");
 			state = FeederState.IS_FEEDING;
 			partRequested.state = MyPartRequestState.DELIVERED;
 		}
@@ -473,30 +476,39 @@ public class FeederAgent extends Agent implements Feeder {
 		},(long) kOK_TO_PURGE_TIME * 1000); // okay to purge after this many seconds
 
 		feederEmptyTimer.schedule(new TimerTask(){
-			public void run(){		    
-				partResettleTimer.schedule(new TimerTask() {
-					public void run() {
-						debug("A lane is ready for a picture.");
-						currentLane.readyForPicture = true;
-
-						if (bottomLane.readyForPicture == true && topLane.readyForPicture == true)
-						{
-							debug("both of my nests are ready for a picture.");
-							vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
-							topLane.readyForPicture = false;
-							bottomLane.readyForPicture = false;
-						}
-						stateChanged();
-					}
-				}, 3000); // 3 seconds to resettle in the nest
+			public void run(){	
+					/** TODO: FIX THIS CODE, PERHAPS USE MSGING FROM THE ANIMATION. **/
+//				partResettleTimer.schedule(new TimerTask() {
+//					public void run() {
+//						debug("A lane is ready for a picture.");
+//						currentLane.readyForPicture = true;
+//
+//						if (bottomLane.readyForPicture == true && topLane.readyForPicture == true)
+//						{
+//							System.out.println("1.0");
+//							debug("both of my nests are ready for a picture.");
+//							vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
+//							topLane.readyForPicture = false;
+//							bottomLane.readyForPicture = false;
+//							System.out.println("1.1");
+//						}
+//						System.out.println("1.2");
+//						stateChanged();
+//						System.out.println("1.3");
+//					}
+//				}, 3000); // 3 seconds to resettle in the nest
+//				System.out.println("1.4");
 			}
 		}, (long) kOK_TO_PURGE_TIME * 1000); // time it takes the part to move down the lane and fill a nest 
+		System.out.println("1.5");
 
 		//	Timer.new(30000, { state = FeederState.OK_TO_PURGE; });
 		//		Timer.new(currentPart.averageDelayTime,{vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this) });
 		// need a timer so that we don't immediately purge the new ones
 
 		DoStartFeeding(currentPart);
+		System.out.println("1.6");
+
 		stateChanged();
 	}
 

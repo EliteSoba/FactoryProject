@@ -48,7 +48,7 @@ public class GantryAgent extends Agent implements Gantry {
 	// *** SCHEDULER ***
 
 	public boolean pickAndExecuteAnAction() {
-
+		System.out.println("gantry scheduler called");
 		for(MyBin b: myBins){
 			if(b.state == MyBinState.NEEDED){
 				goFetchTheRequestedBin(b);
@@ -61,9 +61,10 @@ public class GantryAgent extends Agent implements Gantry {
 
 	// *** ACTIONS ***
 	private void goFetchTheRequestedBin(MyBin b) {
-		
+		debug("goFetchTheRequestedBin");
 		if (b.fdr.getFeederHasABinUnderneath() == true)
 				DoPickupPurgeBin(b); //animation message
+		
 		System.out.println("1");
 		DoGoGetNewBin(b);
 		System.out.println("2");
