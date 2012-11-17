@@ -25,7 +25,7 @@ public class KitAssemblyPanel extends GraphicPanel implements ActionListener{
 		if (FKAM instanceof Client)
 			am = (Client)FKAM;
 		
-		belt = new GraphicKitBelt(0, 0, this);
+		belt = new GraphicConveyorBelt(0, 0, this);
 		station = new GraphicKittingStation(200, 191, this);
 		kitRobot = new GraphicKittingRobot(this, 70, 250);
 		

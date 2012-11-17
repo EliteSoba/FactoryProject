@@ -28,7 +28,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected static Image flashImage;
 	
 	// KIT MANAGER
-	protected GraphicKitBelt belt; //The conveyer belt
+	protected GraphicConveyorBelt belt; //The conveyer belt
 	protected GraphicKittingStation station; //The kitting station
 	protected GraphicKittingRobot kitRobot;
 	
@@ -218,7 +218,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public GraphicKittingStation getStation() {
 		return station;
 	}
-	public GraphicKitBelt getBelt() {
+	public GraphicConveyorBelt getBelt() {
 		return belt;
 	}
 	public ArrayList<Nest> getNest(){

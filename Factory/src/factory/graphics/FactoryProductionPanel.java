@@ -19,7 +19,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	
 	// KIT MANAGER
 	private FactoryProductionManager am; //The JFrame that holds this. Will be removed when gets integrated with the rest of the project
-	private GraphicKitBelt belt; //The conveyer belt
+	private GraphicConveyorBelt belt; //The conveyer belt
 	private GraphicKittingStation station; //The kitting station
 	private GraphicKittingRobot kitRobot;
 	public static final int WIDTH = 1100, HEIGHT = 720;
@@ -38,7 +38,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		if (FKAM instanceof Client)
 			am = (Client)FKAM;
 		
-		belt = new GraphicKitBelt(0, 0, this);
+		belt = new GraphicConveyorBelt(0, 0, this);
 		station = new GraphicKittingStation(200, 191, this);
 		kitRobot = new GraphicKittingRobot(this, 70, 250);
 		

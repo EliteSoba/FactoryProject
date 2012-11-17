@@ -17,7 +17,7 @@ public class GraphicKittingRobot {
 	private int direction; //For now I'm using directions 2 = down, 4 = left, 6 = right, 8 = up. I'll probably change this in the future but this is the way I'm used to
 	ImageIcon robot[]; //The icons for the robot with robot[direction] showing the robot facing the direction, and robot[direction-1] shows it facing that direction holding an empty kit
 	GraphicPanel GKAM; //The Panel to allow the drawing of ImageIcons
-	GraphicKitBelt belt;
+	GraphicConveyorBelt belt;
 	GraphicKittingStation station;
 
 	//Movement booleans

@@ -2,9 +2,11 @@ package factory.graphics;
 import java.awt.*;
 import javax.swing.*;
 
-public class GraphicKitBelt {
+public class GraphicConveyorBelt {
 	
-	/*GraphicKitBelt.java (50x720) - Tobias Lee
+	/**
+	 * @author Tobias Lee
+	 * GraphicConveyorBelt.java (50x720)
 	 * This displays and animates the conveyer belts,
 	 * as well as any kits entering/exiting the factory (1 of each)
 	 */
@@ -14,57 +16,41 @@ public class GraphicKitBelt {
 	private GraphicKit kitIn; //The Kit entering the factory
 	private GraphicKit kitOut; //The Kit exiting the factory
 	private boolean pickUp; //When a Kit has arrived
-	private boolean export;
-	private GraphicPanel GKAM;
-	public static int width = 50, height = FactoryProductionPanel.HEIGHT;
+	private boolean export; //When a Kit is leaving
+	private GraphicPanel GP; //The GraphicPanel for intercomponent communication
+	public static int width = 50, height = FactoryProductionPanel.HEIGHT; //The width and height of this component
 	
-	public GraphicKitBelt(int m, int n, GraphicPanel GKAM) {
-		//Constructor
-		x = m;
-		y = n;
+	/**
+	 * Creates a Conveyor Belt at the given x and y coordinates
+	 * @param x The initial x coordinate of the Conveyor Belt
+	 * @param y The initial y coordinate of the Conveyor Belt
+	 * @param GP The GraphicPanel to communicate with
+	 */
+	public GraphicConveyorBelt(int x, int y, GraphicPanel GP) {
+		this.x = x;
+		this.y = y;
 		t = 0;
 		pickUp = false;
 		kitIn = null;
 		kitOut = null;
 		export = false;
-		this.GKAM = GKAM;
+		this.GP = GP;
 	}
 	
+	/**
+	 * Paints the Conveyor Belt
+	 * @param g The specified graphics window
+	 */
 	public void paint(Graphics g) {
-		//Paints the conveyer belt
-		
 		//Main belt
 		g.setColor(new Color(47, 41, 32));
 		g.fillRect(x, y, width, height);
 		
-		//Side exit belt
-		/*g.fillRect(x+120, y+300, 100, 100);
-		g.fillRect(x+100, y+400, 20, 100);
-		g.fillArc(x+20, y+300, 200, 200, 270, 90);*/
-		
-		//Lines to animate
-		//Main conveyer belt
+		//Main belt animation
 		g.setColor(new Color(224, 224, 205));
 		for (int i = t; i < height; i += 50) {
 			g.drawLine(x, i, x+width, i);
 		}
-		
-		//Side conveyer belts
-		/*for (int i = t + 300; i < 400; i += 50)
-			g.drawLine(x+120, i, x+220, i);  
-		g.drawLine(x+120, y+400, x+120+(int)(100*Math.cos(3.14*t/100)), y+400+(int)(100*Math.sin(3.14*t/100)));
-		if (t < 20)
-			g.drawLine(x+120-t, y+400, x+120-t, y+500);
-		
-		//The diagonal to push kit into ready station
-		g.setColor(new Color(27, 21, 12));
-		for (int i = 0; i < 5; i++)
-			g.drawLine(x, 90+i, x+100, 190+i);
-		
-		//The ready station for a robot to take
-		g.setColor(new Color(10, 5, 0));
-		g.fillRoundRect(x+100, y+110, 50, 100, 20, 20);
-		g.fillRect(x+100, y+110, 20, 100);*/
 		
 		//Draws the kit moving into the factory
 		drawKitIn(g);
@@ -73,59 +59,72 @@ public class GraphicKitBelt {
 		drawKitOut(g);
 	}
 	
+	/**
+	 * Sends a new Kit down the Conveyor Belt into the Factory
+	 */
 	public void inKit() {
-		//Has a new kit enter the factory
 		kitIn = new GraphicKit(x+(width-40)/2, y-80);
 		pickUp = false;
 	}
 	
+	/**
+	 * Moves a Kit onto the Conveyor Belt to be exported out of the Factory
+	 * @param kit The Kit to be exported
+	 */
 	public void outKit(GraphicKit kit) {
-		//Has a kit exit the factory
 		kitOut = kit;
 		if (kitOut == null)
 			return;
 		kitOut.move(x+(width-40)/2, y+305);
 	}
 	
+	/**
+	 * Moves a Kit ready to be exported out of the factory
+	 * @see factory.graphics.GraphicConveyorBelt.outKit
+	 */
 	public void exportKit() {
 		if (kitout())
 			export = true;
 		else
-			GKAM.exportKitDone();
+			GP.exportKitDone();
 	}
 	
+	/**
+	 * Draws the incoming Kit
+	 * @param g The specified graphics window
+	 */
 	public void drawKitIn(Graphics g) {
-		//Draws the kit that's entering the factory
 		if (kitin())
 			kitIn.paint(g);
 	}
 	
+	/**
+	 * Draws the outgoing Kit
+	 * @param g The specified graphics window
+	 */
 	public void drawKitOut(Graphics g) {
-		//Draws the kit that's exiting the factory
 		if (kitout())
 			kitOut.paint(g);
 	}
 	
+	/**
+	 * Moves the belt along at velocity v
+	 * @param v The velocity at which the belt moves
+	 */
 	public void moveBelt(int v) {
-		//Increments t for animation
-		
 		if (kitin() && !pickUp || kitout() && export)
 		t += v;
 		if (t >= 50)
 			t = 0;
 		
 		//Moves the incoming kit along a path
-		//TODO: NO MORE PATH
 		if (kitin()) {
 			if (kitIn.getY() <= y+300)
-			kitIn.moveY(v);
-			//if (kitIn.getY() >= y+40 && kitIn.getX() <= x+100)
-				//kitIn.moveX(v);
-			//if (kitIn.getX() >= x+105 && kitIn.getY() >= y+115) {
+				kitIn.moveY(v);
 			if (kitIn.getY() >= y+305) {
 				//Kit in completion
 				if (!pickUp)
-					GKAM.newEmptyKitDone();
+					GP.newEmptyKitDone();
 				pickUp = true;
 			}
 			if (kitIn.getY() >= y+height)
@@ -133,58 +132,64 @@ public class GraphicKitBelt {
 		}
 		
 		//Moves the outgoing kit along a path
-		//TODO: NO MORE PATH
 		if (kitout() && export) {
-			/*if (kitOut.getY() <= y+370)
 				kitOut.moveY(v);
-			else if (kitOut.getY() <= y+400){
-				kitOut.moveX(-v);
-				kitOut.moveY(v);
-			}
-			else if (kitOut.getX() > x+80)
-				kitOut.moveX(-v);
-			else if (kitOut.getX() > x+25) {
-				kitOut.moveX(-v);
-				kitOut.moveY(v);
-			}
-			else*/
-				kitOut.moveY(v);
-			
 			if (kitOut.getY() >= y+height) {
+				//Kit export complete
 				kitOut = null;
 				export = false;
-				GKAM.exportKitDone();
+				GP.exportKitDone();
 			}
 		}
 	}
 	
+	/**
+	 * Removes the incoming Kit from the belt
+	 * @return The removed GraphicKit
+	 */
 	public GraphicKit unKitIn() {
-		//Removes kitIn
 		GraphicKit temp = kitIn;
 		kitIn = null;
 		pickUp = false;
 		return temp;
 	}
 	
+	/**
+	 * Checks if there is an incoming Kit on the belt
+	 * @return {@code true} if there is an incoming Kit; {@code false} otherwise
+	 */
 	public boolean kitin() {
-		//Returns if a kit is entering the factory
 		return kitIn != null;
 	}
 	
+	/**
+	 * Checks if there is an outgoing Kit on the belt
+	 * @return {@code true} if there is an outgoing Kit; {@code false} otherwise
+	 */
 	public boolean kitout() {
-		//Returns if a kit is exiting the factory
 		return kitOut != null;
 	}
 	
+	/**
+	 * Checks if the incoming Kit is ready to be picked up
+	 * @return {@code true} if the Kit is ready to be picked up; {@code false} otherwise
+	 */
 	public boolean pickUp() {
-		//Returns if a kit that's entering the factory is ready to be picked up
 		return pickUp;
 	}
 	
+	/**
+	 * Gets the x coordinate of this Conveyor Belt
+	 * @return The x coordinate of this Conveyor Belt
+	 */
 	public int getX() {
 		return x;
 	}
 	
+	/**
+	 * Gets the y coordinate of this Conveyor Belt
+	 * @return The y coordinate of htis Conveyor Belt
+	 */
 	public int getY() {
 		return y;
 	}
