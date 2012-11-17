@@ -107,12 +107,12 @@ public class GraphicLaneManager{
 		// Draw lanes
 		// horizontal
 		Graphics2D g3 = (Graphics2D)g.create();
-		g2.drawImage(new ImageIcon("Images/Lane/"+laneAnimationCounter/laneAnimationSpeed+".png").getImage(), lane_xPos+75, lane_yPos+20, 180, 40, null);
-		g2.drawImage(new ImageIcon("Images/Lane/"+laneAnimationCounter/laneAnimationSpeed+".png").getImage(), lane_xPos+75, lane_yPos+100, 180, 40, null);
 		// vertical
 		g3.rotate(Math.toRadians(90),lane_xPos+210, lane_yPos+20);
 		g3.drawImage(new ImageIcon("Images/Lane/"+laneAnimationCounter/laneAnimationSpeed+".png").getImage(), lane_xPos+210, lane_yPos-25, 120, 40, null);
-		g3.dispose();
+		g3.dispose();	
+		g2.drawImage(new ImageIcon("Images/Lane/"+laneAnimationCounter/laneAnimationSpeed+".png").getImage(), lane_xPos+75, lane_yPos+20, 180, 40, null);
+		g2.drawImage(new ImageIcon("Images/Lane/"+laneAnimationCounter/laneAnimationSpeed+".png").getImage(), lane_xPos+75, lane_yPos+100, 180, 40, null);
 		laneAnimationCounter ++;
 		if(laneAnimationCounter == laneAnimationSpeed*7)		// 7 = number of images
 			laneAnimationCounter = 0;
