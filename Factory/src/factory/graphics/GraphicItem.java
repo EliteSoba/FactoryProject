@@ -200,7 +200,7 @@ public class GraphicItem {
 	}
 	
 	/**
-	 * Gets whether the Item will go down the top Lane or the bottom Lane
+	 * Checks if the Item will go down the top Lane or the bottom Lane
 	 * @return {@code true} if it will go down the top Lane; {@code false} if it will go down the bottom Lane
 	 */
 	public boolean getDivergeUp() {

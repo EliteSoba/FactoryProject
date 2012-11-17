@@ -11,9 +11,9 @@ import java.util.*;
 
 public class GraphicKit {
 	
-	/**The x coordinate of the Item*/
+	/**The x coordinate of the Kit*/
 	private int x;
-	/**The y coordinate of the Item*/
+	/**The y coordinate of the Kit*/
 	private int y;
 	/**The direction the Kit is facing with 8, 6, 2, 4 being North, East, South, and West respectively*/
 	private int direction;
