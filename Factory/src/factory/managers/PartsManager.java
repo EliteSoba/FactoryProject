@@ -43,6 +43,8 @@ public class PartsManager extends Client implements WindowListener{
 		
 		add(UI, BorderLayout.LINE_END);
 		pack();
+		this.setSize(460,600);
+		this.setResizable(false);
 		setVisible(true);
 	}
 	
