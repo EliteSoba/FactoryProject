@@ -57,7 +57,8 @@ public class MasterControl {
 	private static final List<String> cmds = Arrays.asList( "makekits", "addkitname", "rmkitname", "addpartame",
 			"rmpartname", "lanepowertoggle", "vibration", "kitcontent",
 			"startfeeding", "stopfeeding", "purgefeeder", "switchlane",
-			"purgetoplane", "purgebottomlane", "stopfactory", "pickupbin");
+			"purgetoplane", "purgebottomlane", "stopfactory", "pickuppurgebin",
+			"getnewbin", "bringbin");
 
 	// The following are lists of commands that are to be received by multiple clients.
 
@@ -290,7 +291,7 @@ public class MasterControl {
 		// 3 = Cmd OR if cnf, this would be optional identifier
 		// 4+ = Parameters
 
-		System.out.println("agentCmd()");
+		System.out.println("agentCmd() = " + cmd.get(0) + " " + cmd.get(1) + " " + cmd.get(2));
 
 		if(cmd.get(2).equals("cnf")){
 
@@ -418,12 +419,8 @@ public class MasterControl {
 
 
 		} else {
-			System.out.println("1");
 			PartHandler destinationPH = determinePH(b);
-			System.out.println("2");
 			boolean result = sendCmd(destinationPH, fullCmd);
-			System.out.println("3");
-			System.out.println(result);
 			return result;
 		}
 

@@ -22,7 +22,7 @@ public class FeederAgent extends Agent implements Feeder {
 	/** DATA **/
 	private static int kOK_TO_PURGE_TIME = 10;
 	private String name;
-	public int feederSlot;
+	public int feederNumber;
 	public ArrayList<MyPartRequest> requestedParts = new ArrayList<MyPartRequest>();   
 	public MyLane topLane;
 	public MyLane bottomLane;
@@ -94,7 +94,7 @@ public class FeederAgent extends Agent implements Feeder {
 		this.bottomLane = new MyLane(bottom);
 		this.gantry = g;
 		this.name = nameStr+slot;
-		this.feederSlot = slot;
+		this.feederNumber = slot;
 	}
 
 
@@ -529,8 +529,8 @@ public class FeederAgent extends Agent implements Feeder {
 	/** ANIMATIONS 
 	 * @throws InterruptedException **/
 	private void DoStartFeeding(Part part) {
-//		server.command("fa fpm cmd startfeeding " + feederSlot);
-		debug("Feeder " + feederSlot + " started feeding.");
+//		server.command("fa fpm cmd startfeeding " + feederNumber);
+		debug("Feeder " + feederNumber + " started feeding.");
 //		try {
 //			animation.acquire();
 //		} catch (InterruptedException e) {
@@ -540,7 +540,7 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	private void DoStopFeeding() { 
-//		server.command("fa fpm cmd stopfeeding " + feederSlot);
+//		server.command("fa fpm cmd stopfeeding " + feederNumber);
 		debug("stopped feeding.");
 		//		try {
 		//		animation.acquire();
@@ -554,7 +554,7 @@ public class FeederAgent extends Agent implements Feeder {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeFeeder()"));
 
-//		server.command("fa fpm cmd purgefeeder " + feederSlot);
+//		server.command("fa fpm cmd purgefeeder " + feederNumber);
 		debug("purging feeder.");
 		//		try {
 		//		animation.acquire();
@@ -568,7 +568,7 @@ public class FeederAgent extends Agent implements Feeder {
 		log.add(new LoggedEvent(
 				"Animation DoSwitchLane()"));
 
-//		server.command("fa fpm cmd switchlane " + feederSlot);
+//		server.command("fa fpm cmd switchlane " + feederNumber);
 		debug("switching lane");
 //				try {
 //				animation.acquire();
@@ -587,7 +587,7 @@ public class FeederAgent extends Agent implements Feeder {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeTopLane()"));
 
-//		server.command("fa fpm cmd purgetoplane " + feederSlot);
+//		server.command("fa fpm cmd purgetoplane " + feederNumber);
 		debug("purging top lane");
 		//		try {
 		//		animation.acquire();
@@ -601,7 +601,7 @@ public class FeederAgent extends Agent implements Feeder {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeBottomLane()"));
 
-//		server.command("fa fpm cmd purgebottomlane " + feederSlot);
+//		server.command("fa fpm cmd purgebottomlane " + feederNumber);
 		debug("purging bottom lane");
 		//		try {
 		//		animation.acquire();
@@ -613,10 +613,15 @@ public class FeederAgent extends Agent implements Feeder {
 
 	
 	/** OTHER **/
-	public boolean getFeederHasABinUnderneath() {
+	public boolean getFeederHasABinUnderneath() 
+	{
 		return feederHasABinUnderneath;
 	}
 
+	public int getFeederNumber()
+	{
+		return this.feederNumber;
+	}
 }
 
 

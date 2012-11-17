@@ -61,9 +61,15 @@ public class GantryAgent extends Agent implements Gantry {
 
 	// *** ACTIONS ***
 	private void goFetchTheRequestedBin(MyBin b) {
-		DoPickupPurgeBin(b); //animation message
 		
-		
+		if (b.fdr.getFeederHasABinUnderneath() == true)
+				DoPickupPurgeBin(b); //animation message
+		System.out.println("1");
+		DoGoGetNewBin(b);
+		System.out.println("2");
+		DoBringNewBin(b);
+		System.out.println("3");
+
 //		DoRefillPurgeBin(binConfig.binList.get(b.pt));
 //		DoBringRequestedBin(binConfig.binList.get(b.pt),b.fdr,b.pt);
 		
@@ -76,14 +82,35 @@ public class GantryAgent extends Agent implements Gantry {
 
 	private void DoPickupPurgeBin(MyBin b) {
 		print("Picking up Purge Bin");
-		server.command("ga fpm cmd pickupbin " + b.pt.imagePath);
+		server.command("ga fpm cmd pickuppurgebin " + b.fdr.getFeederNumber());
 		try{
 			animation.acquire();
 		}
 		catch (InterruptedException e){
 			e.printStackTrace();
 		}
-		
+	}
+	
+	private void DoGoGetNewBin(MyBin b) {
+		print("Going to get new Bin");
+		server.command("ga fpm cmd getnewbin " + b.pt.imagePath);
+		try{
+			animation.acquire();
+		}
+		catch (InterruptedException e){
+			e.printStackTrace();
+		}
+	}
+	
+	private void DoBringNewBin(MyBin b) {
+		print("Bringing new Bin to the feeder");
+		server.command("ga fpm cmd bringbin " + b.fdr.getFeederNumber());
+		try{
+			animation.acquire();
+		}
+		catch (InterruptedException e){
+			e.printStackTrace();
+		}
 	}
 
 	

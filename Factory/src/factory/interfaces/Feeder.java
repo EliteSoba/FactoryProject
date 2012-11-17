@@ -18,4 +18,5 @@ public interface Feeder {
 
 	public boolean getFeederHasABinUnderneath();
 	
+	public int getFeederNumber();
 }

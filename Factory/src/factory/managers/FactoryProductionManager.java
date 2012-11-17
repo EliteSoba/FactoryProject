@@ -93,11 +93,24 @@ public class FactoryProductionManager extends Client {
 			}
 			
 			// Commands from GantryAgent:
-			else if (identifier.equals("pickupbin"))
+			else if (identifier.equals("pickuppurgebin"))
+			{
+				int feederNumber = Integer.valueOf(pCmd.get(2)); 
+				((FactoryProductionPanel) graphics).moveGantryRobotToFeederForPickup(feederNumber);
+			}
+			else if (identifier.equals("getnewbin"))
 			{
 				String desiredPartImagePath = pCmd.get(2); 
 				((FactoryProductionPanel) graphics).moveGantryRobotToPickup(desiredPartImagePath);
 			}
+			else if (identifier.equals("getnewbin"))
+			{
+				int feederNumber = Integer.valueOf(pCmd.get(2)); 
+				((FactoryProductionPanel) graphics).moveGantryRobotToFeederForDropoff(feederNumber);
+			}
+
+
+			
 			//Swing Receive Commands
 			else if (identifier.equals("addkitname")) {		// add new kit configuration to kit configuration list
 				KitConfig newKit = new KitConfig(pCmd.get(2));
@@ -142,7 +155,7 @@ public class FactoryProductionManager extends Client {
 			if (identifier.equals("kitcontent")) { 			// modify content of a kit
 				KitConfig kit = kitConfigList.get(pCmd.get(2));
 				String partName = pCmd.get(3);
-				kit.listOfParts.set(pCmd.get(3),partsList.get(partName));
+				//kit.listOfParts.set(pCmd.get(3),partsList.get(partName)); // commented out for now
 			}
 			else if (identifier.equals("kitsproduced")) { // updates number of kits produced for schedule
 				((FactoryProdManPanel) UI).kitProduced();
