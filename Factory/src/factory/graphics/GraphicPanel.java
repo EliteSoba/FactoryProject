@@ -182,7 +182,12 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void feedFeeder(int feederNum) {
-		feedLane(feederNum*2);
+		if(!lane[feederNum].lane1PurgeOn){	//If purging is on, cannot feed!
+			if(lane[feederNum].hasBin() && lane[feederNum].bin.getBinItems().size() > 0){
+				lane[feederNum].laneStart = true;
+				lane[feederNum].feederOn = true;
+			}
+		}
 	}
 	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
