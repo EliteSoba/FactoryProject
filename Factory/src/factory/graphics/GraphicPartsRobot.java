@@ -3,18 +3,18 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
-class PartsRobot extends AnimatedObject
+class GraphicPartsRobot extends GraphicAnimatedObject
 {
 	int fx, fy;		// final position (destination)
 	int destinationNest, destinationKit;
 	boolean arrived;
 	int state;
 	
-	public PartsRobot()
+	public GraphicPartsRobot()
 	{
 		
 	}
-	public PartsRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
+	public GraphicPartsRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
 		items = new ArrayList<GraphicItem>();
 		arrived = false;

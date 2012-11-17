@@ -27,7 +27,7 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 		for (int i = 0; i < lane.length; i++)
 			lane[i] = new GraphicLaneManager(-200, 160*i + 50, i, this);
 		
-		gantryRobot = new GantryRobot(WIDTH-125,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
+		gantryRobot = new GraphicGantryRobot(WIDTH-125,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
 		
 		(new Timer(delay, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));

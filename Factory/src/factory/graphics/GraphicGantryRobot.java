@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import factory.Part;
 
-class GantryRobot
+class GraphicGantryRobot
 {
 	int x, y;							// current position
 	int dx, dy;						// change in position
@@ -22,11 +22,11 @@ class GantryRobot
 	boolean hasBin;
 	Image binImage;
 	
-	public GantryRobot()
+	public GraphicGantryRobot()
 	{
 		
 	}
-	public GantryRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
+	public GraphicGantryRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
 		bin = null;
 		hasBin = false;

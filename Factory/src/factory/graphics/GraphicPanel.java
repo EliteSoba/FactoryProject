@@ -35,11 +35,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected GraphicKittingRobot kitRobot;
 	
 	// PARTS MANAGER
-	protected ArrayList<Nest> nests;
-	protected PartsRobot partsRobot;
+	protected ArrayList<GraphicNest> nests;
+	protected GraphicPartsRobot partsRobot;
 	
 	// GANTRY
-	protected GantryRobot gantryRobot;
+	protected GraphicGantryRobot gantryRobot;
 	
 	public GraphicPanel() {
 		am = null;
@@ -417,7 +417,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public GraphicConveyorBelt getBelt() {
 		return belt;
 	}
-	public ArrayList<Nest> getNest(){
+	public ArrayList<GraphicNest> getNest(){
 		return nests;
 	}
 	public GraphicLaneManager getLane(int index) {
@@ -452,7 +452,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		// Draw the nests
 		if (isLaneManager || isFactoryProductionManager)
 		for(int i = 0; i < nests.size(); i++) {
-			Nest currentNest = nests.get(i);
+			GraphicNest currentNest = nests.get(i);
 			currentNest.paint(g);
 		}
 		

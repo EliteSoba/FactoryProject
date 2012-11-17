@@ -44,10 +44,10 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		
 		// Parts robot client
 		// Add 8 nests
-		nests = new ArrayList<Nest>();	
+		nests = new ArrayList<GraphicNest>();	
 		for(int i = 0; i < 8; i++)
 		{
-			Nest newNest = new Nest(510,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
+			GraphicNest newNest = new GraphicNest(510,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
 			Random randomGen = new Random();
 			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
 				newNest.addItem(new GraphicItem(20,20,"Images/eyesItem.png"));
@@ -58,8 +58,8 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		for (int i = 0; i < lane.length; i++)
 			lane[i] = new GraphicLaneManager(510, 160*i + 50, i, this);
 		
-		partsRobot = new PartsRobot(WIDTH/2-200,HEIGHT/2,0,5,5,10,100,100,"Images/robot1.png");
-		gantryRobot = new GantryRobot(WIDTH-150,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
+		partsRobot = new GraphicPartsRobot(WIDTH/2-200,HEIGHT/2,0,5,5,10,100,100,"Images/robot1.png");
+		gantryRobot = new GraphicGantryRobot(WIDTH-150,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
 		
 		(new Timer(delay, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));

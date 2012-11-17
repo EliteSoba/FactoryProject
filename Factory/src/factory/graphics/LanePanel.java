@@ -24,10 +24,10 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 			am = (Client)LM;
 		// Parts robot client
 		// Add 8 nests
-		nests = new ArrayList<Nest>();	
+		nests = new ArrayList<GraphicNest>();	
 		for(int i = 0; i < 8; i++)
 		{
-			Nest newNest = new Nest(35,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
+			GraphicNest newNest = new GraphicNest(35,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
 			Random randomGen = new Random();
 			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
 				newNest.addItem(new GraphicItem(20,20,"Images/eyesItem.png"));
