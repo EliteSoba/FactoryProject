@@ -42,7 +42,7 @@ public class MasterControl {
 	FCSAgent fcs;
 
 	public FeederAgent f0, f1, f2, f3;
-	List<FeederAgent> feederAgents = Arrays.asList(f0, f1, f2, f3);
+	List<FeederAgent> feederAgents;
 
 
 	TreeMap<String, Agent> agentTreeMap;
@@ -136,6 +136,7 @@ public class MasterControl {
 		f1 = new FeederAgent("f1",1,l1t,l1b,gantry,this);
 		f2 = new FeederAgent("f2",2,l2t,l2b,gantry,this);
 		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,this);
+		feederAgents = Arrays.asList(f0, f1, f2, f3);
 
 
 		// Instantiate the Conveyor and related Agents
@@ -291,7 +292,11 @@ public class MasterControl {
 		// 3 = Cmd OR if cnf, this would be optional identifier
 		// 4+ = Parameters
 
-		System.out.println("agentCmd() = " + cmd.get(0) + " " + cmd.get(1) + " " + cmd.get(2));
+		System.out.println("agentCmd() = ");
+		for (int i = 0; i < cmd.size(); i++)
+		{
+			System.out.print(cmd.get(i) + " ");
+		}
 
 		if(cmd.get(2).equals("cnf")){
 
@@ -314,7 +319,10 @@ public class MasterControl {
 				} else if(cmd.get(1).equals("fa")){     // Feeder
 
 					destination = feederAgents.get(Integer.valueOf(cmd.get(3)));
-
+					if (feederAgents.get(Integer.valueOf(cmd.get(3))) == null)
+					{
+						System.out.println("ERROR: NULL FEEDERAGENT.");
+					}
 				} else {
 					return false;
 				}
@@ -346,20 +354,20 @@ public class MasterControl {
 			}
 			/*
 			//MCS Commands:
-	
+
 			if (cmd.get(1).equals("mcs"))
 			{
 				destination = agentTreeMap.get(cmd.get(1));
-				
+
 				//fpm mcs cmd stopfactory
 				if(cmd.get(3).equals("stopfactory")){
-					
+
 					//method for stopping factory?
 					//this.closeAgents();
 				}
 				//more fcsagent commands
 			}*/
-			
+
 
 		}
 
@@ -583,10 +591,14 @@ public class MasterControl {
 		long timeToQuit = System.currentTimeMillis() + 5000;
 		while (System.currentTimeMillis() < timeToQuit);
 
-//		Part p0 = new Part("Ear");
 
-		// request a part for the lane
-//		mc.f0.msgLaneNeedsPart(p0, mc.l0t);		
+		// TEMPORARY, FOR TESTING PURPOSES:
+		Part p0 = new Part("Shoe");
+
+		mc.f0.msgLaneNeedsPart(p0,mc.l0t); // request a part for the lane
+
+
+		//		mc.f0.msgLaneNeedsPart(p0, mc.l0t);		
 		// should make the gantry go get a bin of parts
 		// should call DoSwitchLane() and then DoStartFeeding()
 	}

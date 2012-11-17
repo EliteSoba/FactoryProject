@@ -36,7 +36,7 @@ public class FeederAgent extends Agent implements Feeder {
 	public Timer feederEmptyTimer = new Timer();
 	public Timer partResettleTimer = new Timer();
 	public boolean feederHasABinUnderneath = false; // no bin underneath the feeder initially
-	
+
 	public enum FeederState { EMPTY, WAITING_FOR_PARTS, CONTAINS_PARTS, OK_TO_PURGE, SHOULD_START_FEEDING, IS_FEEDING }
 	public enum DiverterState { FEEDING_TOP, FEEDING_BOTTOM }
 
@@ -93,7 +93,7 @@ public class FeederAgent extends Agent implements Feeder {
 		this.topLane = new MyLane(top);
 		this.bottomLane = new MyLane(bottom);
 		this.gantry = g;
-		this.name = nameStr+slot;
+		this.name = "f"+slot;
 		this.feederNumber = slot;
 	}
 
@@ -128,7 +128,7 @@ public class FeederAgent extends Agent implements Feeder {
 		String laneStr = "Top Lane";
 		if (bottomLane.lane == la)
 			laneStr = "Bottom Lane";
-		
+
 		debug("received msgNestWasDumped("+ laneStr + ")");
 		if (topLane.lane == la)
 		{
@@ -147,7 +147,7 @@ public class FeederAgent extends Agent implements Feeder {
 			laneStr = "Bottom Lane";
 		else if (topLane.lane == lane)
 			laneStr = "Top Lane";
-		
+
 		debug("received msgLaneNeedsPart("+part.name + "," + laneStr + ")");
 		requestedParts.add(new MyPartRequest(part, lane));
 		stateChanged();
@@ -155,9 +155,9 @@ public class FeederAgent extends Agent implements Feeder {
 
 	public void msgHereAreParts(Part part) {
 		debug("received msgHereAreParts("+part.name+")");
-		
+
 		feederHasABinUnderneath = true; // should never be false again
-		
+
 		for (MyPartRequest pr : requestedParts) {
 			if(pr.state == MyPartRequestState.ASKED_GANTRY && pr.pt == part) {
 				pr.state = MyPartRequestState.DELIVERED;
@@ -207,12 +207,12 @@ public class FeederAgent extends Agent implements Feeder {
 						diverter = DiverterState.FEEDING_TOP;
 						DoSwitchLane();   // Animation to switch lane
 					}
-					
+
 					state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
 					StartFeeding();
 					return true;
 				}
-				
+
 			}
 			else if (bottomLane.part == currentPart)
 			{
@@ -223,16 +223,16 @@ public class FeederAgent extends Agent implements Feeder {
 						diverter = DiverterState.FEEDING_BOTTOM;
 						DoSwitchLane();   // Animation to switch lane
 					}
-					
+
 					state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
 					StartFeeding();
 					return true;
 				}
 			}
-			
-			
+
+
 		}
-		
+
 		for (MyPartRequest p : requestedParts) 
 		{
 			if (p.state == MyPartRequestState.DELIVERED)
@@ -309,7 +309,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	private void askGantryForPart(MyPartRequest partRequested) { 
 		debug("asking gantry for part " + partRequested.pt.name + ".");
-		
+
 		// This first if statement makes sure that the feeder doesn't unnecessarily purge itself
 		if (this.currentPart == partRequested.pt && state != FeederState.EMPTY)
 		{
@@ -529,53 +529,53 @@ public class FeederAgent extends Agent implements Feeder {
 	/** ANIMATIONS 
 	 * @throws InterruptedException **/
 	private void DoStartFeeding(Part part) {
-//		server.command("fa fpm cmd startfeeding " + feederNumber);
+		server.command("fa fpm cmd startfeeding " + feederNumber);
 		debug("Feeder " + feederNumber + " started feeding.");
-//		try {
-//			animation.acquire();
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void DoStopFeeding() { 
-//		server.command("fa fpm cmd stopfeeding " + feederNumber);
+		server.command("fa fpm cmd stopfeeding " + feederNumber);
 		debug("stopped feeding.");
-		//		try {
-		//		animation.acquire();
-		//	} catch (InterruptedException e) {
-		//		// TODO Auto-generated catch block
-		//		e.printStackTrace();
-		//	}
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void DoPurgeFeeder() {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeFeeder()"));
 
-//		server.command("fa fpm cmd purgefeeder " + feederNumber);
+		server.command("fa fpm cmd purgefeeder " + feederNumber);
 		debug("purging feeder.");
-		//		try {
-		//		animation.acquire();
-		//	} catch (InterruptedException e) {
-		//		// TODO Auto-generated catch block
-		//		e.printStackTrace();
-		//	}
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void DoSwitchLane() {
 		log.add(new LoggedEvent(
 				"Animation DoSwitchLane()"));
 
-//		server.command("fa fpm cmd switchlane " + feederNumber);
+		server.command("fa fpm cmd switchlane " + feederNumber);
 		debug("switching lane");
-//				try {
-//				animation.acquire();
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void DoContinueFeeding(Part part) {
@@ -587,31 +587,31 @@ public class FeederAgent extends Agent implements Feeder {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeTopLane()"));
 
-//		server.command("fa fpm cmd purgetoplane " + feederNumber);
+		server.command("fa fpm cmd purgetoplane " + feederNumber);
 		debug("purging top lane");
-		//		try {
-		//		animation.acquire();
-		//	} catch (InterruptedException e) {
-		//		// TODO Auto-generated catch block
-		//		e.printStackTrace();
-		//	}
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void DoPurgeBottomLane() {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeBottomLane()"));
 
-//		server.command("fa fpm cmd purgebottomlane " + feederNumber);
+		server.command("fa fpm cmd purgebottomlane " + feederNumber);
 		debug("purging bottom lane");
-		//		try {
-		//		animation.acquire();
-		//	} catch (InterruptedException e) {
-		//		// TODO Auto-generated catch block
-		//		e.printStackTrace();
-		//	}
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	
+
 	/** OTHER **/
 	public boolean getFeederHasABinUnderneath() 
 	{
