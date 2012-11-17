@@ -142,7 +142,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			gantryRobot.setState(3);
 			gantryRobot.setDestinationFeeder(feederIndex);
 			gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
-			gantryRobotArrivedAtFeederForDropoff();
+			//gantryRobotArrivedAtFeederForDropoff();
 		//}
 	}
 	
