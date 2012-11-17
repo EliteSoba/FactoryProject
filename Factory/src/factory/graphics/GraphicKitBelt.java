@@ -82,12 +82,16 @@ public class GraphicKitBelt {
 	public void outKit(GraphicKit kit) {
 		//Has a kit exit the factory
 		kitOut = kit;
+		if (kitOut == null)
+			return;
 		kitOut.move(x+(width-40)/2, y+305);
 	}
 	
 	public void exportKit() {
 		if (kitout())
 			export = true;
+		else
+			GKAM.exportKitDone();
 	}
 	
 	public void drawKitIn(Graphics g) {
