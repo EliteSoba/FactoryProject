@@ -17,7 +17,7 @@ public class KitManager extends Client {
 	public KitManager() {
 		super(Client.Type.km, null, null);
 		
-	    KitManPanel buttons = new KitManPanel(this);
+	    buttons = new KitManPanel(this);
 
 		setInterface();
 	}

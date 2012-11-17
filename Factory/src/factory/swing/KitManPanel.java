@@ -231,7 +231,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 					cMessages.setText("Kit Name already exists, try another name");
 				}
 			}
-			else if (){
+			/*else if (false){
 				
 			}
 			else {
@@ -242,7 +242,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 					(String)cItemComboBox6.getSelectedItem() + " " + (String)cItemComboBox7.getSelectedItem() + " " + 
 					(String)cItemComboBox8.getSelectedItem(); //#kitname #partname1 #partname2 ... #partname8";
 				kitManager.sendCommand(set);
-			}
+			}*/
 		}
 		else if (ae.getSource() == mSave) {
 		}
