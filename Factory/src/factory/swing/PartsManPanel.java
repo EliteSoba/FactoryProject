@@ -252,7 +252,7 @@ public class PartsManPanel extends JPanel{
 					Part p = new Part(name.getText(), currentID, description.getText(),"Images/" + (String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
 					addItem(p);
 					currentID++;
-					partsManager.sendMessage("add",p);
+					partsManager.sendMessage("add", p, null);
 					idLabel.setText("ID# : " + currentID);
 					name.setText("");
 					description.setText("Enter description here");
@@ -400,7 +400,7 @@ public class PartsManPanel extends JPanel{
 			
 			if (ae.getSource() == removeItem){
 				System.out.println("I will remove a part and update the server.");
-				partsManager.sendMessage("remove", currentPart);
+				partsManager.sendMessage("remove", currentPart, null);
 				removeItem(currentPart);
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
@@ -423,7 +423,7 @@ public class PartsManPanel extends JPanel{
 				}else{
 					
 					Part p = new Part(name.getText(), currentPart.id, description.getText(),"Images/" + (String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
-					
+					partsManager.sendMessage("edit", p, currentPart);
 					editItem(p);
 					partsManager.parts.remove(currentPart.name);
 					partsManager.parts.put(p.name, p);
