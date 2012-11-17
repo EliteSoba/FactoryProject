@@ -393,7 +393,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 
 	public void feedLaneDone(int laneNum){
-		sendMessage("FILLER");
+		sendMessage("fa cnf " + laneNum/2);
 	}
 	
 	public void purgeTopLaneDone(int feederNum) {
