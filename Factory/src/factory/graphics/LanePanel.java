@@ -14,7 +14,7 @@ import factory.*;
 
 public class LanePanel extends GraphicPanel implements ActionListener{
 	
-	public static final int WIDTH = 500, HEIGHT = 720;
+	public static final int WIDTH = 400, HEIGHT = 720;
 	
 	public LanePanel(JFrame LM) {
 		super();
@@ -27,7 +27,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		nests = new ArrayList<Nest>();	
 		for(int i = 0; i < 8; i++)
 		{
-			Nest newNest = new Nest(50,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
+			Nest newNest = new Nest(35,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
 			Random randomGen = new Random();
 			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
 				newNest.addItem(new GraphicItem(20,20,"Images/eyesItem.png"));
@@ -35,7 +35,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		}
 		lane = new GraphicLaneManager [4];
 		for (int i = 0; i < lane.length; i++)
-			lane[i] = new GraphicLaneManager(50, 160*i + 50, i, this);
+			lane[i] = new GraphicLaneManager(35, 160*i + 50, i, this);
 		
 		(new Timer(delay, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));

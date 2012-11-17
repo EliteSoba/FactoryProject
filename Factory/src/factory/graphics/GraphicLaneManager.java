@@ -37,6 +37,7 @@ public class GraphicLaneManager{
 	int vibrationCount;			//every 2 paint, it'll vibrate
 	private int vibrationAmplitude;
 	int laneManagerID;					//lane Manager Number
+	int laneAnimationCounter, laneAnimationSpeed;
 	boolean feederOn;			//Feeder on/off
 	boolean binExists;			
 	boolean lane1PurgeOn;
@@ -50,6 +51,8 @@ public class GraphicLaneManager{
 		graphicPanel = gp;
 		//bin = null;
 		//declaration of variables
+		laneAnimationCounter = 0;
+		laneAnimationSpeed = 1;			// default value
 		lane1Items = new ArrayList<GraphicItem>();
 		lane2Items = new ArrayList<GraphicItem>();
 		lane1QueueTaken = new ArrayList<Boolean>();
@@ -101,11 +104,18 @@ public class GraphicLaneManager{
 	public void paintLane(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
 
-		// Draw feeder
-		g2.drawImage(lane1Icon.getImage(), lane_xPos+75, lane_yPos+20, null);
-		g2.drawImage(lane2Icon.getImage(), lane_xPos+75, lane_yPos+100, null);
-		g2.drawImage(divergeLaneIcon.getImage(), lane_xPos+210, lane_yPos+20, null);
-
+		// Draw lanes
+		// horizontal
+		Graphics2D g3 = (Graphics2D)g.create();
+		// vertical
+		g3.rotate(Math.toRadians(90),lane_xPos+210, lane_yPos+20);
+		g3.drawImage(new ImageIcon("Images/Lane/"+laneAnimationCounter/laneAnimationSpeed+".png").getImage(), lane_xPos+210, lane_yPos-25, 120, 40, null);
+		g3.dispose();	
+		g2.drawImage(new ImageIcon("Images/Lane/"+laneAnimationCounter/laneAnimationSpeed+".png").getImage(), lane_xPos+75, lane_yPos+20, 180, 40, null);
+		g2.drawImage(new ImageIcon("Images/Lane/"+laneAnimationCounter/laneAnimationSpeed+".png").getImage(), lane_xPos+75, lane_yPos+100, 180, 40, null);
+		laneAnimationCounter ++;
+		if(laneAnimationCounter == laneAnimationSpeed*7)		// 7 = number of images
+			laneAnimationCounter = 0;
 		for(int i = 0;i<lane1Items.size();i++)
 			lane1Items.get(i).paint(g2);
 		for(int i = 0;i<lane2Items.size();i++)

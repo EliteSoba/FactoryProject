@@ -279,7 +279,7 @@ public class MasterControl {
 
 	}
 
-
+	// command sent to agent or agents
 	// agentCmd is the giant parser that figures out
 	// what method to call on what agent.
 
@@ -373,7 +373,7 @@ public class MasterControl {
 		//...
 		return false; // Default is false.
 	}
-
+	// command sent to client
 	// clientCmd figures out which partHandler to use sendCmd on
 	// and then sends it.
 
@@ -394,7 +394,7 @@ public class MasterControl {
 		String c = cmd.get(2); // CommandType
 		String d = "";
 
-		for(int i = 3; i < cmd.size(); i++){  // Command
+		for(int i = 3; i < cmd.size(); i++){  // Command ... put command into string form
 			d+= cmd.get(i)+" ";
 		}
 
