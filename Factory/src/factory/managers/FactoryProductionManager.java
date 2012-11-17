@@ -103,7 +103,7 @@ public class FactoryProductionManager extends Client {
 				String desiredPartImagePath = pCmd.get(2); 
 				((FactoryProductionPanel) graphics).moveGantryRobotToPickup(desiredPartImagePath);
 			}
-			else if (identifier.equals("getnewbin"))
+			else if (identifier.equals("bringbin"))
 			{
 				int feederNumber = Integer.valueOf(pCmd.get(2)); 
 				((FactoryProductionPanel) graphics).moveGantryRobotToFeederForDropoff(feederNumber);

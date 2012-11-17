@@ -89,6 +89,7 @@ public abstract class Agent {
 	
 	/** MESSAGE from the animation, notifying the agent that the animation is done. **/
 	public void msgAnimationDone() {
+		debug("msgAnimationDone() received by Agent");
 		animation.release();
 	}
 
