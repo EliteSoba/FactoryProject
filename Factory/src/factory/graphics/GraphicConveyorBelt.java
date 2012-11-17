@@ -1,18 +1,19 @@
 package factory.graphics;
+
 import java.awt.*;
 import javax.swing.*;
 
 /**
- * @author Tobias Lee <br>
+ * @author Tobias Lee <p>
  * <b>{@code GraphicConveyorBelt.java}</b> (50x720) <br>
  * This displays and animates the conveyer belts,
  * as well as any kits entering/exiting the factory (1 of each)
  */
 
 public class GraphicConveyorBelt {
-	/**The x value of the Conveyor Belt*/
+	/**The x coordinate of the Conveyor Belt*/
 	private int x;
-	/**The y value of the Conveyor Belt*/
+	/**The y coordinate of the Conveyor Belt*/
 	private int y;
 	/**The current time in the animation*/
 	private int t;
@@ -123,8 +124,9 @@ public class GraphicConveyorBelt {
 	 * @param v The velocity at which the belt moves
 	 */
 	public void moveBelt(int v) {
+		//Only animates if kit is being imported/exported
 		if (kitin() && !pickUp || kitout() && export)
-		t += v;
+			t += v;
 		if (t >= 50)
 			t = 0;
 		
@@ -132,14 +134,12 @@ public class GraphicConveyorBelt {
 		if (kitin()) {
 			if (kitIn.getY() <= y+300)
 				kitIn.moveY(v);
-			if (kitIn.getY() >= y+305) {
-				//Kit in completion
+			if (kitIn.getY() > y+300) {
+				//Kit import complete
 				if (!pickUp)
-					GP.newEmptyKitDone();
+					GP.newEmptyKitDone(); //Messages GraphicPanel about task completion 
 				pickUp = true;
 			}
-			if (kitIn.getY() >= y+height)
-				kitIn = null;
 		}
 		
 		//Moves the outgoing kit along a path
@@ -149,7 +149,7 @@ public class GraphicConveyorBelt {
 				//Kit export complete
 				kitOut = null;
 				export = false;
-				GP.exportKitDone();
+				GP.exportKitDone(); //Messages GraphicPanel about task completion
 			}
 		}
 	}
@@ -199,7 +199,7 @@ public class GraphicConveyorBelt {
 	
 	/**
 	 * Gets the y coordinate of this Conveyor Belt
-	 * @return The y coordinate of htis Conveyor Belt
+	 * @return The y coordinate of this Conveyor Belt
 	 */
 	public int getY() {
 		return y;
