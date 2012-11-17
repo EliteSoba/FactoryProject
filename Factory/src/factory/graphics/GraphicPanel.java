@@ -181,6 +181,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		partsRobot.setDestination(WIDTH/2-200, HEIGHT/2);
 	}
 	
+	public void feedFeeder(int feederNum) {
+		feedLane(feederNum*2);
+	}
+	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
 		/*//Testing for quick feed
 		lane[(laneNum) / 2].bin = new GraphicBin(new Part("eyes"));
