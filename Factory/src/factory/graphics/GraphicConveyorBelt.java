@@ -11,6 +11,7 @@ import javax.swing.*;
  */
 
 public class GraphicConveyorBelt {
+	
 	/**The x coordinate of the Conveyor Belt*/
 	private int x;
 	/**The y coordinate of the Conveyor Belt*/

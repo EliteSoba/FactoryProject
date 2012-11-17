@@ -1,29 +1,47 @@
 package factory.graphics;
+
 import java.awt.*;
-import javax.swing.*;
 import java.util.*;
+
+/**
+ * @author Tobias Lee <p>
+ * <b>{@code GraphicKit.java}</b> (40x80)<br>
+ * A graphical representation of a Kit
+ */
 
 public class GraphicKit {
 	
-	/*GraphicKit.java (40x80) - Tobias Lee
-	 * This class paints a graphical representation of a kit
-	 */
-	
-	private int x, y; //coordinates at which it's painted
-	private int direction; //2,4,6,8 direction of kit
+	/**The x coordinate of the Item*/
+	private int x;
+	/**The y coordinate of the Item*/
+	private int y;
+	/**The direction the Kit is facing with 8, 6, 2, 4 being North, East, South, and West respectively*/
+	private int direction;
+	/**The Items the Kit is holding*/
 	private ArrayList<GraphicItem> items;
-	public static int width = 40, height = 80; //Static size of a Kit
+	/**The width of the Kit*/
+	public static int width = 40;
+	/**The height of the Kit*/
+	public static int height = 80;
 	
-	public GraphicKit(int m, int n) {
+	/**
+	 * Creates a Kit at the given x and y coordinates
+	 * @param x The initial x coordinate of the Kit
+	 * @param y The initial y coordinate of the Kit
+	 */
+	public GraphicKit(int x, int y) {
 		//Constructor
-		x = m;
-		y = n;
+		this.x = x;
+		this.y = y;
 		direction = 4;
 		items = new ArrayList<GraphicItem>();
 	}
 	
+	/**
+	 * Paints the Kit
+	 * @param g The specified graphics window
+	 */
 	public void paint(Graphics g) {
-		//Paints the Kit
 		if (direction == 4 || direction == 6) {
 			g.setColor(new Color(241, 198, 67));
 			g.fillRect(x, y, width, height);
@@ -49,6 +67,10 @@ public class GraphicKit {
 		paintItems(g);
 	}
 	
+	/**
+	 * Paints the Items in the Kit
+	 * @param g The specified graphics window
+	 */
 	public void paintItems(Graphics g) {
 		validateItems();
 		for (int i = 0; i < items.size(); i++) {
@@ -56,62 +78,9 @@ public class GraphicKit {
 		}
 	}
 	
-	public void moveY(int v) {
-		//Moves down v units
-		y += v;
-	}
-	
-	public void move(int x, int y) {
-		//Moves to the given x and y coordinates
-		this.x = x;
-		this.y = y;
-	}
-	
-	public void moveX(int v) {
-		//Moves right v units
-		x += v;
-	}
-	
-	public int getX() {
-		//Returns x
-		return x;
-	}
-	
-	public void setX(int x) {
-		//Sets x
-		this.x = x;
-	}
-	
-	public int getY() {
-		//Returns y
-		return y;
-	}
-	
-	public void setY(int y) {
-		//Sets y
-		this.y = y;
-	}
-	
-	public void setDirection(int d) {
-		direction = d;
-	}
-	
-	public int getDirection() {
-		return direction;
-	}
-	
-	public void addItem(GraphicItem item) {
-		items.add(item);
-	}
-	
-	public GraphicItem getItem(int index) {
-		if (index >= items.size())
-			return items.get(items.size()-1);
-		if (index < 0)
-			return items.get(0);
-		return items.get(index);
-	}
-	
+	/**
+	 * Repositions the Items in the Kit
+	 */
 	public void validateItems() {
 		for (int i = 0; i < items.size(); i++) {
 			switch (direction) {
@@ -124,6 +93,102 @@ public class GraphicKit {
 					items.get(i).setY(y+(i%4)*21+1);
 			}
 		}
+	}
+	
+	/**
+	 * Moves the Kit horizontally
+	 * @param v The horizontal distance to move
+	 */
+	public void moveX(int v) {
+		x += v;
+	}
+	
+	/**
+	 * Moves the Kit vertically
+	 * @param v The vertical distance to move
+	 */
+	public void moveY(int v) {
+		y += v;
+	}
+	
+	/**
+	 * Moves the Kit to the given position
+	 * @param x The x coordinate to move to
+	 * @param y The y coordinate to move to
+	 */
+	public void move(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	/**
+	 * Sets the x coordinate of the Kit
+	 * @param x The new x coordinate of the Kit
+	 */
+	public void setX(int x) {
+		this.x = x;
+	}
+	
+	/**
+	 * Sets the y coordinate of the Kit
+	 * @param y The new y coordinate of the Kit
+	 */
+	public void setY(int y) {
+		this.y = y;
+	}
+	
+	/**
+	 * Gets the x coordinate of the Kit
+	 * @return The x coordinate of the Kit
+	 */
+	public int getX() {
+		return x;
+	}
+	
+	/**
+	 * Gets the y coordinate of the Kit
+	 * @return The y coordinate of the Kit
+	 */
+	public int getY() {
+		return y;
+	}
+	
+	/**
+	 * Sets the direction of the Kit
+	 * @param d The new direction of the Kit
+	 */
+	public void setDirection(int d) {
+		direction = d;
+	}
+	
+	/**
+	 * Gets the direction of the Kit
+	 * @return The direction of the Kit
+	 */
+	public int getDirection() {
+		return direction;
+	}
+	
+	/**
+	 * Adds an Item to the Kit
+	 * @param item The Item to be added to the Kit
+	 */
+	public void addItem(GraphicItem item) {
+		items.add(item);
+	}
+	
+	/**
+	 * Gets the Item at the given index of the Kit, or the Item at the nearest valid index
+	 * @param index The index of the item to retrieve
+	 * @return The Item at the given index
+	 * @exception ArrayIndexOutOfBoundsException If there is nothing in the Kit
+	 */
+	public GraphicItem getItem(int index) {
+		if (index >= items.size())
+			return items.get(items.size()-1);
+		if (index < 0)
+			return items.get(0);
+		return items.get(index);
 	}
 	
 }

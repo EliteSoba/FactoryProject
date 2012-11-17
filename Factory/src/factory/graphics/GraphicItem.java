@@ -4,12 +4,13 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * @author Minh La, Tobias Lee, and George Li<p>
+ * @author Minh La, Tobias Lee, and George Li <p>
  * <b>{@code GraphicItem.java}</b> (20x20)<br>
  * This is the graphical representation of a Part
  */
 
 public class GraphicItem {
+	
 	/**The x coordinate of the Item*/
 	private int x;
 	/**The y coordinate of the Item*/
