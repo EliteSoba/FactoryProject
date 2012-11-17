@@ -83,41 +83,43 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	
 	public void moveGantryRobotToFeederForDropoff(int feederIndex)
 	{
-		if(lane[feederIndex].hasBin())
-		{
+		// Error checking code has temporarily(?) been commented out as requested by Alfonso
+		//if(lane[feederIndex].hasBin())
+		//{
 			//System.out.println("1");
-			System.err.println("Can't dropoff: feeder " + feederIndex + " (0-based index) already has a bin!");
-			gantryRobotArrivedAtFeederForDropoff();
-		}
-		else if(!gantryRobot.hasBin())
-		{
+			//System.err.println("Can't dropoff: feeder " + feederIndex + " (0-based index) already has a bin!");
+			//gantryRobotArrivedAtFeederForDropoff();
+		//}
+		//else if(!gantryRobot.hasBin())
+		//{
 			//System.out.println("2");
-			System.err.println("Can't dropoff: gantry robot does not have a bin!");
-			gantryRobotArrivedAtFeederForDropoff();
-		}
-		else
-		{
+			//System.err.println("Can't dropoff: gantry robot does not have a bin!");
+			//gantryRobotArrivedAtFeederForDropoff();
+		//}
+		//else
+		//{
 			//System.out.println("3");
 			gantryRobot.setState(3);
 			gantryRobot.setDestinationFeeder(feederIndex);
 			gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
 			gantryRobotArrivedAtFeederForDropoff();
-		}
+		//}
 	}
 	
 	public void moveGantryRobotToFeederForPickup(int feederIndex)
 	{
-		if(!lane[feederIndex].hasBin())
-		{
-			System.err.println("Can't pickup: no bin at feeder " + feederIndex + " (0-based index)!");
-			gantryRobotArrivedAtFeederForPickup();
-		}
-		else
-		{
+		// Error checking
+		//if(!lane[feederIndex].hasBin())
+		//{
+		//	System.err.println("Can't pickup: no bin at feeder " + feederIndex + " (0-based index)!");
+		//	gantryRobotArrivedAtFeederForPickup();
+		//}
+		//else
+		//{
 			gantryRobot.setState(5);
 			gantryRobot.setDestinationFeeder(feederIndex);
 			gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
-		}
+		//}
 	}
 	
 	//CHANGE TO 0 BASE
