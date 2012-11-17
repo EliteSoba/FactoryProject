@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class KitAssemblyPanel extends GraphicPanel implements ActionListener{
 	
-	/*GraphicKitAssemblyManager.java (350x720) - Tobias Lee
+	/*GraphicKitAssemblyManager.java (280x720) - Tobias Lee
 	 * This is the graphical display of the Kit Assembly Manager
 	 * Currently, this displays a conveyer belt and its kits, and a kitting station
 	 * and animates the two.

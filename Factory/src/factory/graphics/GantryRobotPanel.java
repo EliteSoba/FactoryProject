@@ -14,7 +14,7 @@ import factory.Part;
 
 public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 	
-	public static final int WIDTH = 400, HEIGHT = 720;
+	public static final int WIDTH = 300, HEIGHT = 720;
 	
 	public GantryRobotPanel(JFrame GR) {
 		super();
@@ -27,7 +27,7 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 		for (int i = 0; i < lane.length; i++)
 			lane[i] = new GraphicLaneManager(-200, 160*i + 50, i, this);
 		
-		gantryRobot = new GantryRobot(WIDTH-150,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
+		gantryRobot = new GantryRobot(WIDTH-125,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
 		
 		(new Timer(delay, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -57,23 +57,6 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 			gantryRobotArrivedAtFeederForDropoff();
 		}
 	}
-	
-	/*public void paint(Graphics g) {
-		g.setColor(new Color(200, 200, 200));
-		g.fillRect(0, 0, getWidth(), getHeight());
-		if (lane != null)
-			for (int i = 0; i < lane.length; i++) {
-				if (lane[i] != null)
-					lane[i].paintFeeder(g);
-			}
-		
-		final Graphics2D g4 = (Graphics2D)g.create();
-		g4.rotate(Math.toRadians(360-gantryRobot.getAngle()), gantryRobot.getX()+gantryRobot.getImageWidth()/2, gantryRobot.getY()+gantryRobot.getImageHeight()/2);
-		gantryRobot.paint(g4);
-		// Draw bin gantryRobot is carrying
-		
-		g4.dispose();
-	}*/
 	
 	public void actionPerformed(ActionEvent arg0) {
 		gantryRobotStateCheck();
