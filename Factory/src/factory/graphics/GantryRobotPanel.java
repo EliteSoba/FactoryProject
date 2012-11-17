@@ -77,7 +77,7 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 		do {
 			command = kbr.nextLine();
 			switch (command.charAt(0)) {
-			case 'n': gr.moveGantryRobotToPickup("IMAGE PATH"); break;
+			case 'n': gr.moveGantryRobotToPickup(command.substring(1)); break;
 			case '1': gr.moveGantryRobotToFeeder(0); break;
 			case '2': gr.moveGantryRobotToFeeder(1); break;
 			case '3': gr.moveGantryRobotToFeeder(2); break;

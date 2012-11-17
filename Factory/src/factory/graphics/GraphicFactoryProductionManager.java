@@ -142,7 +142,7 @@ public class GraphicFactoryProductionManager extends JFrame {
 	
 	public void getBin()
 	{
-		panel.moveGantryRobotToPickup("IMAGE FILE PATH GOES HERE LATER");
+		panel.moveGantryRobotToPickup("sword");
 	}
 	
 	public void moveGantryToFeeder1Pickup()

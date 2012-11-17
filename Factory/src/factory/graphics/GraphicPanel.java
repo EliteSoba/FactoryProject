@@ -118,6 +118,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void moveGantryRobotToPickup(String path)
 	{
 		gantryRobot.setState(1);
+		gantryRobot.setPartPath(path);
 		gantryRobot.setDestination(WIDTH-100,-100);
 	}
 	
@@ -292,7 +293,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		{
 			gantryRobot.setState(0);
 			// Give gantry robot a bin
-			gantryRobot.giveBin(new GraphicBin(new Part("Test Item")));
+			gantryRobot.giveBin(new GraphicBin(new Part(gantryRobot.getPartPath())));
 			gantryRobotArrivedAtPickup();
 		}
 		else if(gantryRobot.getState() == 4)		// gantry robot reached feeder for dropoff
@@ -335,7 +336,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		else
 			System.out.println(message + command);
 	}
-	
+	/**TODO: THIS IS SO I CAN FIND THE DONES*/
 	public void newEmptyKitDone() {
 		sendMessage("cca cnf");
 	}

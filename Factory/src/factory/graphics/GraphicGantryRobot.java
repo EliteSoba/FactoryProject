@@ -21,6 +21,7 @@ class GraphicGantryRobot
 	GraphicBin bin;
 	boolean hasBin;
 	Image binImage;
+	String partPath;
 	
 	public GraphicGantryRobot()
 	{
@@ -46,6 +47,8 @@ class GraphicGantryRobot
 		imageHeight = init_imageHeight;
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
 		binImage = Toolkit.getDefaultToolkit().getImage("Images/binCrate.png");
+		
+		partPath = "Images/eyesItem.png";
 	}
 	
 	public void setDestination(int init_fx, int init_fy)
@@ -114,6 +117,14 @@ class GraphicGantryRobot
 	public boolean hasBin()
 	{
 		return hasBin;
+	}
+	public void setPartPath(String path)
+	{
+		partPath = path;
+	}
+	public String getPartPath()
+	{
+		return partPath;
 	}
 	public void giveBin(GraphicBin init_bin)
 	{

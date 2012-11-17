@@ -12,7 +12,6 @@ import javax.swing.*;
 
 public class GraphicKittingRobot {
 
-	
 	/**The x coordinate of the Kit Robot*/
 	private int x;
 	/**The y coordinate of the Kit Robot*/
