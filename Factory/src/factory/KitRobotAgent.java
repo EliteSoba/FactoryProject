@@ -16,7 +16,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public Stand stand;
 	public Conveyor conveyor;
 
-	String name;
+	public String name;
 	
 	Kit holding = null;
 	Semaphore standApproval = new Semaphore(0); //Semaphore for waiting for stand
@@ -242,7 +242,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+			debug("Got the go from the Stand");
 		//Here the stand gave the kit robot clearance
 		//Can assume that the kit robot has exclusive access to the stand here
 
