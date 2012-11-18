@@ -105,7 +105,6 @@ public class MasterControl {
 		// At this point, all of the sockets are connected, PartHandlers have been created
 		// The TreeMaps are updated with all of the relevant data, and the Factory can go.
 		startAgents();
-		partOccupied.put("multi", false);
 
 		sendConfirm();
 		// At this point, all of the parts have been notified that
@@ -171,11 +170,18 @@ public class MasterControl {
 		kitRobot = new KitRobotAgent(this,conveyor);
 
 		// Instantiate the Stand
-		stand = new StandAgent(this, kitRobot);
+		//stand = new StandAgent(); // bad code
+
 
 		// Instantiate the FCS
 		fcs = new FCSAgent(gantry,partsRobot, this);
-		
+
+
+		// SET A FEW THINGS
+		conveyor.setKitRobot(kitRobot);
+		kitRobot.setStand(stand);
+		conveyor.setFCS(fcs);
+
 
 		// Set up the TreeMaps
 		laneAgentTreeMap.put("l0t", l0t);
@@ -224,7 +230,7 @@ public class MasterControl {
 		agentTreeMap.put("ga", gantry );
 		agentTreeMap.put("kra", kitRobot);
 		agentTreeMap.put("pra", partsRobot);
-		agentTreeMap.put("sa", stand);
+		//agentTreeMap.put("sa", stand);
 		agentTreeMap.put("va", vision);
 		agentTreeMap.put("fcsa", fcs);
 
@@ -409,20 +415,6 @@ public class MasterControl {
 					((FCSAgent) destination).editKitRecipe(oldkitname, kitname, partname1, partname2, partname3, partname4, 
 							partname5, partname6, partname7, partname8);
 				}
-				
-				if(cmd.get(3).equals("editpartname")){
-					//" #originalpartname #newpartname #newpartid #newfilepath 
-					//#newstabalizationtime #newpartdescription"
-					String originalpartname = cmd.get(4);
-					String newpartname = cmd.get(5);
-					int newpartid = Integer.valueOf(cmd.get(6));
-					String newfilepath = cmd.get(7);
-					int newstabalizationtime = Integer.valueOf(cmd.get(8));
-					String newpartdescription = cmd.get(9);
-					((FCSAgent) destination).editPartType(originalpartname, newpartname,
-							newpartid, newfilepath, newstabalizationtime, newpartdescription);
-				}
-
 			}
 
 
@@ -450,7 +442,7 @@ public class MasterControl {
 					String filepath = cmd.get(6);
 					int stabalizationtime = Integer.valueOf(cmd.get(7));
 					String partdescription = cmd.get(8);
-					((FCSAgent) destination).addPartType(partname, partid, filepath, stabalizationtime, partdescription);
+					((FCSAgent) destination).addPartType(partname, stabalizationtime, partdescription, partid, filepath);
 				}
 
 
@@ -461,7 +453,19 @@ public class MasterControl {
 
 				}
 
-				
+				if(cmd.get(3).equals("editpartname")){
+					//" #originalpartname #newpartname #newpartid #newfilepath 
+					//#newstabalizationtime #newpartdescription"
+					String originalpartname = cmd.get(4);
+					String newpartname = cmd.get(5);
+					int newpartid = Integer.valueOf(cmd.get(6));
+					String newfilepath = cmd.get(7);
+					int newstabalizationtime = Integer.valueOf(cmd.get(8));
+					String newpartdescription = cmd.get(9);
+					((FCSAgent) destination).editPartType(originalpartname, newpartname,
+							newpartid, newfilepath, newstabalizationtime, newpartdescription);
+				}
+
 				if(cmd.get(3).equals("addkitname")){
 					//"#kitname #partname1 #partname2 ... #partname8"
 					String kitname = cmd.get(4);
@@ -560,7 +564,69 @@ public class MasterControl {
 
 
 	}
-	
+	/*
+		// 0 = Source
+		// 1 = Destination
+		// 2 = CmdType
+		// 3 = Cmd OR if cnf, this would be optional identifier
+		// 4+ = Parameters
+		String s = checkCmd(cmd); //why is this different from agentCmd?
+		System.out.println(s);
+		String a = cmd.get(0); // Source
+		if(s != null){
+			if(clients.contains(a)){
+				PartHandler sourcePH = determinePH(a);
+				sourcePH.send("err failed to parse command XXX log "+s);
+			}
+			return false;
+		}
+
+		String b = cmd.get(1); // Destination
+		String c = cmd.get(2); // CommandType
+		String d = "";
+
+		for(int i = 3; i < cmd.size(); i++){  // Command ... put command into string form 
+			d+= cmd.get(i)+" ";
+		}
+
+		String fullCmd = envelopeCmd(c, d);
+		  //Why is this necessary? Now I can't pass my parameters or check my commands...
+
+		System.out.println("Server received ... "+cmd+" from "+a);
+		//System.out.println("Server is about to send ... "+fullCmd);
+		return false;
+
+		if (cmd.get(2).equals("set")){
+
+		}
+		else if( cmd.get(2).equals("set")){
+
+		} else if( cmd.get(2).equals("cmd")){
+
+		}
+
+		if (b.equals("multi")){
+			ArrayList<PartHandler> destinations = getDestinations(cmd.get(3));
+			if(destinations == null){
+				return false;
+			} else {
+				for(PartHandler x : destinations){
+					if(!sendCmd(x, fullCmd)){
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+ else {
+			PartHandler destinationPH = determinePH(b);
+			boolean result = sendCmd(destinationPH, fullCmd);
+			return result;
+		} //TEMPORARILY IN HIBERNATION FOR V.1 (NOT THE BEST USE OF OUR TIME TO FIX)
+
+
+	}
+	 */
 	// getDestinations parses the command and determines which Clients need to receive it.
 
 	private ArrayList<PartHandler> getDestinations(String myCmd){
