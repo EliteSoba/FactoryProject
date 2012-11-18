@@ -85,22 +85,24 @@ public class ConveyorAgent extends Agent implements Conveyor {
 
 	private void exportKit() {
 		debug("Exporting Kit");
-		server.command("ca fpm cmd exportKitFromCell");
-		
-		/**
-		  try {
-			debug("Waiting on the server to finish the animation of exporting Kit");
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		 */
+		DoKitExportAnimation();
 		debug("Export Animation Completed");
 	    fcs.msgKitIsExported(kitAtConveyor);
 		kitAtConveyor = null;
 		stateChanged();
 	}
 
+	////Animations
+	private void DoKitExportAnimation() {
+		debug("doing DoKitExport Animation");
+		server.command("ca fpm cmd exportKitFromCell");
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	////Misc / Hacks
 	public Kit getAtConveyor() {
 		return kitAtConveyor;

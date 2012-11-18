@@ -57,26 +57,27 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		    	//After this timer, the graphics needs to play the new kit animation and then after tell the ConveyorAgent about the new empty kit
 		    	//The message to tell the Conveyor about the new kit is Conveyor.msgHeresEmptyKit(new Kit());
 		    	
-		    	// Tell server to do animation of moving empty kit from conveyor to the topSlot of the stand
-				//server.sendNewEmptyKit();
+		    	DoEmptyKitArrivingAnimation();
+		    	conveyor.msgHeresEmptyKit(new Kit());
+		    	conveyor_state = Conveyor_State.NO_ACTION;
 		    	server.command("cca fpm cmd emptyKitEntersCell");
-				
-				// Wait until the animation is done
-				try {
-					debug("Waiting on the server to finish the animation sendNewEmptyKit()");
-					animation.acquire();
-					//should tell the Conveyor now about the new kit before setting state to no_action
-					conveyor.msgHeresEmptyKit(new Kit());
-					conveyor_state = Conveyor_State.NO_ACTION;
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				stateChanged();
 		    }
 		}, delivery_time);
-		stateChanged();
 	}
 	
-	// Hacks / MISC
+	////Animations
+	private void DoEmptyKitArrivingAnimation() {
+		debug("doing EmptyKitArriving Animation");
+		server.command("cca fpm cmd emptyKitEntersCell");
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//// Hacks / MISC
 	public void setConveyor(Conveyor c) {
 		this.conveyor = c;
 	}

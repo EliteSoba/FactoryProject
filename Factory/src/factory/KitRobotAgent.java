@@ -187,17 +187,9 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public void dumpKit() {
 		//action for dumping a bad kit
 		debug("KitRobot dumping bad kit");
-		//server.dumpKit();
-		server.command("kra fpm cmd dumpKitAtSlot inspectionSlot");
-
-		// Wait until the animation is done
-		try {
-			debug("Waiting on the server to finish the animation dumpKit()");
-			animation.acquire();
-			debug("Animation dumpKit() was completed");
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		
+		DoDumpKitAtSlot("inspectionSlot");
+		debug("Dumping animation complete");
 		
 		holding = null;
 		stand.setSlotKit("inspectionSlot", null);
@@ -222,16 +214,8 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		}
 		
 		holding = stand.getSlotKit("inspectionSlot");
-		server.command("kra fpm cmd putInspectionKitOnConveyor");
 		
-		// Wait until the animation is done
-		try {
-			debug("Waiting on the server to finish the animation outKit()");
-			animation.acquire();
-			debug("Animation outKit() was completed");
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		DoMoveInspectedKitToConveyor();
 		
 		//Animation is now done, kit is on the conveyor
 		conveyor.msgExportKit(holding);
@@ -260,7 +244,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		}
 		
 		//Here the stand gave the kit robot clearance
-		//Can assume that hte kit robot has exclusive access to the stand here
+		//Can assume that the kit robot has exclusive access to the stand here
 
 		//new kit is picked up by the kit robot from the conveyor
 		holding = new Kit();
@@ -268,14 +252,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		conveyor.setAtConveyor(null);
 		
 		//Here do the animation for picking up the kit from the conveyor
-		server.command("kra fpm cmd putEmptyKitAtSlot "+pos);
-
-		try {
-			debug("Kit robot is taking empty kit from conveyor");
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		DoPutEmptyKitAt(pos);
 		debug("Kit robot is taking empty kit from conveyor");
 		
 		stand.setSlotKit(pos, this.holding);
@@ -296,15 +273,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		if (stand.getSlotKit("topSlot") != null) {
 			if (stand.getSlotKit("topSlot").state.equals(KitState.INCOMPLETE)) {
 				//do animation of dumping topSlot
-				server.command("kra fpm cmd dumpKitAtSlot topSlot");
-				
-				// Wait until the animation is done
-				try {
-					debug("Waiting on the server to finish the animation of dumping the bottom kit");
-					animation.acquire();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				DoDumpKitAtSlot("topSlot");
 				stand.setSlotKit("topSlot", null);
 				stand.setSlotState("topSlot", MySlotState.EMPTY);
 			}
@@ -312,15 +281,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		if (stand.getSlotKit("bottomSlot") != null) {
 			if (stand.getSlotKit("bottomSlot").state.equals(KitState.INCOMPLETE)) {
 				//do animation of dumping bottomSlot
-				server.command("kra fpm cmd dumpKitAtSlot bottomSlot");
-				
-				// Wait until the animation is done
-				try {
-					debug("Waiting on the server to finish the animation of dumping the bottom kit");
-					animation.acquire();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				DoDumpKitAtSlot("bottomSlot");
 				stand.setSlotKit("bottomSlot", null);
 				stand.setSlotState("bottomSlot", MySlotState.EMPTY);
 			}
@@ -345,16 +306,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		//method for KitRobot moving a kit to the inspection slot
 		//Can assume that has exclusive access to the Stand during this
 		debug("Executing moveToInspectionSpot for the" + pos);
-
-		server.command("kra fpm cmd moveKitToInspectionSlot " + pos);
-		
-		// Wait until the animation is done
-		try {
-			debug("Waiting on the server to finish the animation moveEmptyKitToSlot()");
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		DoMoveKitToInspection(pos);
 		debug("Animation moveKitFromSlotToInspection() was completed");
 		
 		stand.setSlotKit("inspectionSlot", stand.getSlotKit(pos));
@@ -367,7 +319,48 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stateChanged();
 	}
 	
-	//Hacks / MISC
+	////Animations
+	private void DoMoveInspectedKitToConveyor() {
+		debug("doing moveInspectedKitToConveyor");
+		server.command("kra fpm cmd putInspectionKitOnConveyor");
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void DoPutEmptyKitAt(String pos) {
+		debug("doing PutEmptyKitAt Animation for the "+ pos);
+		server.command("kra fpm cmd putEmptyKitAtSlot "+pos);
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void DoMoveKitToInspection(String pos) {
+		debug("doing MoveKitToInspection Animation.  moving the kit at the "+pos+" to the inspectionSlot");
+		server.command("kra fpm cmd moveKitToInspectionSlot " + pos);
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void DoDumpKitAtSlot(String pos) {
+		debug("doing DoDumpKitAtSlot Animation.  dumping the kit at "+pos);
+		server.command("kra fpm cmd dumpKitAtSlot "+pos);
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	////Hacks / MISC
 	public void setStand(Stand s) {
 		this.stand = s;
 	}
