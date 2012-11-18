@@ -17,7 +17,7 @@ public class NestAgent extends Agent implements Nest {
 	/** DATA **/
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
 	public Lane myLane;
-	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED }
+	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILZIED}
 	public NestState nestState = NestState.NORMAL;
 	public enum MyPartState {  NEEDED, REQUESTED }
 	public class MyPart {
@@ -93,6 +93,12 @@ public class NestAgent extends Agent implements Nest {
 	public void tellMyLaneIHaveStabilized() {
 		nestState = NestState.NORMAL;
 		myLane.msgNestHasStabilized();
+		stateChanged();
+	}
+	
+	public void tellMyLaneIHaveBecomeUnstable() {
+		nestState = NestState.HAS_DESTABILZIED;
+		myLane.msgNestHasDestabilized();
 		stateChanged();
 	}
 	

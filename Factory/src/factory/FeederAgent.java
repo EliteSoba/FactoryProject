@@ -68,7 +68,7 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 	}
 
-	public enum NestStability {UNSTABLE, STABLE }
+	public enum PictureState {UNSTABLE, STABLE, TOLD_VISION_TO_TAKE_PICTURE }
 	public enum MyLaneState {EMPTY, PURGING, CONTAINS_PARTS, BAD_NEST, 
 		TOLD_NEST_TO_DUMP, NEST_SUCCESSFULLY_DUMPED}
 	public enum JamState {MIGHT_BE_JAMMED, TOLD_TO_INCREASE_AMPLITUDE, 
@@ -78,7 +78,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 		public Lane lane;
 		public MyLaneState state = MyLaneState.EMPTY;
-		public NestStability stability = NestStability.UNSTABLE; // initially it should be empty. essentially unstbale
+		public PictureState picState = PictureState.UNSTABLE; // initially it should be empty. essentially unstbale
 		public JamState jamState;
 		public Part part;
 		public boolean readyForPicture = false;
@@ -107,17 +107,31 @@ public class FeederAgent extends Agent implements Feeder {
 		if(topLane.lane == lane)
 		{
 			debug("My top lane has stabilized and so it's ready for a picture.");
-			topLane.stability = NestStability.STABLE;
+			topLane.picState = PictureState.STABLE;
 		}
 		else if(bottomLane.lane == lane)
 		{
 			debug("My bottom lane has stabilized and so it's ready for a picture.");
-			bottomLane.stability = NestStability.STABLE;
+			bottomLane.picState = PictureState.STABLE;
 		}
 		
 		stateChanged();
 	}
 
+	public void msgNestHasDeStabilized(Lane lane) {
+		if(topLane.lane == lane)
+		{
+			debug("My top lane has destabilized!");
+			topLane.picState = PictureState.UNSTABLE;
+		}
+		else if(bottomLane.lane == lane)
+		{
+			debug("My bottom lane has destabilized!");
+			bottomLane.picState = PictureState.UNSTABLE;
+		}
+		
+		stateChanged();
+	}
 	public void msgEmptyNest(Nest n) {
 		debug("received msgEmptyNest()");
 		if (topLane.lane.getNest() == n) 
@@ -193,7 +207,13 @@ public class FeederAgent extends Agent implements Feeder {
 	public boolean pickAndExecuteAnAction() {
 
 		// Determine if the Feeder's associated Nests are ready for a picture
-		if ()
+		if (topLane.picState == PictureState.STABLE && 
+				bottomLane.picState == PictureState.STABLE)
+		{
+			topLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;
+			bottomLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;
+			vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
+		}
 		
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
 		{
@@ -517,37 +537,38 @@ public class FeederAgent extends Agent implements Feeder {
 		},(long) kOK_TO_PURGE_TIME * 1000); // okay to purge after this many seconds
 
 		
-		feederEmptyTimer.schedule(new TimerTask(){
-			public void run(){	
-					/** TODO: FIX THIS CODE, PERHAPS USE MSGING FROM THE ANIMATION. **/
-				partResettleTimer.schedule(new TimerTask() {
-					public void run() {
-						if (currentLane == topLane)
-							debug("My top lane is ready for a picture.");
-						else
-							debug("My bottom lane is ready for a picture.");
-
-						
-						currentLane.readyForPicture = true;
-
-						if (bottomLane.readyForPicture == true && topLane.readyForPicture == true)
-						{
-							System.out.println("1.0");
-							debug("both of my nests are ready for a picture.");
-							vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
-							topLane.readyForPicture = false;
-							bottomLane.readyForPicture = false;
-							System.out.println("1.1");
-						}
-						System.out.println("1.2");
-						stateChanged();
-						System.out.println("1.3");
-					}
-				}, 3000); // 3 seconds to resettle in the nest
-				System.out.println("1.4");
-			}
-		}, (long) kOK_TO_PURGE_TIME * 1000); // time it takes the part to move down the lane and fill a nest 
-		System.out.println("1.5");
+		// NOT NEEDED:
+//		feederEmptyTimer.schedule(new TimerTask(){
+//			public void run(){	
+//					/** TODO: FIX THIS CODE, PERHAPS USE MSGING FROM THE ANIMATION. **/
+//				partResettleTimer.schedule(new TimerTask() {
+//					public void run() {
+//						if (currentLane == topLane)
+//							debug("My top lane is ready for a picture.");
+//						else
+//							debug("My bottom lane is ready for a picture.");
+//
+//						
+//						currentLane.readyForPicture = true;
+//
+//						if (bottomLane.readyForPicture == true && topLane.readyForPicture == true)
+//						{
+//							System.out.println("1.0");
+//							debug("both of my nests are ready for a picture.");
+//							vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
+//							topLane.readyForPicture = false;
+//							bottomLane.readyForPicture = false;
+//							System.out.println("1.1");
+//						}
+//						System.out.println("1.2");
+//						stateChanged();
+//						System.out.println("1.3");
+//					}
+//				}, 3000); // 3 seconds to resettle in the nest
+//				System.out.println("1.4");
+//			}
+//		}, (long) kOK_TO_PURGE_TIME * 1000); // time it takes the part to move down the lane and fill a nest 
+//		System.out.println("1.5");
 
 		//	Timer.new(30000, { state = FeederState.OK_TO_PURGE; });
 		//		Timer.new(currentPart.averageDelayTime,{vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this) });

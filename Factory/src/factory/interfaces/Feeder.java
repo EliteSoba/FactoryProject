@@ -21,4 +21,6 @@ public interface Feeder {
 	public int getFeederNumber();
 
 	public void msgNestHasStabilized(Lane lane);
+
+	public void msgNestHasDeStabilized(Lane lane);
 }

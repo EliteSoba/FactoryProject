@@ -21,4 +21,6 @@ public void msgNestNeedsPart(Part pt);
 
 public void msgNestHasStabilized();
 
+public void msgNestHasDestabilized();
+
 }

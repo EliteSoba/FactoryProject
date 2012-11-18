@@ -22,8 +22,9 @@ public class LaneAgent extends Agent implements Lane {
 	public Nest myNest;
 	public int amplitude = 5;
 	public static int kMAX_AMPLITUDE = 20;
-	public enum NestState { NORMAL, HAS_STABILIZED, NEEDS_TO_DUMP, WAITING_FOR_DUMP_CONFIRMATION,
-		NEST_WAS_DUMPED, NEEDS_TO_INCREASE_AMPLITUDE }
+	public enum NestState { NORMAL, HAS_STABILIZED, HAS_DESTABILIZED,
+						NEEDS_TO_DUMP, WAITING_FOR_DUMP_CONFIRMATION,
+						NEST_WAS_DUMPED, NEEDS_TO_INCREASE_AMPLITUDE }
 	public NestState nestState;
 
 	public enum MyPartState {  NEEDED, REQUESTED }
@@ -56,6 +57,10 @@ public class LaneAgent extends Agent implements Lane {
 		stateChanged();
 	}
 
+	public void msgNestHasDestabilized() {
+		nestState = NestState.HAS_DESTABILIZED;
+		stateChanged();
+	}
 	public void msgDumpNest() {
 		nestState = NestState.NEEDS_TO_DUMP;
 		stateChanged();
@@ -76,6 +81,11 @@ public class LaneAgent extends Agent implements Lane {
 		if (nestState == NestState.HAS_STABILIZED)
 		{
 			tellFeederNestHasStabilized();
+			return true;
+		}
+		if (nestState == NestState.HAS_DESTABILIZED)
+		{
+			tellFeederNestHasDeStabilized();
 			return true;
 		}
 		if (nestState == NestState.NEEDS_TO_DUMP)
@@ -108,6 +118,8 @@ public class LaneAgent extends Agent implements Lane {
 	}
 
 
+
+
 	/** ACTIONS **/
 	public void tellFeederNestHasStabilized() {
 		nestState = NestState.NORMAL;
@@ -115,6 +127,12 @@ public class LaneAgent extends Agent implements Lane {
 		stateChanged();
 	}
 
+	private void tellFeederNestHasDeStabilized() {
+		nestState = NestState.NORMAL;
+		myFeeder.msgNestHasDeStabilized(this);
+		stateChanged();
+	}
+	
 	public void tellFeederNestWasDumped() {
 		//if (nestState != NestState.NEEDS_TO_INCREASE_AMPLITUDE) // unnecessary, will never happen
 		nestState = NestState.NORMAL;
