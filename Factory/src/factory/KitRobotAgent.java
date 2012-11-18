@@ -104,7 +104,6 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			actions.add(StandInfo.INSPECTION_SLOT_DONE);
 		}
 		stateChanged();
-		
 	}
 	
 	

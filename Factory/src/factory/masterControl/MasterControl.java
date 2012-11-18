@@ -235,6 +235,11 @@ public class MasterControl {
 	private void closeAgents() {
 		//Close all of the agents!!!!!!
 
+		f0.stopThread();
+		f1.stopThread();
+		f2.stopThread();
+		f3.stopThread();
+		
 		//Stopping all agent threads in agentTreeMap
 		for (Map.Entry<String, Agent> agentMap : agentTreeMap.entrySet()) {
 			agentMap.getValue().stopThread();
