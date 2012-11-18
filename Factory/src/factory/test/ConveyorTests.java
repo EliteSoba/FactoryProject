@@ -25,6 +25,19 @@ public class ConveyorTests extends TestCase {
 		 * Test for the Conveyor getting a request for a new Kit from the KitRobot
 		 */
 		initializeAgents();
+		
+		conveyor.pickAndExecuteAnAction();
+		
+		conveyor.msgNeedEmptyKit(); //Sending the nneedEmptyKit 
+		
+		conveyor.pickAndExecuteAnAction();
+		
+		conveyor.msgHeresEmptyKit(new Kit()); //The New Kit Arrives on the conveyor
+		
+		conveyor.pickAndExecuteAnAction();
+		
+		//Should have told the kitrobot about the empty kit that is at the conveyor
+		
 	}
 
 }
