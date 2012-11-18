@@ -28,7 +28,7 @@ public class SaveTest {
 		
 			kitConfigList = new HashMap<String,KitConfig>();
 			   
-			KitConfig newKitConfig = new KitConfig("Mr. Potato Head");
+			KitConfig newKitConfig = new KitConfig("Mr.PotatoHead");
 			newKitConfig.listOfParts.add(partsList.get("Eye"));
 			newKitConfig.listOfParts.add(partsList.get("Body"));	
 			newKitConfig.listOfParts.add(partsList.get("Hat"));
@@ -46,7 +46,27 @@ public class SaveTest {
 			newKitConfig.listOfParts.add(partsList.get("Arm"));
 			newKitConfig.listOfParts.add(partsList.get("Arm"));
 			kitConfigList.put(newKitConfig.kitName,newKitConfig);
-			
+
+			newKitConfig = new KitConfig("Cthulhu");
+			newKitConfig.listOfParts.add(partsList.get("Tentacle"));	
+			newKitConfig.listOfParts.add(partsList.get("Tentacle"));
+			newKitConfig.listOfParts.add(partsList.get("Tentacle"));
+			newKitConfig.listOfParts.add(partsList.get("Tentacle"));
+			newKitConfig.listOfParts.add(partsList.get("Tentacle"));
+			newKitConfig.listOfParts.add(partsList.get("Tentacle"));
+			newKitConfig.listOfParts.add(partsList.get("Tentacle"));
+			newKitConfig.listOfParts.add(partsList.get("Sword"));
+			kitConfigList.put(newKitConfig.kitName,newKitConfig);
+
+
+			newKitConfig = new KitConfig("PotatoDragon");
+			newKitConfig.listOfParts.add(partsList.get("Body"));	
+			newKitConfig.listOfParts.add(partsList.get("Wing"));
+			newKitConfig.listOfParts.add(partsList.get("Arm"));
+			newKitConfig.listOfParts.add(partsList.get("Eye"));
+			newKitConfig.listOfParts.add(partsList.get("Wing"));
+			newKitConfig.listOfParts.add(partsList.get("Cane"));
+			kitConfigList.put(newKitConfig.kitName,newKitConfig);
 			
 	}
 	public void saveData() {
