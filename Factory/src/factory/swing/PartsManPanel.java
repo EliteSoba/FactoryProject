@@ -70,7 +70,6 @@ public class PartsManPanel extends JPanel{
 		renderer = new PartsTableCellRenderer();
 		table = new JTable(model);
 		table.setDefaultRenderer(Integer.class, renderer);
-		table.setDefaultRenderer(Integer.class, renderer);
 		table.setDefaultRenderer(String.class, renderer);
 		table.setAutoCreateRowSorter(true);
 		table.addMouseListener(new MouseListener());
