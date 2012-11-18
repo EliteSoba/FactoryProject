@@ -94,7 +94,7 @@ public class GantryAgent extends Agent implements Gantry {
 	
 	private void DoGoGetNewBin(MyBin b) {
 		print("Going to get new Bin");
-		server.command("ga fpm cmd getnewbin " + b.pt.imagePath);
+		server.command("ga fpm cmd getnewbin " + b.pt.name);
 		try{
 			animation.acquire();
 		}

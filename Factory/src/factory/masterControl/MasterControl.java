@@ -594,12 +594,18 @@ public class MasterControl {
 
 
 		// TEMPORARY, FOR TESTING PURPOSES:
-		Part p0 = new Part("Eye");
-		Part p1 = new Part("Shoe");
+		Part p0 = new Part("eye");
+		Part p1 = new Part("shoe");
+		Part p2 = new Part("shoe");
 
+		//mc.n0t.msgYouNeedPart(p0);
+		
+		// shortcut testing
 		mc.f0.msgLaneNeedsPart(p1,mc.l0t); // request a part for the lane
 
-		mc.f0.msgLaneNeedsPart(p0,mc.l0t); // request a new part for the other lane
+		mc.f0.msgLaneNeedsPart(p0,mc.l0b); // request a new part for the other lane
+
+		mc.f0.msgLaneNeedsPart(p2,mc.l0t); // request a part for the lane
 
 		
 		//		mc.f0.msgLaneNeedsPart(p0, mc.l0t);		
