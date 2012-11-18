@@ -121,8 +121,8 @@ public class FactoryProductionManager extends Client {
 			// Commands from PartsRobotAgent
 			else if (identifier.equals("putpartinkit"))
 			{
-				int kitNumber = Integer.valueOf(pCmd.get(2));
-				((FactoryProductionPanel) graphics).movePartsRobotToStation(kitNumber);
+				int itemIndex = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).partsRobotPopItemToCurrentKit(itemIndex);
 			}
 			else if (identifier.equals("movetostand"))
 			{
