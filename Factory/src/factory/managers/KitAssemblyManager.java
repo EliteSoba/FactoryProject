@@ -20,7 +20,7 @@ public class KitAssemblyManager extends Client {
 			super(Client.Type.kam, null, null);
 			
 			buttons = new KitAssManPanel(this);
-			animation = new KitAssemblyPanel(this); //TODO does not currently work but will by 11/13 -->Tobi
+			animation = new KitAssemblyPanel(this);
 			
 			this.setInterface();
 		}
