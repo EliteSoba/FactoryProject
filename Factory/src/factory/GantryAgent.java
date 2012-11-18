@@ -65,11 +65,8 @@ public class GantryAgent extends Agent implements Gantry {
 		if (b.fdr.getFeederHasABinUnderneath() == true)
 				DoPickupPurgeBin(b); //animation message
 		
-		System.out.println("1");
 		DoGoGetNewBin(b);
-		System.out.println("2");
 		DoBringNewBin(b);
-		System.out.println("3");
 
 //		DoRefillPurgeBin(binConfig.binList.get(b.pt));
 //		DoBringRequestedBin(binConfig.binList.get(b.pt),b.fdr,b.pt);
