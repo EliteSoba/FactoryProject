@@ -103,6 +103,8 @@ public class GraphicLaneManager{
 		this.bin = bin;
 		bin.getBinType().setX(feederX+35);
 		bin.getBinType().setY(feederY+55);
+		feederPurgeTimer = 0;
+		feederPurged = false;
 		if (bin != null)
 			binExists = true;
 	}
