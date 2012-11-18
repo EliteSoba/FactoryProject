@@ -28,6 +28,11 @@ public class MockNest extends MockAgent implements Nest {
 //		System.out.println("received msgYouNeedPart("+part.name+").");
 		log.add(new LoggedEvent("msgYouNeedPart("+part.name+")")); 
 	}
+
+	@Override
+	public void msgPartsRobotGrabbingPartFromNest(int coordinate) {
+
+	}
 	
 	
 

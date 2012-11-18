@@ -78,14 +78,14 @@ public class LaneAgent extends Agent implements Lane {
 
 	/** SCHEDULER **/
 	public boolean pickAndExecuteAnAction() {
-		if (nestState == NestState.HAS_STABILIZED)
-		{
-			tellFeederNestHasStabilized();
-			return true;
-		}
 		if (nestState == NestState.HAS_DESTABILIZED)
 		{
 			tellFeederNestHasDeStabilized();
+			return true;
+		}
+		if (nestState == NestState.HAS_STABILIZED)
+		{
+			tellFeederNestHasStabilized();
 			return true;
 		}
 		if (nestState == NestState.NEEDS_TO_DUMP)

@@ -1,5 +1,5 @@
 package factory.test;
-/*
+
 import factory.LaneAgent;
 import factory.LaneAgent.MyPart;
 import factory.LaneAgent.MyPartState;
@@ -17,7 +17,7 @@ public class LaneTests extends TestCase {
 	Part p1;
 	
 	protected void setUp() throws Exception {
-		lane = new LaneAgent();
+		lane = new LaneAgent(null);
 		feeder = new MockFeeder("feeder");
 		nest = new MockNest("nest");
 		lane.setFeeder(feeder);
@@ -106,10 +106,41 @@ public class LaneTests extends TestCase {
     			feeder.log.containsString("msgNestWasDumped()"));
 	
 	}
+	
+	public void testMsgNestHasStabilized() {
+		lane.msgNestHasStabilized();
+		
+		assertTrue(lane.nestState == NestState.HAS_STABILIZED);
+
+		lane.pickAndExecuteAnAction();
+		
+		assertTrue(lane.nestState == NestState.NORMAL);
+
+		// Check to see if the feeder receives the appropriate message
+    	assertTrue("Feeder should have been told msgNestHasStabilized(). Event log: "
+    			+ feeder.log.toString(), 
+    			feeder.log.containsString("msgNestHasStabilized()"));
+
+	}
+	
+	public void testMsgNestHasDestabilized() {
+		lane.msgNestHasDestabilized();
+		
+		assertTrue(lane.nestState == NestState.HAS_DESTABILIZED);
+
+		lane.pickAndExecuteAnAction();
+		
+		assertTrue(lane.nestState == NestState.NORMAL);
+
+		// Check to see if the feeder receives the appropriate message
+    	assertTrue("Feeder should have been told msgNestHasDestabilized(). Event log: "
+    			+ feeder.log.toString(), 
+    			feeder.log.containsString("msgNestHasDestabilized()"));
+
+	}
+
 
 }
-
-*/
 
 
 
