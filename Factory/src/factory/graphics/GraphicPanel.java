@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 import factory.Part;
 import factory.client.*;
@@ -41,11 +42,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	// GANTRY
 	protected GraphicGantryRobot gantryRobot;
 	
-	public GraphicPanel() {
+	public GraphicPanel(int offset) {
 		WIDTH = 1100;
 		HEIGHT = 720;
 		am = null;
-		lane = null;
+		/*lane = null;
 		belt = null;
 		station = null;
 		kitRobot = null;
@@ -56,9 +57,29 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		isLaneManager = false;
 		isGantryRobotManager = false;
 		isKitAssemblyManager = false;
-		isFactoryProductionManager = false;
+		isFactoryProductionManager = false;*/
 		
 		flashImage = Toolkit.getDefaultToolkit().getImage("Images/flash3x3.png");
+		
+		belt = new GraphicConveyorBelt(0-offset, 0, this);
+		station = new GraphicKittingStation(200-offset, 191, this);
+		kitRobot = new GraphicKittingRobot(this, 70-offset, 250);
+		
+		// Parts robot client
+		// Add 8 nests
+		nests = new ArrayList<GraphicNest>();	
+		for(int i = 0; i < 8; i++)
+		{
+			GraphicNest newNest = new GraphicNest(510-offset,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
+			nests.add(newNest);
+		}
+
+		lane = new GraphicLaneManager [4];
+		for (int i = 0; i < lane.length; i++)
+			lane[i] = new GraphicLaneManager(510-offset, 160*i + 50, i, this);
+		
+		partsRobot = new GraphicPartsRobot(350-offset,360,0,5,5,10,100,100,"Images/robot1.png");
+		gantryRobot = new GraphicGantryRobot(950-offset,360,0,5,5,10,100,100,"Images/robot2.png");
 	}
 	
 	/**TODO: Kit Assembly Methods*/

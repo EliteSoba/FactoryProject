@@ -17,16 +17,16 @@ public class KitAssemblyPanel extends GraphicPanel implements ActionListener{
 	 */
 	
 	public KitAssemblyPanel(JFrame FKAM) {
-		super();
+		super(0);
 		WIDTH = 280;
 		isKitAssemblyManager = true;
 		
 		if (FKAM instanceof Client)
 			am = (Client)FKAM;
 		
-		belt = new GraphicConveyorBelt(0, 0, this);
+		/*belt = new GraphicConveyorBelt(0, 0, this);
 		station = new GraphicKittingStation(200, 191, this);
-		kitRobot = new GraphicKittingRobot(this, 70, 250);
+		kitRobot = new GraphicKittingRobot(this, 70, 250);*/
 		
 		(new Timer(delay, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
