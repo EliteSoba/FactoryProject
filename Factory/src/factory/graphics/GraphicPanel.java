@@ -226,6 +226,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void feedFeeder(int feederNum) {
 		//if(!lane[feederNum].lane1PurgeOn){	//If purging is on, cannot feed!
 		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].bin.getBinItems().clear();
+			for(int i = 0; i < lane[feederNum].bin.binSize;i++){		//unlimited items
+				lane[feederNum].bin.binItems.add(new GraphicItem(-40, 0, "Images/"+lane[feederNum].bin.partName+".png"));
+			}
 			if(lane[feederNum].hasBin() && lane[feederNum].bin.getBinItems().size() > 0){
 				lane[feederNum].laneStart = true;
 				lane[feederNum].feederOn = true;
@@ -240,6 +244,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		//end Test*/
 		//if(!lane[(laneNum) / 2].lane1PurgeOn){	//If purging is on, cannot feed!
 		if (isLaneManager || isFactoryProductionManager) {
+			lane[laneNum / 2].bin.getBinItems().clear();
+			for(int i = 0; i < lane[laneNum / 2].bin.binSize;i++){		//unlimited items
+				lane[laneNum / 2].bin.binItems.add(new GraphicItem(-40, 0, "Images/"+lane[laneNum / 2].bin.partName+".png"));
+			}
+			
 			if(lane[(laneNum) / 2].hasBin() && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
 				lane[(laneNum) / 2].laneStart = true;
 				lane[(laneNum) / 2].divergeUp = ((laneNum) % 2 == 0);

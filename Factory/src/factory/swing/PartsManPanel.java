@@ -70,12 +70,12 @@ public class PartsManPanel extends JPanel{
 		renderer = new PartsTableCellRenderer();
 		table = new JTable(model);
 		table.setDefaultRenderer(Integer.class, renderer);
-		table.setDefaultRenderer(Double.class, renderer);
+		table.setDefaultRenderer(Integer.class, renderer);
 		table.setDefaultRenderer(String.class, renderer);
 		table.setAutoCreateRowSorter(true);
 		table.addMouseListener(new MouseListener());
 		TableColumn column = null;
-		for (int i = 1; i < 2; i ++){
+		for (int i = 0; i < 2; i ++){
 			column = table.getColumnModel().getColumn(i);
 			if(i==0){
 				column.setPreferredWidth(2);
@@ -157,7 +157,9 @@ public class PartsManPanel extends JPanel{
 			idLabel = new JLabel("ID# : " + currentID);
 			descriptionLabel = new JLabel("Description : ");
 			nestStabalizationTimeLabel = new JLabel ("Nest Stabalization Time : ");
-			nestStabalizationTime = new JSpinner();
+			nestStabalizationTime = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+						JFormattedTextField tf = ((JSpinner.DefaultEditor) nestStabalizationTime.getEditor()).getTextField();
+						tf.setEditable(false);
 			description = new JTextArea("Enter description here", 2, 10);
 			description.setLineWrap(true);
 			description.setWrapStyleWord(true);
@@ -179,7 +181,7 @@ public class PartsManPanel extends JPanel{
 			c.gridy = 0;
 			c.gridwidth = 2;
 			c.fill = GridBagConstraints.VERTICAL;
-			c.insets = new Insets(0,0,20,0);
+			c.insets = new Insets(5,0,20,0);
 			this.add(title, c);
 			c.fill = GridBagConstraints.VERTICAL;
 			c.anchor = GridBagConstraints.LINE_START;
@@ -214,9 +216,9 @@ public class PartsManPanel extends JPanel{
 			c.gridx = 2;
 			c.gridy = 4;
 			c.fill = GridBagConstraints.VERTICAL;
-			c.insets = new Insets(0,20,20,0);
+			c.insets = new Insets(5,20,20,0);
 			this.add(previewFrame, c);
-			c.insets = new Insets(0,0,20,0);
+			c.insets = new Insets(5,0,20,0);
 			c.gridx = 0;
 			c.gridy = 5;
 			c.anchor = GridBagConstraints.LINE_START;
@@ -325,7 +327,8 @@ public class PartsManPanel extends JPanel{
 			idLabel = new JLabel("ID# : " + currentID);
 			descriptionLabel = new JLabel("Description : ");
 			nestStabalizationTimeLabel = new JLabel ("Nest Stabalization Time : ");
-			nestStabalizationTime = new JSpinner();
+			nestStabalizationTime = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+			JFormattedTextField tf = ((JSpinner.DefaultEditor) nestStabalizationTime.getEditor()).getTextField();
 			description = new JTextArea("Enter description here", 2, 10);
 			description.setLineWrap(true);
 			description.setWrapStyleWord(true);
@@ -348,7 +351,7 @@ public class PartsManPanel extends JPanel{
 			c.gridy = 0;
 			c.gridwidth = 2;
 			c.fill = GridBagConstraints.VERTICAL;
-			c.insets = new Insets(0,0,20,0);
+			c.insets = new Insets(5,0,20,0);
 			this.add(title, c);
 			c.fill = GridBagConstraints.VERTICAL;
 			c.gridwidth = 1;
@@ -383,9 +386,9 @@ public class PartsManPanel extends JPanel{
 			c.gridx = 2;
 			c.gridy = 4;
 			c.fill = GridBagConstraints.VERTICAL;
-			c.insets = new Insets(0,20,20,0);
+			c.insets = new Insets(5,20,20,0);
 			this.add(previewFrame, c);
-			c.insets = new Insets(0,0,20,0);
+			c.insets = new Insets(5,0,20,0);
 			c.gridx = 0;
 			c.gridy = 5;
 			c.fill = GridBagConstraints.VERTICAL;
@@ -435,7 +438,7 @@ public class PartsManPanel extends JPanel{
 				basePanel2.setVisible(false);
 			}else if(ae.getSource() == saveItem){
 
-				String testName;
+				String testName; //hi
 				name.setText(name.getText().replaceAll("\\s","")) ;
 				testName = name.getText().toUpperCase();
 				boolean nameTaken = false;

@@ -47,6 +47,7 @@ public class GraphicLaneManager{
 	int feederPurgeTimer;
 	int stabilizationCount[];
 	boolean isStable[];
+	int laneSpeed;
 
 	GraphicPanel graphicPanel;
 
@@ -62,7 +63,8 @@ public class GraphicLaneManager{
 		lane2Items = new ArrayList<GraphicItem>();
 		lane1QueueTaken = new ArrayList<Boolean>();
 		lane2QueueTaken = new ArrayList<Boolean>();
-		vX = -8; vY = 8;
+		laneSpeed = 8;				//Change speed of the lane later
+		vX = -laneSpeed; vY = laneSpeed;
 		laneStart = false;
 		divergeUp = false;
 		feederOn = false;
@@ -224,9 +226,12 @@ public class GraphicLaneManager{
 					lane1Items.get(j).setVX(vX);
 				}
 			}
-
+			System.out.println("size " + lane1QueueTaken.size());
+			
 			if(lane1Items.size() == 0){
 				lane1PurgeOn = false; //This is where the purge ends
+				//lane1QueueTaken.clear();
+				System.out.println("size " + lane1QueueTaken.size());
 				graphicPanel.purgeTopLaneDone(laneManagerID);
 			}
 			else{
@@ -282,7 +287,7 @@ public class GraphicLaneManager{
 				}
 			}
 		} // end of purge statements
-		else{
+		else{		//Normal lane processing
 			for(int i = 0;i<lane1Items.size();i++){
 				lane1Items.get(i).setX(lane1Items.get(i).getX() + lane1Items.get(i).getVX());
 				lane1Items.get(i).setY(lane1Items.get(i).getY() + lane1Items.get(i).getVY());
@@ -433,6 +438,7 @@ public class GraphicLaneManager{
 
 			if(lane2Items.size() == 0){
 				lane2PurgeOn = false; //This is where the purge ends
+				lane2QueueTaken.clear();
 				graphicPanel.purgeTopLaneDone(laneManagerID);
 			}
 			else{

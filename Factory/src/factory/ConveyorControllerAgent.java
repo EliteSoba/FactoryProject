@@ -12,7 +12,7 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	////Data	
 	Conveyor conveyor;
 	List<Kit> exported_kits = new ArrayList<Kit>();
-	enum Conveyor_State { WANTS_EMPTY_KIT, EMPTY_KIT_SENDING, NO_ACTION };
+	public enum Conveyor_State { WANTS_EMPTY_KIT, EMPTY_KIT_SENDING, NO_ACTION };
 	Conveyor_State conveyor_state = Conveyor_State.NO_ACTION;
 	
 	Timer timer = new Timer();
