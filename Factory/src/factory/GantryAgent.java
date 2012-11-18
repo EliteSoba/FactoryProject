@@ -7,24 +7,34 @@ import java.util.*;
 
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
-//test commit
+
 public class GantryAgent extends Agent implements Gantry {
 	public GantryAgent(MasterControl mc) {
 		super(mc); // needed for the server 
 		
 	}
-
+	// *** DATA ***
+	
+	//This is an list of myBins object that keeps track of the bins that the feeders need
 	public ArrayList<MyBin> myBins = new ArrayList<MyBin>();   
-	BinConfig binConfig;
 
+	//enum to keep track of the myBin object state.
 	enum MyBinState { NEEDED, DELIVERED}
 
+	/**
+	 * Private class that keeps track of a requested bin, and which part is needed, and which feeder it goes to
+	 */
 	public class MyBin {
 
 		public MyBinState state;
 		public Part pt;
 		public Feeder fdr;
 
+		/**
+		 * Constructor for MyBin object.
+		 * @param part Type of part needed.
+		 * @param feeder The feeder the parts are sent to.
+		 */
 		public MyBin(Part part, Feeder feeder){
 			this.state = MyBinState.NEEDED;
 			this.fdr = feeder;
@@ -34,15 +44,14 @@ public class GantryAgent extends Agent implements Gantry {
 
 	// *** MESSAGES ***
 
+	/**
+	 * This is a message that comes from a feeder that requests parts
+	 */
 	public void msgFeederNeedsPart(Part part, Feeder feeder) {
 		myBins.add(new MyBin(part, feeder));
 		stateChanged();
 	}
 
-	public void msgChangeGantryBinConfig(BinConfig binConfig) {
-		this.binConfig = binConfig;
-		stateChanged();
-	}
 
 
 	// *** SCHEDULER ***
@@ -60,6 +69,11 @@ public class GantryAgent extends Agent implements Gantry {
 
 
 	// *** ACTIONS ***
+	
+	/**
+	 * This method tells the gantry to go fetch a bin.
+	 * @param b This is the bin that the gantry is going to go fetch.
+	 */
 	private void goFetchTheRequestedBin(MyBin b) {
 		debug("goFetchTheRequestedBin");
 		if (b.fdr.getFeederHasABinUnderneath() == true)
@@ -67,17 +81,19 @@ public class GantryAgent extends Agent implements Gantry {
 		
 		DoGoGetNewBin(b);
 		DoBringNewBin(b);
-
-//		DoRefillPurgeBin(binConfig.binList.get(b.pt));
-//		DoBringRequestedBin(binConfig.binList.get(b.pt),b.fdr,b.pt);
 		
 		b.fdr.msgHereAreParts(b.pt);
-		b.state = MyBinState.DELIVERED; //is this needed?  Or do I just remove it per the line below?
-		//myBins.remove(b);
+		myBins.remove(b);
 		stateChanged();
 	}
 
-
+	// *** ANIMATION METHODS ***
+	
+	/**
+	 * This is an animation method that tells the gantry to go pick up a bin and place it under a feeder that current
+	 * doesn't have a bin.
+	 * @param b The bin that is requested.
+	 */
 	private void DoPickupPurgeBin(MyBin b) {
 		print("Picking up Purge Bin");
 		server.command("ga fpm cmd pickuppurgebin " + b.fdr.getFeederNumber());
@@ -89,6 +105,10 @@ public class GantryAgent extends Agent implements Gantry {
 		}
 	}
 	
+	/**
+	 * This is a method that tells the gantry to get the bin.
+	 * @param b The bin that is requested.
+	 */
 	private void DoGoGetNewBin(MyBin b) {
 		print("Going to get new Bin");
 		server.command("ga fpm cmd getnewbin " + b.pt.name);
@@ -100,6 +120,10 @@ public class GantryAgent extends Agent implements Gantry {
 		}
 	}
 	
+	/**
+	 * This is a method that tells the gantry to come back and drop off the bin
+	 * @param b The bin that is requested.
+	 */
 	private void DoBringNewBin(MyBin b) {
 		print("Bringing new Bin to the feeder");
 		server.command("ga fpm cmd bringbin " + b.fdr.getFeederNumber());

@@ -48,13 +48,13 @@ public class FCSAgent extends Agent implements FCS{
 		this.masterControl = mc; // for testing purposes
 		this.gantry = gantry;
 		this.partsRobot = partsRobot;
-		loadData();
+		//loadData();
 		//		testImport();
 	}
 	public FCSAgent(MasterControl mc){
 		super (mc);
 		this.masterControl = mc;
-		loadData();
+		//loadData();
 		//		testImport();
 	}
 
@@ -244,7 +244,7 @@ public class FCSAgent extends Agent implements FCS{
 
 	/**
 	 * This removes a kit configuration from the FCS Agent.
-	 * @param kitName The name of the kit yo uwant to remove.
+	 * @param kitName The name of the kit you want to remove.
 	 */
 	public void removeKitRecipe(String kitName){
 		kitRecipes.remove(kitName);
