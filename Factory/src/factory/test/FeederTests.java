@@ -33,7 +33,7 @@ public class FeederTests extends TestCase{
 		bottom = new MockLane("bottom");
 		gantry = new MockGantry("gantry");
 		
-		feeder = new FeederAgent("Feeder",0, top, bottom, gantry, null);
+		feeder = new FeederAgent("Feeder",0, top, bottom, gantry, null,null);
 		feeder.diverter = DiverterState.FEEDING_BOTTOM; // initial setting to test the switching of the lane diverter
 		
 		
@@ -52,7 +52,7 @@ public class FeederTests extends TestCase{
 		assertEquals(feeder.feederNumber,0);
 		System.out.println("feeder name = " + feeder.getName());
 
-		assertEquals(feeder.getName(),"Feeder0");
+		assertEquals(feeder.getName(),"f0");
 		
 	}
 	

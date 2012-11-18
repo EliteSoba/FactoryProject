@@ -8,6 +8,12 @@ import factory.test.mock.*;
 
 public class ConveyorControllerTests extends TestCase {
 	
+	MockConveyor conveyor;
+	
+	public void initializeAgents() {
+		
+	}
+	
 	@Test
 	public void testNewKitRequest() {
 		//Setting Up Agents and Mocks

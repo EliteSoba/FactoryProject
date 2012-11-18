@@ -108,6 +108,7 @@ public class GraphicLaneManager{
 	}
 	
 	public void purgeFeeder() {
+		bin.getBinItems().clear();
 		feederOn = false;
 		feederPurged = true;
 		feederPurgeTimer = 0;

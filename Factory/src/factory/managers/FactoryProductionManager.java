@@ -107,8 +107,8 @@ public class FactoryProductionManager extends Client {
 			}
 			else if (identifier.equals("getnewbin"))
 			{
-				String desiredPartImagePath = pCmd.get(2); 
-				((FactoryProductionPanel) graphics).moveGantryRobotToPickup(desiredPartImagePath);
+				String desiredPartName = pCmd.get(2); 
+				((FactoryProductionPanel) graphics).moveGantryRobotToPickup(desiredPartName);
 			}
 			else if (identifier.equals("bringbin"))
 			{
