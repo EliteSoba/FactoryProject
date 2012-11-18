@@ -121,8 +121,8 @@ public class FactoryProductionManager extends Client {
 			// Commands from PartsRobotAgent
 			else if (identifier.equals("putpartinkit"))
 			{
-				int kitNumber = Integer.valueOf(pCmd.get(2));
-				((FactoryProductionPanel) graphics).movePartsRobotToStation(kitNumber);
+				int itemIndex = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).partsRobotPopItemToCurrentKit(itemIndex);
 			}
 			else if (identifier.equals("movetostand"))
 			{
@@ -182,6 +182,12 @@ public class FactoryProductionManager extends Client {
 			// Commands from ConveyorControllerAgent
 			else if (identifier.equals("emptykitenterscell")) {
 				((FactoryProductionPanel) graphics).newEmptyKit();
+			}
+			
+			//Commands from VisionAgent
+			else if (identifier.equals("takepictureofnest")) {
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).cameraFlash(nestIndex);
 			}
 
 			
@@ -246,6 +252,8 @@ public class FactoryProductionManager extends Client {
 				error.concat(parsedCommand.get(i));
 			System.out.println(error);
 	   }
+	   else 
+		   System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 	
 	}
 			

@@ -14,17 +14,17 @@ import factory.*;
 
 public class LanePanel extends GraphicPanel implements ActionListener{
 	
-	public static final int WIDTH = 400, HEIGHT = 720;
-	
 	public LanePanel(JFrame LM) {
-		super();
+		super(485);
 		isLaneManager = true;
+		
+		WIDTH = 450;
 		
 		if (LM instanceof Client)
 			am = (Client)LM;
 		// Parts robot client
 		// Add 8 nests
-		nests = new ArrayList<GraphicNest>();	
+		/*nests = new ArrayList<GraphicNest>();	
 		for(int i = 0; i < 8; i++)
 		{
 			GraphicNest newNest = new GraphicNest(35,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
@@ -35,14 +35,14 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		}
 		lane = new GraphicLaneManager [4];
 		for (int i = 0; i < lane.length; i++)
-			lane[i] = new GraphicLaneManager(35, 160*i + 50, i, this);
+			lane[i] = new GraphicLaneManager(35, 160*i + 50, i, this);*/
 		
 		(new Timer(delay, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		this.setVisible(true);
 	}
 	
-	public void cameraFlash(int nestIndex) {
+	/*public void cameraFlash(int nestIndex) {
 		flashCounter = 10;
 		flashFeederIndex = nestIndex;
 	}
@@ -52,10 +52,10 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 	}
 	
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
-		/*//Testing for quick feed
+		///Testing for quick feed
 		lane[(laneNum) / 2].bin = new GraphicBin(new Part("eyes"));
 		lane[(laneNum) / 2].binExist = true;
-		//end Test*/
+		//end Test/
 		if(lane[(laneNum) / 2].binExists && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
 			lane[(laneNum) / 2].laneStart = true;
 			lane[(laneNum) / 2].divergeUp = ((laneNum) % 2 == 0);
@@ -116,7 +116,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 	public void moveLanes() {
 		for (int i = 0; i < lane.length; i++)
 			lane[i].moveLane();
-	}
+	}*/
 	
 	public void actionPerformed(ActionEvent arg0) {
 		moveLanes();
@@ -137,38 +137,6 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		do {
 			command = kbr.nextLine();
 			switch (command.charAt(0)) {
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-			case '5':
-			case '6':
-			case '7':
-			case '8': lp.loadLane((command.charAt(0)-'1')/2, new GraphicBin(new Part("Test"))); break;
-			case 'q': lp.feedLane(0); break;
-			case 'w': lp.feedLane(1); break;
-			case 'e': lp.feedLane(2); break;
-			case 'r': lp.feedLane(3); break;
-			case 't': lp.feedLane(4); break;
-			case 'y': lp.feedLane(5); break;
-			case 'u': lp.feedLane(6); break;
-			case 'i': lp.feedLane(7); break;
-			case '!':
-			case '@': lp.cameraFlash(0); break;
-			case '#':
-			case '$': lp.cameraFlash(1); break;
-			case '%':
-			case '^': lp.cameraFlash(2); break;
-			case '&':
-			case '*': lp.cameraFlash(3); break;
-			case 'Q': lp.purgeLane(0); break;
-			case 'W': lp.purgeLane(1); break;
-			case 'E': lp.purgeLane(2); break;
-			case 'R': lp.purgeLane(3); break;
-			case 'T': lp.purgeLane(4); break;
-			case 'Y': lp.purgeLane(5); break;
-			case 'U': lp.purgeLane(6); break;
-			case 'I': lp.purgeLane(7); break;
 			case '`': System.exit(0); break;
 			}
 		} while(command.charAt(0) != '`');
