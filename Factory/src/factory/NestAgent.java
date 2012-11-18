@@ -9,8 +9,10 @@ import factory.masterControl.MasterControl;
 
 public class NestAgent extends Agent implements Nest {
 	
-	public NestAgent(MasterControl mc) {
+	public NestAgent(MasterControl mc, Lane lane) {
 		super(mc); // needed for the server 
+		
+		this.myLane = lane;
 	}
 
 
@@ -46,6 +48,7 @@ public class NestAgent extends Agent implements Nest {
 	 * that its parts have stabilized after resettling.
 	 */
 	public void msgNestHasStabilized() {
+		System.out.println("NEST HAS STABILIZED");
 		nestState = NestState.HAS_STABILIZED;
 		stateChanged();
 	}
@@ -55,6 +58,7 @@ public class NestAgent extends Agent implements Nest {
 	 * parts have destabilized (become unstable!)
 	 */
 	public void msgNestHasDestabilized() {
+		System.out.println("NEST HAS BECOME UNSTABLE");
 		nestState = NestState.HAS_DESTABILIZED;
 		stateChanged();
 	}
