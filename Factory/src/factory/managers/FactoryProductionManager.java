@@ -67,6 +67,7 @@ public class FactoryProductionManager extends Client {
 		if(action.equals("cmd")){
 			//Graphics Receive Commands
 			
+		
 			// Commands from FeederAgent
 			if (identifier.equals("startfeeding"))
 			{
@@ -115,7 +116,44 @@ public class FactoryProductionManager extends Client {
 				int feederNumber = Integer.valueOf(pCmd.get(2)); 
 				((FactoryProductionPanel) graphics).moveGantryRobotToFeederForDropoff(feederNumber);
 			}
+			
+			// Commands from KitRobotAgent
+			else if (identifier.equals("putInspectionKitOnConveyor")) {
+				((FactoryProductionPanel) graphics).moveKitFromInspectionToConveyor();
+			}
+			else if (identifier.equals("putEmptyKitAtSlot")) {
+				if (pCmd.get(2).equals("topSlot")) {
+					((FactoryProductionPanel) graphics).moveEmptyKitToSlot(0);
+				} else if (pCmd.get(2).equals("bottomSlot")) {
+					((FactoryProductionPanel) graphics).moveEmptyKitToSlot(1);
+				}
+			}
+			else if (identifier.equals("moveKitToInspectionSlot")) {
+				if (pCmd.get(2).equals("topSlot")) {
+					((FactoryProductionPanel) graphics).moveKitToInspection(0);
+				} else if (pCmd.get(2).equals("bottomSlot")) {
+					((FactoryProductionPanel) graphics).moveKitToInspection(1);
+				}
+			}
+			else if (identifier.equals("dumpKitAtSlot")) {
+				if (pCmd.get(2).equals("topSlot")) {
+					((FactoryProductionPanel) graphics).dumpKitAtSlot(0);
+				} else if (pCmd.get(2).equals("bottomSlot")) {
+					((FactoryProductionPanel) graphics).dumpKitAtSlot(1);
+				} else if (pCmd.get(2).equals("inspectionSlot")) {
+					((FactoryProductionPanel) graphics).dumpKitAtInspection();
+				}
+			}
 
+			// Commands from ConveyorAgent
+			else if (identifier.equals("exportKitFromCell")) {
+				((FactoryProductionPanel) graphics).exportKit();
+			}
+			
+			// Commands from ConveyorControllerAgent
+			else if (identifier.equals("emptyKitEntersCell")) {
+				((FactoryProductionPanel) graphics).newEmptyKit();
+			}
 
 			
 			//Swing Receive Commands
