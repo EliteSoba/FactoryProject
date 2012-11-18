@@ -474,6 +474,9 @@ public class MasterControl {
                 if(cmd.get(3).equals("neststabilized")){
                     ((NestAgent) destination).msgNestHasStabilized();
                 }
+                else if(cmd.get(3).equals("nestdestabilized")){
+                    ((NestAgent) destination).msgNestHasDestabilized();
+                }
             }//End NestAgent Commands
 		}
 
@@ -761,9 +764,9 @@ public class MasterControl {
 		//	public Part(String n,int i,String d,String p,double t) {
 
 
-		//		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
-		//
-		//		mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
+				mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
+		
+				mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
 		//
 		//		mc.f0.msgLaneNeedsPart(p1,mc.l0t); //eye to top
 		//
@@ -771,15 +774,13 @@ public class MasterControl {
 		//
 
 
+		//mc.f1.msgLaneNeedsPart(p0,mc.l1t); //eye to top
 
-		mc.f1.msgLaneNeedsPart(p0,mc.l1t); //eye to top
+		//mc.f1.msgLaneNeedsPart(p1,mc.l1b); //eye to bottom
 
-		mc.f1.msgLaneNeedsPart(p1,mc.l1b); //eye to bottom
-
-		mc.f1.msgLaneNeedsPart(p2,mc.l1t); //shoe to top
-
-		mc.f1.msgLaneNeedsPart(p3,mc.l1b); //shoe to bottom		
-
+		//mc.n1t.msgPartsRobotGrabbingPartFromNest(0); // parts robot grabs part	
+		
+		
 		//		
 		//		
 		//

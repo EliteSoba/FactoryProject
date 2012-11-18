@@ -212,6 +212,7 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			topLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;
 			bottomLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;
+			debug("Feeder sends msgMyNestsReadyForPicture() to vision.");
 			vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
 		}
 		

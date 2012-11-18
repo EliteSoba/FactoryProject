@@ -177,7 +177,7 @@ public class GraphicLaneManager{
 				isStable[i] = false;
 		}
 		
-		if (feederPurged) {
+		if (feederPurged && bin.getBinType() != null) {
 			feederPurgeTimer++;
 			if (feederPurgeTimer < 7)
 				bin.getBinType().moveX(5);
