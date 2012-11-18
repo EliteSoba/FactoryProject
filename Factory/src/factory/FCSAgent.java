@@ -40,6 +40,7 @@ public class FCSAgent extends Agent implements FCS{
 	//parts robot to start producing the next order
 	public int kitsExportedCount = 0;
 
+	//reference to the masterControl to communicate to server
 	public MasterControl masterControl;
 
 	//this is temporarily used for testing purposes.  Constructor will likely change.
@@ -166,7 +167,7 @@ public class FCSAgent extends Agent implements FCS{
 	public void editPartType(String oldPartName, String newPartName, int id, String imagePath, int nestStabilizationTime, String description){
 		if(partsList.containsKey(oldPartName)){
 			partsList.remove(oldPartName);
-			addPartType(newPartName, nestStabilizationTime, description, id, imagePath);
+			addPartType(newPartName, id, description, nestStabilizationTime, imagePath);
 		}
 	}
 	//edit part

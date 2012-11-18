@@ -35,7 +35,9 @@ public class FCSTests extends TestCase{
 	{
 		
 		KitConfig kitConfig = new KitConfig();
-		
+		KitProductionState stateFinished = KitProductionState.FINISHED;
+		KitProductionState statePending = KitProductionState.PENDING;
+		KitProductionState stateProducing = KitProductionState.PRODUCING;
 		MockGantry gantry = new MockGantry("gantry");
 		MockPartsRobot partsRobot = new MockPartsRobot("parts robot");
 		FCSAgent fcs = new FCSAgent(gantry, partsRobot, null);
@@ -44,6 +46,10 @@ public class FCSTests extends TestCase{
 		
 		//create message for FCS.  Should eventually call this.partsRobot.msgMakeKit(mkc.kitConfig);
 		fcs.msgProduceKit(5, "typeA");
+		
+		//tests to see if the kit config state is PENDING
+		assertEquals("FCS state should be PENDING, but instead is: " + fcs.state 
+				, statePending, fcs.state);
 		
 		//test to see that the parts robot has not been given a message before the scheduler is called.
 		//Its log should be empty.
@@ -63,7 +69,8 @@ public class FCSTests extends TestCase{
 				.containsString("msgMakeKit"));
 		
 		//tests to see if the kit config state changed from PENDING to PRODUCING
-//		assertTrue("Parts Robot should have gotten a message to make a kit.", );
+		assertEquals("FCS state should be changed from PENDING to PRODUCING, but instead is: " + fcs.state 
+				, stateProducing, fcs.state);
 	}
 
 	
@@ -214,14 +221,68 @@ public class FCSTests extends TestCase{
 				, statePending, fcs.state);
 	}
 	
+	//test if the parts robot can add/edit/remove a part type
+	public void testPartTypeMethods(){
+		
+		FCSAgent fcs = new FCSAgent(null);
+		Map<String, Part> partsList = new HashMap<String, Part>();
+		partsList = createPartsList();
+		fcs.partsList = partsList;
+		
+		//test to see if the partsList initialized properly
+		assertEquals("The size of the parts list should currently be 6, but instead is: " + fcs.partsList.size()
+				, 6, fcs.partsList.size());
+		
+		//test to see if things are mapping correctly
+		assertEquals("The nose id should be 1, but instead is: " + fcs.partsList.get("nose").id
+				, 1, fcs.partsList.get("nose").id);
+		
+		//test to see if things are mapping correctly
+		assertEquals("The ears id should be 2, but instead is: " + fcs.partsList.get("ears").id
+				, 2, fcs.partsList.get("ears").id);
+		
+		//add a part type
+		fcs.addPartType("sword", 7, "jpg", 5, "sword of potato");
+		
+		//test to see if partsList updated
+		assertEquals("The size of the parts list should currently be 7, but instead is: " + fcs.partsList.size()
+				, 7, fcs.partsList.size());
+		
+		fcs.editPartType("hat", "nostril", 4, "jpg", 5, "hat of potato");
+		
+		//test to see if nose got edited
+		assertFalse("The part type \"hat\" should not exist because it should have been updated, but it still exists",
+				fcs.partsList.containsKey("hat"));
+		
+		//test to see if nostril is in the list
+		assertTrue("The part type \"hat\" should have been edited to nostril, but the nostril doesn't exist",
+				fcs.partsList.containsKey("nostril"));
+		
+		//test to so if nostril id is 1
+		assertEquals("The id of the nostril should be 4, but instead is: " + fcs.partsList.get("nostril").id,
+				4, fcs.partsList.get("nostril").id);
+		
+		fcs.removePartType("arm");
+		
+		//test to see if part was removed by counting size of map
+		assertEquals("The size of the parts list should currently be 6, but instead is: " +fcs.partsList.size(),
+				6, fcs.partsList.size());
+		
+		assertFalse("The part type \"arm\" should not exist anymore because it should have been removed",
+				fcs.partsList.containsKey("arm"));
+		
+		System.out.println(fcs.partsList.keySet());
+	}
+	
+	
 	public Map<String, Part> createPartsList(){
 		 Map<String, Part> partsList = new HashMap<String, Part>();
 		 Part p1 = new Part("nose", 1, "nose of potato", "jpg", 5);
-		 Part p2 = new Part("ears", 1, "ears of potato", "jpg", 5);
-		 Part p3 = new Part("arm", 1, "arm of potato", "jpg", 5);
-		 Part p4 = new Part("hat", 1, "hat of potato", "jpg", 5);
-		 Part p5 = new Part("leg", 1, "leg of potato", "jpg", 5);
-		 Part p6 = new Part("mouth", 1, "mouth of potato", "jpg", 5);
+		 Part p2 = new Part("ears", 2, "ears of potato", "jpg", 5);
+		 Part p3 = new Part("arm", 3, "arm of potato", "jpg", 5);
+		 Part p4 = new Part("hat", 4, "hat of potato", "jpg", 5);
+		 Part p5 = new Part("leg", 5, "leg of potato", "jpg", 5);
+		 Part p6 = new Part("mouth", 6, "mouth of potato", "jpg", 5);
 		 partsList.put(p1.name, p1);
 		 partsList.put(p2.name, p2);
 		 partsList.put(p3.name, p3);
