@@ -117,13 +117,11 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			}
 			
 			if (actions.contains(StandInfo.NEED_INSPECTION_TOP) && (inspectionAreaClear == 1)) {
-				actions.remove(StandInfo.NEED_INSPECTION_TOP);
 				moveToInspectionSpot("topSlot");
 				return true;
 			}
 			
 			if (actions.contains(StandInfo.NEED_INSPECTION_BOTTOM) && (inspectionAreaClear == 1)) {
-				actions.remove(StandInfo.NEED_INSPECTION_BOTTOM);
 				moveToInspectionSpot("bottomSlot");
 				return true;
 			}
@@ -149,7 +147,6 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			}
 			
 			if (actions.contains(StandInfo.NEED_EMPTY_TOP) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
-				actions.remove(StandInfo.NEED_EMPTY_TOP);
 				putEmptyKitOnStand("topSlot");
 				return true;
 			}
@@ -252,10 +249,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		}
 		
 		debug("Got the go from the Stand");
-		//Here the stand gave the kit robot clearance
 		//Can assume that the kit robot has exclusive access to the stand here
-
-		//new kit is picked up by the kit robot from the conveyor
 		holding = new Kit();
 		conveyor_state = ConveyorStatus.EMPTY;
 		conveyor.setAtConveyor(null);
@@ -270,6 +264,13 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		holding = null;
 		stand.msgKitRobotNoLongerUsingStand();
 		debug("Done putting empty kit in "+pos);
+		
+		if (pos.equals("topSlot")) {
+			actions.remove(StandInfo.NEED_EMPTY_TOP);
+		} else if (pos.equals("bottomSlot")) {
+			actions.remove(StandInfo.NEED_EMPTY_BOTTOM);
+		}
+		
 		stateChanged();
 	}
 	
@@ -332,49 +333,47 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stand.setSlotState(pos, MySlotState.EMPTY);
 		
 		stand.msgKitRobotNoLongerUsingStand();
+		if (pos.equals("bottomSlot")) {
+			actions.remove(StandInfo.NEED_INSPECTION_BOTTOM);
+		} else if (pos.equals("topSlot")) {
+			actions.remove(StandInfo.NEED_INSPECTION_TOP);
+		}
 		
 		stateChanged();
 	}
 	
 	////Animations
-	private void DoMoveInspectedKitToConveyor() {
-		debug("doing moveInspectedKitToConveyor");
-		server.command("kra fpm cmd putinspectionkitonconveyor");
+	
+	private void waitForAnimation() {
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void DoMoveInspectedKitToConveyor() {
+		debug("doing moveInspectedKitToConveyor");
+		server.command("kra fpm cmd putinspectionkitonconveyor");
+		waitForAnimation();
 	}
 	
 	private void DoPutEmptyKitAt(String pos) {
 		debug("doing PutEmptyKitAt Animation for the "+ pos);
 		server.command("kra fpm cmd putemptykitatslot "+pos);
-		try {
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		waitForAnimation();
 	}
 	
 	private void DoMoveKitToInspection(String pos) {
 		debug("doing MoveKitToInspection Animation.  moving the kit at the "+pos+" to the inspectionSlot");
 		server.command("kra fpm cmd movekittoinspectionslot " + pos);
-		try {
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		waitForAnimation();
 	}
 	
 	private void DoDumpKitAtSlot(String pos) {
 		debug("doing DoDumpKitAtSlot Animation.  dumping the kit at "+pos);
 		server.command("kra fpm cmd dumpkitatslot "+pos);
-		try {
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		waitForAnimation();
 	}
 	
 	////Hacks / MISC
