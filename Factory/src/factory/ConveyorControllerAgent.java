@@ -60,7 +60,6 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		    	DoEmptyKitArrivingAnimation();
 		    	conveyor.msgHeresEmptyKit(new Kit());
 		    	conveyor_state = Conveyor_State.NO_ACTION;
-		    	server.command("cca fpm cmd emptyKitEntersCell");
 				stateChanged();
 		    }
 		}, delivery_time);
@@ -69,7 +68,7 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	////Animations
 	private void DoEmptyKitArrivingAnimation() {
 		debug("doing EmptyKitArriving Animation");
-		server.command("cca fpm cmd emptyKitEntersCell");
+		server.command("cca fpm cmd emptykitenterscell");
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {

@@ -63,6 +63,7 @@ public class PartsManPanel extends JPanel{
 		fileNames.add("cane");
 		fileNames.add("sword");
 		fileNames.add("tentacle");
+		fileNames.add("wing");
 
 		model = new PartsTableModel();
 		model.addColumn("ID");
@@ -93,7 +94,8 @@ public class PartsManPanel extends JPanel{
 		scrollPane = new JScrollPane(table);
 		scrollPane.setMaximumSize(new Dimension(460, 300));
 		table.setFillsViewportHeight(true);
-		for(int i = 1; i < partsManager.parts.size(); i++){
+		System.out.println("Parts : " + partsManager.parts.size());
+		for(int i = 0; i <= partsManager.parts.size(); i++){
 			for(Part temp : partsManager.parts.values()){
 				if(i == temp.id){
 					ImageIcon image = new ImageIcon(temp.imagePath);

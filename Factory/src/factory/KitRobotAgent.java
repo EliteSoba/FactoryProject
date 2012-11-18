@@ -339,7 +339,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	////Animations
 	private void DoMoveInspectedKitToConveyor() {
 		debug("doing moveInspectedKitToConveyor");
-		server.command("kra fpm cmd putInspectionKitOnConveyor");
+		server.command("kra fpm cmd putinspectionkitonconveyor");
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -349,7 +349,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	
 	private void DoPutEmptyKitAt(String pos) {
 		debug("doing PutEmptyKitAt Animation for the "+ pos);
-		server.command("kra fpm cmd putEmptyKitAtSlot "+pos);
+		server.command("kra fpm cmd putemptykitatslot "+pos);
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -359,7 +359,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	
 	private void DoMoveKitToInspection(String pos) {
 		debug("doing MoveKitToInspection Animation.  moving the kit at the "+pos+" to the inspectionSlot");
-		server.command("kra fpm cmd moveKitToInspectionSlot " + pos);
+		server.command("kra fpm cmd movekittoinspectionslot " + pos);
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -369,7 +369,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	
 	private void DoDumpKitAtSlot(String pos) {
 		debug("doing DoDumpKitAtSlot Animation.  dumping the kit at "+pos);
-		server.command("kra fpm cmd dumpKitAtSlot "+pos);
+		server.command("kra fpm cmd dumpkitatslot "+pos);
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {

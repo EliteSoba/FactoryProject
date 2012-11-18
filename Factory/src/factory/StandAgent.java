@@ -59,6 +59,19 @@ public class StandAgent extends Agent implements Stand {
 		inspectionSlot = new MySlot("inspectionSlot");
 	}
 	
+	public StandAgent(MasterControl mc, KitRobot kitRobot) {
+		super(mc);
+		this.kitRobot = kitRobot;
+		
+		partsRobotWantsToDeliverParts = false;
+		kitRobotWantsToDeliverEmptyKit = false;
+		this.state = StandAgentState.FREE;
+		
+		topSlot = new MySlot("topSlot");
+		bottomSlot = new MySlot("bottomSlot");
+		inspectionSlot = new MySlot("inspectionSlot");
+	}
+	
 	//UnitTesting Constructor
 	public StandAgent() {
 		super(null);
@@ -303,6 +316,18 @@ public class StandAgent extends Agent implements Stand {
 	/**
 	 * Hacks and Misc
 	 */
+	public void setVision(Vision v) {
+		this.vision = v;
+	}
+	
+	public void setKitRobot(KitRobot kr) {
+		this.kitRobot = kr;
+	}
+	
+	public void setPartsRobot(PartsRobot pr) {
+		this.partsRobot = pr;
+	}
+	
 	public boolean setSlotKit(String slot, Kit k) {
 		if (slot.equals("topSlot")) {
 			topSlot.kit = k;
