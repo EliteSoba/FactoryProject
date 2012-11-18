@@ -171,7 +171,7 @@ public class GraphicLaneManager{
 			if (binExists && stabilizationCount[i] >= bin.getStabilizationTime()) {
 				isStable[i] = true;
 				if (stabilizationCount[i] == bin.getStabilizationTime())
-					graphicPanel.sendMessage("fa cmd neststabilized n" + laneManagerID + (i==0?"t":"b")); 
+					graphicPanel.sendMessage("na cmd neststabilized n" + laneManagerID + (i==0?"t":"b")); 
 			} 
 			else
 				isStable[i] = false;
@@ -345,7 +345,7 @@ public class GraphicLaneManager{
 						lane1Items.get(i).setVY(0);
 						lane1Items.get(i).setVX(0);
 						stabilizationCount[0] = 0;
-						graphicPanel.sendMessage("fa cmd nestdestabilized n" + laneManagerID + "t");
+						graphicPanel.sendMessage("na cmd nestdestabilized n" + laneManagerID + "t");
 						lane1Items.get(i).setX(lane_xPos + 3 + 25 * (int)(graphicPanel.getNest().get(laneManagerID * 2).getSize() / 3));
 						boolean testDiverge = lane1Items.get(i).getDivergeUp();
 						lane1Items.get(i).setY(lane_yPos + 3 + 25 * (graphicPanel.getNest().get(laneManagerID * 2).getSize() % 3) + 80 * ((testDiverge)?0:1));
@@ -416,7 +416,7 @@ public class GraphicLaneManager{
 						lane1Items.get(i).setVY(0);
 						lane1Items.get(i).setVX(0);
 						stabilizationCount[0] = 0;
-						graphicPanel.sendMessage("fa cmd nestdestabilized n" + laneManagerID + "t");
+						graphicPanel.sendMessage("na cmd nestdestabilized n" + laneManagerID + "t");
 						lane1Items.get(i).setX(lane_xPos + 3 + 25 * (int)(graphicPanel.getNest().get(laneManagerID * 2).getSize() / 3));
 						boolean testDiverge = lane1Items.get(i).getDivergeUp();
 						lane1Items.get(i).setY(lane_yPos + 3 + 25 * (graphicPanel.getNest().get(laneManagerID * 2).getSize() % 3) + 80 * ((testDiverge)?0:1));
@@ -568,7 +568,7 @@ public class GraphicLaneManager{
 						lane2Items.get(i).setVY(0);
 						lane2Items.get(i).setVX(0);
 						stabilizationCount[1] = 0;
-						graphicPanel.sendMessage("fa cmd nestdestabilized n" + laneManagerID + "b");
+						graphicPanel.sendMessage("na cmd nestdestabilized n" + laneManagerID + "b");
 						lane2Items.get(i).setX(lane_xPos + 3 + 25 * (int)(graphicPanel.getNest().get(laneManagerID * 2 + 1).getSize() / 3));
 						boolean testDiverge = lane2Items.get(i).getDivergeUp();
 						lane2Items.get(i).setY(lane_yPos + 3 + 25 * (graphicPanel.getNest().get(laneManagerID * 2 + 1).getSize() % 3) + 80 * ((testDiverge)?0:1));
@@ -649,7 +649,7 @@ public class GraphicLaneManager{
 						lane2Items.get(i).setVY(0);
 						lane2Items.get(i).setVX(0);
 						stabilizationCount[1] = 0;
-						graphicPanel.sendMessage("fa cmd nestdestabilized n" + laneManagerID + "b");
+						graphicPanel.sendMessage("na cmd nestdestabilized n" + laneManagerID + "b");
 						lane2Items.get(i).setX(lane_xPos + 3 + 25 * (int)(graphicPanel.getNest().get(laneManagerID * 2 + 1).getSize() / 3));
 						boolean testDiverge = !lane2Items.get(i).getDivergeUp();
 						lane2Items.get(i).setY(lane_yPos + 3 + 25 * (graphicPanel.getNest().get(laneManagerID * 2 + 1).getSize() % 3) + 80 * ((testDiverge)?0:1));
