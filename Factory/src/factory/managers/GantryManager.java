@@ -104,43 +104,10 @@ public class GantryManager extends Client {
 			}
 			
 			// Commands from KitRobotAgent
-			else if (identifier.equals("putInspectionKitOnConveyor")) {
-				((GantryRobotPanel) graphics).moveKitFromInspectionToConveyor();
-			}
-			else if (identifier.equals("putEmptyKitAtSlot")) {
-				if (pCmd.get(2).equals("topSlot")) {
-					((GantryRobotPanel) graphics).moveEmptyKitToSlot(0);
-				} else if (pCmd.get(2).equals("bottomSlot")) {
-					((GantryRobotPanel) graphics).moveEmptyKitToSlot(1);
-				}
-			}
-			else if (identifier.equals("moveKitToInspectionSlot")) {
-				if (pCmd.get(2).equals("topSlot")) {
-					((GantryRobotPanel) graphics).moveKitToInspection(0);
-				} else if (pCmd.get(2).equals("bottomSlot")) {
-					((GantryRobotPanel) graphics).moveKitToInspection(1);
-				}
-			}
-			else if (identifier.equals("dumpKitAtSlot")) {
-				if (pCmd.get(2).equals("topSlot")) {
-					((GantryRobotPanel) graphics).dumpKitAtSlot(0);
-				} else if (pCmd.get(2).equals("bottomSlot")) {
-					((GantryRobotPanel) graphics).dumpKitAtSlot(1);
-				} else if (pCmd.get(2).equals("inspectionSlot")) {
-					((GantryRobotPanel) graphics).dumpKitAtInspection();
-				}
-			}
 
 			// Commands from ConveyorAgent
-			else if (identifier.equals("exportKitFromCell")) {
-				((GantryRobotPanel) graphics).exportKit();
-			}
 			
 			// Commands from ConveyorControllerAgent
-			else if (identifier.equals("emptyKitEntersCell")) {
-				((GantryRobotPanel) graphics).newEmptyKit();
-			}
-
 			
 			//Swing Receive Commands
 			
