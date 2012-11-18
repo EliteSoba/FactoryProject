@@ -1,9 +1,9 @@
 package factory.interfaces;
 
 import factory.Kit;
+import factory.Part;
 public interface Vision {
 
-	public void msgHereArePartCoordiantesForNest(Nest nest, Nest nest2, Feeder feeder);
 	public void msgAnalyzeKitAtInspection(Kit kit);
 
 	
