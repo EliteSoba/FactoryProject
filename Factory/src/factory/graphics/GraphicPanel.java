@@ -274,6 +274,12 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 	}
 	
+	public void partsRobotPopItemToCurrentKit(int itemIndex)
+	{
+		station.addItem(partsRobot.popItemAt(partsRobot.getItemIndex()),partsRobot.getDestinationKit());
+		partsRobotPopItemToCurrentKitDone();
+	}
+	
 	/**
 	 * Moves Parts Robot to the center of the Factory
 	 * @see partsRobotArrivedAtCenter()
@@ -464,13 +470,15 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			}
 			else if(partsRobot.getState() == 4)	// partsRobot has arrived at kitting station
 			{
+				/*
 				System.out.println("Size:"+partsRobot.getSize());
 				int numberOfParts = partsRobot.getSize();
 				for(int i = 0; i < numberOfParts; i++)
 				{
 					System.out.println("Adding part to kit: " + i);
-					station.addItem(partsRobot.popItem(),partsRobot.getDestinationKit());
+					station.addItem(partsRobot.popItemAt(partsRobot.getItemIndex()),partsRobot.getDestinationKit());
 				}
+				*/
 				partsRobot.setState(0);
 				partsRobotArrivedAtStation();
 			}
@@ -604,6 +612,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	public void dropPartsRobotsItemsDone() {
 		sendMessage("pra cnf");
+	}
+	
+	public void partsRobotPopItemToCurrentKitDone() {
+		sendMessage("kra cnf");
 	}
 
 	public void feedLaneDone(int feederNum){
