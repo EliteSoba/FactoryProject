@@ -457,7 +457,7 @@ public class PartsManPanel extends JPanel{
 
 					Part p = new Part(name.getText(), currentPart.id, description.getText(),"Images/" + 
 							(String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
-					messageEditPanel = "pm multi cmd editpartname " + currentPart.name + " " + p.name + " " + 
+					messageEditPanel = "pm multi set editpartname " + currentPart.name + " " + p.name + " " + 
 							p.id + " " + p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
 					partsManager.sendCommand(messageEditPanel);
 					editItem(p);
