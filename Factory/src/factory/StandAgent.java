@@ -59,6 +59,19 @@ public class StandAgent extends Agent implements Stand {
 		inspectionSlot = new MySlot("inspectionSlot");
 	}
 	
+	public StandAgent(MasterControl mc, KitRobot kitRobot) {
+		super(mc);
+		this.kitRobot = kitRobot;
+		
+		partsRobotWantsToDeliverParts = false;
+		kitRobotWantsToDeliverEmptyKit = false;
+		this.state = StandAgentState.FREE;
+		
+		topSlot = new MySlot("topSlot");
+		bottomSlot = new MySlot("bottomSlot");
+		inspectionSlot = new MySlot("inspectionSlot");
+	}
+	
 	//UnitTesting Constructor
 	public StandAgent() {
 		super(null);

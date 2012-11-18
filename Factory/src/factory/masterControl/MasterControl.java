@@ -22,7 +22,10 @@ import java.util.*;
 
 import agent.Agent;
 import factory.*;
+import factory.interfaces.KitRobot;
 import factory.interfaces.Nest;
+import factory.interfaces.PartsRobot;
+import factory.interfaces.Vision;
 
 
 public class MasterControl {
@@ -101,6 +104,7 @@ public class MasterControl {
 		// At this point, all of the sockets are connected, PartHandlers have been created
 		// The TreeMaps are updated with all of the relevant data, and the Factory can go.
 		startAgents();
+		partOccupied.put("multi", false);
 
 		String singleD = (debug? partHandlers.firstKey(): null);
 		sendConfirm(singleD);
@@ -167,18 +171,11 @@ public class MasterControl {
 		kitRobot = new KitRobotAgent(this,conveyor);
 
 		// Instantiate the Stand
-		//stand = new StandAgent(); // bad code
-
+		stand = new StandAgent(this, kitRobot);
 
 		// Instantiate the FCS
 		fcs = new FCSAgent(gantry,partsRobot, this);
-
-
-		// SET A FEW THINGS
-		conveyor.setKitRobot(kitRobot);
-		kitRobot.setStand(stand);
-		conveyor.setFCS(fcs);
-
+		
 
 		// Set up the TreeMaps
 		laneAgentTreeMap.put("l0t", l0t);
@@ -211,6 +208,13 @@ public class MasterControl {
 		nestAgentListForPartsRobot.add(7, n3b);
 
 		partsRobot = new PartsRobotAgent(this, fcs, vision, stand, nestAgentListForPartsRobot); 
+	
+		//Hacking References
+		conveyor.setKitRobot(kitRobot);
+		kitRobot.setStand(stand);
+		conveyor.setFCS(fcs);
+		stand.setVision(vision);
+		stand.setPartsRobot(partsRobot);
 
 		
 		
@@ -219,7 +223,7 @@ public class MasterControl {
 		agentTreeMap.put("ga", gantry );
 		agentTreeMap.put("kra", kitRobot);
 		agentTreeMap.put("pra", partsRobot);
-		//agentTreeMap.put("sa", stand);
+		agentTreeMap.put("sa", stand);
 		agentTreeMap.put("va", vision);
 		agentTreeMap.put("fcsa", fcs);
 
@@ -404,6 +408,20 @@ public class MasterControl {
 					((FCSAgent) destination).editKitRecipe(oldkitname, kitname, partname1, partname2, partname3, partname4, 
 							partname5, partname6, partname7, partname8);
 				}
+				
+				if(cmd.get(3).equals("editpartname")){
+					//" #originalpartname #newpartname #newpartid #newfilepath 
+					//#newstabalizationtime #newpartdescription"
+					String originalpartname = cmd.get(4);
+					String newpartname = cmd.get(5);
+					int newpartid = Integer.valueOf(cmd.get(6));
+					String newfilepath = cmd.get(7);
+					int newstabalizationtime = Integer.valueOf(cmd.get(8));
+					String newpartdescription = cmd.get(9);
+					((FCSAgent) destination).editPartType(originalpartname, newpartname,
+							newpartid, newfilepath, newstabalizationtime, newpartdescription);
+				}
+
 			}
 
 
@@ -431,7 +449,7 @@ public class MasterControl {
 					String filepath = cmd.get(6);
 					int stabalizationtime = Integer.valueOf(cmd.get(7));
 					String partdescription = cmd.get(8);
-					((FCSAgent) destination).addPartType(partname, stabalizationtime, partdescription, partid, filepath);
+					((FCSAgent) destination).addPartType(partname, partid, filepath, stabalizationtime, partdescription);
 				}
 
 
@@ -442,19 +460,7 @@ public class MasterControl {
 
 				}
 
-				if(cmd.get(3).equals("editpartname")){
-					//" #originalpartname #newpartname #newpartid #newfilepath 
-					//#newstabalizationtime #newpartdescription"
-					String originalpartname = cmd.get(4);
-					String newpartname = cmd.get(5);
-					int newpartid = Integer.valueOf(cmd.get(6));
-					String newfilepath = cmd.get(7);
-					int newstabalizationtime = Integer.valueOf(cmd.get(8));
-					String newpartdescription = cmd.get(9);
-					((FCSAgent) destination).editPartType(originalpartname, newpartname,
-							newpartid, newfilepath, newstabalizationtime, newpartdescription);
-				}
-
+				
 				if(cmd.get(3).equals("addkitname")){
 					//"#kitname #partname1 #partname2 ... #partname8"
 					String kitname = cmd.get(4);
