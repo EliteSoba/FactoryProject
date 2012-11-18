@@ -60,13 +60,39 @@ int size = pCmd.size();
 //parameters lay between i = 2 and i = size - 2
 String action = pCmd.get(0);
 String identifier = pCmd.get(1);
-if(action.equals("cmd")){
-	/*if(identifier.equals(command1))
-	 * do(command1);
-	 * else if(identifier.equals(command2))
-	 * do(command2);
-	 */
+if(action.equals("cmd"))
+{	
+	if(identifier.equals("addpartname"))// check directions
+	{
+		partsList.put(pCmd.get(2), new Part(pCmd.get(2),
+						Integer.parseInt(pCmd.get(3)),pCmd.get(4),pCmd.get(5),Integer.parseInt(pCmd.get(6))));
+	}
+	else if(identifier.equals("rmpartname"))//check directions
+	{
+		partsList.remove(pCmd.get(2));// remove part from partList
+				
+		// iterate through the kitConfigList and find kitConfigurations with the removed part and remove them
+		for(String s : kitConfigList.keySet())
+		{
+			KitConfig configToCheck = kitConfigList.get(s);
+			for(int i = 0; i < configToCheck.listOfParts.size(); i++)
+			{
+				Part partToCheck = configToCheck.listOfParts.get(i);
+				String name = partToCheck.name;
+				if(pCmd.get(2).equals(name))
+				{
+					kitConfigList.remove(s);
+							
+					super.sendCommand("km fpm cmd rmkitname "+ s);
+					super.sendCommand("km fcsa cmd rmkitname "+ s);
+				}
+			}
+		}
+				
+	}
 }
+	
+
 else if(action.equals("req")){
 	/*if(identifier.equals(request1))
 	 * do(request1);
