@@ -22,10 +22,8 @@ import java.util.*;
 
 import agent.Agent;
 import factory.*;
-import factory.interfaces.KitRobot;
 import factory.interfaces.Nest;
-import factory.interfaces.PartsRobot;
-import factory.interfaces.Vision;
+
 
 
 public class MasterControl {
@@ -70,6 +68,8 @@ public class MasterControl {
 
     );
 
+    private ArrayList<PartHandler> partHandlerList;
+
 	// The following are lists of commands that are to be received by multiple clients.
 
 	private static final List<String> partCmds = Arrays.asList("addpartname", "rmpartname", "partconfig");
@@ -83,12 +83,13 @@ public class MasterControl {
 
 	// Constructor
 
-	public MasterControl(boolean debug){
+	public MasterControl(int debug){
 		partHandlers = new TreeMap<String, PartHandler>();
 		partOccupied = new TreeMap<String, Boolean>();
 		agentTreeMap = new TreeMap<String, Agent>();
 		laneAgentTreeMap = new TreeMap<String, LaneAgent>();
 		nestAgentTreeMap = new TreeMap<String, NestAgent>();
+        partHandlerList = new ArrayList<PartHandler>();
 
 
 
@@ -106,8 +107,7 @@ public class MasterControl {
 		startAgents();
 		partOccupied.put("multi", false);
 
-		String singleD = (debug? partHandlers.firstKey(): null);
-		sendConfirm(singleD);
+		sendConfirm();
 		// At this point, all of the parts have been notified that
 		// the connections have been made, and therefore, the
 		// Factory simulation can begin.
@@ -667,9 +667,9 @@ public class MasterControl {
 	// connectAllSockets() is the function responsible for managing each socket connection
 	// It waits until each connection specified in 'dids' has been made, and then continues.
 
-	private void connectAllSockets(boolean debugmode){
+	private void connectAllSockets(int debugnum){
 		int numConnected = 0;
-		int numToConnect = (debugmode ? 1 : clients.size());
+		int numToConnect = (debugnum > 0 ? debugnum : clients.size());
 		while(numConnected != numToConnect){
 			try{
 				Socket s = myServerSocket.accept();
@@ -682,6 +682,7 @@ public class MasterControl {
 				PartHandler ph = new PartHandler(s, br, pw, name, this);
 				partHandlers.put(name, ph);
 				partOccupied.put(name, false);
+                partHandlerList.add(ph);
 				pw.println("connected");
 			} catch (Exception e){
 				e.printStackTrace();
@@ -694,22 +695,16 @@ public class MasterControl {
 	// sendConfirm() is the function responsible for sending a confirmation through each socket
 	// this confirms that every connection has been made, and therefore, the factory sim can begin.
 
-	private void sendConfirm(String singleDest){
-		if(singleDest != null){
-			PartHandler ph = partHandlers.get(singleDest);
-			ph.send("mcs start");
+	private void sendConfirm(){
+        for(PartHandler ph : partHandlerList){
+            ph.send("mcs start");
+        }
 
-		} else {
-			for(String p : clients){
-				PartHandler ph = partHandlers.get(p);
-				ph.send("mcs start");
-			}
-		}
 	}
 
 	public static void main(String args[]){
-		// boolean debug = Boolean.getBoolean(args[0]);
-		MasterControl mc = new MasterControl(true);
+		int debug = Integer.valueOf(args[0]);
+		MasterControl mc = new MasterControl(debug);
 
 		//This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
 		long timeToQuit = System.currentTimeMillis() + 5000;
