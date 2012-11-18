@@ -49,8 +49,8 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		{
 			GraphicNest newNest = new GraphicNest(510,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
 			Random randomGen = new Random();
-			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
-				newNest.addItem(new GraphicItem(20,20,"Images/eyesItem.png"));
+//			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
+//				newNest.addItem(new GraphicItem(20,20,"Images/eyesItem.png"));
 			nests.add(newNest);
 		}
 

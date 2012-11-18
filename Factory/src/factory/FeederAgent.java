@@ -160,15 +160,7 @@ public class FeederAgent extends Agent implements Feeder {
 		feederHasABinUnderneath = true; // should never be false again
 
 		for (MyPartRequest pr : requestedParts) {
-			/*
-			 * // Checks to see if two parts are of the same type
-	public boolean isTheSameTypeOfPartAs(Part p)
-	{
-		
-		return true; // if ....
-	}
-			 */
-			if(pr.state == MyPartRequestState.ASKED_GANTRY && pr.pt.name.equals(part.name)) {
+			if(pr.state == MyPartRequestState.ASKED_GANTRY && pr.pt.id == part.id) {
 				pr.state = MyPartRequestState.DELIVERED;
 			}
 		}
@@ -209,7 +201,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 			// Which lane should it feed to?
 			System.out.println("0.4");
-			if (topLane.part.name.equals(currentPart.name))
+			if (topLane.part.id == currentPart.id)
 			{
 				System.out.println("0.5a, lanestate = " + topLane.state);
 				if (topLane.state == MyLaneState.EMPTY || topLane.state == MyLaneState.CONTAINS_PARTS)
@@ -229,7 +221,7 @@ public class FeederAgent extends Agent implements Feeder {
 				}
 				return true;
 			}
-			else if (bottomLane.part.name.equals(currentPart.name))
+			else if (bottomLane.part.id == currentPart.id)
 			{
 				System.out.println("0.5b");
 				if (bottomLane.state == MyLaneState.EMPTY || bottomLane.state == MyLaneState.CONTAINS_PARTS)
@@ -329,14 +321,15 @@ public class FeederAgent extends Agent implements Feeder {
 	private void askGantryForPart(MyPartRequest partRequested) { 
 		debug("asking gantry for part " + partRequested.pt.name + ".");
 
-		if (partRequested.pt.name == null)
-			System.out.println("ERRRORRRRORRR");
 		// This first if statement makes sure that the feeder doesn't unnecessarily purge itself
-		if (this.currentPart.name.equals(partRequested.pt.name) && state != FeederState.EMPTY)
+		if (this.currentPart != null)
 		{
-			debug("feeder doesn't need to purge.");
-			state = FeederState.IS_FEEDING;
-			partRequested.state = MyPartRequestState.DELIVERED;
+			if (this.currentPart.id == partRequested.pt.id && state != FeederState.EMPTY)
+			{
+				debug("feeder doesn't need to purge.");
+				state = FeederState.IS_FEEDING;
+				partRequested.state = MyPartRequestState.DELIVERED;
+			}
 		}
 		if (purgeIfNecessary(partRequested) || this.state == FeederState.EMPTY )
 		{
@@ -370,7 +363,7 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			if (topLane.part != null) // the topLane's part is initially null, which is always != to 
 			{						  // the partRequested.pt, but we don't want to purge when the lane is empty!
-				if (topLane.part != partRequested.pt)
+				if (topLane.part.id != partRequested.pt.id)
 				{
 					purging = true;
 					purgeLane(topLane);
@@ -382,7 +375,7 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			if (bottomLane.part != null) // the bottomlane's part is initially null, which is always != to
 			{						  	 // the partRequested.pt, but we don't want to purge when the lane is empty!
-				if (bottomLane.part != partRequested.pt)
+				if (bottomLane.part.id != partRequested.pt.id)
 				{
 					purging = true;
 					purgeLane(bottomLane);
@@ -471,7 +464,7 @@ public class FeederAgent extends Agent implements Feeder {
 	private void StartFeeding(){
 		debug("action start feeding.");
 		final MyLane currentLane;
-		if(currentPart.name.equals(topLane.part.name))
+		if(currentPart.id == topLane.part.id)
 			currentLane = topLane;
 		else 
 			currentLane = bottomLane;
