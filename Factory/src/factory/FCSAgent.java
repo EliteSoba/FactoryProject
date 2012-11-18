@@ -180,6 +180,9 @@ public class FCSAgent extends Agent implements FCS{
 	//edit kit
 	//old kit name, new kit name, String p1, String p2....
 
+	public void removeKitRecipe(String kitName){
+		kitRecipes.remove(kitName);
+	}
 
 	public void testImport() {
 		System.out.println("Recipes" + kitRecipes.keySet());
