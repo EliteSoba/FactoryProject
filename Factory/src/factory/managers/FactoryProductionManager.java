@@ -126,19 +126,22 @@ public class FactoryProductionManager extends Client {
 			}
 			else if (identifier.equals("movetostand"))
 			{
-				((FactoryProductionPanel) graphics).movePartsRobotToStation(0); //not sure if this is the right method
+				int kitIndex = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).movePartsRobotToStation(kitIndex); //not sure if this is the right method
 			}
 			else if (identifier.equals("droppartsrobotsitems"))
 			{
-				// implement
+				((FactoryProductionPanel) graphics).dropPartsRobotsItems();
 			}
 			else if (identifier.equals("movetonest"))
 			{
-				// implement
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				int itemIndex = Integer.valueOf(pCmd.get(3));
+				((FactoryProductionPanel) graphics).movePartsRobotToNest(nestIndex, itemIndex);
 			}
 			else if (identifier.equals("movetocenter"))
 			{
-				// implement
+				((FactoryProductionPanel) graphics).movePartsRobotToCenter();
 			}
 
 			// End Commands from PartsRobotAgent
@@ -148,9 +151,9 @@ public class FactoryProductionManager extends Client {
 				((FactoryProductionPanel) graphics).moveKitFromInspectionToConveyor();
 			}
 			else if (identifier.equals("putemptykitatslot")) {
-				if (pCmd.get(2).equals("topslot")) {
+				if (pCmd.get(2).equals("topSlot")) {
 					((FactoryProductionPanel) graphics).moveEmptyKitToSlot(0);
-				} else if (pCmd.get(2).equals("bottomslot")) {
+				} else if (pCmd.get(2).equals("bottomSlot")) {
 					((FactoryProductionPanel) graphics).moveEmptyKitToSlot(1);
 				}
 			}
@@ -162,11 +165,11 @@ public class FactoryProductionManager extends Client {
 				}
 			}
 			else if (identifier.equals("dumpkitatslot")) {
-				if (pCmd.get(2).equals("topslot")) {
+				if (pCmd.get(2).equals("topSlot")) {
 					((FactoryProductionPanel) graphics).dumpKitAtSlot(0);
-				} else if (pCmd.get(2).equals("bottomslot")) {
+				} else if (pCmd.get(2).equals("bottomSlot")) {
 					((FactoryProductionPanel) graphics).dumpKitAtSlot(1);
-				} else if (pCmd.get(2).equals("inspectionslot")) {
+				} else if (pCmd.get(2).equals("inspectionSlot")) {
 					((FactoryProductionPanel) graphics).dumpKitAtInspection();
 				}
 			}
