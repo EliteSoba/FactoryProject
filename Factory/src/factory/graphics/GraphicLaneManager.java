@@ -101,12 +101,13 @@ public class GraphicLaneManager{
 
 	public void setBin(GraphicBin bin){
 		this.bin = bin;
-		bin.getBinType().setX(feederX+35);
-		bin.getBinType().setY(feederY+55);
-		/*feederPurgeTimer = 0;
-		feederPurged = false;*/
-		if (bin != null)
+		if (bin != null) {
 			binExists = true;
+			bin.getBinType().setX(feederX+35);
+			bin.getBinType().setY(feederY+55);
+			feederPurgeTimer = 0;
+			feederPurged = false;
+		}
 	}
 
 	public GraphicBin getBin(){
@@ -161,7 +162,7 @@ public class GraphicLaneManager{
 		g.drawImage(feederIcon.getImage(), feederX, feederY, null);
 		g.setColor(new Color(60, 33, 0));
 		g.fillRect(feederX+34, feederY+54, 22, 22);
-		if (binExists && feederPurgeTimer < 7)
+		if (binExists && feederPurgeTimer < 7 || feederPurged && feederPurgeTimer < 7)
 			bin.getBinType().paint(g);
 	}
 
@@ -177,7 +178,7 @@ public class GraphicLaneManager{
 				isStable[i] = false;
 		}
 		
-		if (feederPurged && bin != null) {
+		if (feederPurged) {
 			feederPurgeTimer++;
 			if (feederPurgeTimer < 7)
 				bin.getBinType().moveX(5);

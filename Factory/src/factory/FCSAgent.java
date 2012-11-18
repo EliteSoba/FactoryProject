@@ -49,7 +49,7 @@ public class FCSAgent extends Agent implements FCS{
 		this.masterControl = mc; // for testing purposes
 		this.gantry = gantry;
 		this.partsRobot = partsRobot;
-		//loadData();
+		loadData();
 		//		testImport();
 	}
 	public FCSAgent(MasterControl mc){
@@ -68,7 +68,7 @@ public class FCSAgent extends Agent implements FCS{
 	 * @param kitName This is the name of the kit configuration that you want to produce.
 	 */
 	public void msgProduceKit(int quantity, String kitName) {
-		System.out.println("IT WORKS!");
+//		System.out.println("IT WORKS!");
 		KitConfig recipe = new KitConfig();
 		recipe = kitRecipes.get(kitName);
 		recipe.quantity = quantity;
@@ -153,6 +153,7 @@ public class FCSAgent extends Agent implements FCS{
 		part.id = id;
 		part.imagePath = imagePath;
 		partsList.put(name, part);
+		testImport();
 	}
 
 	/**
@@ -181,6 +182,7 @@ public class FCSAgent extends Agent implements FCS{
 	public void removePartType(String partname){
 		if (partsList.containsKey(partname))
 			partsList.remove(partname);
+		testImport();
 	}
 
 	/**
@@ -220,6 +222,7 @@ public class FCSAgent extends Agent implements FCS{
 			}
 		}
 		kitRecipes.put(configurationName, config);
+		testImport();
 	}
 	/**
 	 * This edits a kit configuration that already exists within the FCS Agent.
@@ -249,6 +252,7 @@ public class FCSAgent extends Agent implements FCS{
 	 */
 	public void removeKitRecipe(String kitName){
 		kitRecipes.remove(kitName);
+		testImport();
 	}
 
 	/**
@@ -256,11 +260,20 @@ public class FCSAgent extends Agent implements FCS{
 	 * from the text file.
 	 */
 	public void testImport() {
-		System.out.println("Recipes" + kitRecipes.keySet());
-		System.out.println("Parts" + partsList.keySet());
-		System.out.println("LIST OF PARTS FOR RECIPE KIT2");
-		for (int i=0; i < kitRecipes.get("Kit2").listOfParts.size(); i++){
-			System.out.println(kitRecipes.get("Kit2").listOfParts.get(i).name);
+		System.out.println("========== LIST OF RECIPES ==========");
+		System.out.println("Recipes" + kitRecipes.keySet() + "\n");
+		System.out.println("========== LIST OF PARTS ==========");
+		System.out.println("Parts" + partsList.keySet() + "\n");
+		
+		List<String> configs = new ArrayList<String>(kitRecipes.keySet());
+		
+		System.out.println("========== LIST OF PARTS IN EACH RECIPE ==========\n");
+		for (int i=0; i < configs.size(); i++){
+			System.out.println("KIT CONFIG: " + configs.get(i));
+			for (int j=0; j < kitRecipes.get(configs.get(i)).listOfParts.size(); j++){
+				System.out.println("Part " + j + ": " + kitRecipes.get(configs.get(i)).listOfParts.get(j).name);
+			}
+			System.out.println("\n");
 		}
 	}
 

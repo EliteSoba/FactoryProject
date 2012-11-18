@@ -54,9 +54,57 @@ public class KitManager extends Client implements WindowListener{
 	}
 
 
-	public void doCommand(ArrayList<String> pCmd) {
+	@Override
+public void doCommand(ArrayList<String> pCmd) {
+int size = pCmd.size();
+//parameters lay between i = 2 and i = size - 2
+String action = pCmd.get(0);
+String identifier = pCmd.get(1);
+if(action.equals("cmd")){
+	/*if(identifier.equals(command1))
+	 * do(command1);
+	 * else if(identifier.equals(command2))
+	 * do(command2);
+	 */
+}
+else if(action.equals("req")){
+	/*if(identifier.equals(request1))
+	 * do(request1);
+	 * else if(identifier.equals(request2))
+	 * do(request2);
+	 */
+}
+else if(action.equals("get")){
+	/*if(identifier.equals(get1))
+	 * do(get1);
+	 * else if(identifier.equals(get2))
+	 * do(get2);
+	 */
+}
+else if(action.equals("set")){
+	/*if(identifier.equals(set1))
+	 * do(set1);
+	 * else if(identifier.equals(set2))
+	 * do(set2);
+	 */
+}
+else if(action.equals("cnf")){
+	/*if(identifier.equals(confirm1))
+	 * do(confirm1);
+	 * else if(identifier.equals(confirm2))
+	 * do(confirm2);
+	 */
+}
+          else if(action.equals("err")){
+	String error;
+	error = new String();
+	for(int i = 1; i<this.parsedCommand.size(); i++)
+		error.concat(parsedCommand.get(i));
+	System.out.println(error);
 
-	}
+	
+}
+}
 
 	// Load Data - remember to import the file - FOR EVERYONE
 	@SuppressWarnings("unchecked")
