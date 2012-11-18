@@ -124,9 +124,9 @@ public class FCSAgent extends Agent implements FCS{
 		stateChanged();
 	}
 
-
 	// *** OTHER METHODS ***
-	public void addPartType(String name, int nestStabilizationTime, String description, int id, String imagePath){
+	
+	public void addPartType(String name, int id, String imagePath, int nestStabilizationTime, String description){
 		Part part = new Part();
 		part.name = name;
 		part.nestStabilizationTime = nestStabilizationTime;
@@ -139,13 +139,16 @@ public class FCSAgent extends Agent implements FCS{
 	public void editPartType(String oldPartName, String newPartName, int id, String imagePath, int nestStabilizationTime, String description){
 		partsList.remove(oldPartName);
 		addPartType(newPartName, nestStabilizationTime, description, id, imagePath);
-
 	}
 	//edit part
 	//old part, new part, new id, new imagepath, new stabilizaitontime, new description
+	
+	public void removePartType(String partname){
+		partsList.remove(partname);
+	}
 
 	public void addKitRecipe(String name, String p1, String p2, String p3, String p4, String p5, String p6, 
-		String p7, String p8 /*List<String> partsRequired*/){
+		String p7, String p8){
 		
 		KitConfig recipe = new KitConfig();
 		List<String> partsRequired = new ArrayList<String>();
@@ -172,15 +175,11 @@ public class FCSAgent extends Agent implements FCS{
 		String p7, String p8){
 		
 		kitRecipes.remove(oldKitName);
-		addKitRecipe(newKitName,  p1,  p2,  p3,  p4,  p5,  p6, p7,  p8);
+		addKitRecipe(newKitName,  p1, p2, p3, p4, p5, p6, p7, p8);
 	}
 	//edit kit
 	//old kit name, new kit name, String p1, String p2....
 
-
-	public void editKitConfig(String newKitName, String oldKitName, List<String> partsRequired){
-
-	}
 
 	public void testImport() {
 		System.out.println("Recipes" + kitRecipes.keySet());
