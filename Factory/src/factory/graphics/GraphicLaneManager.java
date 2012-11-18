@@ -1,6 +1,7 @@
 //Minh La
 
 package factory.graphics;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -124,9 +125,13 @@ public class GraphicLaneManager{
 	} // END Paint function
 
 	public void paintFeeder(Graphics g) {
-		if(binExists)
+		if (binExists)
 			g.drawImage(bin.getBinImage().getImage(), feederX + 50, feederY+15, null);
 		g.drawImage(feederIcon.getImage(), feederX, feederY, null);
+		g.setColor(new Color(60, 33, 0));
+		g.fillRect(feederX+34, feederY+54, 22, 22);
+		if (binExists)
+			g.drawImage(bin.getBinType().getImage().getImage(), feederX+35, feederY+55, null);
 	}
 
 	public void moveLane() {
