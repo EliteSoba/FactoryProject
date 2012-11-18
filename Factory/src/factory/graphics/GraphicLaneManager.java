@@ -163,6 +163,7 @@ public class GraphicLaneManager{
 		g.setColor(new Color(60, 33, 0));
 		g.fillRect(feederX+34, feederY+54, 22, 22);
 		if (binExists && (feederPurgeTimer < 7 || feederPurged && feederPurgeTimer < 7))
+		if (bin != null && (binExists && feederPurgeTimer < 7 || feederPurged && feederPurgeTimer < 7))
 			bin.getBinType().paint(g);
 	}
 
