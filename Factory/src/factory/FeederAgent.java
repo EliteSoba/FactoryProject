@@ -1,6 +1,8 @@
 package factory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
@@ -23,7 +25,7 @@ public class FeederAgent extends Agent implements Feeder {
 	private static int kOK_TO_PURGE_TIME = 10;
 	private String name;
 	public int feederNumber;
-	public ArrayList<MyPartRequest> requestedParts = new ArrayList<MyPartRequest>();   
+	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());   
 	public MyLane topLane;
 	public MyLane bottomLane;
 	public Vision vision;
@@ -66,7 +68,7 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 	}
 
-
+	public enum NestStability {UNSTABLE, STABLE }
 	public enum MyLaneState {EMPTY, PURGING, CONTAINS_PARTS, BAD_NEST, 
 		TOLD_NEST_TO_DUMP, NEST_SUCCESSFULLY_DUMPED}
 	public enum JamState {MIGHT_BE_JAMMED, TOLD_TO_INCREASE_AMPLITUDE, 
@@ -76,6 +78,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 		public Lane lane;
 		public MyLaneState state = MyLaneState.EMPTY;
+		public NestStability stability = NestStability.UNSTABLE; // initially it should be empty. essentially unstbale
 		public JamState jamState;
 		public Part part;
 		public boolean readyForPicture = false;
@@ -100,15 +103,20 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** MESSAGES **/
-
-	/**
-	 * Message from the server when the animation is done
-	 */
-	public void msgAnimationDone(){
-		debug("Received msgAnimationDone() from server");
-		animation.release();
+	public void msgNestHasStabilized(Lane lane) {
+		if(topLane.lane == lane)
+		{
+			debug("My top lane has stabilized and so it's ready for a picture.");
+			topLane.stability = NestStability.STABLE;
+		}
+		else if(bottomLane.lane == lane)
+		{
+			debug("My bottom lane has stabilized and so it's ready for a picture.");
+			bottomLane.stability = NestStability.STABLE;
+		}
+		
+		stateChanged();
 	}
-
 
 	public void msgEmptyNest(Nest n) {
 		debug("received msgEmptyNest()");
@@ -159,9 +167,12 @@ public class FeederAgent extends Agent implements Feeder {
 
 		feederHasABinUnderneath = true; // should never be false again
 
-		for (MyPartRequest pr : requestedParts) {
-			if(pr.state == MyPartRequestState.ASKED_GANTRY && pr.pt.id == part.id) {
-				pr.state = MyPartRequestState.DELIVERED;
+		synchronized(requestedParts)
+		{
+			for (MyPartRequest pr : requestedParts) {
+				if(pr.state == MyPartRequestState.ASKED_GANTRY && pr.pt.id == part.id) {
+					pr.state = MyPartRequestState.DELIVERED;
+				}
 			}
 		}
 		stateChanged();
@@ -181,15 +192,20 @@ public class FeederAgent extends Agent implements Feeder {
 	@Override
 	public boolean pickAndExecuteAnAction() {
 
+		// Determine if the Feeder's associated Nests are ready for a picture
+		if ()
+		
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
 		{
-			//MAKE THIS SYNCHRONIZED
-			for (MyPartRequest p : requestedParts)
+			synchronized(requestedParts)
 			{
-				if (p.state == MyPartRequestState.NEEDED)
+				for (MyPartRequest p : requestedParts)
 				{
-					askGantryForPart(p);
-					return true;
+					if (p.state == MyPartRequestState.NEEDED)
+					{
+						askGantryForPart(p);
+						return true;
+					}
 				}
 			}
 		}
@@ -244,12 +260,15 @@ public class FeederAgent extends Agent implements Feeder {
 			return true;
 		}
 
-		for (MyPartRequest p : requestedParts) 
+		synchronized(requestedParts)
 		{
-			if (p.state == MyPartRequestState.DELIVERED)
+			for (MyPartRequest p : requestedParts) 
 			{
-				processFeederParts(p);
-				return true;
+				if (p.state == MyPartRequestState.DELIVERED)
+				{
+					processFeederParts(p);
+					return true;
+				}
 			}
 		}
 
@@ -465,9 +484,15 @@ public class FeederAgent extends Agent implements Feeder {
 		debug("action start feeding.");
 		final MyLane currentLane;
 		if(currentPart.id == topLane.part.id)
+		{
 			currentLane = topLane;
+		}
 		else 
+		{
 			currentLane = bottomLane;
+		}
+		
+		
 		// Switch Diverter
 		/*if (diverter == DiverterState.FEEDING_BOTTOM) {
 			if (currentLane == topLane)
@@ -491,29 +516,35 @@ public class FeederAgent extends Agent implements Feeder {
 			}
 		},(long) kOK_TO_PURGE_TIME * 1000); // okay to purge after this many seconds
 
+		
 		feederEmptyTimer.schedule(new TimerTask(){
 			public void run(){	
 					/** TODO: FIX THIS CODE, PERHAPS USE MSGING FROM THE ANIMATION. **/
-//				partResettleTimer.schedule(new TimerTask() {
-//					public void run() {
-//						debug("A lane is ready for a picture.");
-//						currentLane.readyForPicture = true;
-//
-//						if (bottomLane.readyForPicture == true && topLane.readyForPicture == true)
-//						{
-//							System.out.println("1.0");
-//							debug("both of my nests are ready for a picture.");
-//							vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
-//							topLane.readyForPicture = false;
-//							bottomLane.readyForPicture = false;
-//							System.out.println("1.1");
-//						}
-//						System.out.println("1.2");
-//						stateChanged();
-//						System.out.println("1.3");
-//					}
-//				}, 3000); // 3 seconds to resettle in the nest
-//				System.out.println("1.4");
+				partResettleTimer.schedule(new TimerTask() {
+					public void run() {
+						if (currentLane == topLane)
+							debug("My top lane is ready for a picture.");
+						else
+							debug("My bottom lane is ready for a picture.");
+
+						
+						currentLane.readyForPicture = true;
+
+						if (bottomLane.readyForPicture == true && topLane.readyForPicture == true)
+						{
+							System.out.println("1.0");
+							debug("both of my nests are ready for a picture.");
+							vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
+							topLane.readyForPicture = false;
+							bottomLane.readyForPicture = false;
+							System.out.println("1.1");
+						}
+						System.out.println("1.2");
+						stateChanged();
+						System.out.println("1.3");
+					}
+				}, 3000); // 3 seconds to resettle in the nest
+				System.out.println("1.4");
 			}
 		}, (long) kOK_TO_PURGE_TIME * 1000); // time it takes the part to move down the lane and fill a nest 
 		System.out.println("1.5");
@@ -651,6 +682,8 @@ public class FeederAgent extends Agent implements Feeder {
 	{
 		return this.feederNumber;
 	}
+
+
 }
 
 

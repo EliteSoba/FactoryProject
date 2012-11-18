@@ -287,6 +287,8 @@ public class MasterControl {
 	// what method to call on what agent.
 
 	public boolean agentCmd(ArrayList<String> cmd){ 		//GO HERE
+
+		Agent destination = null;
 		// 0 = Source
 		// 1 = Destination
 		// 2 = CmdType
@@ -300,8 +302,6 @@ public class MasterControl {
 		}
 
 		if(cmd.get(2).equals("cnf")){
-
-			Agent destination;
 
 			if(agentTreeMap.containsKey(cmd.get(1))){
 
@@ -335,11 +335,34 @@ public class MasterControl {
 
 		} else if( cmd.get(2).equals("set")){
 
+			if (cmd.get(1).equals("fcsa")){
+
+				destination = agentTreeMap.get(cmd.get(1));
+
+				if(cmd.get(3).equals("kitcontent")){
+					//#oldkitname #kitname #partname1 #partname2 ... #partname8"
+					String oldkitname = cmd.get(4);
+					String kitname = cmd.get(5);
+					String partname1 = cmd.get(6);
+					String partname2 = cmd.get(7);
+					String partname3 = cmd.get(8);
+					String partname4 = cmd.get(9);
+					String partname5 = cmd.get(10);
+					String partname6 = cmd.get(11);
+					String partname7 = cmd.get(12);
+					String partname8 = cmd.get(13);
+
+					((FCSAgent) destination).editKitRecipe(oldkitname, kitname, partname1, partname2, partname3, partname4, 
+							partname5, partname6, partname7, partname8);
+				}
+			}
+
+
 		} else if( cmd.get(2).equals("cmd")){
 			// cmd.get(2) is CmdType
 			// cmd.get(3) is Command
 			// cmd.get(4+) are parameters
-			Agent destination;
+
 
 			// FCSAgent Commands:
 			if (cmd.get(1).equals("fcsa"))
@@ -362,25 +385,66 @@ public class MasterControl {
 					((FCSAgent) destination).addPartType(partname, stabalizationtime, partdescription, partid, filepath);
 				}
 
+
+				if(cmd.get(3).equals("rmpartname")){
+					//"#partname"
+					String partname = cmd.get(4);
+					((FCSAgent) destination).removePartType(partname);
+
+				}
+
+				if(cmd.get(3).equals("editpartname")){
+					//" #originalpartname #newpartname #newpartid #newfilepath 
+					//#newstabalizationtime #newpartdescription"
+					String originalpartname = cmd.get(4);
+					String newpartname = cmd.get(5);
+					int newpartid = Integer.valueOf(cmd.get(6));
+					String newfilepath = cmd.get(7);
+					int newstabalizationtime = Integer.valueOf(cmd.get(8));
+					String newpartdescription = cmd.get(9);
+					((FCSAgent) destination).editPartType(originalpartname, newpartname,
+							newpartid, newfilepath, newstabalizationtime, newpartdescription);
+				}
+
+				if(cmd.get(3).equals("addkitname")){
+					//"#kitname #partname1 #partname2 ... #partname8"
+					String kitname = cmd.get(4);
+					String partname1 = cmd.get(5);
+					String partname2 = cmd.get(6);
+					String partname3 = cmd.get(7);
+					String partname4 = cmd.get(8);
+					String partname5 = cmd.get(9);
+					String partname6 = cmd.get(10);
+					String partname7 = cmd.get(11);
+					String partname8 = cmd.get(12);
+					((FCSAgent) destination).addKitRecipe(kitname, partname1, partname2, partname3, partname4, 
+							partname5, partname6, partname7, partname8);
+				}
+				
+				if (cmd.get(3).equals("rmkitname")){
+					//"#kitname"
+					String kitname = cmd.get(4);
+					((FCSAgent) destination).removeKitRecipe(kitname);
+					
+				}
 			}//End FCSAgent Commands
 
-			/*
-			//MCS Commands: //MOVED ELSEWHERE
-
-			if (cmd.get(1).equals("mcs"))
+			// FeederAgent Commands:
+			else if (cmd.get(1).equals("fa"))
 			{
-				destination = agentTreeMap.get(cmd.get(1));
 
-				//fpm mcs cmd stopfactory
-				if(cmd.get(3).equals("stopfactory")){
+			}//End FeederAgent Commands
 
-					//method for stopping factory?
-					//this.closeAgents();
+			// NestAgent Commands:
+			else if (cmd.get(1).equals("na"))
+			{
+				//"fa cmd neststabilized n" + laneManagerID + (i==0?"t":"b")
+				destination = nestAgentTreeMap.get(cmd.get(3)); 
+
+				if(cmd.get(3).equals("neststabilized")){	
+					((NestAgent) destination).msgNestHasStabilized();
 				}
-				//more fcsagent commands
-			}*/
-
-
+			}//End NestAgent Commands
 		}
 
 		//If...
@@ -446,7 +510,7 @@ public class MasterControl {
 
 
 	}
-		/*
+	/*
 		// 0 = Source
 		// 1 = Destination
 		// 2 = CmdType
@@ -466,7 +530,7 @@ public class MasterControl {
 		String b = cmd.get(1); // Destination
 		String c = cmd.get(2); // CommandType
 		String d = "";
-		
+
 		for(int i = 3; i < cmd.size(); i++){  // Command ... put command into string form 
 			d+= cmd.get(i)+" ";
 		}
@@ -477,14 +541,14 @@ public class MasterControl {
 		System.out.println("Server received ... "+cmd+" from "+a);
 		//System.out.println("Server is about to send ... "+fullCmd);
 		return false;
-		
+
 		if (cmd.get(2).equals("set")){
-			
+
 		}
 		else if( cmd.get(2).equals("set")){
 
 		} else if( cmd.get(2).equals("cmd")){
-			
+
 		}
 
 		if (b.equals("multi")){
@@ -508,7 +572,7 @@ public class MasterControl {
 
 
 	}
-*/
+	 */
 	// getDestinations parses the command and determines which Clients need to receive it.
 
 	private ArrayList<PartHandler> getDestinations(String myCmd){
@@ -665,22 +729,47 @@ public class MasterControl {
 		long timeToQuit = System.currentTimeMillis() + 5000;
 		while (System.currentTimeMillis() < timeToQuit);
 
-
 		// TEMPORARY, FOR TESTING PURPOSES:
 		Part p0 = new Part("eye",000,"desc","imgPath",2);
-		Part p1 = new Part("shoe",001,"desc","imgPath",3);
+		Part p1 = new Part("eye",000,"desc","imgPath",3);
 		Part p2 = new Part("shoe",001,"desc","imgPath",3);
+		Part p3 = new Part("shoe",001,"desc","imgPath",3);
+		Part p4 = new Part("sword",002,"desc","imgPath",4);
 
 		//mc.n0t.msgYouNeedPart(p0);
 
 		// shortcut testing
 		//	public Part(String n,int i,String d,String p,double t) {
 
-		mc.f0.msgLaneNeedsPart(p1,mc.l0t); // request a part for the lane
 
-		mc.f0.msgLaneNeedsPart(p0,mc.l0b); // request a new part for the other lane
+		//		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
+		//
+		//		mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
+		//
+		//		mc.f0.msgLaneNeedsPart(p1,mc.l0t); //eye to top
+		//
+		//		mc.f0.msgLaneNeedsPart(p3,mc.l0b); //shoe to bottom
+		//
 
-		mc.f0.msgLaneNeedsPart(p2,mc.l0t); // request a part for the lane
+
+
+		mc.f1.msgLaneNeedsPart(p0,mc.l1t); //eye to top
+
+		mc.f1.msgLaneNeedsPart(p1,mc.l1b); //eye to bottom
+
+		mc.f1.msgLaneNeedsPart(p2,mc.l1t); //shoe to top
+
+		mc.f1.msgLaneNeedsPart(p3,mc.l1b); //shoe to bottom		
+
+		//		
+		//		
+		//
+		//		mc.f2.msgLaneNeedsPart(p0,mc.l2t); //eye to top
+		//
+		//		mc.f2.msgLaneNeedsPart(p2,mc.l2b); //shoe to bottom
+		//
+		//		mc.f2.msgLaneNeedsPart(p4,mc.l2t); //sword to top
+
 
 
 		//		mc.f0.msgLaneNeedsPart(p0, mc.l0t);		

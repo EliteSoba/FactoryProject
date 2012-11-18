@@ -17,6 +17,7 @@ public class GraphicBin{
 	//ImageIcon binItemsStackImage;
 	int binSize;
 	GraphicItem binType;
+	int stabilizationTime;
 
 	public GraphicBin(Part part){
 		partName = part.name;
@@ -26,6 +27,7 @@ public class GraphicBin{
 			binItems.add(new GraphicItem(-40, 0, "Images/"+partName+".png"));
 		}
 		binType = new GraphicItem(-40, 0, "Images/"+partName+".png");
+		stabilizationTime = part.nestStabilizationTime;
 		
 		//binItemsStackImage = new ImageIcon("Images/binCrate.png");
 		binImage = new ImageIcon("Images/binCrate.png");
@@ -41,6 +43,10 @@ public class GraphicBin{
 	
 	public GraphicItem getBinType() {
 		return binType;
+	}
+	
+	public int getStabilizationTime() {
+		return stabilizationTime;
 	}
 	
 	public void paint(Graphics g, int x, int y) {

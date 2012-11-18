@@ -1,20 +1,19 @@
 package factory.graphics;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
-class GraphicPartsRobot extends GraphicAnimatedObject
+class GraphicPartsRobot extends GraphicRobot
 {
-	int fx, fy;		// final position (destination)
-	int destinationNest, destinationKit;
-	boolean arrived;
-	int state;
+	protected ArrayList<GraphicItem> items;			// inventory of items
 	int itemIndex;
 	
 	public GraphicPartsRobot()
 	{
 		
 	}
+	
 	public GraphicPartsRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
 		items = new ArrayList<GraphicItem>();
@@ -35,107 +34,78 @@ class GraphicPartsRobot extends GraphicAnimatedObject
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
 		itemIndex = 0;
 	}
-	
-	public void setDestination(int init_fx, int init_fy)
-	{
-		fx = init_fx;
-		fy = init_fy;
-	}
-
-	public void setState(int init_state)
-	{
-		state = init_state;
-	}
-	
 	public int getDestinationKit()
 	{
 		return destinationKit;
 	}
-	
 	public void setDestinationKit(int init_destinationKit)
 	{
 		destinationKit = init_destinationKit;
 	}
-	
 	public int getDestinationNest()
 	{
 		return destinationNest;
 	}
-	
 	public void setDestinationNest(int init_destinationNest)
 	{
 		destinationNest = init_destinationNest;
 	}
-
 	public void setItemIndex(int index) {
 		itemIndex = index;
 	}
 	public int getItemIndex() {
 		return itemIndex;
 	}
-	public void adjustShift(int amount)
+	public void addItem(GraphicItem newItem)
 	{
-		//if(theta == 0 || theta == 360)
-			x -= amount;
+		items.add(newItem);
 	}
-	public int getState()
+	public void clearItems()
 	{
-		return state;
+		items.clear();
+	}
+	public boolean hasItem()
+	{
+		if(items.size() >= 1)
+			return true;
+		else
+			return false;
+	}
+	public GraphicItem popItem()
+	{
+		if (items.size() == 0)
+			return null;
+		GraphicItem lastItem = items.get(items.size()-1);		// get last item
+		items.remove(items.size()-1);					// remove last item
+		return lastItem;								// return last item
+	}
+	/**
+	 * Gets an Item at the provided index and removes the Item
+	 * @param index The index of the Item being taken
+	 * @return The Item at the provided index; returns {@code null} if the index is invalid
+	 */
+	public GraphicItem popItemAt(int index) {
+		if (index < 0 || index >= items.size())
+			return null;
+		GraphicItem returnedItem = items.get(index);
+		items.remove(index);
+		return returnedItem;
+	}
+	public int getSize()
+	{
+		return items.size();
+	}
+	public GraphicItem getItemAt(int i)
+	{
+		return items.get(i);
 	}
 	public void paint(Graphics g)
 	{
-		// Draw the parts robot itself
-		g.drawImage(image, x, y, imageWidth, imageHeight, null);
-		// Draw the items it's carrying
+		// Draw the robot
+		super.paint(g);
+		// Draw the items the robot is carrying
 		for(int i = 0; i < items.size(); i++)
 			items.get(i).paint(g, x+imageWidth-25,y+10+i*20);
 	}
-	public void move()
-	{
-		//System.out.println(fx + " " + fy);
-		if(y == fy && x == fx)	// robot has arrived at destination
-		{
-			if(state % 2 == 1)
-				state += 1;
-		}
-		else if(y > fy)
-		{
-			if(theta > 90 && theta < 270)
-				theta -= dtheta;
-			else if(theta < 90 || theta >= 270)
-				theta += dtheta;
-			else
-				y -= dy;
-		}
-		else if(y < fy)
-		{
-			if(theta > 90 && theta < 270)
-				theta += dtheta;
-			else if(theta <= 90 || theta > 270)
-				theta -= dtheta;
-			else
-				y += dy;
-		}
-		else if(x > fx)
-		{
-			if(theta < 180 && theta >= 0)
-				theta += dtheta;
-			else if(theta > 180 && theta <= 360)
-				theta -= dtheta;
-			else
-				x -= dx;
-		}
-		else if(x < fx)
-		{
-			if(theta < 180 && theta > 0)
-				theta -= dtheta;
-			else if(theta > 180 && theta < 360)
-				theta += dtheta;
-			else
-				x += dx;
-		}
-		if(theta < 0) theta = 360;
-		else if(theta > 360) theta = 0;
-		//System.out.println(theta);
-	}
+
 }

@@ -19,4 +19,6 @@ public void msgNestWasDumped();
 
 public void msgNestNeedsPart(Part pt);
 
+public void msgNestHasStabilized();
+
 }

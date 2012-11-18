@@ -17,7 +17,7 @@ public class NestAgent extends Agent implements Nest {
 	/** DATA **/
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
 	public Lane myLane;
-	public enum NestState { NORMAL, NEEDS_TO_DUMP }
+	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED }
 	public NestState nestState = NestState.NORMAL;
 	public enum MyPartState {  NEEDED, REQUESTED }
 	public class MyPart {
@@ -40,10 +40,28 @@ public class NestAgent extends Agent implements Nest {
 		myParts.add(new MyPart(part));
 		stateChanged();
 	}
+	
+	/** 
+	 * Message from the animation notifying the NestAgent 
+	 * that its parts have stabilized after resettling.
+	 */
+	public void msgNestHasStabilized() {
+		nestState = NestState.HAS_STABILIZED;
+		stateChanged();
+	}
 
+	
+	
+	
+	
+	
 
 	/** SCHEDULER **/
 	public boolean pickAndExecuteAnAction() {
+		if (nestState == NestState.HAS_STABILIZED)
+		{
+			tellMyLaneIHaveStabilized();
+		}
 		if (nestState == NestState.NEEDS_TO_DUMP)
 		{
 			dump();
@@ -72,6 +90,12 @@ public class NestAgent extends Agent implements Nest {
 		stateChanged();
 	}
 	
+	public void tellMyLaneIHaveStabilized() {
+		nestState = NestState.NORMAL;
+		myLane.msgNestHasStabilized();
+		stateChanged();
+	}
+	
 	public void askLaneToSendParts(MyPart part) { 
 		debug("asking lane to send parts of type "+part.pt.name + ".");
 		part.state = MyPartState.REQUESTED;
@@ -90,6 +114,14 @@ public class NestAgent extends Agent implements Nest {
 	public void setLane(Lane la) {
 		myLane = la;
 	}
+	@Override
+	public String getNestName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+
+	
 
 }
 

@@ -25,6 +25,7 @@ import javax.swing.table.TableColumn;
 
 public class PartsManPanel extends JPanel{
 
+	private static final long serialVersionUID = -8456999510669881291L;
 	// Data
 	AddPanel addPanel;
 	EditPanel editPanel;
@@ -123,6 +124,7 @@ public class PartsManPanel extends JPanel{
 
 	private class AddPanel extends JPanel implements ActionListener{
 
+		private static final long serialVersionUID = 500493950494624477L;
 		// Data
 		JLabel title;
 		JLabel nameLabel;
@@ -156,8 +158,8 @@ public class PartsManPanel extends JPanel{
 			descriptionLabel = new JLabel("Description : ");
 			nestStabalizationTimeLabel = new JLabel ("Nest Stabalization Time : ");
 			nestStabalizationTime = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
-			JFormattedTextField tf = ((JSpinner.DefaultEditor) nestStabalizationTime.getEditor()).getTextField();
-			tf.setEditable(false);
+						JFormattedTextField tf = ((JSpinner.DefaultEditor) nestStabalizationTime.getEditor()).getTextField();
+						tf.setEditable(false);
 			description = new JTextArea("Enter description here", 2, 10);
 			description.setLineWrap(true);
 			description.setWrapStyleWord(true);
@@ -242,6 +244,7 @@ public class PartsManPanel extends JPanel{
 		}
 		@Override
 		public void actionPerformed(ActionEvent ae) {
+			String messageAddPanel = new String (" ");
 			if (ae.getSource() == saveItem){
 				String testName;
 				name.setText(name.getText().replaceAll("\\s","")) ;
@@ -264,7 +267,9 @@ public class PartsManPanel extends JPanel{
 					Part p = new Part(name.getText(), currentID, description.getText(),"Images/" + (String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
 					addItem(p);
 					currentID++;
-					partsManager.sendMessage("add", p, null);
+					messageAddPanel = "pm multi cmd addpartname " + p.name + " " + p.id + " " +
+							p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
+					partsManager.sendCommand(messageAddPanel);
 					idLabel.setText("ID# : " + currentID);
 					name.setText("");
 					description.setText("Enter description here");
@@ -285,6 +290,7 @@ public class PartsManPanel extends JPanel{
 	private class EditPanel extends JPanel implements ActionListener{
 		// Data
 
+		private static final long serialVersionUID = -5141689953794161944L;
 		// Data
 		JLabel title;
 		JLabel nameLabel;
@@ -323,7 +329,6 @@ public class PartsManPanel extends JPanel{
 			nestStabalizationTimeLabel = new JLabel ("Nest Stabalization Time : ");
 			nestStabalizationTime = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 			JFormattedTextField tf = ((JSpinner.DefaultEditor) nestStabalizationTime.getEditor()).getTextField();
-		    tf.setEditable(false);
 			description = new JTextArea("Enter description here", 2, 10);
 			description.setLineWrap(true);
 			description.setWrapStyleWord(true);
@@ -421,16 +426,19 @@ public class PartsManPanel extends JPanel{
 		}
 
 		public void actionPerformed(ActionEvent ae) {
-			
+			String messageEditPanel = new String (" ");
+
 			if (ae.getSource() == removeItem){
 				System.out.println("I will remove a part and update the server.");
-				partsManager.sendMessage("remove", currentPart, null);
+				messageEditPanel = "pm multi cmd rmpartname " + currentPart.name; 
+				partsManager.sendCommand(messageEditPanel);
+
 				removeItem(currentPart);
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
 			}else if(ae.getSource() == saveItem){
 
-				String testName;
+				String testName; //hi
 				name.setText(name.getText().replaceAll("\\s","")) ;
 				testName = name.getText().toUpperCase();
 				boolean nameTaken = false;
@@ -445,9 +453,12 @@ public class PartsManPanel extends JPanel{
 				}else if ((Integer)nestStabalizationTime.getValue() <= 0){
 					name.setText("Invalid time.");	
 				}else{
-					
-					Part p = new Part(name.getText(), currentPart.id, description.getText(),"Images/" + (String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
-					partsManager.sendMessage("edit", p, currentPart);
+
+					Part p = new Part(name.getText(), currentPart.id, description.getText(),"Images/" + 
+							(String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
+					messageEditPanel = "pm multi cmd editpartname " + currentPart.name + " " + p.name + " " + 
+							p.id + " " + p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
+					partsManager.sendCommand(messageEditPanel);
 					editItem(p);
 					partsManager.parts.remove(currentPart.name);
 					partsManager.parts.put(p.name, p);
@@ -458,7 +469,7 @@ public class PartsManPanel extends JPanel{
 			}else if(ae.getSource() == cancel){
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
-				
+
 			}else{
 				JComboBox cb = (JComboBox)ae.getSource();
 				String selectedItem = (String)cb.getSelectedItem();
@@ -508,7 +519,7 @@ public class PartsManPanel extends JPanel{
 			}
 
 		}
-		
+
 		table.revalidate();
 	}
 
@@ -528,6 +539,8 @@ public class PartsManPanel extends JPanel{
 
 
 	public class PartsTableModel extends DefaultTableModel{
+		private static final long serialVersionUID = -3819364278880242952L;
+
 		public boolean isCellEditable(int row, int column){
 			return false;
 		}
@@ -541,6 +554,9 @@ public class PartsManPanel extends JPanel{
 	}
 
 	public class PartsTableCellRenderer	extends DefaultTableCellRenderer{
+
+		private static final long serialVersionUID = 4476957663412431729L;
+
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(
 					table, value, isSelected, hasFocus, row, column);
