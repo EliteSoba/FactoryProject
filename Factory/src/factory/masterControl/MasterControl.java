@@ -22,6 +22,7 @@ import java.util.*;
 
 import agent.Agent;
 import factory.*;
+import factory.interfaces.Nest;
 
 
 public class MasterControl {
@@ -48,7 +49,7 @@ public class MasterControl {
 
 	// Data Members
 
-	TreeMap<String, PartHandler> partHandlers;
+	TreeMap<String, PartHandler> partHandlers; 
 	TreeMap<String, Boolean> partOccupied;
 	private static final List<String> clients = Arrays.asList("fpm", "gm", "kam", "km", "lm", "pm", "multi");
 	private static final List<String> agents = Arrays.asList("ca", "cca", "fcsa", "fa", "ga", "kra", "la", "na", "pra", "sa", "va");
@@ -61,7 +62,8 @@ public class MasterControl {
 			"purgetoplane", "purgebottomlane", "stopfactory", "pickuppurgebin",
 			"getnewbin", "bringbin", "putinspectionkitonconveyor", "putemptykitatslot",
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
-            "partconfig"
+            "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
+            "movetocenter"
 
     );
 
@@ -164,9 +166,6 @@ public class MasterControl {
 		// Instantiate the KitRobot
 		kitRobot = new KitRobotAgent(this,conveyor);
 
-		// Instantiate the PartsRobot
-		//partsRobot = new PartsRobotAgent(); // bad code
-
 		// Instantiate the Stand
 		//stand = new StandAgent(); // bad code
 
@@ -200,12 +199,27 @@ public class MasterControl {
 		nestAgentTreeMap.put("n3t", n3t);
 		nestAgentTreeMap.put("n3b", n3b);
 
+		// Instantiate the PartsRobot
+		List<Nest> nestAgentListForPartsRobot = new ArrayList<Nest>();
+		nestAgentListForPartsRobot.add(0, n0t);
+		nestAgentListForPartsRobot.add(1, n0b);
+		nestAgentListForPartsRobot.add(2, n1t);
+		nestAgentListForPartsRobot.add(3, n1b);
+		nestAgentListForPartsRobot.add(4, n2t);
+		nestAgentListForPartsRobot.add(5, n2b);
+		nestAgentListForPartsRobot.add(6, n3t);
+		nestAgentListForPartsRobot.add(7, n3b);
+
+		partsRobot = new PartsRobotAgent(this, fcs, vision, stand, nestAgentListForPartsRobot); 
+
+		
+		
 		agentTreeMap.put("ca", conveyor);
 		agentTreeMap.put("cca", conveyorController);
 		agentTreeMap.put("ga", gantry );
 		agentTreeMap.put("kra", kitRobot);
-		//        agentTreeMap.put("pra", partsRobot);
-		//        agentTreeMap.put("sa", stand);
+		agentTreeMap.put("pra", partsRobot);
+		//agentTreeMap.put("sa", stand);
 		agentTreeMap.put("va", vision);
 		agentTreeMap.put("fcsa", fcs);
 
@@ -757,21 +771,49 @@ public class MasterControl {
 		Part p2 = new Part("shoe",001,"desc","imgPath",3);
 		Part p3 = new Part("shoe",001,"desc","imgPath",3);
 		Part p4 = new Part("sword",002,"desc","imgPath",4);
-
+		Part p5 = new Part("tentacle",002,"desc","imgPath",4);
+		
+		List<Part> partList = new ArrayList<Part>();
+		partList.add(p0);
+		partList.add(p1);
+		partList.add(p2);
+		partList.add(p3);
+		partList.add(p4);
+		partList.add(p5);
+		
 		//mc.n0t.msgYouNeedPart(p0);
 
 		// shortcut testing
 		//	public Part(String n,int i,String d,String p,double t) {
 
 
-				mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
 		
-				mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
-		//
-		//		mc.f0.msgLaneNeedsPart(p1,mc.l0t); //eye to top
-		//
-		//		mc.f0.msgLaneNeedsPart(p3,mc.l0b); //shoe to bottom
-		//
+		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
+
+		mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
+		
+		// TESTING PARTSROBOT:
+		KitConfig kc = new KitConfig();
+		kc.listOfParts = partList;
+		mc.partsRobot.topSlot = kc; // stand TOP SLOT position
+//		mc.partsRobot.armOne = p0; // i think this gets figured out inside his code
+//		mc.partsRobot.armTwo = p1;
+
+		mc.partsRobot.msgDeliverKitParts();
+		
+		// partsRobot.armOne,partsRobot.armTwo //instances of part object, must be instantiated
+		
+		
+		
+		
+//				mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
+//		
+//				mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
+//		
+//				mc.f0.msgLaneNeedsPart(p4,mc.l0t); //sword to top
+//		
+//				mc.f0.msgLaneNeedsPart(p5,mc.l0b); //tentacle to bottom
+//		
 
 
 		//mc.f1.msgLaneNeedsPart(p0,mc.l1t); //eye to top

@@ -81,7 +81,7 @@ public class FeederAgent extends Agent implements Feeder {
 		public PictureState picState = PictureState.UNSTABLE; // initially it should be empty. essentially unstbale
 		public JamState jamState;
 		public Part part;
-		public boolean readyForPicture = false;
+		public boolean nestChecked = false; // initially
 
 		public MyLane(Lane lane){
 			this.state = MyLaneState.EMPTY;
@@ -104,15 +104,18 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** MESSAGES **/
 	public void msgNestHasStabilized(Lane lane) {
+		
 		if(topLane.lane == lane)
 		{
 			debug("My top lane has stabilized and so it's ready for a picture.");
 			topLane.picState = PictureState.STABLE;
+			topLane.nestChecked = false;
 		}
 		else if(bottomLane.lane == lane)
 		{
 			debug("My bottom lane has stabilized and so it's ready for a picture.");
 			bottomLane.picState = PictureState.STABLE;
+			bottomLane.nestChecked = false;
 		}
 		
 		stateChanged();
@@ -123,11 +126,13 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			debug("Uhoh, my top lane has destabilized!");
 			topLane.picState = PictureState.UNSTABLE;
+			topLane.nestChecked = false;
 		}
 		else if(bottomLane.lane == lane)
 		{
 			debug("Uhoh, my bottom lane has destabilized!");
 			bottomLane.picState = PictureState.UNSTABLE;
+			topLane.nestChecked = false;
 		}
 		
 		stateChanged();
@@ -206,14 +211,16 @@ public class FeederAgent extends Agent implements Feeder {
 	@Override
 	public boolean pickAndExecuteAnAction() {
 
-		// Determine if the Feeder's associated Nests are ready for a picture
-		if (topLane.picState == PictureState.STABLE && 
-				bottomLane.picState == PictureState.STABLE)
+		// Determine if the Nests need to be checked to see if they are ready for a picture
+		if (topLane.nestChecked == false)
 		{
-			topLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;
-			bottomLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;
-			debug("Feeder sends msgMyNestsReadyForPicture() to vision.");
-			vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
+			topLane.nestChecked = true;
+			return areMyNestsReadyForAPicture();
+		}
+		else if (bottomLane.nestChecked == false)
+		{
+			bottomLane.nestChecked = true;
+			return areMyNestsReadyForAPicture();
 		}
 		
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
@@ -326,6 +333,21 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** ACTIONS **/
+	private boolean areMyNestsReadyForAPicture() {
+		
+		// Determine if the Feeder's associated Nests are ready for a picture
+		if (topLane.picState == PictureState.STABLE && 
+				bottomLane.picState == PictureState.STABLE)
+		{
+			topLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;
+			bottomLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;
+			debug("Feeder sends msgMyNestsReadyForPicture() to vision.");
+			vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
+			return true;
+		}
+		
+		return false;
+	}
 	private void nestWasDumped(MyLane la) {
 		String laneStr = "Top Lane";
 		if (bottomLane == la)

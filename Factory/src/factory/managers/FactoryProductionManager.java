@@ -117,6 +117,32 @@ public class FactoryProductionManager extends Client {
 				((FactoryProductionPanel) graphics).moveGantryRobotToFeederForDropoff(feederNumber);
 			}
 			
+			
+			// Commands from PartsRobotAgent
+			else if (identifier.equals("putpartinkit"))
+			{
+				int kitNumber = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).movePartsRobotToStation(kitNumber);
+			}
+			else if (identifier.equals("movetostand"))
+			{
+				((FactoryProductionPanel) graphics).movePartsRobotToStation(0); //not sure if this is the right method
+			}
+			else if (identifier.equals("droppartsrobotsitems"))
+			{
+				// implement
+			}
+			else if (identifier.equals("movetonest"))
+			{
+				// implement
+			}
+			else if (identifier.equals("movetocenter"))
+			{
+				// implement
+			}
+
+			// End Commands from PartsRobotAgent
+			
 			// Commands from KitRobotAgent
 			else if (identifier.equals("putInspectionKitOnConveyor")) {
 				((FactoryProductionPanel) graphics).moveKitFromInspectionToConveyor();
