@@ -140,9 +140,9 @@ public class GraphicFactoryProductionManager extends JFrame {
 		panel.purgeBottomLane(feederNum);
 	}
 	
-	public void getBin()
+	public void getBin(String partName)
 	{
-		panel.moveGantryRobotToPickup("sword");
+		panel.moveGantryRobotToPickup(partName);
 	}
 	
 	public void moveGantryToFeeder1Pickup()
