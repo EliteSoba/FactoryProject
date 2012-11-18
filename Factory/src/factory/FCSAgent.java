@@ -19,15 +19,20 @@ import factory.test.mock.MockGantry;
 
 public class FCSAgent extends Agent implements FCS{
 
-	public Queue<KitConfig> orders = new LinkedList<KitConfig>(); //added this queue for kits
+	//queue of orders that is received from the panels
+	public Queue<KitConfig> orders = new LinkedList<KitConfig>();
+	
+	//agents
 	public PartsRobot partsRobot;
 	Gantry gantry;
-	BinConfig binConfig; //no need for this the way CS200 is designing the bins?
-	public boolean passBinConfigurationToGantry = false;
-	public boolean freeToMakeKit = true;
+	
+	//map to keep track of list of available parts
 	public Map<String, Part> partsList = new HashMap<String, Part>();
+	
+	//map to keep track of list of available recipes
 	public Map<String, KitConfig> kitRecipes = new HashMap<String, KitConfig>();
 
+	//enum to keep track of the state of the factory
 	public enum KitProductionState { PENDING, PRODUCING, FINISHED, PURGING }
 	public KitProductionState state = KitProductionState.PENDING;
 
