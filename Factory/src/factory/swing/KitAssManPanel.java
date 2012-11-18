@@ -23,7 +23,9 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 	KitAssemblyManager kitAssemblyManager;
 	
 	
-	public KitAssManPanel(){
+	public KitAssManPanel(KitAssemblyManager k){
+		kitAssemblyManager = k;
+		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
@@ -50,19 +52,17 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 		c.gridy = 2;
 		this.add(kitRobotFreeze, c);
 	}
-	
-	public void setManager(KitAssemblyManager k){
-		kitAssemblyManager = k;
-	}
 
 	public void actionPerformed(ActionEvent ae) {
+		String set = new String (" ");
 		if(ae.getSource() == incorrectKits){
-			kitAssemblyManager.sendMessage(null, null, "incorrectKits");
-			System.out.println("Initiating non-normative case : Incorrect Kits");
+			kitAssemblyManager.sendCommand("incorrectKits");
+			//to be implemented in v.2
 		}
+		
 		else if (ae.getSource() == kitRobotFreeze){
-			kitAssemblyManager.sendMessage(null, null, "kitRobotFreeze");
-			System.out.println("Initiating non-normative case : Kit Robot Freeze");
+			kitAssemblyManager.sendCommand("kitRobotFreeze");
+			//to be implemented in v.2
 		}
 	}
 

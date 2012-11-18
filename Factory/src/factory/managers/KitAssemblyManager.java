@@ -19,8 +19,7 @@ public class KitAssemblyManager extends Client {
 		public KitAssemblyManager() {
 			super(Client.Type.kam, null, null);
 			
-			buttons = new KitAssManPanel();
-			buttons.setManager(this);
+			buttons = new KitAssManPanel(this);
 			animation = new KitAssemblyPanel(this); //TODO does not currently work but will by 11/13 -->Tobi
 			
 			this.setInterface();
@@ -42,23 +41,7 @@ public class KitAssemblyManager extends Client {
 			setVisible(true);
 
 		}
-		
-		public void sendMessage (String kitname, String quantity, String message) { // sends message out from swing
-			String set = new String("");
-			if (message == "incorrectKits"){
-				//TODO get the format of the command from server //for V.2
-			}
-			else if (message == "kitRobotFreeze"){
-				//TODO get the format of the command from server //for V.2
-			}
-			else{
-				set = "bad command";
-			}
-			sendCommand(set);
-		}
 
 		public void doCommand(ArrayList<String> pCmd) {
-			// TODO receive commands
-			
 		}
 }
