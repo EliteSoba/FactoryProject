@@ -303,6 +303,18 @@ public class StandAgent extends Agent implements Stand {
 	/**
 	 * Hacks and Misc
 	 */
+	public void setVision(Vision v) {
+		this.vision = v;
+	}
+	
+	public void setKitRobot(KitRobot kr) {
+		this.kitRobot = kr;
+	}
+	
+	public void setPartsRobot(PartsRobot pr) {
+		this.partsRobot = pr;
+	}
+	
 	public boolean setSlotKit(String slot, Kit k) {
 		if (slot.equals("topSlot")) {
 			topSlot.kit = k;
