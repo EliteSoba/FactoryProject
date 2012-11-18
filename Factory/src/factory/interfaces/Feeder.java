@@ -19,4 +19,6 @@ public interface Feeder {
 	public boolean getFeederHasABinUnderneath();
 	
 	public int getFeederNumber();
+
+	public void msgNestHasStabilized(Lane lane);
 }

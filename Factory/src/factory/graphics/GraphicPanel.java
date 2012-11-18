@@ -222,6 +222,12 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 	}
 	
+	public void dropPartsRobotsItems() {
+		if (isFactoryProductionManager)
+			partsRobot.clearItems();
+		dropPartsRobotsItemsDone();
+	}
+	
 	/**TODO: Lane methods*/
 	public void feedFeeder(int feederNum) {
 		//if(!lane[feederNum].lane1PurgeOn){	//If purging is on, cannot feed!
@@ -467,6 +473,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 
 	public void partsRobotArrivedAtCenter() {
+		sendMessage("pra cnf");
+	}
+	
+	public void dropPartsRobotsItemsDone() {
 		sendMessage("pra cnf");
 	}
 

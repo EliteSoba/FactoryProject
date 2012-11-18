@@ -162,8 +162,8 @@ public class GraphicLaneManager{
 			if (binExists && stabilizationCount[i] >= bin.getStabilizationTime()) {
 				isStable[i] = true;
 				if (stabilizationCount[i] == bin.getStabilizationTime())
-					graphicPanel.sendMessage("fa cmd neststabilized " + laneManagerID + (i==0?"t":"b")); 
-			}
+					graphicPanel.sendMessage("fa cmd neststabilized n" + laneManagerID + (i==0?"t":"b")); 
+			} 
 			else
 				isStable[i] = false;
 		}

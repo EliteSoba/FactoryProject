@@ -17,12 +17,13 @@ public class LaneAgent extends Agent implements Lane {
 	/** DATA **/
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
 	public Feeder myFeeder;
-//	public enum LaneState { NORMAL, NEEDS_TO_PURGE, PURGING };  // not sure about this, need to update wiki still
-//	public LaneState state = LaneState.NORMAL; 
+	//	public enum LaneState { NORMAL, NEEDS_TO_PURGE, PURGING };  // not sure about this, need to update wiki still
+	//	public LaneState state = LaneState.NORMAL; 
 	public Nest myNest;
 	public int amplitude = 5;
 	public static int kMAX_AMPLITUDE = 20;
-	public enum NestState { NORMAL, NEEDS_TO_DUMP, WAITING_FOR_DUMP_CONFIRMATION, NEST_WAS_DUMPED, NEEDS_TO_INCREASE_AMPLITUDE }
+	public enum NestState { NORMAL, HAS_STABILIZED, NEEDS_TO_DUMP, WAITING_FOR_DUMP_CONFIRMATION,
+		NEST_WAS_DUMPED, NEEDS_TO_INCREASE_AMPLITUDE }
 	public NestState nestState;
 
 	public enum MyPartState {  NEEDED, REQUESTED }
@@ -50,6 +51,11 @@ public class LaneAgent extends Agent implements Lane {
 		stateChanged();
 	}
 
+	public void msgNestHasStabilized() {
+		nestState = NestState.HAS_STABILIZED;
+		stateChanged();
+	}
+
 	public void msgDumpNest() {
 		nestState = NestState.NEEDS_TO_DUMP;
 		stateChanged();
@@ -67,6 +73,11 @@ public class LaneAgent extends Agent implements Lane {
 
 	/** SCHEDULER **/
 	public boolean pickAndExecuteAnAction() {
+		if (nestState == NestState.HAS_STABILIZED)
+		{
+			tellFeederNestHasStabilized();
+			return true;
+		}
 		if (nestState == NestState.NEEDS_TO_DUMP)
 		{
 			dumpNest();
@@ -98,14 +109,19 @@ public class LaneAgent extends Agent implements Lane {
 
 
 	/** ACTIONS **/
-	
+	public void tellFeederNestHasStabilized() {
+		nestState = NestState.NORMAL;
+		myFeeder.msgNestHasStabilized(this);
+		stateChanged();
+	}
+
 	public void tellFeederNestWasDumped() {
 		//if (nestState != NestState.NEEDS_TO_INCREASE_AMPLITUDE) // unnecessary, will never happen
-			nestState = NestState.NORMAL;
+		nestState = NestState.NORMAL;
 		myFeeder.msgNestWasDumped(this);
 		stateChanged();
 	}
-	
+
 	public void increaseAmplitude() {
 		if (amplitude+5 <= kMAX_AMPLITUDE)
 		{
@@ -115,7 +131,7 @@ public class LaneAgent extends Agent implements Lane {
 		}
 		stateChanged();
 	}
-	
+
 	public void askFeederToSendParts(MyPart part) { 
 		debug("asking feeder to send parts of type " + part.pt.name + ".");
 		myFeeder.msgLaneNeedsPart(part.pt, this);
@@ -130,8 +146,8 @@ public class LaneAgent extends Agent implements Lane {
 		stateChanged();
 	}
 
-	
-	
+
+
 	/** ANIMATIONS **/
 	private void DoIncreaseAmplitude(int amp) 
 	{
@@ -152,11 +168,11 @@ public class LaneAgent extends Agent implements Lane {
 	public Nest getNest() {
 		return myNest;
 	}
-	
+
 	public void setFeeder(Feeder f) {
 		myFeeder = f;
 	}
 
-	
+
 
 }

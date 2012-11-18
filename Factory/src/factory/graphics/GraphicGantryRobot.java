@@ -6,18 +6,9 @@ import java.util.ArrayList;
 
 import factory.Part;
 
-class GraphicGantryRobot
+class GraphicGantryRobot extends GraphicRobot
 {
-	int x, y;							// current position
-	int dx, dy;						// change in position
-	int theta;						// image angle
-	int dtheta;						// change in image angle
-	int imageWidth, imageHeight;		// image size
-	Image image;
-	int fx, fy;		// final position (destination)
 	int destinationFeeder;
-	boolean arrived;
-	int state;
 	GraphicBin bin;
 	boolean hasBin;
 	Image binImage;
@@ -51,27 +42,14 @@ class GraphicGantryRobot
 		partPath = "Images/eyesItem.png";
 	}
 	
-	public void setDestination(int init_fx, int init_fy)
-	{
-		fx = init_fx;
-		fy = init_fy;
-	}
-
-	public void setState(int init_state)
-	{
-		state = init_state;
-	}
-	
-	public int getDestinationFeeder()
-	{
-		return destinationFeeder;
-	}
-	
 	public void setDestinationFeeder(int init_destinationFeeder)
 	{
 		destinationFeeder = init_destinationFeeder;
 	}
-	
+	public int getDestinationFeeder()
+	{
+		return destinationFeeder;
+	}
 	public void adjustShift(int amount)
 	{
 		if(theta == 0 || theta == 360)
@@ -83,36 +61,11 @@ class GraphicGantryRobot
 	}
 	public void paint(Graphics g)
 	{
-		// Draw the parts robot itself
-		g.drawImage(image, x, y, imageWidth, imageHeight, null);
+		// Draw the robot
+		super.paint(g);
 		// Draw the bin if it has one
 		if(hasBin)
 			g.drawImage(binImage, x+imageWidth-25, y, 50, 95, null);
-	}
-	// Get functions
-	public int getX()
-	{
-		return x;
-	}
-	public int getY()
-	{
-		return y;
-	}
-	public Image getImage()
-	{
-		return image;
-	}
-	public int getAngle()
-	{
-		return theta;
-	}
-	public int getImageWidth()
-	{
-		return imageWidth;
-	}
-	public int getImageHeight()
-	{
-		return imageHeight;
 	}
 	public boolean hasBin()
 	{
@@ -135,51 +88,5 @@ class GraphicGantryRobot
 	{
 		hasBin = false;
 		return bin;
-	}
-	public void move()
-	{
-		if(y == fy && x == fx)	// robot has arrived at destination
-		{
-			if(state % 2 == 1)
-				state += 1;
-		}
-		else if(x < fx)
-		{
-			if(theta <= 180 && theta > 0)
-				theta -= dtheta;
-			else if(theta > 180 && theta < 360)
-				theta += dtheta;
-			else
-				x += dx;
-		}
-		else if(y > fy)
-		{
-			if(theta > 90 && theta < 270)
-				theta -= dtheta;
-			else if(theta < 90 || theta >= 270)
-				theta += dtheta;
-			else
-				y -= dy;
-		}
-		else if(y < fy)
-		{
-			if(theta > 90 && theta < 270)
-				theta += dtheta;
-			else if(theta <= 90 || theta > 270)
-				theta -= dtheta;
-			else
-				y += dy;
-		}
-		else if(x > fx)
-		{
-			if(theta < 180 && theta >= 0)
-				theta += dtheta;
-			else if(theta > 180 && theta <= 360)
-				theta -= dtheta;
-			else
-				x -= dx;
-		}
-		if(theta < 0) theta = 360;
-		else if(theta > 360) theta = 0;
 	}
 }
