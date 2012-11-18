@@ -121,12 +121,12 @@ public class FeederAgent extends Agent implements Feeder {
 	public void msgNestHasDeStabilized(Lane lane) {
 		if(topLane.lane == lane)
 		{
-			debug("My top lane has destabilized!");
+			debug("Uhoh, my top lane has destabilized!");
 			topLane.picState = PictureState.UNSTABLE;
 		}
 		else if(bottomLane.lane == lane)
 		{
-			debug("My bottom lane has destabilized!");
+			debug("Uhoh, my bottom lane has destabilized!");
 			bottomLane.picState = PictureState.UNSTABLE;
 		}
 		
@@ -212,6 +212,7 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			topLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;
 			bottomLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;
+			debug("Feeder sends msgMyNestsReadyForPicture() to vision.");
 			vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
 		}
 		

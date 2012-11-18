@@ -22,8 +22,7 @@ import java.util.*;
 
 import agent.Agent;
 import factory.*;
-import factory.interfaces.Gantry;
-import factory.interfaces.Lane;
+
 
 public class MasterControl {
 
@@ -54,16 +53,24 @@ public class MasterControl {
 	private static final List<String> clients = Arrays.asList("fpm", "gm", "kam", "km", "lm", "pm", "multi");
 	private static final List<String> agents = Arrays.asList("ca", "cca", "fcsa", "fa", "ga", "kra", "la", "na", "pra", "sa", "va");
 	private static final List<String> cmdTypes = Arrays.asList("cmd", "req", "get", "set", "cnf");
-	private static final List<String> cmds = Arrays.asList( "makekits", "addkitname", "rmkitname", "addpartame",
+	private static final List<String> cmds = Arrays.asList(
+
+            "makekits", "addkitname", "rmkitname", "addpartame",
 			"rmpartname", "lanepowertoggle", "vibration", "kitcontent",
 			"startfeeding", "stopfeeding", "purgefeeder", "switchlane",
 			"purgetoplane", "purgebottomlane", "stopfactory", "pickuppurgebin",
-			"getnewbin", "bringbin", "putInspectionKitOnConveyor", "putEmptyKitAtSlot", "moveKitToInspectionSlot", "dumpKitAtSlot", "exportKitFromCell", "emptyKitEntersCell");
+			"getnewbin", "bringbin", "putinspectionkitonconveyor", "putemptykitatslot",
+            "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
+            "partconfig"
+
+    );
 
 	// The following are lists of commands that are to be received by multiple clients.
 
-	private static final List<String> partCmds = Arrays.asList("addpartname", "rmpartname");
-	private static final List<String> kitCmds = Arrays.asList("kitcontent", "addkitname", "addpartname");
+	private static final List<String> partCmds = Arrays.asList("addpartname", "rmpartname", "partconfig");
+
+    // No longer necessary.
+	//private static final List<String> kitCmds = Arrays.asList("addkitname", "rmkitname", "kitcontent");
 
 
 	ServerSocket myServerSocket;
@@ -92,7 +99,7 @@ public class MasterControl {
 		// At this point, all of the sockets are connected, PartHandlers have been created
 		// The TreeMaps are updated with all of the relevant data, and the Factory can go.
 		startAgents();
-		laneAgentTreeMap.put("l0t", l0t); //tmp for testing.
+
 		String singleD = (debug? partHandlers.firstKey(): null);
 		sendConfirm(singleD);
 		// At this point, all of the parts have been notified that
@@ -104,29 +111,27 @@ public class MasterControl {
 	// Member Methods
 
 	private void startAgents(){
-		//Instantiate all of the agents!!!!!!
+        //Instantiate all of the agents!!!!!!
 
+        // Instantiate the Lanes
+        l0t = new LaneAgent(this);
+        l0b = new LaneAgent(this);
+        l1t = new LaneAgent(this);
+        l1b = new LaneAgent(this);
+        l2t = new LaneAgent(this);
+        l2b = new LaneAgent(this);
+        l3t = new LaneAgent(this);
+        l3b = new LaneAgent(this);
 
-		// Instantiate the Nests
-		n0t = new NestAgent(this);
-		n0b = new NestAgent(this);
-		n1t = new NestAgent(this);
-		n1b = new NestAgent(this);
-		n2t = new NestAgent(this);
-		n2b = new NestAgent(this);
-		n3t = new NestAgent(this);
-		n3b = new NestAgent(this);
-
-
-		// Instantiate the Lanes
-		l0t = new LaneAgent(this);
-		l0b = new LaneAgent(this);
-		l1t = new LaneAgent(this);
-		l1b = new LaneAgent(this);
-		l2t = new LaneAgent(this);
-		l2b = new LaneAgent(this);
-		l3t = new LaneAgent(this);
-		l3b = new LaneAgent(this);
+        // Instantiate the Nests
+        n0t = new NestAgent(this,l0t);
+        n0b = new NestAgent(this,l0b);
+        n1t = new NestAgent(this,l1t);
+        n1b = new NestAgent(this,l1b);
+        n2t = new NestAgent(this,l2t);
+        n2b = new NestAgent(this,l2b);
+        n3t = new NestAgent(this,l3t);
+        n3b = new NestAgent(this,l3b);
 
 		// Instantiate the Gantry
 		gantry = new GantryAgent(this);
@@ -141,6 +146,16 @@ public class MasterControl {
 		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,vision,this);
 		feederAgents = Arrays.asList(f0, f1, f2, f3);
 
+		// Set the Lane's Feeders
+		l0t.setFeeder(f0);
+		l0b.setFeeder(f0);
+		l1t.setFeeder(f1);
+		l1b.setFeeder(f1);
+		l2t.setFeeder(f2);
+		l2b.setFeeder(f2);
+		l3t.setFeeder(f3);
+		l3b.setFeeder(f3);
+		
 
 		// Instantiate the Conveyor and related Agents
 		conveyor = new ConveyorAgent();
@@ -288,18 +303,20 @@ public class MasterControl {
 
 	public boolean agentCmd(ArrayList<String> cmd){ 		//GO HERE
 
-		Agent destination = null;
+		Agent destination;
 		// 0 = Source
 		// 1 = Destination
 		// 2 = CmdType
 		// 3 = Cmd OR if cnf, this would be optional identifier
 		// 4+ = Parameters
 
-		System.out.println("agentCmd() = ");
-		for (int i = 0; i < cmd.size(); i++)
+		System.out.print("agentCmd() = ");
+		for (String c : cmd)
 		{
-			System.out.print(cmd.get(i) + " ");
+			System.out.print(c + " ");
 		}
+
+        System.out.println();
 
 		if(cmd.get(2).equals("cnf")){
 
@@ -311,19 +328,32 @@ public class MasterControl {
 
 				if(cmd.get(1).equals("na")){            // Nest
 
-					destination = nestAgentTreeMap.get(cmd.get(3));
-
+                    if (nestAgentTreeMap.get(cmd.get(3)) == null)
+                    {
+                        System.out.println("ERROR: NULL NESTAGENT.");
+                        return false;
+                    } else {
+                        destination = nestAgentTreeMap.get(cmd.get(3));
+                    }
 				} else if(cmd.get(1).equals("la")){     // Lane
 
-					destination = laneAgentTreeMap.get(cmd.get(3));
+                    if (laneAgentTreeMap.get(cmd.get(3)) == null)
+                    {
+                        System.out.println("ERROR: NULL LANEAGENT.");
+                        return false;
+                    } else {
+                        destination = laneAgentTreeMap.get(cmd.get(3));
+                    }
 
 				} else if(cmd.get(1).equals("fa")){     // Feeder
+                    if (feederAgents.get(Integer.valueOf(cmd.get(3))) == null)
+                    {
+                        System.out.println("ERROR: NULL FEEDERAGENT.");
+                        return false;
+                    } else {
+					    destination = feederAgents.get(Integer.valueOf(cmd.get(3)));
+                    }
 
-					destination = feederAgents.get(Integer.valueOf(cmd.get(3)));
-					if (feederAgents.get(Integer.valueOf(cmd.get(3))) == null)
-					{
-						System.out.println("ERROR: NULL FEEDERAGENT.");
-					}
 				} else {
 					return false;
 				}
@@ -435,27 +465,22 @@ public class MasterControl {
 
 			}//End FeederAgent Commands
 
-			// NestAgent Commands:
-			else if (cmd.get(1).equals("na"))
-			{
-				//"fa cmd neststabilized n" + laneManagerID + (i==0?"t":"b")
-				destination = nestAgentTreeMap.get(cmd.get(3)); 
+            // NestAgent Commands:
+            else if (cmd.get(1).equals("na"))
+            {
+                //"na cmd neststabilized n" + laneManagerID + (i==0?"t":"b")
+                destination = nestAgentTreeMap.get(cmd.get(4));
 
-				if(cmd.get(3).equals("neststabilized")){	
-					((NestAgent) destination).msgNestHasStabilized();
-				}
-			}//End NestAgent Commands
+                if(cmd.get(3).equals("neststabilized")){
+                    ((NestAgent) destination).msgNestHasStabilized();
+                }
+                else if(cmd.get(3).equals("nestdestabilized")){
+                    ((NestAgent) destination).msgNestHasDestabilized();
+                }
+            }//End NestAgent Commands
 		}
 
-		//If...
-		//If
-		//Else if...
-		//Else if...
-		//Else if
-		//If
-		//Else if...
-		//Else if...
-		//...
+
 		return false; // Default is false.
 	}
 	// command sent to client
@@ -504,8 +529,7 @@ public class MasterControl {
 
 		} else {
 			PartHandler destinationPH = determinePH(b);
-			boolean result = sendCmd(destinationPH, fullCmd);
-			return result;
+			return sendCmd(destinationPH, fullCmd);
 		}
 
 
@@ -581,8 +605,6 @@ public class MasterControl {
 
 		if(partCmds.contains(myCmd)){
 			return new ArrayList<PartHandler>(Arrays.asList(partHandlers.get("km"), partHandlers.get("fpm")));
-		} else if(kitCmds.contains(myCmd) ){
-			return new ArrayList<PartHandler>(Arrays.asList(partHandlers.get("fpm"), partHandlers.get("pm")));
 		} else {
 			return null;
 		}
@@ -742,9 +764,9 @@ public class MasterControl {
 		//	public Part(String n,int i,String d,String p,double t) {
 
 
-		//		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
-		//
-		//		mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
+				mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
+		
+				mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
 		//
 		//		mc.f0.msgLaneNeedsPart(p1,mc.l0t); //eye to top
 		//
@@ -752,15 +774,13 @@ public class MasterControl {
 		//
 
 
+		//mc.f1.msgLaneNeedsPart(p0,mc.l1t); //eye to top
 
-		mc.f1.msgLaneNeedsPart(p0,mc.l1t); //eye to top
+		//mc.f1.msgLaneNeedsPart(p1,mc.l1b); //eye to bottom
 
-		mc.f1.msgLaneNeedsPart(p1,mc.l1b); //eye to bottom
-
-		mc.f1.msgLaneNeedsPart(p2,mc.l1t); //shoe to top
-
-		mc.f1.msgLaneNeedsPart(p3,mc.l1b); //shoe to bottom		
-
+		//mc.n1t.msgPartsRobotGrabbingPartFromNest(0); // parts robot grabs part	
+		
+		
 		//		
 		//		
 		//

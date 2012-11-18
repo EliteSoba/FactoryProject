@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 //Stephanie Reagle, Marc Mendiola
 //CS 200
 package factory.swing;
@@ -14,12 +5,9 @@ package factory.swing;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
-
 import javax.swing.*;
 
 import factory.managers.KitManager;
-import factory.managers.LaneManager;
 
 public class KitManPanel extends JPanel implements ActionListener{
 
@@ -44,7 +32,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 	JComboBox cItemComboBox6 = new JComboBox();
 	JComboBox cItemComboBox7 = new JComboBox();
 	JComboBox cItemComboBox8 = new JComboBox();
-	
+
 	JLabel cItemFrame1;
 	JLabel cItemFrame2;
 	JLabel cItemFrame3;
@@ -61,7 +49,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 	ImageIcon cItem6;
 	ImageIcon cItem7;
 	ImageIcon cItem8;
-	
+
 	JLabel mItemFrame1;
 	JLabel mItemFrame2;
 	JLabel mItemFrame3;
@@ -106,7 +94,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 	JComboBox mItemComboBox6 = new JComboBox();
 	JComboBox mItemComboBox7 = new JComboBox();
 	JComboBox mItemComboBox8 = new JComboBox();
-	
+
 
 	JTextField mKitName = new JTextField( "Default Kit");
 	JLabel mMessages = new JLabel ("Messages:");
@@ -149,7 +137,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 		cItemComboBox6.addActionListener(this);
 		cItemComboBox7.addActionListener(this);
 		cItemComboBox8.addActionListener(this);
-		
+
 		cItem1 = new ImageIcon(kitManager.getPartsList().get(cItemComboBox1.getItemAt(0)).imagePath);
 		cItem2 = new ImageIcon(kitManager.getPartsList().get(cItemComboBox2.getItemAt(0)).imagePath);
 		cItem3 = new ImageIcon(kitManager.getPartsList().get(cItemComboBox3.getItemAt(0)).imagePath);
@@ -175,8 +163,8 @@ public class KitManPanel extends JPanel implements ActionListener{
 		cItemFrame7.setIcon(cItem7);
 		cItemFrame8 = new JLabel();
 		cItemFrame8.setIcon(cItem8);
-		
-		
+
+
 		mItemComboBox1.addActionListener(this);
 		mItemComboBox2.addActionListener(this);
 		mItemComboBox3.addActionListener(this);
@@ -185,7 +173,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 		mItemComboBox6.addActionListener(this);
 		mItemComboBox7.addActionListener(this);
 		mItemComboBox8.addActionListener(this);
-		
+
 		mItem1 = new ImageIcon(kitManager.getPartsList().get(mItemComboBox1.getItemAt(0)).imagePath);
 		mItem2 = new ImageIcon(kitManager.getPartsList().get(mItemComboBox2.getItemAt(0)).imagePath);
 		mItem3 = new ImageIcon(kitManager.getPartsList().get(mItemComboBox3.getItemAt(0)).imagePath);
@@ -251,7 +239,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 		c.gridx = 1;
 		c.gridy = 0;
 		createKit.add(cItemComboBox1, c);
-		
+
 		c.gridy = 1;
 		createKit.add(cItemComboBox2, c);
 
@@ -272,14 +260,14 @@ public class KitManPanel extends JPanel implements ActionListener{
 
 		c.gridy = 7;
 		createKit.add(cItemComboBox8, c);
-		
+
 		c.gridy = 8;
 		createKit.add(cMessages, c);
-		
+
 		c.gridx = 2;
 		c.gridy = 0;
 		createKit.add(cItemFrame1, c);
-		
+
 		c.gridy = 1;
 		createKit.add(cItemFrame2, c);
 
@@ -368,11 +356,11 @@ public class KitManPanel extends JPanel implements ActionListener{
 		c.gridx = 1;
 		c.gridy = 10;
 		modifyKit.add(mRemove, c);
-		
+
 		c.gridx = 2;
 		c.gridy = 1;
 		modifyKit.add(mItemFrame1, c);
-		
+
 		c.gridy = 2;
 		modifyKit.add(mItemFrame2, c);
 
@@ -403,7 +391,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent ae) {
 		String set = new String();
 		if (ae.getSource() == cSave) {
-			
+
 		}
 		else if (ae.getSource() == mSave) {
 		}
@@ -445,7 +433,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 				updatePicture(mItem7, mItemFrame7, selectedItem);
 			else if(cb == mItemComboBox8)
 				updatePicture(mItem8, mItemFrame8, selectedItem);
-			
+
 		}
 
 	}
@@ -457,4 +445,3 @@ public class KitManPanel extends JPanel implements ActionListener{
 	}
 
 }
-

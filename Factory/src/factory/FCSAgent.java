@@ -19,15 +19,20 @@ import factory.test.mock.MockGantry;
 
 public class FCSAgent extends Agent implements FCS{
 
-	public Queue<KitConfig> orders = new LinkedList<KitConfig>(); //added this queue for kits
+	//queue of orders that is received from the panels
+	public Queue<KitConfig> orders = new LinkedList<KitConfig>();
+	
+	//agents
 	public PartsRobot partsRobot;
 	Gantry gantry;
-	BinConfig binConfig; //no need for this the way CS200 is designing the bins?
-	public boolean passBinConfigurationToGantry = false;
-	public boolean freeToMakeKit = true;
+	
+	//map to keep track of list of available parts
 	public Map<String, Part> partsList = new HashMap<String, Part>();
+	
+	//map to keep track of list of available recipes
 	public Map<String, KitConfig> kitRecipes = new HashMap<String, KitConfig>();
 
+	//enum to keep track of the state of the factory
 	public enum KitProductionState { PENDING, PRODUCING, FINISHED, PURGING }
 	public KitProductionState state = KitProductionState.PENDING;
 
@@ -35,6 +40,7 @@ public class FCSAgent extends Agent implements FCS{
 	//parts robot to start producing the next order
 	public int kitsExportedCount = 0;
 
+	//reference to the masterControl to communicate to server
 	public MasterControl masterControl;
 
 	//this is temporarily used for testing purposes.  Constructor will likely change.
@@ -43,13 +49,13 @@ public class FCSAgent extends Agent implements FCS{
 		this.masterControl = mc; // for testing purposes
 		this.gantry = gantry;
 		this.partsRobot = partsRobot;
-		loadData();
+		//loadData();
 		//		testImport();
 	}
 	public FCSAgent(MasterControl mc){
 		super (mc);
 		this.masterControl = mc;
-		loadData();
+		//loadData();
 		//		testImport();
 	}
 
@@ -161,7 +167,7 @@ public class FCSAgent extends Agent implements FCS{
 	public void editPartType(String oldPartName, String newPartName, int id, String imagePath, int nestStabilizationTime, String description){
 		if(partsList.containsKey(oldPartName)){
 			partsList.remove(oldPartName);
-			addPartType(newPartName, nestStabilizationTime, description, id, imagePath);
+			addPartType(newPartName, id, description, nestStabilizationTime, imagePath);
 		}
 	}
 	//edit part
@@ -239,7 +245,7 @@ public class FCSAgent extends Agent implements FCS{
 
 	/**
 	 * This removes a kit configuration from the FCS Agent.
-	 * @param kitName The name of the kit yo uwant to remove.
+	 * @param kitName The name of the kit you want to remove.
 	 */
 	public void removeKitRecipe(String kitName){
 		kitRecipes.remove(kitName);
