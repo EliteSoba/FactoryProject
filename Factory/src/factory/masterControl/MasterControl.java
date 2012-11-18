@@ -58,7 +58,7 @@ public class MasterControl {
 			"rmpartname", "lanepowertoggle", "vibration", "kitcontent",
 			"startfeeding", "stopfeeding", "purgefeeder", "switchlane",
 			"purgetoplane", "purgebottomlane", "stopfactory", "pickuppurgebin",
-			"getnewbin", "bringbin");
+			"getnewbin", "bringbin", "putInspectionKitOnConveyor", "putEmptyKitAtSlot", "moveKitToInspectionSlot", "dumpKitAtSlot", "exportKitFromCell", "emptyKitEntersCell");
 
 	// The following are lists of commands that are to be received by multiple clients.
 

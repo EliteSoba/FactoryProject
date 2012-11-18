@@ -1,9 +1,15 @@
 package factory.test;
 
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import factory.*;
 import factory.test.mock.*;
+import factory.ConveyorControllerAgent.Conveyor_State;
 import factory.KitRobotAgent.StandInfo;
 import factory.KitRobotAgent.ConveyorStatus;
 
@@ -53,6 +59,13 @@ public class KitRobotTests extends TestCase {
 		
 		//Calling KitRobot Scheduler, KitRobot should now start trying to put the empty kit in the topSlot
 		kitrobot.pickAndExecuteAnAction();
+		
+		Timer t = new Timer();
+		t.schedule(new TimerTask(){
+		    public void run(){
+		    	kitrobot.msgStandClear();
+		    }
+		}, 1000);
 		
 		//KitRobot should be done putting the empty kit in the topSlot now
 	}

@@ -25,7 +25,6 @@ import javax.swing.table.TableColumn;
 
 public class PartsManPanel extends JPanel{
 
-	private static final long serialVersionUID = -8456999510669881291L;
 	// Data
 	AddPanel addPanel;
 	EditPanel editPanel;
@@ -70,12 +69,12 @@ public class PartsManPanel extends JPanel{
 		renderer = new PartsTableCellRenderer();
 		table = new JTable(model);
 		table.setDefaultRenderer(Integer.class, renderer);
-		table.setDefaultRenderer(Double.class, renderer);
+		table.setDefaultRenderer(Integer.class, renderer);
 		table.setDefaultRenderer(String.class, renderer);
 		table.setAutoCreateRowSorter(true);
 		table.addMouseListener(new MouseListener());
 		TableColumn column = null;
-		for (int i = 1; i < 2; i ++){
+		for (int i = 0; i < 2; i ++){
 			column = table.getColumnModel().getColumn(i);
 			if(i==0){
 				column.setPreferredWidth(2);
@@ -124,7 +123,6 @@ public class PartsManPanel extends JPanel{
 
 	private class AddPanel extends JPanel implements ActionListener{
 
-		private static final long serialVersionUID = 500493950494624477L;
 		// Data
 		JLabel title;
 		JLabel nameLabel;
@@ -157,7 +155,9 @@ public class PartsManPanel extends JPanel{
 			idLabel = new JLabel("ID# : " + currentID);
 			descriptionLabel = new JLabel("Description : ");
 			nestStabalizationTimeLabel = new JLabel ("Nest Stabalization Time : ");
-			nestStabalizationTime = new JSpinner();
+			nestStabalizationTime = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+			JFormattedTextField tf = ((JSpinner.DefaultEditor) nestStabalizationTime.getEditor()).getTextField();
+			tf.setEditable(false);
 			description = new JTextArea("Enter description here", 2, 10);
 			description.setLineWrap(true);
 			description.setWrapStyleWord(true);
@@ -179,7 +179,7 @@ public class PartsManPanel extends JPanel{
 			c.gridy = 0;
 			c.gridwidth = 2;
 			c.fill = GridBagConstraints.VERTICAL;
-			c.insets = new Insets(0,0,20,0);
+			c.insets = new Insets(5,0,20,0);
 			this.add(title, c);
 			c.fill = GridBagConstraints.VERTICAL;
 			c.anchor = GridBagConstraints.LINE_START;
@@ -214,9 +214,9 @@ public class PartsManPanel extends JPanel{
 			c.gridx = 2;
 			c.gridy = 4;
 			c.fill = GridBagConstraints.VERTICAL;
-			c.insets = new Insets(0,20,20,0);
+			c.insets = new Insets(5,20,20,0);
 			this.add(previewFrame, c);
-			c.insets = new Insets(0,0,20,0);
+			c.insets = new Insets(5,0,20,0);
 			c.gridx = 0;
 			c.gridy = 5;
 			c.anchor = GridBagConstraints.LINE_START;
@@ -242,7 +242,6 @@ public class PartsManPanel extends JPanel{
 		}
 		@Override
 		public void actionPerformed(ActionEvent ae) {
-			String messageAddPanel = new String (" ");
 			if (ae.getSource() == saveItem){
 				String testName;
 				name.setText(name.getText().replaceAll("\\s","")) ;
@@ -265,9 +264,7 @@ public class PartsManPanel extends JPanel{
 					Part p = new Part(name.getText(), currentID, description.getText(),"Images/" + (String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
 					addItem(p);
 					currentID++;
-					messageAddPanel = "pm multi cmd addpartname " + p.name + " " + p.id + " " +
-							p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
-					partsManager.sendCommand(messageAddPanel);
+					partsManager.sendMessage("add", p, null);
 					idLabel.setText("ID# : " + currentID);
 					name.setText("");
 					description.setText("Enter description here");
@@ -288,7 +285,6 @@ public class PartsManPanel extends JPanel{
 	private class EditPanel extends JPanel implements ActionListener{
 		// Data
 
-		private static final long serialVersionUID = -5141689953794161944L;
 		// Data
 		JLabel title;
 		JLabel nameLabel;
@@ -325,7 +321,9 @@ public class PartsManPanel extends JPanel{
 			idLabel = new JLabel("ID# : " + currentID);
 			descriptionLabel = new JLabel("Description : ");
 			nestStabalizationTimeLabel = new JLabel ("Nest Stabalization Time : ");
-			nestStabalizationTime = new JSpinner();
+			nestStabalizationTime = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+			JFormattedTextField tf = ((JSpinner.DefaultEditor) nestStabalizationTime.getEditor()).getTextField();
+		    tf.setEditable(false);
 			description = new JTextArea("Enter description here", 2, 10);
 			description.setLineWrap(true);
 			description.setWrapStyleWord(true);
@@ -348,7 +346,7 @@ public class PartsManPanel extends JPanel{
 			c.gridy = 0;
 			c.gridwidth = 2;
 			c.fill = GridBagConstraints.VERTICAL;
-			c.insets = new Insets(0,0,20,0);
+			c.insets = new Insets(5,0,20,0);
 			this.add(title, c);
 			c.fill = GridBagConstraints.VERTICAL;
 			c.gridwidth = 1;
@@ -383,9 +381,9 @@ public class PartsManPanel extends JPanel{
 			c.gridx = 2;
 			c.gridy = 4;
 			c.fill = GridBagConstraints.VERTICAL;
-			c.insets = new Insets(0,20,20,0);
+			c.insets = new Insets(5,20,20,0);
 			this.add(previewFrame, c);
-			c.insets = new Insets(0,0,20,0);
+			c.insets = new Insets(5,0,20,0);
 			c.gridx = 0;
 			c.gridy = 5;
 			c.fill = GridBagConstraints.VERTICAL;
@@ -423,19 +421,16 @@ public class PartsManPanel extends JPanel{
 		}
 
 		public void actionPerformed(ActionEvent ae) {
-			String messageEditPanel = new String (" ");
-
+			
 			if (ae.getSource() == removeItem){
 				System.out.println("I will remove a part and update the server.");
-				messageEditPanel = "pm multi cmd rmpartname " + currentPart.name; 
-				partsManager.sendCommand(messageEditPanel);
-
+				partsManager.sendMessage("remove", currentPart, null);
 				removeItem(currentPart);
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
 			}else if(ae.getSource() == saveItem){
 
-				String testName;
+				String testName; //hi
 				name.setText(name.getText().replaceAll("\\s","")) ;
 				testName = name.getText().toUpperCase();
 				boolean nameTaken = false;
@@ -450,12 +445,9 @@ public class PartsManPanel extends JPanel{
 				}else if ((Integer)nestStabalizationTime.getValue() <= 0){
 					name.setText("Invalid time.");	
 				}else{
-
-					Part p = new Part(name.getText(), currentPart.id, description.getText(),"Images/" + 
-							(String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
-					messageEditPanel = "pm multi cmd editpartname " + currentPart.name + " " + p.name + " " + 
-							p.id + " " + p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
-					partsManager.sendCommand(messageEditPanel);
+					
+					Part p = new Part(name.getText(), currentPart.id, description.getText(),"Images/" + (String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
+					partsManager.sendMessage("edit", p, currentPart);
 					editItem(p);
 					partsManager.parts.remove(currentPart.name);
 					partsManager.parts.put(p.name, p);
@@ -466,7 +458,7 @@ public class PartsManPanel extends JPanel{
 			}else if(ae.getSource() == cancel){
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
-
+				
 			}else{
 				JComboBox cb = (JComboBox)ae.getSource();
 				String selectedItem = (String)cb.getSelectedItem();
@@ -516,7 +508,7 @@ public class PartsManPanel extends JPanel{
 			}
 
 		}
-
+		
 		table.revalidate();
 	}
 
@@ -536,8 +528,6 @@ public class PartsManPanel extends JPanel{
 
 
 	public class PartsTableModel extends DefaultTableModel{
-		private static final long serialVersionUID = -3819364278880242952L;
-
 		public boolean isCellEditable(int row, int column){
 			return false;
 		}
@@ -551,9 +541,6 @@ public class PartsManPanel extends JPanel{
 	}
 
 	public class PartsTableCellRenderer	extends DefaultTableCellRenderer{
-
-		private static final long serialVersionUID = 4476957663412431729L;
-
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(
 					table, value, isSelected, hasFocus, row, column);
