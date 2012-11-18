@@ -11,5 +11,5 @@ public interface PartsRobot {
 	public void msgMakeKit(KitConfig kitConfig);
 	public void msgClearLineOfSight(Nest nestOne, Nest nestTwo);
 	public void msgPictureTaken(Nest nestOne, Nest nestTwo);
-	public void msgHereArePartCoordiantes(Part part, Coordinate coordinateTwo);
+	public void msgHereArePartCoordiantesForNest(Nest nest, Part part, int coordinate);
 }

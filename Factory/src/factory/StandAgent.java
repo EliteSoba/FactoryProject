@@ -355,5 +355,17 @@ public class StandAgent extends Agent implements Stand {
 		}
 	}
 
+	@Override
+	public void msgKitRobotWantsToExportKit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgClearStand() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

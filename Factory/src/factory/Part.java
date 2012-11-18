@@ -3,7 +3,7 @@ package factory;
 import java.io.Serializable;
 import java.io.*;
 
-public class Part implements Serializable{
+public class Part implements Serializable,  Cloneable{
 
 	public String name;               // name of the part type
 	public int id;
@@ -31,6 +31,16 @@ public class Part implements Serializable{
 
 	public Part(){}
 
+	
+	 public Object clone() {
+         try {
+             return super.clone();
+         }
+         catch( CloneNotSupportedException e ) {
+             return null;
+         }
+     } 
+	 
 }
 
 

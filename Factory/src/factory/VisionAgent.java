@@ -84,8 +84,7 @@ public class VisionAgent extends Agent implements Vision {
 	
 	//the following message existed in the wiki, but the parameter is different.  It takes a timer rather than feeder
 	@Override
-	public void msgMyNestsReadyForPicture(Nest nest, Nest nest2,
-			TimerTask timerTask) {
+	public void msgMyNestsReadyForPicture(Nest nest, Nest nest2, TimerTask timerTask) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -97,13 +96,6 @@ public class VisionAgent extends Agent implements Vision {
 		stateChanged();
 	}
 	
-	/**
-	 * Message from the server when the animation is done
-	 */
-	public void msgAnimationDone(){
-		debug("Received msgAnimationDone() from server");
-		animation.release();
-	}
 	
 	// *** SCHEDULER ***
 	public boolean pickAndExecuteAnAction() {
