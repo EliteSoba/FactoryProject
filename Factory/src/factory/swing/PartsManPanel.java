@@ -1,4 +1,7 @@
+//Stephanie Reagle, Marc Mendiola
+
 package factory.swing;
+
 
 
 import factory.Part;
@@ -16,9 +19,8 @@ import javax.swing.table.TableColumn;
 
 
 /*
- * This class is the GUI for the Parts Manaager. This will be
- * instantiated in the general PartsManager class (which extends JFrame).
- * Written by : Marc Mendiola
+ * This class is the GUI for the Parts Manager. This will be
+ * instantiated in the general PartsManager class (which extends Client).
  */
 
 
