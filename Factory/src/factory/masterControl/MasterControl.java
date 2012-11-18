@@ -22,8 +22,7 @@ import java.util.*;
 
 import agent.Agent;
 import factory.*;
-import factory.interfaces.Gantry;
-import factory.interfaces.Lane;
+
 
 public class MasterControl {
 
@@ -69,7 +68,9 @@ public class MasterControl {
 	// The following are lists of commands that are to be received by multiple clients.
 
 	private static final List<String> partCmds = Arrays.asList("addpartname", "rmpartname", "partconfig");
-	private static final List<String> kitCmds = Arrays.asList("addkitname", "rmkitname", "kitcontent");
+
+    // No longer necessary.
+	//private static final List<String> kitCmds = Arrays.asList("addkitname", "rmkitname", "kitcontent");
 
 
 	ServerSocket myServerSocket;
@@ -144,6 +145,16 @@ public class MasterControl {
 		f2 = new FeederAgent("f2",2,l2t,l2b,gantry,vision,this);
 		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,vision,this);
 		feederAgents = Arrays.asList(f0, f1, f2, f3);
+
+        // Set the Lane's Feeders
+        l0t.setFeeder(f0);
+        l0b.setFeeder(f0);
+        l1t.setFeeder(f1);
+        l1b.setFeeder(f1);
+        l2t.setFeeder(f2);
+        l2b.setFeeder(f2);
+        l3t.setFeeder(f3);
+        l3b.setFeeder(f3);
 
 
 		// Instantiate the Conveyor and related Agents
@@ -292,7 +303,7 @@ public class MasterControl {
 
 	public boolean agentCmd(ArrayList<String> cmd){ 		//GO HERE
 
-		Agent destination = null;
+		Agent destination;
 		// 0 = Source
 		// 1 = Destination
 		// 2 = CmdType
@@ -300,9 +311,9 @@ public class MasterControl {
 		// 4+ = Parameters
 
 		System.out.print("agentCmd() = ");
-		for (int i = 0; i < cmd.size(); i++)
+		for (String c : cmd)
 		{
-			System.out.print(cmd.get(i) + " ");
+			System.out.print(c + " ");
 		}
 
         System.out.println();
@@ -515,8 +526,7 @@ public class MasterControl {
 
 		} else {
 			PartHandler destinationPH = determinePH(b);
-			boolean result = sendCmd(destinationPH, fullCmd);
-			return result;
+			return sendCmd(destinationPH, fullCmd);
 		}
 
 
@@ -592,8 +602,6 @@ public class MasterControl {
 
 		if(partCmds.contains(myCmd)){
 			return new ArrayList<PartHandler>(Arrays.asList(partHandlers.get("km"), partHandlers.get("fpm")));
-		} else if(kitCmds.contains(myCmd) ){
-			return new ArrayList<PartHandler>(Arrays.asList(partHandlers.get("pm"), partHandlers.get("fpm")));
 		} else {
 			return null;
 		}
