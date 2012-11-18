@@ -42,7 +42,7 @@ public class GraphicKittingRobot {
 	GraphicKittingStation station;
 
 	/**Booleans to determine what pathing the Kit Robot is taking*/
-	private boolean fromBelt, toStation, toBelt, toCheck, checkKit, fromCheck, purgeKit, toDump;
+	private boolean fromBelt, toStation, toBelt, toCheck, checkKit, fromCheck, purgeInspectionKit, toDump, purgeKit;
 	/**The slot in the Kit Station the Kit Robot is going to*/
 	private int stationTarget;
 	
@@ -77,6 +77,7 @@ public class GraphicKittingRobot {
 		toCheck = false;
 		checkKit = false;
 		fromCheck = false;
+		purgeInspectionKit = false;
 		purgeKit = false;
 		toDump = false;
 		stationTarget = 0;
@@ -317,10 +318,19 @@ public class GraphicKittingRobot {
 			}
 		}
 		
-		//From Inspection Station to Dump Station
+		//From Kit Station to Dump Station
 		else if (purgeKit) {
-			if (moveToCheck(v)) {
+			if (moveToStation(v, stationTarget)) {
 				purgeKit = false;
+				setKit(station.popKit(stationTarget));
+				toDump = true;
+			}
+		}
+		
+		//From Inspection Station to Dump Station
+		else if (purgeInspectionKit) {
+			if (moveToCheck(v)) {
+				purgeInspectionKit = false;
 				setKit(station.popCheck());
 				toDump = true;
 			}
@@ -520,19 +530,25 @@ public class GraphicKittingRobot {
 	public void setCheckKit(boolean checkKit) {
 		this.checkKit = checkKit;
 	}
+	public void setPurgeKit(boolean purgeKit) {
+		this.purgeKit = purgeKit;
+	}
+	public boolean getPurgeKit() {
+		return purgeKit;
+	}
 	/**
 	 * Checks if the Kit Robot is going to the Dump Station
 	 * @return {@code true} if the Kit Robot is going to the Dump Station; {@code false} otherwise
 	 */
-	public boolean getPurgeKit() {
-		return purgeKit;
+	public boolean getpurgeInspectionKit() {
+		return purgeInspectionKit;
 	}
 	/**
 	 * Sets if the Kit Robot is going to the Dump Station
 	 * @param fromBelt If the Kit Robot is going to the Dump Station
 	 */
-	public void setPurgeKit(boolean purgeKit) {
-		this.purgeKit = purgeKit;
+	public void setPurgeInspectionKit(boolean purgeInspectionKit) {
+		this.purgeInspectionKit = purgeInspectionKit;
 	}
 	/**
 	 * Gets the slot in the Kit Station the Kit Robot is going to
