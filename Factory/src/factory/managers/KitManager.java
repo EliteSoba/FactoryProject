@@ -145,6 +145,10 @@ else if(action.equals("cnf")){
 
 	
 }
+          else 
+   		   System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
+
+
 }
 
 	// Load Data - remember to import the file - FOR EVERYONE
