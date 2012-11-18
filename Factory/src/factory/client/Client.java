@@ -2,6 +2,8 @@ package factory.client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -58,6 +60,7 @@ public abstract class Client extends JFrame implements ActionListener {
 	}; //end independentInput
 	
 	public Client(Type t, JPanel buttons, JPanel Animation){
+		
 		connected = false;
 		type = t;
 		UI = buttons;
@@ -70,8 +73,11 @@ public abstract class Client extends JFrame implements ActionListener {
 		//setInterface(); //to be implemented...set size, layout, add UI etc...
 		Thread inputThread = new Thread(independentInput);
 		inputThread.start();
+		this.addWindowListener(new WindowCloser(this));
+		
+		
 	}
-	
+		
 	public void connect(){
 		try {
 			server = new Socket("127.0.0.1", 12321); //connects to server on localhost
@@ -106,9 +112,69 @@ public abstract class Client extends JFrame implements ActionListener {
 		/*if(arg0.getSource() == updater)
 			if(graphics != null)
 				graphics.repaint();*/
+		
 	}
 	
+
 	public abstract void setInterface(); // to be implemented by child class
     public abstract void doCommand(ArrayList<String> pCmd); // also must be implemented by child class
+    
+    private class WindowCloser implements WindowListener{
+
+    	Client client;
+    	public WindowCloser(Client client2) {
+			client = client2;
+		}
+		
+		@Override
+		public void windowActivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowClosed(WindowEvent e) {
+			
+		}
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+			try {
+				if(client.input != null)
+					client.input.close();
+				if(client.output != null)
+					client.output.close();
+				} catch (IOException e1) {
+					//never executes but wont compile w/o
+				}
+			System.out.println("closed");
+		}
+
+		@Override
+		public void windowDeactivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowDeiconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowIconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowOpened(WindowEvent e) {
+			// TODO Auto-generated method stub
+			System.out.println("Window opened");
+		}
+    }
+    
+    
 }
 

@@ -48,7 +48,7 @@ public class NestAgent extends Agent implements Nest {
 	 * that its parts have stabilized after resettling.
 	 */
 	public void msgNestHasStabilized() {
-		System.out.println("NEST HAS STABILIZED");
+		debug("NEST HAS STABILIZED");
 		nestState = NestState.HAS_STABILIZED;
 		stateChanged();
 	}
@@ -58,7 +58,7 @@ public class NestAgent extends Agent implements Nest {
 	 * parts have destabilized (become unstable!)
 	 */
 	public void msgNestHasDestabilized() {
-		System.out.println("NEST HAS BECOME UNSTABLE");
+		debug("NEST HAS BECOME UNSTABLE");
 		nestState = NestState.HAS_DESTABILIZED;
 		stateChanged();
 	}
@@ -69,7 +69,9 @@ public class NestAgent extends Agent implements Nest {
 	 */
 	public void msgPartsRobotGrabbingPartFromNest(int coordinate) {
 		//for all intensive purposes, this just means the nest has destabilized
-		msgNestHasDestabilized();
+		debug("PARTS ROBOT GRABS PART FROM NEST");
+		nestState = NestState.HAS_DESTABILIZED;
+		stateChanged();
 	}
 	
 
