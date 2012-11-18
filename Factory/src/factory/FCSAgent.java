@@ -44,13 +44,13 @@ public class FCSAgent extends Agent implements FCS{
 		this.gantry = gantry;
 		this.partsRobot = partsRobot;
 		loadData();
-		testImport();
+		//		testImport();
 	}
 	public FCSAgent(MasterControl mc){
 		super (mc);
 		this.masterControl = mc;
 		loadData();
-		testImport();
+		//		testImport();
 	}
 
 	// *** MESSAGES ***
@@ -112,8 +112,8 @@ public class FCSAgent extends Agent implements FCS{
 	private void sendKitConfigToPartRobot() { 
 
 		/**THIS IS TEMPORARY, //TODO for now send message to gantry instead of parts robot to test swing->agent->animation**/
-		this.gantry.msgFeederNeedsPart(partsList.get("Shoe"), this.masterControl.f0);
-		//		this.partsRobot.msgMakeKit(orders.peek()); //TODO uncomment this for v1 implementation
+		//		this.gantry.msgFeederNeedsPart(partsList.get("Shoe"), this.masterControl.f0); //comment this out for unit testing
+		this.partsRobot.msgMakeKit(orders.peek()); //TODO uncomment this for v1 implementation
 		this.state = KitProductionState.PRODUCING;
 		kitsExportedCount = 0;
 		stateChanged();
@@ -245,6 +245,10 @@ public class FCSAgent extends Agent implements FCS{
 		kitRecipes.remove(kitName);
 	}
 
+	/**
+	 * This is a method to test whether or not the FCS was able to load the list of parts and kit configurations
+	 * from the text file.
+	 */
 	public void testImport() {
 		System.out.println("Recipes" + kitRecipes.keySet());
 		System.out.println("Parts" + partsList.keySet());
@@ -253,7 +257,7 @@ public class FCSAgent extends Agent implements FCS{
 			System.out.println(kitRecipes.get("Kit2").listOfParts.get(i).name);
 		}
 	}
-	
+
 	// Load Data - remember to import the file - FOR EVERYONE
 	/**
 	 * This function loads the data of existing parts and kit configurations from a text file.

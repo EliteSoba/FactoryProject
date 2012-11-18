@@ -30,45 +30,6 @@ public class FCSTests extends TestCase{
 //	BinConfig binConfig;
 //	boolean passBinConfigurationToGantry;
 	
-	/**tests the msgInitialize().  The initialize msg should send the bin config information to a gantry agent **/
-	public void testMsgInitialize(){
-		
-		HashMap<Bin, Integer> binList = new HashMap<Bin, Integer>();
-		BinConfig binConfig = new BinConfig(binList);
-		MockGantry gantry = new MockGantry("gantry");
-		MockPartsRobot partsRobot = new MockPartsRobot("parts robot");
-		FCSAgent fcs = new FCSAgent(gantry, partsRobot, null);
-		
-		//create message for FCS.  Should eventually call gantry.msgChangeGantryBinConfig(this.binConfig);
-		fcs.msgInitialize(binConfig);
-		
-		//passBinConfigurationToGantry should be true
-		assertTrue("passBinConfigurationToGantry should be true after calling msgInitialize.  Instead, it is: "
-				+ fcs.passBinConfigurationToGantry, fcs.passBinConfigurationToGantry);
-		
-		//test to see that the gantry robot has not been given a message before the scheduler is called.
-		//Its log should be empty.
-		assertEquals(
-				"Mock Gantry should have an empty event log before the FCSAgent scheduler is called. Instead, the mock gantry event log reads: "
-						+ gantry.log.toString(), 0, gantry.log.size());
-		
-		//call the fcs scheduler
-		fcs.pickAndExecuteAnAction();
-		
-		//tests to see if the gantry log got the message
-		assertTrue("Gantry should have gotten a message to change bin config.", gantry.log
-				.containsString("msgChangeGantryBinConfig"));
-		
-		//passBinConfigurationToGantry should be false after calling the scheduler. 
-		assertFalse("passBinConfigurationToGantry should be false after calling the scheduler.  Instead, it is: "
-				+ fcs.passBinConfigurationToGantry, fcs.passBinConfigurationToGantry);
-		
-		//only one message should be sent to the gantry
-		assertEquals(
-				"Only 1 message should have been sent to the gantry. Event log: "
-						+ gantry.log.toString(), 1, gantry.log.size());
-		
-	}
 	
 	public void testMsgProduceKit()
 	{
@@ -104,10 +65,7 @@ public class FCSTests extends TestCase{
 		//tests to see if the kit config state changed from PENDING to PRODUCING
 //		assertTrue("Parts Robot should have gotten a message to make a kit.", );
 	}
-	
-	public void testImports(){
-		FCSAgent fcs = new FCSAgent(null);
-	}
+
 	
 	public void testAddingAndFinishingKitConfig(){
 		
