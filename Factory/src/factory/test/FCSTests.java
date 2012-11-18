@@ -271,7 +271,17 @@ public class FCSTests extends TestCase{
 		assertFalse("The part type \"arm\" should not exist anymore because it should have been removed",
 				fcs.partsList.containsKey("arm"));
 		
-		System.out.println(fcs.partsList.keySet());
+//		System.out.println(fcs.partsList.keySet());
+		
+	}
+	
+	public void testImportListAndSwing(){
+		FCSAgent fcs = new FCSAgent(null);
+		
+		assertTrue(true);
+		
+		fcs.loadData();
+		fcs.testImport();
 	}
 	
 	
