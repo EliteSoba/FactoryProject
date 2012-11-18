@@ -14,8 +14,9 @@ public class GraphicBin{
 	ArrayList <GraphicItem> binItems;
 	ImageIcon binImage;
 	String partName;
-	ImageIcon binItemsStackImage;
+	//ImageIcon binItemsStackImage;
 	int binSize;
+	GraphicItem binType;
 
 	public GraphicBin(Part part){
 		partName = part.name;
@@ -23,14 +24,10 @@ public class GraphicBin{
 		binItems = new ArrayList<GraphicItem>();
 		for(int i = 0; i < binSize;i++){
 			binItems.add(new GraphicItem(-40, 0, "Images/"+partName+".png"));
-			//binItems.add(new GraphicItem(-40, 0, "Images/eyesItem.png"));
 		}
-		//Declaration of items in bin's location
-		/*for(int i = 0;i<binItems.size();i++){
-			binItems.get(i).setX(-40);
-			binItems.get(i).itemImage = new ImageIcon("Images/" + partName + ".png");
-		}*/
-		binItemsStackImage = new ImageIcon("Images/binCrate.png");
+		binType = new GraphicItem(-40, 0, "Images/"+partName+".png");
+		
+		//binItemsStackImage = new ImageIcon("Images/binCrate.png");
 		binImage = new ImageIcon("Images/binCrate.png");
 	}
 
@@ -40,6 +37,10 @@ public class GraphicBin{
 
 	public ImageIcon getBinImage(){
 		return binImage;
+	}
+	
+	public GraphicItem getBinType() {
+		return binType;
 	}
 	
 	public void paint(Graphics g, int x, int y) {

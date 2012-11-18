@@ -124,7 +124,7 @@ public class FCSTests extends TestCase{
 		
 		fcs.kitRecipes.put("typeA", kit1);
 		fcs.kitRecipes.put("typeB", kit2);
-		fcs.partsRobot = new MockPartsRobotAgent("name");
+		fcs.partsRobot = new MockPartsRobot("name");
 		
 		//test to see if fcs has 2 recipe types.
 		assertEquals("FCS should have 2 recipes of kits, but instead has: " + fcs.kitRecipes.size()

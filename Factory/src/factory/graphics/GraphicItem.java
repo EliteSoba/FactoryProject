@@ -207,4 +207,12 @@ public class GraphicItem {
 		return divergeUp;
 	}
 	
+	/**
+	 * Gets the image of the Item
+	 * @return The ImageIcon of the Item
+	 */
+	public ImageIcon getImage() {
+		return image;
+	}
+	
 }

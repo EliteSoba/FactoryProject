@@ -287,8 +287,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 //		lane[(feederNum)].bin = null;
 //		lane[(feederNum)].binExists = false;
 		if (isLaneManager || isFactoryProductionManager) {
-			lane[feederNum].bin.getBinItems().clear();
-			lane[(feederNum)].feederOn = false;
+			lane[(feederNum)].purgeFeeder();
 			purgeFeederDone(feederNum); // send the confirmation
 		}
 	}
@@ -427,7 +426,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void cameraFlashDone() {
-		sendMessage("FILLER");
+		sendMessage("va cnf");
 	}
 
 	public void gantryRobotArrivedAtPickup() {
@@ -444,15 +443,15 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void partsRobotArrivedAtNest() {
-		sendMessage("FILLER");
+		sendMessage("pra cnf");
 	}
 
 	public void partsRobotArrivedAtStation() {
-		sendMessage("FILLER");
+		sendMessage("pra cnf");
 	}
 
 	public void partsRobotArrivedAtCenter() {
-		sendMessage("FILLER");
+		sendMessage("pra cnf");
 	}
 
 	public void feedLaneDone(int laneNum){
@@ -496,6 +495,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		return lane[index];
 	}
 	
+	/**TODO: Paint function*/
 	public void paint(Graphics g) {
 		g.setColor(new Color(200, 200, 200));
 		g.fillRect(0, 0, getWidth(), getHeight());

@@ -46,26 +46,6 @@ public class PartsManager extends Client implements WindowListener{
 		setVisible(true);
 	}
 	
-	public void sendMessage(String option, Part p1, Part p2){
-		String message = null;
-		
-		if(option.equals("add")){
-			message = "pm multi cmd addpartname " + p1.name + " " + p1.id + " " + p1.imagePath + " " + p1.nestStabilizationTime + " " + p1.description;
-			System.out.println(message);
-		}
-		
-		else if (option.equals("remove")){
-			message = "pm multi cmd rmpartname " + p1.name; 
-		}else if (option.equals("edit")){
-			message = "pm multi cmd editpartname " + p2.name + " " + p1.name + " " + p1.id + " " + p1.imagePath + " " + p1.nestStabilizationTime + " " + p1.description;
-			
-		}
-		
-		//sendCommand(message);
-		
-	}
-
-		
 	public HashMap<String, Part> getParts(){
 		return parts;
 	}
