@@ -265,6 +265,15 @@ public class FCSAgent extends Agent implements FCS{
 		System.out.println("========== LIST OF PARTS ==========");
 		System.out.println("Parts" + partsList.keySet() + "\n");
 		
+		List<String> parts = new ArrayList<String>(partsList.keySet());
+		for (int a=0; a < partsList.size(); a++){
+			System.out.println("***" + partsList.get(parts.get(a)).name + "***");
+			System.out.println("ID: " + partsList.get(parts.get(a)).id);
+			System.out.println("Description: " + partsList.get(parts.get(a)).description);
+			System.out.println("Image Path: " + partsList.get(parts.get(a)).imagePath);
+			System.out.println("Nest Stabilization Time: " + partsList.get(parts.get(a)).nestStabilizationTime + "\n\n");
+		}
+		
 		List<String> configs = new ArrayList<String>(kitRecipes.keySet());
 		
 		System.out.println("========== LIST OF PARTS IN EACH RECIPE ==========\n");

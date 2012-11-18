@@ -144,40 +144,40 @@ public class FactoryProductionManager extends Client {
 			// End Commands from PartsRobotAgent
 			
 			// Commands from KitRobotAgent
-			else if (identifier.equals("putInspectionKitOnConveyor")) {
+			else if (identifier.equals("putinspectionkitonconveyor")) {
 				((FactoryProductionPanel) graphics).moveKitFromInspectionToConveyor();
 			}
-			else if (identifier.equals("putEmptyKitAtSlot")) {
-				if (pCmd.get(2).equals("topSlot")) {
+			else if (identifier.equals("putemptykitatslot")) {
+				if (pCmd.get(2).equals("topslot")) {
 					((FactoryProductionPanel) graphics).moveEmptyKitToSlot(0);
-				} else if (pCmd.get(2).equals("bottomSlot")) {
+				} else if (pCmd.get(2).equals("bottomslot")) {
 					((FactoryProductionPanel) graphics).moveEmptyKitToSlot(1);
 				}
 			}
-			else if (identifier.equals("moveKitToInspectionSlot")) {
+			else if (identifier.equals("movekittoinspectionslot")) {
 				if (pCmd.get(2).equals("topSlot")) {
 					((FactoryProductionPanel) graphics).moveKitToInspection(0);
 				} else if (pCmd.get(2).equals("bottomSlot")) {
 					((FactoryProductionPanel) graphics).moveKitToInspection(1);
 				}
 			}
-			else if (identifier.equals("dumpKitAtSlot")) {
-				if (pCmd.get(2).equals("topSlot")) {
+			else if (identifier.equals("dumpkitatslot")) {
+				if (pCmd.get(2).equals("topslot")) {
 					((FactoryProductionPanel) graphics).dumpKitAtSlot(0);
-				} else if (pCmd.get(2).equals("bottomSlot")) {
+				} else if (pCmd.get(2).equals("bottomslot")) {
 					((FactoryProductionPanel) graphics).dumpKitAtSlot(1);
-				} else if (pCmd.get(2).equals("inspectionSlot")) {
+				} else if (pCmd.get(2).equals("inspectionslot")) {
 					((FactoryProductionPanel) graphics).dumpKitAtInspection();
 				}
 			}
 
 			// Commands from ConveyorAgent
-			else if (identifier.equals("exportKitFromCell")) {
+			else if (identifier.equals("exportkitfromcell")) {
 				((FactoryProductionPanel) graphics).exportKit();
 			}
 			
 			// Commands from ConveyorControllerAgent
-			else if (identifier.equals("emptyKitEntersCell")) {
+			else if (identifier.equals("emptykitenterscell")) {
 				((FactoryProductionPanel) graphics).newEmptyKit();
 			}
 
