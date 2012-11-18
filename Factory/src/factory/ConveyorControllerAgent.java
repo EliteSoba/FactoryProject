@@ -59,7 +59,7 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		    	
 		    	// Tell server to do animation of moving empty kit from conveyor to the topSlot of the stand
 				//server.sendNewEmptyKit();
-		    	server.command("cca fpm cmd newKitEntersCell");
+		    	server.command("cca fpm cmd emptyKitEntersCell");
 				
 				// Wait until the animation is done
 				try {

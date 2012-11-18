@@ -7,12 +7,24 @@ import factory.*;
 import factory.test.mock.*;
 
 public class ConveyorTests extends TestCase {
+	ConveyorAgent conveyor;
+	MockKitRobot kitRobot;
+	MockConveyorController conveyorController;
+	
+	public void initializeAgents() {
+		conveyor = new ConveyorAgent();
+		kitRobot = new MockKitRobot("KitRobot");
+		conveyorController = new MockConveyorController("ConveyorController");
+		conveyor.setKitRobot(kitRobot);
+		conveyor.setConveyorController(conveyorController);
+	}
 	
 	@Test
 	public void testNewKitRequest() {
-		ConveyorAgent  conveyor = new ConveyorAgent();
-		MockKitRobot kitRobot = new MockKitRobot("KitRobot");
-		
+		/**
+		 * Test for the Conveyor getting a request for a new Kit from the KitRobot
+		 */
+		initializeAgents();
 	}
 
 }

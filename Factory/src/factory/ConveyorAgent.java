@@ -113,7 +113,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	public void setKitRobot(KitRobot kr) {
 		this.kitRobot = kr;
 	}
-	public void setConveyorControll(ConveyorController cc) {
+	public void setConveyorController(ConveyorController cc) {
 		this.conveyorController = cc;
 	}
 	public void setFCS(FCS fcs) {
