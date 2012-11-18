@@ -103,8 +103,8 @@ public class GraphicLaneManager{
 		this.bin = bin;
 		if (bin != null) {
 			binExists = true;
-			bin.getBinType().setX(feederX+35);
-			bin.getBinType().setY(feederY+55);
+			bin.getBinType().setX(feederX+54);
+			bin.getBinType().setY(feederY+54);
 			feederPurgeTimer = 0;
 			feederPurged = false;
 		}
@@ -157,14 +157,13 @@ public class GraphicLaneManager{
 	} // END Paint function
 
 	public void paintFeeder(Graphics g) {
-		if (binExists)
-			g.drawImage(bin.getBinImage().getImage(), feederX + 50, feederY+15, null);
+		g.setColor(Color.WHITE);
+		g.fillRect(feederX, feederY, 110, 110);
+		if(binExists && feederPurgeTimer < 7)
+				bin.getBinType().paint(g);
+		//if (binExists)
+			//g.drawImage(bin.getBinImage().getImage(), feederX + 50, feederY+15, null);
 		g.drawImage(feederIcon.getImage(), feederX, feederY, null);
-		g.setColor(new Color(60, 33, 0));
-		g.fillRect(feederX+34, feederY+54, 22, 22);
-		if (binExists && (feederPurgeTimer < 7 || feederPurged && feederPurgeTimer < 7))
-		if (bin != null && (binExists && feederPurgeTimer < 7 || feederPurged && feederPurgeTimer < 7))
-			bin.getBinType().paint(g);
 	}
 
 	public void moveLane() {
