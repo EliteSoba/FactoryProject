@@ -87,10 +87,7 @@ public class FCSAgent extends Agent implements FCS{
 
 	// *** SCHEDULER ***
 	public boolean pickAndExecuteAnAction() {
-		if (this.passBinConfigurationToGantry == true){
-			changeGantryBinConfig();
-			return true;
-		}
+
 
 		//added this in the scheduler
 		if (this.state == KitProductionState.FINISHED){
@@ -106,23 +103,15 @@ public class FCSAgent extends Agent implements FCS{
 	}
 
 	// *** ACTIONS ***
-	/**
-	 * Passes down the new configuration to the Gantry
-	 */
-	private void changeGantryBinConfig(){
-		gantry.msgChangeGantryBinConfig(this.binConfig);
-		this.passBinConfigurationToGantry = false;
-		stateChanged();
-	}
 
 	/**
 	 * Passes down the new Kit Configuration to the PartsRobot Agent
 	 */
 	private void sendKitConfigToPartRobot() { 
-		
+
 		/**THIS IS TEMPORARY, //TODO for now send message to gantry instead of parts robot to test swing->agent->animation**/
 		this.gantry.msgFeederNeedsPart(partsList.get("Shoe"), this.masterControl.f0);
-//		this.partsRobot.msgMakeKit(orders.peek()); //TODO uncomment this for v1 implementation
+		//		this.partsRobot.msgMakeKit(orders.peek()); //TODO uncomment this for v1 implementation
 		this.state = KitProductionState.PRODUCING;
 		kitsExportedCount = 0;
 		stateChanged();
@@ -135,9 +124,9 @@ public class FCSAgent extends Agent implements FCS{
 		stateChanged();
 	}
 
-
 	// *** OTHER METHODS ***
-	public void addPartType(String name, double nestStabilizationTime, String description, int id, String imagePath){
+	
+	public void addPartType(String name, int id, String imagePath, int nestStabilizationTime, String description){
 		Part part = new Part();
 		part.name = name;
 		part.nestStabilizationTime = nestStabilizationTime;
@@ -147,10 +136,32 @@ public class FCSAgent extends Agent implements FCS{
 		partsList.put(name, part);
 	}
 
-	public void addKitRecipe(String name, List<String> partsRequired){
+	public void editPartType(String oldPartName, String newPartName, int id, String imagePath, int nestStabilizationTime, String description){
+		partsList.remove(oldPartName);
+		addPartType(newPartName, nestStabilizationTime, description, id, imagePath);
+	}
+	//edit part
+	//old part, new part, new id, new imagepath, new stabilizaitontime, new description
+	
+	public void removePartType(String partname){
+		partsList.remove(partname);
+	}
+
+	public void addKitRecipe(String name, String p1, String p2, String p3, String p4, String p5, String p6, 
+		String p7, String p8){
+		
 		KitConfig recipe = new KitConfig();
-		if (partsRequired.size() != 0){
-			for (String p: partsRequired){
+		List<String> partsRequired = new ArrayList<String>();
+		partsRequired.add(p1);
+		partsRequired.add(p2);
+		partsRequired.add(p3);
+		partsRequired.add(p4);
+		partsRequired.add(p5);
+		partsRequired.add(p6);
+		partsRequired.add(p7);
+		partsRequired.add(p8);
+		for (String p: partsRequired){
+			if(!p.equals("None")){
 				Part part = new Part();
 				part = partsList.get(p);
 				recipe.listOfParts.add(part);
@@ -159,6 +170,16 @@ public class FCSAgent extends Agent implements FCS{
 		}
 		kitRecipes.put(name, recipe);
 	}
+	
+	public void editKitRecipe(String oldKitName, String newKitName, String p1, String p2, String p3, String p4, String p5, String p6, 
+		String p7, String p8){
+		
+		kitRecipes.remove(oldKitName);
+		addKitRecipe(newKitName,  p1, p2, p3, p4, p5, p6, p7, p8);
+	}
+	//edit kit
+	//old kit name, new kit name, String p1, String p2....
+
 
 	public void testImport() {
 		System.out.println("Recipes" + kitRecipes.keySet());

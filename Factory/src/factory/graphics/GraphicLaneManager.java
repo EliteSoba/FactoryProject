@@ -45,6 +45,8 @@ public class GraphicLaneManager{
 	boolean lane2PurgeOn;
 	boolean feederPurged;
 	int feederPurgeTimer;
+	int stabilizationCount[];
+	boolean isStable[];
 	int laneSpeed;
 
 	GraphicPanel graphicPanel;
@@ -71,6 +73,12 @@ public class GraphicLaneManager{
 		lane2PurgeOn = false;		//Nest purge is off unless turned on
 		feederPurged = false;
 		timerCount = 1; binItemCount = 0; vibrationCount = 0; vibrationAmplitude = 2;
+		stabilizationCount = new int[2];
+		isStable = new boolean[2];
+		for (int i = 0; i < 2; i++) {
+			stabilizationCount[i] = 0;
+			isStable[i] = false;
+		}
 
 		//Location of bin to appear. x is fixed
 		feederX = lane_xPos + 250; feederY = lane_yPos + 15;
@@ -149,6 +157,15 @@ public class GraphicLaneManager{
 	}
 
 	public void moveLane() {
+		for (int i = 0; i < 2; i++) {
+			stabilizationCount[i]++;
+			if (binExists && stabilizationCount[i] >= bin.getStabilizationTime()) {
+				isStable[i] = true;
+			}
+			else
+				isStable[i] = false;
+		}
+		
 		if (feederPurged) {
 			feederPurgeTimer++;
 			if (feederPurgeTimer < 7)
@@ -209,9 +226,12 @@ public class GraphicLaneManager{
 					lane1Items.get(j).setVX(vX);
 				}
 			}
-
+			System.out.println("size " + lane1QueueTaken.size());
+			
 			if(lane1Items.size() == 0){
 				lane1PurgeOn = false; //This is where the purge ends
+				lane1QueueTaken.clear();
+				System.out.println("size " + lane1QueueTaken.size());
 				graphicPanel.purgeTopLaneDone(laneManagerID);
 			}
 			else{
@@ -262,6 +282,7 @@ public class GraphicLaneManager{
 					}
 					if(lane1Items.size() == 0){
 						lane1PurgeOn = false; //This is where the purge ends
+						lane1QueueTaken.clear();
 						graphicPanel.purgeTopLaneDone(laneManagerID);
 					}
 				}
@@ -308,6 +329,7 @@ public class GraphicLaneManager{
 					if(lane1Items.get(i).getStepX() == 0){
 						lane1Items.get(i).setVY(0);
 						lane1Items.get(i).setVX(0);
+						stabilizationCount[0] = 0;
 						lane1Items.get(i).setX(lane_xPos + 3 + 25 * (int)(graphicPanel.getNest().get(laneManagerID * 2).getSize() / 3));
 						boolean testDiverge = lane1Items.get(i).getDivergeUp();
 						lane1Items.get(i).setY(lane_yPos + 3 + 25 * (graphicPanel.getNest().get(laneManagerID * 2).getSize() % 3) + 80 * ((testDiverge)?0:1));
@@ -334,6 +356,7 @@ public class GraphicLaneManager{
 						else{
 							lane1Items.get(i).setVX(0);
 							lane1QueueTaken.add(new Boolean(true));
+							
 						}
 						continue;
 					}
@@ -372,6 +395,7 @@ public class GraphicLaneManager{
 					else if(lane1Items.get(i).getStepX() == 0){
 						lane1Items.get(i).setVY(0);
 						lane1Items.get(i).setVX(0);
+						stabilizationCount[0] = 0;
 						lane1Items.get(i).setX(lane_xPos + 3 + 25 * (int)(graphicPanel.getNest().get(laneManagerID * 2).getSize() / 3));
 						boolean testDiverge = lane1Items.get(i).getDivergeUp();
 						lane1Items.get(i).setY(lane_yPos + 3 + 25 * (graphicPanel.getNest().get(laneManagerID * 2).getSize() % 3) + 80 * ((testDiverge)?0:1));
@@ -415,6 +439,7 @@ public class GraphicLaneManager{
 
 			if(lane2Items.size() == 0){
 				lane2PurgeOn = false; //This is where the purge ends
+				lane2QueueTaken.clear();
 				graphicPanel.purgeTopLaneDone(laneManagerID);
 			}
 			else{
@@ -465,6 +490,7 @@ public class GraphicLaneManager{
 					}
 					if(lane2Items.size() == 0){
 						lane2PurgeOn = false; //This is where the purge ends
+						lane2QueueTaken.clear();
 						graphicPanel.purgeTopLaneDone(laneManagerID);
 					}
 				}
@@ -512,6 +538,7 @@ public class GraphicLaneManager{
 					if(lane2Items.get(i).getStepX() == 0){
 						lane2Items.get(i).setVY(0);
 						lane2Items.get(i).setVX(0);
+						stabilizationCount[1] = 0;
 						lane2Items.get(i).setX(lane_xPos + 3 + 25 * (int)(graphicPanel.getNest().get(laneManagerID * 2 + 1).getSize() / 3));
 						boolean testDiverge = lane2Items.get(i).getDivergeUp();
 						lane2Items.get(i).setY(lane_yPos + 3 + 25 * (graphicPanel.getNest().get(laneManagerID * 2 + 1).getSize() % 3) + 80 * ((testDiverge)?0:1));
@@ -587,6 +614,7 @@ public class GraphicLaneManager{
 						//remove from queue or lane item, add to nest
 						lane2Items.get(i).setVY(0);
 						lane2Items.get(i).setVX(0);
+						stabilizationCount[1] = 0;
 						lane2Items.get(i).setX(lane_xPos + 3 + 25 * (int)(graphicPanel.getNest().get(laneManagerID * 2 + 1).getSize() / 3));
 						boolean testDiverge = !lane2Items.get(i).getDivergeUp();
 						lane2Items.get(i).setY(lane_yPos + 3 + 25 * (graphicPanel.getNest().get(laneManagerID * 2 + 1).getSize() % 3) + 80 * ((testDiverge)?0:1));
