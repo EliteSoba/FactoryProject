@@ -209,9 +209,12 @@ public class GraphicLaneManager{
 					lane1Items.get(j).setVX(vX);
 				}
 			}
-
+			System.out.println("size " + lane1QueueTaken.size());
+			
 			if(lane1Items.size() == 0){
 				lane1PurgeOn = false; //This is where the purge ends
+				//lane1QueueTaken.clear();
+				System.out.println("size " + lane1QueueTaken.size());
 				graphicPanel.purgeTopLaneDone(laneManagerID);
 			}
 			else{
@@ -415,6 +418,7 @@ public class GraphicLaneManager{
 
 			if(lane2Items.size() == 0){
 				lane2PurgeOn = false; //This is where the purge ends
+				lane2QueueTaken.clear();
 				graphicPanel.purgeTopLaneDone(laneManagerID);
 			}
 			else{
