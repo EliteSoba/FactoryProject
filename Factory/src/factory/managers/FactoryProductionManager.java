@@ -148,9 +148,9 @@ public class FactoryProductionManager extends Client {
 				((FactoryProductionPanel) graphics).moveKitFromInspectionToConveyor();
 			}
 			else if (identifier.equals("putemptykitatslot")) {
-				if (pCmd.get(2).equals("topslot")) {
+				if (pCmd.get(2).equals("topSlot")) {
 					((FactoryProductionPanel) graphics).moveEmptyKitToSlot(0);
-				} else if (pCmd.get(2).equals("bottomslot")) {
+				} else if (pCmd.get(2).equals("bottomSlot")) {
 					((FactoryProductionPanel) graphics).moveEmptyKitToSlot(1);
 				}
 			}
@@ -162,11 +162,11 @@ public class FactoryProductionManager extends Client {
 				}
 			}
 			else if (identifier.equals("dumpkitatslot")) {
-				if (pCmd.get(2).equals("topslot")) {
+				if (pCmd.get(2).equals("topSlot")) {
 					((FactoryProductionPanel) graphics).dumpKitAtSlot(0);
-				} else if (pCmd.get(2).equals("bottomslot")) {
+				} else if (pCmd.get(2).equals("bottomSlot")) {
 					((FactoryProductionPanel) graphics).dumpKitAtSlot(1);
-				} else if (pCmd.get(2).equals("inspectionslot")) {
+				} else if (pCmd.get(2).equals("inspectionSlot")) {
 					((FactoryProductionPanel) graphics).dumpKitAtInspection();
 				}
 			}
