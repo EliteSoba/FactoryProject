@@ -783,7 +783,7 @@ public class KitManPanel extends JPanel /*implements ActionListener*/{
 				testName = cKitName.getText().toUpperCase();
 				boolean nameTaken = false;
 				for(String tempName : kitManager.getKitConfigList().keySet()){
-					if(testName.equals(tempName.toUpperCase()) && !testName.equals(currentPart.name.toUpperCase()))
+					if(testName.equals(tempName.toUpperCase()) && !testName.equals(currentKit.kitName.toUpperCase()))
 						nameTaken = true;
 				}
 				if(nameTaken){
@@ -791,14 +791,27 @@ public class KitManPanel extends JPanel /*implements ActionListener*/{
 				}else if (cKitName.getText().equals("")){
 					cKitName.setText("No input.");
 				}else{
-					/*
-					Part p = new Part(name.getText(), currentPart.id, description.getText(),"Images/" + (String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
-					partsManager.sendMessage("edit", p, currentPart);
-					editItem(p);
-					partsManager.parts.remove(currentPart.name);
-					partsManager.parts.put(p.name, p);
-					currentPart = p;
-					*/
+					
+					KitConfig k = new KitConfig(cKitName.getText());
+					if(!cItem1.equals("None"))
+						k.listOfParts.add(kitManager.getPartsList().get(cItem1));
+					if(!cItem1.equals("None"))
+					if(!cItem1.equals("None"))
+						if(!cItem1.equals("None"))
+							if(!cItem1.equals("None"))
+								if(!cItem1.equals("None"))
+									if(!cItem1.equals("None"))
+										if(!cItem1.equals("None"))
+											if(!cItem1.equals("None"))
+					k.listOfParts.add(kitManager.getPartsList().get("Body"));
+					k.listOfParts.add(kitManager.getPartsList().get("Body"));
+					k.listOfParts.add(kitManager.getPartsList().get("Body"));
+					
+					editItem(k);
+					kitManager.removeFromKitConfigList(currentKit);
+					kitManager.addToKitConfigList(k);
+					currentKit = k;
+			
 					basePanel1.setVisible(true);
 					basePanel2.setVisible(false);
 					cItemComboBox.setSelectedIndex(0);
@@ -860,43 +873,39 @@ public class KitManPanel extends JPanel /*implements ActionListener*/{
 
 	}
 
-	/*
-	public void addItem(Part p){
-		partsManager.parts.put(p.name, p);
-		ImageIcon image = new ImageIcon(p.imagePath);
-		Object[] rowData = {p.id,p.name, p.nestStabilizationTime, image};
+	
+	public void addItem(KitConfig k){
+		
+		kitManager.addToKitConfigList(k);
+		Object[] rowData = {k.kitName};
 		model.insertRow(model.getRowCount(),rowData);
 		table.revalidate();
 	}
 
-	public void editItem(Part p){
-		ImageIcon image = new ImageIcon(p.imagePath);
-		Object[] rowData = {p.id,p.name, p.nestStabilizationTime, image};
+	public void editItem(KitConfig k){
+		Object[] rowData = {k.kitName};
 		for(int i = 0; i < model.getRowCount(); i++){
-			if((Integer)p.id == (Integer)model.getValueAt(i, 0)){
+			if(k.kitName.equals(model.getValueAt(i, 0))){
 				model.removeRow(i);
-				model.insertRow(i,rowData);
+				model.insertRow(i, rowData);
 				break;
 			}
-
 		}
 
 		table.revalidate();
 	}
 
-	public void removeItem(Part p){
-		System.out.println("Removing " + p.name + " " + p.id);
+	public void removeItem(KitConfig k){
 		for(int i = 0; i < model.getRowCount(); i++){
-			if((Integer)p.id == (Integer)model.getValueAt(i, 0)){
+			if(k.kitName.equals(model.getValueAt(i, 0))){
 				model.removeRow(i);
 				break;
 			}
-
 		}
-		partsManager.parts.remove(p.name);
+		kitManager.removeFromKitConfigList(k);
 		table.revalidate();
 	}
-	 */
+	 
 
 
 

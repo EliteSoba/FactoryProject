@@ -168,6 +168,12 @@ public class KitManager extends Client implements WindowListener{
 	public void setKitConfigList(HashMap<String,KitConfig> kitConfigList) {
 		this.kitConfigList = kitConfigList;
 	}
+	public void addToKitConfigList(KitConfig k) {
+		this.kitConfigList.put(k.kitName, k);
+	}
+	public void removeFromKitConfigList(KitConfig k) {
+		this.kitConfigList.remove(k.kitName);
+	}
 	public HashMap<String,Part> getPartsList() {
 		return partsList;
 	}
