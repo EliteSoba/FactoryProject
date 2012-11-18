@@ -553,69 +553,7 @@ public class MasterControl {
 
 
 	}
-	/*
-		// 0 = Source
-		// 1 = Destination
-		// 2 = CmdType
-		// 3 = Cmd OR if cnf, this would be optional identifier
-		// 4+ = Parameters
-		String s = checkCmd(cmd); //why is this different from agentCmd?
-		System.out.println(s);
-		String a = cmd.get(0); // Source
-		if(s != null){
-			if(clients.contains(a)){
-				PartHandler sourcePH = determinePH(a);
-				sourcePH.send("err failed to parse command XXX log "+s);
-			}
-			return false;
-		}
-
-		String b = cmd.get(1); // Destination
-		String c = cmd.get(2); // CommandType
-		String d = "";
-
-		for(int i = 3; i < cmd.size(); i++){  // Command ... put command into string form 
-			d+= cmd.get(i)+" ";
-		}
-
-		String fullCmd = envelopeCmd(c, d);
-		  //Why is this necessary? Now I can't pass my parameters or check my commands...
-
-		System.out.println("Server received ... "+cmd+" from "+a);
-		//System.out.println("Server is about to send ... "+fullCmd);
-		return false;
-
-		if (cmd.get(2).equals("set")){
-
-		}
-		else if( cmd.get(2).equals("set")){
-
-		} else if( cmd.get(2).equals("cmd")){
-
-		}
-
-		if (b.equals("multi")){
-			ArrayList<PartHandler> destinations = getDestinations(cmd.get(3));
-			if(destinations == null){
-				return false;
-			} else {
-				for(PartHandler x : destinations){
-					if(!sendCmd(x, fullCmd)){
-						return false;
-					}
-				}
-				return true;
-			}
-		}
- else {
-			PartHandler destinationPH = determinePH(b);
-			boolean result = sendCmd(destinationPH, fullCmd);
-			return result;
-		} //TEMPORARILY IN HIBERNATION FOR V.1 (NOT THE BEST USE OF OUR TIME TO FIX)
-
-
-	}
-	 */
+	
 	// getDestinations parses the command and determines which Clients need to receive it.
 
 	private ArrayList<PartHandler> getDestinations(String myCmd){
