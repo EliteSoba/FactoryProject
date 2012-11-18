@@ -60,7 +60,6 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		    	DoEmptyKitArrivingAnimation();
 		    	conveyor.msgHeresEmptyKit(new Kit());
 		    	conveyor_state = Conveyor_State.NO_ACTION;
-		    	server.command("cca fpm cmd emptyKitEntersCell");
 				stateChanged();
 		    }
 		}, delivery_time);

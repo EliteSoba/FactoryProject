@@ -164,8 +164,8 @@ public class MasterControl {
 		
 
 		// Instantiate the Conveyor and related Agents
-		conveyor = new ConveyorAgent();
-		conveyorController = new ConveyorControllerAgent();
+		conveyorController = new ConveyorControllerAgent(this);
+		conveyor = new ConveyorAgent(this, conveyorController);
 
 		// Instantiate the KitRobot
 		kitRobot = new KitRobotAgent(this,conveyor);
@@ -215,6 +215,7 @@ public class MasterControl {
 		conveyor.setFCS(fcs);
 		stand.setVision(vision);
 		stand.setPartsRobot(partsRobot);
+		conveyorController.setConveyor(conveyor);
 
 		
 		
@@ -618,9 +619,9 @@ public class MasterControl {
 			return "there must be a command";
 		}
 
-		if(pCmd.size() == 4){
-			return "missing parameters for command";
-		}
+//		if(pCmd.size() == 4){
+//			return "missing parameters for command";
+//		}
 
 		// Check that the source is a valid DID
 
@@ -735,8 +736,9 @@ public class MasterControl {
 		// shortcut testing
 		//	public Part(String n,int i,String d,String p,double t) {
 
-
+		//mc.kitRobot.msgNeedEmptyKitAtSlot("topSlot");
 		
+		/*
 		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
 
 		mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
@@ -787,6 +789,8 @@ public class MasterControl {
 		//		mc.f0.msgLaneNeedsPart(p0, mc.l0t);		
 		// should make the gantry go get a bin of parts
 		// should call DoSwitchLane() and then DoStartFeeding()
+		 
+		 */
 	}
 
 }
