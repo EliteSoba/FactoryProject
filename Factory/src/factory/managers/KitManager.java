@@ -107,12 +107,27 @@ else if(action.equals("get")){
 	 * do(get2);
 	 */
 }
-else if(action.equals("set")){
-	/*if(identifier.equals(set1))
-	 * do(set1);
-	 * else if(identifier.equals(set2))
-	 * do(set2);
-	 */
+else if(action.equals("set"))
+{
+	//first get the new and old kitnames 
+	//then check if the identifier is correct and then remove the old kit from the hashMap
+	//make the new kit with the new name and run through a loop to update the parts in the new kitConfig
+	//finally add the new kitConfig to the kitCongifList
+	String oldKitName = pCmd.get(2);
+	String newKitName = pCmd.get(3);
+	if(identifier.equals("kitcontent"))// check directions
+	{	
+		kitConfigList.remove(oldKitName);
+		KitConfig kitConfigToAdd = new KitConfig(newKitName);
+		for(int i = 4; i < size; i++)
+		{
+			if(!pCmd.get(i).equals("NONE") || !pCmd.get(i).equals("endset"))
+			{
+				kitConfigToAdd.listOfParts.add(partsList.get(pCmd.get(i)));
+			}
+		}
+		kitConfigList.put(newKitName, kitConfigToAdd);
+	}
 }
 else if(action.equals("cnf")){
 	/*if(identifier.equals(confirm1))
