@@ -170,8 +170,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 * Message that is received from Vision tells which nest has a good part and its coordinate
 	 */
 	public void msgHereArePartCoordinatesForNest(Nest nest, Part part, int coordinate) {
-		debug("received msgHereArePartCoordinatesForNest("+nest.nestName+","
-							+part.name+","+coordinate+")"); // ryan cleary added this
+		debug("received msgHereArePartCoordinatesForNest("+nest.nestName+"," +part.name+","+coordinate+")");
 		for(int i = 0; i < nests.size(	); i++){
 			if(nests.get(i).nest == nest && nests.get(i).part == part){
 				debug("PICK_UP_NEEDED");
@@ -386,9 +385,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	public void DoClearArms(){
 		debug("Executing DoClearArms()");
 
-		// Animations
-		// TODO Remove this comment
-		// DoAnimationClearArms();
+		DoAnimationClearArms();
 		
 		// Clear the arms
 		this.armOne = null;
@@ -405,7 +402,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		debug("Executing DoPickUpPartFromNest("+nest+")");
 
 		// Animation of Moving to the Nest
-		DoAnimationMovePartsRobotToNestAndGrabPart(nest);
+		DoAnimationMovePartsRobotToNestAndGrabPart(nest, this.nests.get(nest).partCoordinate);
 		
 		// Update Position
 		switch(nest){
@@ -464,7 +461,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		debug("Executing DoMovePartsRobotToCenter()");
 
 		// Animation 
-		DoAnimationMovePartsRobotToStand();
+		DoAnimationMovePartsRobotToCenter();
 		
 		this.position = PartsRobotPositions.CENTER;
 	}
@@ -481,8 +478,8 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 * Function that delivers parts to stand and returns to the middle
 	 */
 	public void DoDeliverPartsToStand(){
-		// Animation to Stand
-		DoAnimationMovePartsRobotToStand();
+		// Animation to Stand to Kit 1
+		DoAnimationMovePartsRobotToStand(0);
 		
 		if(this.armOne != null){
 			boolean placed = false;
@@ -493,17 +490,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armOne = null;
-					DoAnimationPutPartInKit(1,1);
-				}
-			}
-			// try to place in first kit
-			for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
-				if(this.bottomSlot.listOfParts.get(i).name == this.armOne.name){
-					this.stand.bottomSlot.kit.parts.add(this.armOne);
-					this.bottomSlot.listOfParts.remove(i);
-					placed = true;
-					this.armOne = null;
-					DoAnimationPutPartInKit(1,2);
+					DoAnimationPutPartInKit(1);
 				}
 			}
 		}
@@ -517,17 +504,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armTwo = null;
-					DoAnimationPutPartInKit(2,1);
-				}
-			}
-			// try to place in first kit
-			for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
-				if(this.bottomSlot.listOfParts.get(i).name == this.armTwo.name){
-					this.stand.bottomSlot.kit.parts.add(this.armTwo);
-					this.bottomSlot.listOfParts.remove(i);
-					placed = true;
-					this.armTwo = null;
-					DoAnimationPutPartInKit(2,2);
+					DoAnimationPutPartInKit(2);
 				}
 			}
 		}
@@ -541,17 +518,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armThree = null;
-					DoAnimationPutPartInKit(3,1);
-				}
-			}
-			// try to place in first kit
-			for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
-				if(this.bottomSlot.listOfParts.get(i).name == this.armThree.name){
-					this.stand.bottomSlot.kit.parts.add(this.armThree);
-					this.bottomSlot.listOfParts.remove(i);
-					placed = true;
-					this.armThree = null;
-					DoAnimationPutPartInKit(3,2);
+					DoAnimationPutPartInKit(3);
 				}
 			}
 		}
@@ -565,20 +532,69 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armFour = null;
-					DoAnimationPutPartInKit(4,1);
-				}
-			}
-			// try to place in first kit
-			for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
-				if(this.bottomSlot.listOfParts.get(i).name == this.armFour.name){
-					this.stand.bottomSlot.kit.parts.add(this.armFour);
-					this.bottomSlot.listOfParts.remove(i);
-					placed = true;
-					this.armFour = null;
-					DoAnimationPutPartInKit(4,2);
+					DoAnimationPutPartInKit(4);
 				}
 			}
 		}
+		
+		// Animation to Stand to Kit 2
+				DoAnimationMovePartsRobotToStand(1);
+				
+				if(this.armOne != null){
+					boolean placed = false;
+					// try to place in first kit
+					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
+						if(this.bottomSlot.listOfParts.get(i).name == this.armOne.name){
+							this.stand.topSlot.kit.parts.add(this.armOne);
+							this.bottomSlot.listOfParts.remove(i);
+							placed = true;
+							this.armOne = null;
+							DoAnimationPutPartInKit(1);
+						}
+					}
+				}
+				
+				if(this.armTwo != null){
+					boolean placed = false;
+					// try to place in first kit
+					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
+						if(this.bottomSlot.listOfParts.get(i).name == this.armTwo.name){
+							this.stand.topSlot.kit.parts.add(this.armTwo);
+							this.bottomSlot.listOfParts.remove(i);
+							placed = true;
+							this.armTwo = null;
+							DoAnimationPutPartInKit(2);
+						}
+					}
+				}
+				
+				if(this.armThree != null){
+					boolean placed = false;
+					// try to place in first kit
+					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
+						if(this.bottomSlot.listOfParts.get(i).name == this.armThree.name){
+							this.stand.topSlot.kit.parts.add(this.armThree);
+							this.bottomSlot.listOfParts.remove(i);
+							placed = true;
+							this.armThree = null;
+							DoAnimationPutPartInKit(3);
+						}
+					}
+				}
+				
+				if(this.armFour != null){
+					boolean placed = false;
+					// try to place in first kit
+					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
+						if(this.bottomSlot.listOfParts.get(i).name == this.armFour.name){
+							this.stand.topSlot.kit.parts.add(this.armFour);
+							this.bottomSlot.listOfParts.remove(i);
+							placed = true;
+							this.armFour = null;
+							DoAnimationPutPartInKit(4);
+						}
+					}
+				}
 		
 		
 		// Animation to Return
@@ -600,7 +616,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoAnimationClearArms(){
 		debug("Executing DoAnimationClearArms()");
-		server.command("pra pm cmd droppartsrobotsitems");
+		server.command("pra fpm cmd droppartsrobotsitems");
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -611,9 +627,9 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	/**
 	 * Animation that moves the PartsRobot to the nest and grab a part
 	 */
-	public void DoAnimationMovePartsRobotToNestAndGrabPart(int nest){
+	public void DoAnimationMovePartsRobotToNestAndGrabPart(int nest, int coordinate){
 		debug("Executing DoAnimationMovePartsRobotToNestAndGrabPart("+nest+")");
-		server.command("pra pm cmd movetonest " + nest);
+		server.command("pra fpm cmd movetonest " + nest + " " + coordinate);
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -626,7 +642,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoAnimationMovePartsRobotToCenter(){
 		debug("Executing DoAnimationMovePartsRobotToCenter()");
-		server.command("pra pm cmd movetocenter");
+		server.command("pra fpm cmd movetocenter");
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -637,10 +653,9 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	/**
 	 * Animation that moves the PartsRobot to the stand
 	 */
-	public void DoAnimationMovePartsRobotToStand(){
-		debug("Executing DoAnimationMovePartsRobotToStand()");
-		//server.command("pra pm cmd moveToStand");
-		server.command("pra fpm cmd movetostand"); // ryan cleary added this
+	public void DoAnimationMovePartsRobotToStand(int kit){
+		debug("Executing DoAnimationMovePartsRobotToStand("+kit+")");
+		server.command("pra fpm cmd movetostand " + kit);
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -651,10 +666,9 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	/**
 	 * Animation that puts part in kit
 	 */
-	public void DoAnimationPutPartInKit(int arm, int kit){
-		debug("Executing DoAnimationPutPartInKit("+arm+","+kit+")");
-		//server.command("pra pm cmd moveToStand");
-		server.command("pra fpm cmd putpartinkit " + kit); // ryan cleary added this
+	public void DoAnimationPutPartInKit(int arm){
+		debug("Executing DoAnimationPutPartInKit("+arm+")");
+		server.command("pra fpm cmd putpartinkit " + arm);
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -1000,7 +1014,30 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 * Function to check if the part of a particular nest is needed for the current kits in the slots
 	 */
 	public boolean IsPartFromNestNeed(int nest){
-		//return false;
-		return true; // ryan cleary added this
+		
+		int countNeeded = 0;
+		
+		for(int i =0;i < this.topSlot.listOfParts.size(); i++){
+			if(this.topSlot.listOfParts.get(i).name.equals(this.nests.get(nest).part.name))
+				countNeeded++;
+		}
+		for(int i =0;i < this.bottomSlot.listOfParts.size(); i++){
+			if(this.bottomSlot.listOfParts.get(i).name.equals(this.nests.get(nest).part.name))
+				countNeeded++;
+		}
+		
+		if(this.armOne.name.equals(this.nests.get(nest).part.name))
+			countNeeded--;
+
+		if(this.armTwo.name.equals(this.nests.get(nest).part.name))
+			countNeeded--;
+
+		if(this.armThree.name.equals(this.nests.get(nest).part.name))
+			countNeeded--;
+
+		if(this.armFour.name.equals(this.nests.get(nest).part.name))
+			countNeeded--;
+		
+		return countNeeded > 0; 
 	}
 }

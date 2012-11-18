@@ -332,8 +332,10 @@ public class MasterControl {
 	// what method to call on what agent.
 
 	public boolean agentCmd(ArrayList<String> cmd){ 		//GO HERE
-
-		Agent destination;
+        if(!checkAgentCmd(cmd)){
+            return false;
+        }
+        Agent destination;
 		// 0 = Source
 		// 1 = Destination
 		// 2 = CmdType
@@ -519,7 +521,7 @@ public class MasterControl {
 
 
 	public boolean clientCmd(ArrayList<String> cmd){	
-		String s = checkCmd(cmd);
+		String s = checkClientCmd(cmd);
 		System.out.println(s);
 		String a = cmd.get(0); // Source
 		if(s != null){
@@ -673,21 +675,26 @@ public class MasterControl {
 		return partHandlers.get(id);
 	}
 
+    private boolean checkAgentCmd(ArrayList<String> pCmd){
+
+        // These are commands going to Agents
+
+
+        return true;
+
+    }
+
 
 	// checkCmd is called by parseCmd with the command received to check for errors
 	// Therefore, it should be private.
 
-	private String checkCmd(ArrayList<String> pCmd) {
+	private String checkClientCmd(ArrayList<String> pCmd) {
 
 		// Check that the cmd is of a valid length
 
 		if(pCmd.size() < 4){
 			return "there must be a command";
 		}
-
-//		if(pCmd.size() == 4){
-//			return "missing parameters for command";
-//		}
 
 		// Check that the source is a valid DID
 
@@ -772,7 +779,7 @@ public class MasterControl {
 		int debug = Integer.valueOf(args[0]);
 		MasterControl mc = new MasterControl(debug);
 
-		//This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
+/*		//This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
 		long timeToQuit = System.currentTimeMillis() + 5000;
 		while (System.currentTimeMillis() < timeToQuit);
 
@@ -792,7 +799,7 @@ public class MasterControl {
 		partList.add(p2);
 		partList.add(p3);
 		partList.add(p4);
-		partList.add(p5);
+		partList.add(p5);*/
 		
 		//mc.n0t.msgYouNeedPart(p0);
 

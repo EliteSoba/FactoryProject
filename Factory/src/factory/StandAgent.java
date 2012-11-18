@@ -18,6 +18,9 @@ public class StandAgent extends Agent implements Stand {
 	public PartsRobot partsRobot;
 	public Boolean partsRobotWantsToDeliverParts = false;
 	public Boolean kitRobotWantsToDeliverEmptyKit = false;
+	
+	public boolean kitRobotWantsToExportKit = false;
+	
 	public KitRobot kitRobot;
 	public Vision vision;
 	
@@ -95,6 +98,12 @@ public class StandAgent extends Agent implements Stand {
 		stateChanged();
 	}
 	
+	public void msgKitRobotWantsToExportKit() {
+		debug("Received msgKitRobotWantsToExportKit() from the kitRobot");
+		kitRobotWantsToExportKit = true;
+		stateChanged();
+	}
+	
 	/**
 	 * Message that is received from the KitRobot when it has moved out of the way
 	 */
@@ -162,6 +171,12 @@ public class StandAgent extends Agent implements Stand {
 				DoProcessAnalyzedKit();
 				return true;
 			}
+			
+			if (state == StandAgentState.FREE && kitRobotWantsToExportKit) {
+				DoTellKitRobotToExport();
+				return true;
+			}
+			
 			/**
 			 * If there an empty kit was just placed in a slot, tell the partsRobot to build it
 			 */
@@ -218,6 +233,13 @@ public class StandAgent extends Agent implements Stand {
 	}
 	
 	/** ACTIONS **/
+	
+	private void DoTellKitRobotToExport() {
+		debug("Executing DoTellKitRobotToExport()");
+		kitRobot.msgStandClear();
+		state = StandAgentState.KIT_ROBOT;
+		kitRobotWantsToExportKit = false;
+	}
 	
 	/**
 	 * Method that tells the KitRobot to fetch the empty Kit
@@ -378,12 +400,6 @@ public class StandAgent extends Agent implements Stand {
 			//assume inspectionSlot
 			return inspectionSlot.state;
 		}
-	}
-
-	@Override
-	public void msgKitRobotWantsToExportKit() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
