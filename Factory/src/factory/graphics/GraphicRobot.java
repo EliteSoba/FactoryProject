@@ -31,7 +31,17 @@ public class GraphicRobot extends GraphicAnimatedObject
 	public void move()
 	{
 		//System.out.println(fx + " " + fy);
-		if(y == fy && x == fx)	// robot has arrived at destination
+
+		if(x < fx)
+		{
+			if(theta <= 180 && theta > 0)
+				theta -= dtheta;
+			else if(theta > 180 && theta < 360)
+				theta += dtheta;
+			else
+				x += dx;
+		}
+		else if(y == fy && x == fx)	// robot has arrived at destination
 		{
 			if(state % 2 == 1)
 				state += 1;
@@ -62,15 +72,6 @@ public class GraphicRobot extends GraphicAnimatedObject
 				theta -= dtheta;
 			else
 				x -= dx;
-		}
-		else if(x < fx)
-		{
-			if(theta < 180 && theta > 0)
-				theta -= dtheta;
-			else if(theta > 180 && theta < 360)
-				theta += dtheta;
-			else
-				x += dx;
 		}
 		if(theta < 0) theta = 360;
 		else if(theta > 360) theta = 0;
