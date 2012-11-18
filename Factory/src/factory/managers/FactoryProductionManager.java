@@ -126,19 +126,22 @@ public class FactoryProductionManager extends Client {
 			}
 			else if (identifier.equals("movetostand"))
 			{
-				((FactoryProductionPanel) graphics).movePartsRobotToStation(0); //not sure if this is the right method
+				int kitIndex = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).movePartsRobotToStation(kitIndex); //not sure if this is the right method
 			}
 			else if (identifier.equals("droppartsrobotsitems"))
 			{
-				// implement
+				((FactoryProductionPanel) graphics).dropPartsRobotsItems();
 			}
 			else if (identifier.equals("movetonest"))
 			{
-				// implement
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				int itemIndex = Integer.valueOf(pCmd.get(3));
+				((FactoryProductionPanel) graphics).movePartsRobotToNest(nestIndex, itemIndex);
 			}
 			else if (identifier.equals("movetocenter"))
 			{
-				// implement
+				((FactoryProductionPanel) graphics).movePartsRobotToCenter();
 			}
 
 			// End Commands from PartsRobotAgent
