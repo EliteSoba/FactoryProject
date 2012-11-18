@@ -49,7 +49,7 @@ public class FCSAgent extends Agent implements FCS{
 		this.masterControl = mc; // for testing purposes
 		this.gantry = gantry;
 		this.partsRobot = partsRobot;
-		//loadData();
+		loadData();
 		//		testImport();
 	}
 	public FCSAgent(MasterControl mc){
