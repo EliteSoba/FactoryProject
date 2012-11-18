@@ -430,7 +430,7 @@ public class PartsManPanel extends JPanel{
 				basePanel2.setVisible(false);
 			}else if(ae.getSource() == saveItem){
 
-				String testName;
+				String testName; //hi
 				name.setText(name.getText().replaceAll("\\s","")) ;
 				testName = name.getText().toUpperCase();
 				boolean nameTaken = false;
