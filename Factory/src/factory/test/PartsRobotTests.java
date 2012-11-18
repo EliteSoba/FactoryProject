@@ -1200,7 +1200,7 @@ public class PartsRobotTests extends TestCase {
 
 		for(int i = 0; i < 8; i ++){
 			// Send the message that the Vision would send for nest i
-			partsRobotAgent.msgHereArePartCoordiantesForNest(partsRobotAgent.nests.get(i).nest, partsRobotAgent.nests.get(i).part,  9);
+			partsRobotAgent.msgHereArePartCoordinatesForNest(partsRobotAgent.nests.get(i).nest, partsRobotAgent.nests.get(i).part,  9);
 			
 			// Check that the state was updated
 			assertEquals(partsRobotAgent.nests.get(i).state, NestState.PICK_UP_NEEDED);
@@ -1218,7 +1218,7 @@ public class PartsRobotTests extends TestCase {
 		System.out.println("Running test testNewKitConfigurationAfterCoordinateReceived()");
 
 		// Send part coordinate
-		partsRobotAgent.msgHereArePartCoordiantesForNest(partsRobotAgent.nests.get(0).nest, partsRobotAgent.nests.get(0).part, 9);
+		partsRobotAgent.msgHereArePartCoordinatesForNest(partsRobotAgent.nests.get(0).nest, partsRobotAgent.nests.get(0).part, 5);
 
 		// Initialize first configuration
 		KitConfig firstKit = new KitConfig();
@@ -1249,8 +1249,8 @@ public class PartsRobotTests extends TestCase {
 		secondKit.listOfParts.add(new Part("Part48"));
 
 		// Send part coordinate
-		partsRobotAgent.msgHereArePartCoordiantesForNest(partsRobotAgent.nests.get(0).nest, partsRobotAgent.nests.get(0).part, 9);
-		partsRobotAgent.msgHereArePartCoordiantesForNest(partsRobotAgent.nests.get(1).nest, partsRobotAgent.nests.get(1).part, 9);
+		partsRobotAgent.msgHereArePartCoordinatesForNest(partsRobotAgent.nests.get(0).nest, partsRobotAgent.nests.get(0).part, 5);
+		partsRobotAgent.msgHereArePartCoordinatesForNest(partsRobotAgent.nests.get(1).nest, partsRobotAgent.nests.get(1).part, 5);
 
 		// Send the message that the FCS would send
 		partsRobotAgent.msgMakeKit(secondKit);
@@ -1278,8 +1278,8 @@ public class PartsRobotTests extends TestCase {
 		thirdKit.listOfParts.add(new Part("Part92"));
 
 		// Send part coordinate
-		partsRobotAgent.msgHereArePartCoordiantesForNest(partsRobotAgent.nests.get(0).nest, partsRobotAgent.nests.get(0).part, 9);
-		partsRobotAgent.msgHereArePartCoordiantesForNest(partsRobotAgent.nests.get(1).nest, partsRobotAgent.nests.get(1).part, 9);
+		partsRobotAgent.msgHereArePartCoordinatesForNest(partsRobotAgent.nests.get(0).nest, partsRobotAgent.nests.get(0).part, 5);
+		partsRobotAgent.msgHereArePartCoordinatesForNest(partsRobotAgent.nests.get(1).nest, partsRobotAgent.nests.get(1).part, 5);
 		
 		// Send the message that the FCS would send
 		partsRobotAgent.msgMakeKit(thirdKit);
