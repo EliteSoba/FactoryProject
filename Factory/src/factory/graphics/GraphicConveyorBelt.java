@@ -31,7 +31,7 @@ public class GraphicConveyorBelt {
 	/**The width of the Conveyor Belt*/
 	public static int width = 50;
 	/**The height of the Conveyor Belt*/
-	public static int height = FactoryProductionPanel.HEIGHT;
+	public static int height = 720;
 	
 	/**
 	 * Creates a Conveyor Belt at the given x and y coordinates

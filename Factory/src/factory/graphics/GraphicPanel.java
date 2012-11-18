@@ -11,7 +11,7 @@ import factory.client.*;
 
 public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
-	public static final int WIDTH = 1100, HEIGHT = 720;
+	public int WIDTH, HEIGHT;
 	public static final int delay = 10;
 	
 	protected Client am; //The Client that holds this
@@ -42,6 +42,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected GraphicGantryRobot gantryRobot;
 	
 	public GraphicPanel() {
+		WIDTH = 1100;
+		HEIGHT = 720;
 		am = null;
 		lane = null;
 		belt = null;
@@ -111,15 +113,19 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void cameraFlash(int nestIndex) {
-		flashCounter = 10;
-		flashFeederIndex = nestIndex;
+		if (isLaneManager || isFactoryProductionManager) {
+			flashCounter = 10;
+			flashFeederIndex = nestIndex;
+		}
 	}
 	
 	public void moveGantryRobotToPickup(String path)
 	{
-		gantryRobot.setState(1);
-		gantryRobot.setPartPath(path);
-		gantryRobot.setDestination(WIDTH-100,-100);
+		if (isGantryRobotManager || isFactoryProductionManager) {
+			gantryRobot.setState(1);
+			gantryRobot.setPartPath(path);
+			gantryRobot.setDestination(WIDTH-100,-100);
+		}
 	}
 	
 	public void moveGantryRobotToFeederForDropoff(int feederIndex)
@@ -140,9 +146,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		//else
 		//{
 			//System.out.println("3");
+		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(3);
 			gantryRobot.setDestinationFeeder(feederIndex);
 			gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
+		}
 			//gantryRobotArrivedAtFeederForDropoff();
 		//}
 	}
@@ -157,33 +165,42 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		//}
 		//else
 		//{
+		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(5);
 			gantryRobot.setDestinationFeeder(feederIndex);
 			gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
+		}
 		//}
 	}
 	
 	//CHANGE TO 0 BASE
 	public void movePartsRobotToNest(int nestIndex) {
-		partsRobot.setState(1);
-		partsRobot.adjustShift(5);
-		partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-10,nests.get(nestIndex).getY()-15);
-		partsRobot.setDestinationNest(nestIndex);
+		if (isFactoryProductionManager) {
+			partsRobot.setState(1);
+			partsRobot.adjustShift(5);
+			partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-10,nests.get(nestIndex).getY()-15);
+			partsRobot.setDestinationNest(nestIndex);
+		}
 	}
 	
 	public void movePartsRobotToKit(int kitIndex) {
-		partsRobot.setState(3);
-		partsRobot.setDestination(station.getX()+35,station.getY()-station.getY()%5);
-		partsRobot.setDestinationKit(kitIndex);
+		if (isFactoryProductionManager) {
+			partsRobot.setState(3);
+			partsRobot.setDestination(station.getX()+35,station.getY()-station.getY()%5);
+			partsRobot.setDestinationKit(kitIndex);
+		}
 	}
 	
 	public void movePartsRobotToCenter() {
-		partsRobot.setState(5);
-		partsRobot.setDestination(WIDTH/2-200, HEIGHT/2);
+		if (isFactoryProductionManager) {
+			partsRobot.setState(5);
+			partsRobot.setDestination(WIDTH/2-200, HEIGHT/2);
+		}
 	}
 	
 	public void feedFeeder(int feederNum) {
-		if(!lane[feederNum].lane1PurgeOn){	//If purging is on, cannot feed!
+		//if(!lane[feederNum].lane1PurgeOn){	//If purging is on, cannot feed!
+		if (isLaneManager || isFactoryProductionManager) {
 			if(lane[feederNum].hasBin() && lane[feederNum].bin.getBinItems().size() > 0){
 				lane[feederNum].laneStart = true;
 				lane[feederNum].feederOn = true;
@@ -196,7 +213,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		lane[(laneNum) / 2].bin = new GraphicBin(new Part("eyes"));
 		lane[(laneNum) / 2].binExist = true;
 		//end Test*/
-		if(!lane[(laneNum) / 2].lane1PurgeOn){	//If purging is on, cannot feed!
+		//if(!lane[(laneNum) / 2].lane1PurgeOn){	//If purging is on, cannot feed!
+		if (isLaneManager || isFactoryProductionManager) {
 			if(lane[(laneNum) / 2].hasBin() && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
 				lane[(laneNum) / 2].laneStart = true;
 				lane[(laneNum) / 2].divergeUp = ((laneNum) % 2 == 0);
@@ -207,112 +225,135 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void startLane(int laneNum){
-		lane[(laneNum) / 2].laneStart = true;
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[(laneNum) / 2].laneStart = true;
+		}
 	}
 	
 	public void switchLane(int laneNum){
-		lane[(laneNum) / 2].divergeUp = !lane[(laneNum) / 2].divergeUp;
-		lane[(laneNum) / 2].vY = -(lane[(laneNum) / 2].vY);
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[(laneNum) / 2].divergeUp = !lane[(laneNum) / 2].divergeUp;
+			lane[(laneNum) / 2].vY = -(lane[(laneNum) / 2].vY);
+		}
 	}
 	
 	public void switchFeederLane(int feederNum){
-		lane[feederNum].divergeUp = !lane[feederNum].divergeUp;
-		lane[feederNum].vY = -(lane[feederNum].vY);
-		switchFeederLaneDone(feederNum);
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].divergeUp = !lane[feederNum].divergeUp;
+			lane[feederNum].vY = -(lane[feederNum].vY);
+			switchFeederLaneDone(feederNum);
+		}
 	}
 	
 	public void stopLane(int laneNum){
-		lane[(laneNum) / 2].laneStart = false;
+		if (isLaneManager || isFactoryProductionManager)
+			lane[(laneNum) / 2].laneStart = false;
 	}
 	
 	public void turnFeederOn(int feederNum){
-		lane[feederNum].feederOn = true;
-		startFeederDone(feederNum);
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].feederOn = true;
+			startFeederDone(feederNum);
+		}
 	}
 
 	public void turnFeederOff(int feederNum){
-		lane[feederNum].feederOn = false;
-		stopFeederDone(feederNum);
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].feederOn = false;
+			stopFeederDone(feederNum);
+		}
 	}
 	
 	public void purgeFeeder(int feederNum){ // takes in lane 0 - 4
 		// The following 2 lines were causing the bin to disappear, which is undesirable	
 //		lane[(feederNum)].bin = null;
 //		lane[(feederNum)].binExists = false;
-		lane[(feederNum)].feederOn = false;
-		purgeFeederDone(feederNum); // send the confirmation
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[(feederNum)].feederOn = false;
+			purgeFeederDone(feederNum); // send the confirmation
+		}
 	}
 	
 	public void purgeTopLane(int feederNum){
-		lane[feederNum].lane1PurgeOn = true;
-		lane[feederNum].feederOn = false;
-		lane[feederNum].laneStart = true;
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].lane1PurgeOn = true;
+			lane[feederNum].feederOn = false;
+			lane[feederNum].laneStart = true;
+		}
 	}
 	
 	public void purgeBottomLane(int feederNum){
-		lane[feederNum].lane2PurgeOn = true;
-		lane[feederNum].feederOn = false;
-		lane[feederNum].laneStart = true;
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].lane2PurgeOn = true;
+			lane[feederNum].feederOn = false;
+			lane[feederNum].laneStart = true;
+		}
 	}
 	
 	public void partsRobotStateCheck() {
 		// Has robot arrived at its destination?
 		//System.out.println(partsRobot.getState());
-		if(partsRobot.getState() == 2)		// partsRobot has arrived at nest
-		{
-			// Give item to partsRobot
-			if(partsRobot.getSize() < 4)
+		if (isFactoryProductionManager) {
+			if(partsRobot.getState() == 2)		// partsRobot has arrived at nest
 			{
-				if (nests.get(partsRobot.getDestinationNest()).hasItem())
-					partsRobot.addItem(nests.get(partsRobot.getDestinationNest()).popItem());
+				// Give item to partsRobot
+				if(partsRobot.getSize() < 4)
+				{
+					if (nests.get(partsRobot.getDestinationNest()).hasItem())
+						partsRobot.addItem(nests.get(partsRobot.getDestinationNest()).popItem());
+					partsRobot.setState(0);
+				}
+				partsRobotArrivedAtNest();
+			}
+			else if(partsRobot.getState() == 4)	// partsRobot has arrived at kitting station
+			{
+				System.out.println("Size:"+partsRobot.getSize());
+				int numberOfParts = partsRobot.getSize();
+				for(int i = 0; i < numberOfParts; i++)
+				{
+					System.out.println("Adding part to kit: " + i);
+					station.addItem(partsRobot.popItem(),partsRobot.getDestinationKit());
+				}
 				partsRobot.setState(0);
+				partsRobotArrivedAtStation();
 			}
-			partsRobotArrivedAtNest();
-		}
-		else if(partsRobot.getState() == 4)	// partsRobot has arrived at kitting station
-		{
-			System.out.println("Size:"+partsRobot.getSize());
-			int numberOfParts = partsRobot.getSize();
-			for(int i = 0; i < numberOfParts; i++)
+			else if(partsRobot.getState() == 6)
 			{
-				System.out.println("Adding part to kit: " + i);
-				station.addItem(partsRobot.popItem(),partsRobot.getDestinationKit());
+				partsRobot.setState(0);
+				partsRobotArrivedAtCenter();
 			}
-			partsRobot.setState(0);
-			partsRobotArrivedAtStation();
-		}
-		else if(partsRobot.getState() == 6)
-		{
-			partsRobot.setState(0);
-			partsRobotArrivedAtCenter();
 		}
 	}
 	
 	public void gantryRobotStateCheck() {
-		if(gantryRobot.getState() == 2)				// gantry robot reached bin pickup point
-		{
-			gantryRobot.setState(0);
-			// Give gantry robot a bin
-			gantryRobot.giveBin(new GraphicBin(new Part(gantryRobot.getPartPath())));
-			gantryRobotArrivedAtPickup();
-		}
-		else if(gantryRobot.getState() == 4)		// gantry robot reached feeder for dropoff
-		{
-			gantryRobot.setState(0);
-			lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.popBin());
-			gantryRobotArrivedAtFeederForDropoff();
-		}
-		else if(gantryRobot.getState() == 6)		// gantry robot reached feeder for pickup
-		{
-			gantryRobot.setState(0);
-			gantryRobot.giveBin(lane[gantryRobot.getDestinationFeeder()].popBin());
-			gantryRobotArrivedAtFeederForPickup();
+		if (isGantryRobotManager || isFactoryProductionManager) {
+			if(gantryRobot.getState() == 2)				// gantry robot reached bin pickup point
+			{
+				gantryRobot.setState(0);
+				// Give gantry robot a bin
+				gantryRobot.giveBin(new GraphicBin(new Part(gantryRobot.getPartPath())));
+				gantryRobotArrivedAtPickup();
+			}
+			else if(gantryRobot.getState() == 4)		// gantry robot reached feeder for dropoff
+			{
+				gantryRobot.setState(0);
+				lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.popBin());
+				gantryRobotArrivedAtFeederForDropoff();
+			}
+			else if(gantryRobot.getState() == 6)		// gantry robot reached feeder for pickup
+			{
+				gantryRobot.setState(0);
+				gantryRobot.giveBin(lane[gantryRobot.getDestinationFeeder()].popBin());
+				gantryRobotArrivedAtFeederForPickup();
+			}
 		}
 	}
 	
 	public void moveLanes() {
-		for (int i = 0; i < lane.length; i++)
-			lane[i].moveLane();
+		if (isLaneManager || isFactoryProductionManager) {
+			for (int i = 0; i < lane.length; i++)
+				lane[i].moveLane();
+		}
 	}
 	
 	public void sendMessage(String command) {

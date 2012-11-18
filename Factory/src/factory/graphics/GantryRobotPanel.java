@@ -14,10 +14,9 @@ import factory.Part;
 
 public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 	
-	public static final int WIDTH = 300, HEIGHT = 720;
-	
 	public GantryRobotPanel(JFrame GR) {
 		super();
+		WIDTH = 300;
 		isGantryRobotManager = true;
 		
 		if (GR instanceof Client)
@@ -34,7 +33,7 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 		this.setVisible(true);
 	}
 	
-	public void moveGantryRobotToPickup(String path) {
+	/*public void moveGantryRobotToPickup(String path) {
 		//System.out.println("Moving");
 		gantryRobot.setState(0);
 		gantryRobot.setDestination(WIDTH-100,-100);
@@ -56,7 +55,7 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 			lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.popBin());
 			gantryRobotArrivedAtFeederForDropoff();
 		}
-	}
+	}*/
 	
 	public void actionPerformed(ActionEvent arg0) {
 		gantryRobotStateCheck();
@@ -78,10 +77,15 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 			command = kbr.nextLine();
 			switch (command.charAt(0)) {
 			case 'n': gr.moveGantryRobotToPickup(command.substring(1)); break;
-			case '1': gr.moveGantryRobotToFeeder(0); break;
-			case '2': gr.moveGantryRobotToFeeder(1); break;
-			case '3': gr.moveGantryRobotToFeeder(2); break;
-			case '4': gr.moveGantryRobotToFeeder(3); break;
+			case '1': gr.moveGantryRobotToFeederForDropoff(0); break;
+			case '2': gr.moveGantryRobotToFeederForDropoff(1); break;
+			case '3': gr.moveGantryRobotToFeederForDropoff(2); break;
+			case '4': gr.moveGantryRobotToFeederForDropoff(3); break;
+
+			case '!': gr.moveGantryRobotToFeederForPickup(0); break;
+			case '@': gr.moveGantryRobotToFeederForPickup(1); break;
+			case '#': gr.moveGantryRobotToFeederForPickup(2); break;
+			case '$': gr.moveGantryRobotToFeederForPickup(3); break;
 			case 'q': System.exit(0); break;
 			}
 		} while(command.charAt(0) != 'q');

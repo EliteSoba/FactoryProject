@@ -22,7 +22,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	private GraphicConveyorBelt belt; //The conveyer belt
 	private GraphicKittingStation station; //The kitting station
 	private GraphicKittingRobot kitRobot;
-	public static final int WIDTH = 1100, HEIGHT = 720;
 	
 	// PARTS MANAGER
 	private ArrayList<Nest> nests;
@@ -33,6 +32,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	
 	public FactoryProductionPanel(JFrame FKAM) {
 		super();
+		WIDTH = 1100;
 		isFactoryProductionManager = true;
 		
 		if (FKAM instanceof Client)

@@ -16,10 +16,9 @@ public class KitAssemblyPanel extends GraphicPanel implements ActionListener{
 	 * TODO: Comments
 	 */
 	
-	public static final int WIDTH = 280, HEIGHT = 720;
-	
 	public KitAssemblyPanel(JFrame FKAM) {
 		super();
+		WIDTH = 280;
 		isKitAssemblyManager = true;
 		
 		if (FKAM instanceof Client)
