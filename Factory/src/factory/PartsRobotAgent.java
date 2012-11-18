@@ -13,7 +13,9 @@ import agent.Agent;
 
 public class PartsRobotAgent extends Agent implements PartsRobot {
 	
-	/** DATA **/
+	/** ================================================================================ **/
+	/** 									Data	 									 **/
+	/** ================================================================================ **/
 		
 		// ENUM to keep track of the position of the PartsRobot
 		public enum PartsRobotPositions { STAND, CENTER, NEST_ZERO, NEST_ONE, NEST_TWO, NEST_THREE, NEST_FOUR, NEST_FIVE, NEST_SIX, NEST_SEVEN }
@@ -37,6 +39,10 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		public enum StandState { DOING_NOTHING };
 		public StandState standState;
 		
+		// ENUM to know state of the stand
+		public enum SlotState { EMPTY, BUILD_REQUESTED, BUILDING };
+		public SlotState topSlotState;
+		public SlotState bottomSlotState;
 		
 		// Nests
 		public List<MyNest> nests = Collections.synchronizedList(new ArrayList<MyNest>());
@@ -81,6 +87,8 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		this.currentKitConfigurationState = KitConfigState.EMPTY;
 		this.topSlot = null;
 		this.bottomSlot = null;
+		this.topSlotState = SlotState.EMPTY;
+		this.bottomSlotState = SlotState.EMPTY;
 		
 		// Agents
 		this.fcs = fcs;
@@ -110,10 +118,10 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	
 	public void msgBuildKitAtSlot(String slot) {
 		if (slot.equals("topSlot")){
-			this.topSlot = this.currentKitConfiguration;
+			this.topSlotState = SlotState.BUILD_REQUESTED;
 		}
 		else {
-			this.bottomSlot = this.currentKitConfiguration;
+			this.bottomSlotState = SlotState.BUILD_REQUESTED;
 		}
 	}
 
@@ -146,10 +154,26 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 
 	public boolean pickAndExecuteAnAction() {
 		
-		if (this.currentKitConfigurationState == KitConfigState.REQUESTED) {
-			DoProcessNewKitConfiguration();
-			return true;
-		}
+		synchronized(this.currentKitConfigurationState){
+			
+			// If a new Kit Configuration was requested
+			if (this.currentKitConfigurationState == KitConfigState.REQUESTED) {
+				DoProcessNewKitConfiguration();
+				return true;
+			}
+			
+			if (this.currentKitConfigurationState == KitConfigState.PRODUCING && this.topSlotState == SlotState.BUILD_REQUESTED){
+				DoStartBuildingKitAtSlot("topSlot");
+				return true;
+			}
+			
+			if (this.currentKitConfigurationState == KitConfigState.PRODUCING && this.bottomSlotState == SlotState.BUILD_REQUESTED){
+				DoStartBuildingKitAtSlot("bottomSlot");
+				return true;
+			}
+	
+		}	
+		
 		
 		return false;
 	}
@@ -167,7 +191,13 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		
 		// Reset the slots to empty
 		this.topSlot = null;
+		if(this.topSlotState == SlotState.BUILDING){
+			this.topSlotState = SlotState.EMPTY;
+		}
 		this.bottomSlot = null;
+		if(this.bottomSlotState == SlotState.BUILDING){
+			this.bottomSlotState = SlotState.EMPTY;
+		}
 		
 		// Tell the stand to clear stand
 		stand.msgClearStand();
@@ -184,7 +214,8 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			boolean present = false;
 			
 			for(int j = 0; j < nests.size() && !newNeeded.contains(i); j++){
-				if(nests.get(j).part == currentKitConfiguration.listOfParts.get(i) ){
+				
+				if(nests.get(j).part != null && nests.get(j).part.name == currentKitConfiguration.listOfParts.get(i).name ){
 					present = true;
 				}
 			}
@@ -195,22 +226,22 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		}
 		
 		// Check which old ones are not in the new config
-			for(int i = 0; i < nests.size(); i++){
-				boolean present = false;
-				
-				for(int j = 0; j < currentKitConfiguration.listOfParts.size() && !currentNotNeeded.contains(i); j++){
-					if(nests.get(j).part == currentKitConfiguration.listOfParts.get(i) ){
-						present = true;
-					}
+		for(int i = 0; i < nests.size(); i++){
+			boolean present = false;
+			
+			for(int j = 0; j < currentKitConfiguration.listOfParts.size() && !currentNotNeeded.contains(i); j++){
+				if(nests.get(j).part != null && nests.get(j).part.name == currentKitConfiguration.listOfParts.get(i).name ){
+					present = true;
 				}
-				
-				if(!present){
-					currentNotNeeded.add(i);
-				}
-			} 
-		
+			}
+			
+			if(!present){
+				currentNotNeeded.add(i);
+			}
+		} 
 		
 		for(int i = 0; i < currentNotNeeded.size(); i++){
+			
 			nests.get(currentNotNeeded.get(i)).part = currentKitConfiguration.listOfParts.get(newNeeded.get(i));
 			nests.get(currentNotNeeded.get(i)).nest.msgYouNeedPart(currentKitConfiguration.listOfParts.get(newNeeded.get(i)));
 			
@@ -220,6 +251,23 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		this.currentKitConfigurationState = KitConfigState.PRODUCING;
 	}
 	
+	/**
+	 * Action to start producing a Kit in Slot
+	 */
+	public void DoStartBuildingKitAtSlot(String slot){
+		debug("Executing DoStartBuildingKitAtSlot("+slot+")");
+		if(slot.equals("topSlot")){
+			this.topSlot = this.currentKitConfiguration;
+			this.topSlotState = SlotState.BUILDING;
+		}
+		else {
+			this.bottomSlot = this.currentKitConfiguration;
+			this.bottomSlotState = SlotState.BUILDING;
+		}
+	}
+	
+
+
 /** ================================================================================ **/
 /** 									ANIMATIONS 									 **/
 /** ================================================================================ **/
