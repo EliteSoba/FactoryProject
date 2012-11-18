@@ -31,14 +31,14 @@ public class Part implements Serializable,  Cloneable{
 
 	public Part(){}
 
-//	 public Object clone() {
-//         try {
-//             return super.clone();
-//         }
-//         catch( CloneNotSupportedException e ) {
-//             return null;
-//         }
-//     } 
+	 public Object clone() {
+         try {
+             return super.clone();
+         }
+         catch( CloneNotSupportedException e ) {
+             return null;
+         }
+     } 
 	 
 }
 

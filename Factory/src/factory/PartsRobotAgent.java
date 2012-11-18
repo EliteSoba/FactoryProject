@@ -169,7 +169,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	/**
 	 * Message that is received from Vision tells which nest has a good part and its coordinate
 	 */
-	public void msgHereArePartCoordiantesForNest(Nest nest, Part part, int coordinate) {
+	public void msgHereArePartCoordinatesForNest(Nest nest, Part part, int coordinate) {
 		for(int i = 0; i < nests.size(); i++){
 			if(nests.get(i).nest == nest && nests.get(i).part == part){
 				nests.get(i).state = NestState.PICK_UP_NEEDED;
@@ -576,7 +576,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoAnimationClearArms(){
 		debug("Executing DoAnimationClearArms()");
-		server.command("pra pm cmd dropPartsRobotsItems");
+		server.command("pra pm cmd droppartsrobotsitems");
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -589,7 +589,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoAnimationMovePartsRobotToNestAndGrabPart(int nest){
 		debug("Executing DoAnimationMovePartsRobotToNestAndGrabPart("+nest+")");
-		server.command("pra pm cmd moveToNest " + nest);
+		server.command("pra pm cmd movetonest " + nest);
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -602,7 +602,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoAnimationMovePartsRobotToCenter(){
 		debug("Executing DoAnimationMovePartsRobotToCenter()");
-		server.command("pra pm cmd moveToCenter");
+		server.command("pra pm cmd movetocenter");
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -615,7 +615,8 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoAnimationMovePartsRobotToStand(){
 		debug("Executing DoAnimationMovePartsRobotToStand()");
-		server.command("pra pm cmd moveToStand");
+		//server.command("pra pm cmd moveToStand");
+		server.command("pra fpm cmd movetostand"); // ryan cleary added this
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -628,7 +629,8 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoAnimationPutPartInKit(int arm, int kit){
 		debug("Executing DoAnimationPutPartInKit("+arm+","+kit+")");
-		server.command("pra pm cmd moveToStand");
+		//server.command("pra pm cmd moveToStand");
+		server.command("pra fpm cmd putpartinkit " + kit); // ryan cleary added this
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {

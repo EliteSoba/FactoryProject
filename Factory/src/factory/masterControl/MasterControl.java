@@ -22,6 +22,7 @@ import java.util.*;
 
 import agent.Agent;
 import factory.*;
+import factory.interfaces.Nest;
 
 
 public class MasterControl {
@@ -48,7 +49,7 @@ public class MasterControl {
 
 	// Data Members
 
-	TreeMap<String, PartHandler> partHandlers;
+	TreeMap<String, PartHandler> partHandlers; 
 	TreeMap<String, Boolean> partOccupied;
 	private static final List<String> clients = Arrays.asList("fpm", "gm", "kam", "km", "lm", "pm", "multi");
 	private static final List<String> agents = Arrays.asList("ca", "cca", "fcsa", "fa", "ga", "kra", "la", "na", "pra", "sa", "va");
@@ -61,7 +62,8 @@ public class MasterControl {
 			"purgetoplane", "purgebottomlane", "stopfactory", "pickuppurgebin",
 			"getnewbin", "bringbin", "putinspectionkitonconveyor", "putemptykitatslot",
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
-            "partconfig"
+            "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
+            "movetocenter"
 
     );
 
@@ -164,9 +166,6 @@ public class MasterControl {
 		// Instantiate the KitRobot
 		kitRobot = new KitRobotAgent(this,conveyor);
 
-		// Instantiate the PartsRobot
-		//partsRobot = new PartsRobotAgent(); // bad code
-
 		// Instantiate the Stand
 		//stand = new StandAgent(); // bad code
 
@@ -200,12 +199,27 @@ public class MasterControl {
 		nestAgentTreeMap.put("n3t", n3t);
 		nestAgentTreeMap.put("n3b", n3b);
 
+		// Instantiate the PartsRobot
+		List<Nest> nestAgentListForPartsRobot = new ArrayList<Nest>();
+		nestAgentListForPartsRobot.add(0, n0t);
+		nestAgentListForPartsRobot.add(1, n0b);
+		nestAgentListForPartsRobot.add(2, n1t);
+		nestAgentListForPartsRobot.add(3, n1b);
+		nestAgentListForPartsRobot.add(4, n2t);
+		nestAgentListForPartsRobot.add(5, n2b);
+		nestAgentListForPartsRobot.add(6, n3t);
+		nestAgentListForPartsRobot.add(7, n3b);
+
+		partsRobot = new PartsRobotAgent(this, fcs, vision, stand, nestAgentListForPartsRobot); 
+
+		
+		
 		agentTreeMap.put("ca", conveyor);
 		agentTreeMap.put("cca", conveyorController);
 		agentTreeMap.put("ga", gantry );
 		agentTreeMap.put("kra", kitRobot);
-		//        agentTreeMap.put("pra", partsRobot);
-		//        agentTreeMap.put("sa", stand);
+		agentTreeMap.put("pra", partsRobot);
+		//agentTreeMap.put("sa", stand);
 		agentTreeMap.put("va", vision);
 		agentTreeMap.put("fcsa", fcs);
 
@@ -539,69 +553,7 @@ public class MasterControl {
 
 
 	}
-	/*
-		// 0 = Source
-		// 1 = Destination
-		// 2 = CmdType
-		// 3 = Cmd OR if cnf, this would be optional identifier
-		// 4+ = Parameters
-		String s = checkCmd(cmd); //why is this different from agentCmd?
-		System.out.println(s);
-		String a = cmd.get(0); // Source
-		if(s != null){
-			if(clients.contains(a)){
-				PartHandler sourcePH = determinePH(a);
-				sourcePH.send("err failed to parse command XXX log "+s);
-			}
-			return false;
-		}
-
-		String b = cmd.get(1); // Destination
-		String c = cmd.get(2); // CommandType
-		String d = "";
-
-		for(int i = 3; i < cmd.size(); i++){  // Command ... put command into string form 
-			d+= cmd.get(i)+" ";
-		}
-
-		String fullCmd = envelopeCmd(c, d);
-		  //Why is this necessary? Now I can't pass my parameters or check my commands...
-
-		System.out.println("Server received ... "+cmd+" from "+a);
-		//System.out.println("Server is about to send ... "+fullCmd);
-		return false;
-
-		if (cmd.get(2).equals("set")){
-
-		}
-		else if( cmd.get(2).equals("set")){
-
-		} else if( cmd.get(2).equals("cmd")){
-
-		}
-
-		if (b.equals("multi")){
-			ArrayList<PartHandler> destinations = getDestinations(cmd.get(3));
-			if(destinations == null){
-				return false;
-			} else {
-				for(PartHandler x : destinations){
-					if(!sendCmd(x, fullCmd)){
-						return false;
-					}
-				}
-				return true;
-			}
-		}
- else {
-			PartHandler destinationPH = determinePH(b);
-			boolean result = sendCmd(destinationPH, fullCmd);
-			return result;
-		} //TEMPORARILY IN HIBERNATION FOR V.1 (NOT THE BEST USE OF OUR TIME TO FIX)
-
-
-	}
-	 */
+	
 	// getDestinations parses the command and determines which Clients need to receive it.
 
 	private ArrayList<PartHandler> getDestinations(String myCmd){
@@ -762,21 +714,50 @@ public class MasterControl {
 		Part p2 = new Part("shoe",001,"desc","imgPath",3);
 		Part p3 = new Part("shoe",001,"desc","imgPath",3);
 		Part p4 = new Part("sword",002,"desc","imgPath",4);
-
+		Part p5 = new Part("tentacle",002,"desc","imgPath",4);
+		
+		List<Part> partList = new ArrayList<Part>();
+		partList.add(p0);
+		partList.add(p1);
+		partList.add(p2);
+		partList.add(p3);
+		partList.add(p4);
+		partList.add(p5);
+		
 		//mc.n0t.msgYouNeedPart(p0);
 
 		// shortcut testing
 		//	public Part(String n,int i,String d,String p,double t) {
 
 
-				mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
 		
-				mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
-		//
-		//		mc.f0.msgLaneNeedsPart(p1,mc.l0t); //eye to top
-		//
-		//		mc.f0.msgLaneNeedsPart(p3,mc.l0b); //shoe to bottom
-		//
+		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
+
+		mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
+		
+		// TESTING PARTSROBOT:
+		KitConfig kc = new KitConfig();
+		kc.listOfParts = partList;
+		mc.partsRobot.topSlot = kc; // stand TOP SLOT position
+//		mc.partsRobot.armOne = p0; // i think this gets figured out inside his code
+//		mc.partsRobot.armTwo = p1;
+
+		mc.partsRobot.msgHereArePartCoordinatesForNest(mc.n0t,p0,0);
+		
+		
+		// partsRobot.armOne,partsRobot.armTwo //instances of part object, must be instantiated
+		
+		
+		
+		
+//				mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
+//		
+//				mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
+//		
+//				mc.f0.msgLaneNeedsPart(p4,mc.l0t); //sword to top
+//		
+//				mc.f0.msgLaneNeedsPart(p5,mc.l0b); //tentacle to bottom
+//		
 
 
 		//mc.f1.msgLaneNeedsPart(p0,mc.l1t); //eye to top

@@ -1,9 +1,5 @@
 package factory.test;
 
-
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.junit.Test;
 
 import junit.framework.TestCase;
