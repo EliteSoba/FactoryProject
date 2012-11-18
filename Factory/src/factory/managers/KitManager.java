@@ -112,21 +112,31 @@ else if(action.equals("set"))
 	//first get the new and old kitnames 
 	//then check if the identifier is correct and then remove the old kit from the hashMap
 	//make the new kit with the new name and run through a loop to update the parts in the new kitConfig
-	//finally add the new kitConfig to the kitCongifList
+	//finally add the new kitConfig to the kitCongifList and send confirmations to server
 	String oldKitName = pCmd.get(2);
 	String newKitName = pCmd.get(3);
 	if(identifier.equals("kitcontent"))// check directions
 	{	
 		kitConfigList.remove(oldKitName);
 		KitConfig kitConfigToAdd = new KitConfig(newKitName);
-		for(int i = 4; i < size; i++)
+		int i = 4;
+		String endOfConfirm = "set kitcontent " + oldKitName + " " + newKitName;
+		
+		while(!pCmd.get(i).equals("endset"))
 		{
-			if(!pCmd.get(i).equals("NONE") || !pCmd.get(i).equals("endset"))
+			if(!pCmd.get(i).equals("NONE"))
 			{
 				kitConfigToAdd.listOfParts.add(partsList.get(pCmd.get(i)));
 			}
+			if(!pCmd.get(i).equals("endset"))
+			{
+				endOfConfirm = endOfConfirm + " " + pCmd.get(i);
+			}
+			i++;
 		}
 		kitConfigList.put(newKitName, kitConfigToAdd);
+		super.sendCommand("km fpm " + endOfConfirm);
+		super.sendCommand("km fcsa " + endOfConfirm);
 	}
 }
 else if(action.equals("cnf")){
