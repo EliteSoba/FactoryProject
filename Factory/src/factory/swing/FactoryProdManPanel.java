@@ -1,7 +1,14 @@
 /*
 
 author: Joey Huang
-Last edited: 11/15/12 11:40pm
+Last edited: 11/18/12 2:23pm
+
+
+This program contains the user interface panel in the factory production manager client
+window. Operations include submitting a new factory order (specifying kit name and quantity),
+and displaying the production schedule. When a kit has been added or removed, this panel
+shall reflect those changes. Also allows the user to initiate the shut down of the factory. 
+
 */
 package factory.swing;
 import java.util.*;
@@ -28,7 +35,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	
 	JPanel schedulePanel; // production schedule panel
 	DefaultTableModel model; 
-	JTable table;
+	JTable table; // table to house production schedule
 	JButton stopFactory; // terminate all factory operations - close program
 	
 	public FactoryProdManPanel(FactoryProductionManager fpm) { 
@@ -76,7 +83,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		c.gridy = 6;
 		c.gridx = 1;
 		c.gridwidth = 4;
-		messageBox = new JTextArea("System Messages\n",10,20);
+		messageBox = new JTextArea("System Messages\n",20,20);
 		newOrderPanel.add(new JScrollPane(messageBox),c);
 		
 		
@@ -90,8 +97,8 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 
 		table=new JTable(model);
 		
-		
-		TableColumn column = null;
+		// formatting the widths of table columns
+		TableColumn column = null; 
 		for (int i = 0; i < 3; i++) {
 		    column = table.getColumnModel().getColumn(i);
 		    if (i == 0) {
@@ -140,27 +147,33 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 				
 				String set = new String("");
 				set = "fpm fcsa cmd makekits " + qnty + " " + name;	
-				factoryProductionManager.sendCommand(set);
-				
-				
+	try {			factoryProductionManager.sendCommand(set);
+						
 				Object[] rowData = {model.getRowCount()+1,name,qnty}; // add to production schedule
 				model.insertRow(model.getRowCount(),rowData);
 				
 				messageBox.append("Order Submitted.\n     Details: " + qnty + " units of " + name + "\n" );
+	} catch (Exception e) {
+		System.out.println("An error occured trying to send new order");
+e.printStackTrace();
+	}	
 			}
 		}
 		else if (ae.getSource() == stopFactory) { // message that initiates factory shutdown
 			messageBox.append("Terminating all operations...\n");
 			String set = new String("");
 			set = "fpm mcs cmd stopfactory";
-			factoryProductionManager.sendCommand(set);
-			//do we need a confirmation here?...maybe
+try {
+	factoryProductionManager.sendCommand(set);
+		} catch (Exception e) {
+		System.out.println("An error occurred trying to shut down factory");
+		e.printStackTrace();
+	}
 		}
 	}
 	
 	public void addKit(String kitName) {	//add new kit name (String) to Jcombobox list - received from kit manager
 		kitNameBox.addItem(kitName);	
-		//((JComboBox) kitNameBox.getItemAt(kitNameBox.getItemCount()-1)).addActionListener(this);
 		kitNameBox.setSelectedIndex(0); //sending back updated kit list to agents
 	}
 	
