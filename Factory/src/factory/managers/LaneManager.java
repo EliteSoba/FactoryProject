@@ -64,5 +64,7 @@ public class LaneManager extends Client {
 		else if(action == "cnf"){
 
 		}
+		else 
+	   		  System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 	}
 }
