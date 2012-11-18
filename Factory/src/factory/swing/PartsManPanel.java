@@ -268,9 +268,14 @@ public class PartsManPanel extends JPanel{
 					Part p = new Part(name.getText(), currentID, description.getText(),"Images/" + (String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
 					addItem(p);
 					currentID++;
-					messageAddPanel = "pm multi cmd addpartname " + p.name + " " + p.id + " " +
+//					messageAddPanel = "pm multi cmd addpartname " + p.name + " " + p.id + " " +
+//							p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
+//					partsManager.sendCommand(messageAddPanel);
+					
+					messageAddPanel = "pm fcsa cmd addpartname " + p.name + " " + p.id + " " +
 							p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
 					partsManager.sendCommand(messageAddPanel);
+					System.out.println("Client: got here");
 					idLabel.setText("ID# : " + currentID);
 					name.setText("");
 					description.setText("Enter description here");
@@ -431,9 +436,12 @@ public class PartsManPanel extends JPanel{
 
 			if (ae.getSource() == removeItem){
 				System.out.println("I will remove a part and update the server.");
-				messageEditPanel = "pm multi cmd rmpartname " + currentPart.name; 
+				
+//				messageEditPanel = "pm multi cmd rmpartname " + currentPart.name; 
+//				partsManager.sendCommand(messageEditPanel);
+				
+				messageEditPanel = "pm fcsa cmd rmpartname " + currentPart.name; 
 				partsManager.sendCommand(messageEditPanel);
-
 				removeItem(currentPart);
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
@@ -457,7 +465,10 @@ public class PartsManPanel extends JPanel{
 
 					Part p = new Part(name.getText(), currentPart.id, description.getText(),"Images/" + 
 							(String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
-					messageEditPanel = "pm multi set editpartname " + currentPart.name + " " + p.name + " " + 
+//					messageEditPanel = "pm multi set editpartname " + currentPart.name + " " + p.name + " " + 
+//							p.id + " " + p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
+//					partsManager.sendCommand(messageEditPanel);
+					messageEditPanel = "pm fcsa set editpartname " + currentPart.name + " " + p.name + " " + 
 							p.id + " " + p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
 					partsManager.sendCommand(messageEditPanel);
 					editItem(p);
