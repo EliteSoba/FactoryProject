@@ -31,7 +31,6 @@ public class Part implements Serializable,  Cloneable{
 
 	public Part(){}
 
-//	
 //	 public Object clone() {
 //         try {
 //             return super.clone();

@@ -1,6 +1,5 @@
 package factory.interfaces;
 
-import java.util.TimerTask;
 import factory.Kit;
 public interface Vision {
 

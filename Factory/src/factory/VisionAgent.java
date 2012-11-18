@@ -83,11 +83,12 @@ public class VisionAgent extends Agent implements Vision {
 	
 	
 	//the following message existed in the wiki, but the parameter is different.  It takes a timer rather than feeder
-	@Override
-	public void msgMyNestsReadyForPicture(Nest nest, Nest nest2, TimerTask timerTask) {
-		// TODO Auto-generated method stub
-		
-	}
+//Yeah, that was my fault.  It is no longer needed.
+	//	@Override
+//	public void msgMyNestsReadyForPicture(Nest nest, Nest nest2, TimerTask timerTask) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 	
 	
 	public void msgAnalyzeKitAtInspection(Kit kit) {
