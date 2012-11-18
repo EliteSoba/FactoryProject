@@ -804,7 +804,8 @@ public class MasterControl {
 //		mc.partsRobot.armOne = p0; // i think this gets figured out inside his code
 //		mc.partsRobot.armTwo = p1;
 
-		mc.partsRobot.msgDeliverKitParts();
+		mc.partsRobot.msgHereArePartCoordinatesForNest(mc.n0t,p0,0);
+		
 		
 		// partsRobot.armOne,partsRobot.armTwo //instances of part object, must be instantiated
 		

@@ -169,7 +169,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	/**
 	 * Message that is received from Vision tells which nest has a good part and its coordinate
 	 */
-	public void msgHereArePartCoordiantesForNest(Nest nest, Part part, int coordinate) {
+	public void msgHereArePartCoordinatesForNest(Nest nest, Part part, int coordinate) {
 		for(int i = 0; i < nests.size(); i++){
 			if(nests.get(i).nest == nest && nests.get(i).part == part){
 				nests.get(i).state = NestState.PICK_UP_NEEDED;
