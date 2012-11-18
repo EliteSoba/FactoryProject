@@ -747,8 +747,6 @@ public class MasterControl {
 		KitConfig kc = new KitConfig();
 		kc.listOfParts = partList;
 		mc.partsRobot.topSlot = kc; // stand TOP SLOT position
-//		mc.partsRobot.armOne = p0; // i think this gets figured out inside his code
-//		mc.partsRobot.armTwo = p1;
 
 		mc.partsRobot.msgHereArePartCoordinatesForNest(mc.n0t,p0,0);
 		

@@ -170,8 +170,11 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 * Message that is received from Vision tells which nest has a good part and its coordinate
 	 */
 	public void msgHereArePartCoordinatesForNest(Nest nest, Part part, int coordinate) {
-		for(int i = 0; i < nests.size(); i++){
+		debug("received msgHereArePartCoordinatesForNest("+nest.nestName+","
+							+part.name+","+coordinate+")"); // ryan cleary added this
+		for(int i = 0; i < nests.size(	); i++){
 			if(nests.get(i).nest == nest && nests.get(i).part == part){
+				debug("PICK_UP_NEEDED");
 				nests.get(i).state = NestState.PICK_UP_NEEDED;
 				nests.get(i).partCoordinate = coordinate;
 			}
@@ -211,9 +214,30 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			}
 			// If there is a part to be picked up and space in the arms and the PartsRobot can get there without overlapping with the camera
 			for(int i = 0; i < 8; i++){
+				if (nests.get(i).state == NestState.PICK_UP_NEEDED)
+				{
+					debug("YEAH, the nest "+i+" is in need of a pick up.");
+				}
+				if (SpaceInArms() == true)
+				{
+					debug("YEAH, there is space in my arms.");
+				}
+				if (this.CanMoveToNest(i) == true)
+				{
+					debug("YEAH, I can move to nest " + i + ".");
+				}
+				if (IsPartFromNestNeed(i) == true)
+				{
+					debug("YEAH, I need part from nest " + i + ".");
+				}
 				if(nests.get(i).state == NestState.PICK_UP_NEEDED && SpaceInArms() && this.CanMoveToNest(i) && IsPartFromNestNeed(i)){
+					debug("-------- DO PICK UP PART -------");
 					DoPickUpPartFromNest(i);
 					return true;
+				}
+				else
+				{
+					debug("&&&&&& DONT PICK UP PART &&&&&&&");
 				}
 			}
 			
@@ -976,6 +1000,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 * Function to check if the part of a particular nest is needed for the current kits in the slots
 	 */
 	public boolean IsPartFromNestNeed(int nest){
-		return false;
+		//return false;
+		return true; // ryan cleary added this
 	}
 }
