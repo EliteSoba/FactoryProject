@@ -346,15 +346,26 @@ public class MasterControl {
 			{
 				destination = agentTreeMap.get(cmd.get(1)); // FCSAgent
 
-				if(cmd.get(3).equals("makekits")){
+				if(cmd.get(3).equals("makekits")){	//I know this worked before but should this be in clientCmd
 					int quantity = Integer.valueOf(cmd.get(4));
 					String name = cmd.get(5);
 					((FCSAgent) destination).msgProduceKit(quantity,name);
 				}
-				//more fcsagent commands
-			}
+				
+				if(cmd.get(3).equals("addpartname")){
+					//#partname #partid #filepath #stabalizationtime #partdescription"
+					String partname = cmd.get(4);
+					int partid = Integer.valueOf(cmd.get(5));
+					String filepath = cmd.get(6);
+					int stabalizationtime = Integer.valueOf(cmd.get(7));
+					String partdescription = cmd.get(8);
+					((FCSAgent) destination).addPartType(partname, stabalizationtime, partdescription, partid, filepath);
+				}
+			
+			}//End FCSAgent Commands
+			
 			/*
-			//MCS Commands:
+			//MCS Commands: //MOVED ELSEWHERE
 
 			if (cmd.get(1).equals("mcs"))
 			{
@@ -388,8 +399,8 @@ public class MasterControl {
 	// and then sends it.
 
 
-	public boolean clientCmd(ArrayList<String> cmd){	
-		String s = checkCmd(cmd);
+	public boolean clientCmd(ArrayList<String> cmd){
+		String s = checkCmd(cmd); //why is this different from agentCmd?
 		System.out.println(s);
 		String a = cmd.get(0); // Source
 		if(s != null){
@@ -412,8 +423,9 @@ public class MasterControl {
 
 		System.out.println("Server received ... "+cmd+" from "+a);
 		System.out.println("Server is about to send ... "+fullCmd);
+		return false;
 
-		if(b.equals("multi")){
+		/*if(b.equals("multi")){
 			ArrayList<PartHandler> destinations = getDestinations(cmd.get(3));
 			if(destinations == null){
 				return false;
@@ -431,7 +443,7 @@ public class MasterControl {
 			PartHandler destinationPH = determinePH(b);
 			boolean result = sendCmd(destinationPH, fullCmd);
 			return result;
-		}
+		}*/ //TEMPORARILY IN HIBERNATION FOR V.1 (NOT THE BEST USE OF OUR TIME TO FIX)
 
 
 	}
