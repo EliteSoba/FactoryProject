@@ -104,40 +104,40 @@ public class GantryManager extends Client {
 			}
 			
 			// Commands from KitRobotAgent
-			else if (identifier.equals("putInspectionKitOnConveyor")) {
+			else if (identifier.equals("putinspectionkitonconveyor")) {
 				((GantryRobotPanel) graphics).moveKitFromInspectionToConveyor();
 			}
-			else if (identifier.equals("putEmptyKitAtSlot")) {
-				if (pCmd.get(2).equals("topSlot")) {
+			else if (identifier.equals("putemptykitatslot")) {
+				if (pCmd.get(2).equals("topslot")) {
 					((GantryRobotPanel) graphics).moveEmptyKitToSlot(0);
-				} else if (pCmd.get(2).equals("bottomSlot")) {
+				} else if (pCmd.get(2).equals("bottomslot")) {
 					((GantryRobotPanel) graphics).moveEmptyKitToSlot(1);
 				}
 			}
-			else if (identifier.equals("moveKitToInspectionSlot")) {
-				if (pCmd.get(2).equals("topSlot")) {
+			else if (identifier.equals("movekittoinspectionslot")) {
+				if (pCmd.get(2).equals("topslot")) {
 					((GantryRobotPanel) graphics).moveKitToInspection(0);
-				} else if (pCmd.get(2).equals("bottomSlot")) {
+				} else if (pCmd.get(2).equals("bottomslot")) {
 					((GantryRobotPanel) graphics).moveKitToInspection(1);
 				}
 			}
-			else if (identifier.equals("dumpKitAtSlot")) {
-				if (pCmd.get(2).equals("topSlot")) {
+			else if (identifier.equals("dumpkitatslot")) {
+				if (pCmd.get(2).equals("topslot")) {
 					((GantryRobotPanel) graphics).dumpKitAtSlot(0);
-				} else if (pCmd.get(2).equals("bottomSlot")) {
+				} else if (pCmd.get(2).equals("bottomslot")) {
 					((GantryRobotPanel) graphics).dumpKitAtSlot(1);
-				} else if (pCmd.get(2).equals("inspectionSlot")) {
+				} else if (pCmd.get(2).equals("inspectionslot")) {
 					((GantryRobotPanel) graphics).dumpKitAtInspection();
 				}
 			}
 
 			// Commands from ConveyorAgent
-			else if (identifier.equals("exportKitFromCell")) {
+			else if (identifier.equals("exportkitfromcell")) {
 				((GantryRobotPanel) graphics).exportKit();
 			}
 			
 			// Commands from ConveyorControllerAgent
-			else if (identifier.equals("emptyKitEntersCell")) {
+			else if (identifier.equals("emptykitenterscell")) {
 				((GantryRobotPanel) graphics).newEmptyKit();
 			}
 

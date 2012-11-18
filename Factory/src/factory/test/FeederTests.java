@@ -22,7 +22,7 @@ public class FeederTests extends TestCase{
 	FeederAgent feeder;
 	MockLane top, bottom;
 	MockGantry gantry;
-	Part p1,p2;
+	Part p1,p2,p3;
 	
 	/**
 	 * Sets up the standard configuration for easy testing.
@@ -37,9 +37,10 @@ public class FeederTests extends TestCase{
 		feeder.diverter = DiverterState.FEEDING_BOTTOM; // initial setting to test the switching of the lane diverter
 		
 		
-		p1 = new Part("p1");
-		p2 = new Part("p2");
-		
+		p1 = new Part("eye",000,"desc","imgPath",2);
+		p2 = new Part("shoe",001,"desc","imgPath",3);
+		p3 = new Part("sword",002,"desc","imgPath",3);
+
 	}
 	
 	/**
@@ -543,6 +544,21 @@ public class FeederTests extends TestCase{
     			+ feeder.log.toString(), 
     			feeder.log.containsString("Animation DoSwitchLane()"));
 	
+		
+	}
+	
+	/** This test tests the following scenario:
+	 * 1) Parts of type A are loaded into the top lane. 
+	 * 2) Parts of type B are loaded into the bottom lane.
+	 * 3) Parts of type C are loaded into the top lane.
+	 */
+	
+	public void testSendingVisionMessage1() {
+		feeder.msgLaneNeedsPart(p1,top); //eye to top
+		
+		feeder.msgLaneNeedsPart(p2,bottom); //shoe to bottom
+
+		feeder.msgLaneNeedsPart(p3,top); //sword to top
 		
 	}
 	

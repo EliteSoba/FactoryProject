@@ -90,6 +90,7 @@ public class KitManPanel extends JPanel{
 	}
 	public class AddPanel extends JPanel implements ActionListener{
 
+		private static final long serialVersionUID = -8524745924530226740L;
 		JTextField cKitName = new JTextField( "Kit Name");
 		JLabel cMessages = new JLabel ("Messages:");
 		JButton cSave = new JButton("Save Kit Configuration");
@@ -293,6 +294,7 @@ public class KitManPanel extends JPanel{
 
 
 	public class EditPanel extends JPanel implements ActionListener{
+		private static final long serialVersionUID = -5135149055810589452L;
 		JLabel mItemFrame1;
 		JLabel mItemFrame2;
 		JLabel mItemFrame3;
