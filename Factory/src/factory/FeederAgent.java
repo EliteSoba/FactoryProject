@@ -68,7 +68,7 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 	}
 
-
+	public enum NestStability {UNSTABLE, STABLE }
 	public enum MyLaneState {EMPTY, PURGING, CONTAINS_PARTS, BAD_NEST, 
 		TOLD_NEST_TO_DUMP, NEST_SUCCESSFULLY_DUMPED}
 	public enum JamState {MIGHT_BE_JAMMED, TOLD_TO_INCREASE_AMPLITUDE, 
@@ -78,6 +78,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 		public Lane lane;
 		public MyLaneState state = MyLaneState.EMPTY;
+		public NestStability stability = NestStability.UNSTABLE; // initially it should be empty. essentially unstbale
 		public JamState jamState;
 		public Part part;
 		public boolean readyForPicture = false;
@@ -102,6 +103,21 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** MESSAGES **/
+	public void msgNestHasStabilized(Lane lane) {
+		if(topLane.lane == lane)
+		{
+			debug("My top lane has stabilized and so it's ready for a picture.");
+			topLane.stability = NestStability.STABLE;
+		}
+		else if(bottomLane.lane == lane)
+		{
+			debug("My bottom lane has stabilized and so it's ready for a picture.");
+			bottomLane.stability = NestStability.STABLE;
+		}
+		
+		stateChanged();
+	}
+
 	public void msgEmptyNest(Nest n) {
 		debug("received msgEmptyNest()");
 		if (topLane.lane.getNest() == n) 
@@ -176,6 +192,9 @@ public class FeederAgent extends Agent implements Feeder {
 	@Override
 	public boolean pickAndExecuteAnAction() {
 
+		// Determine if the Feeder's associated Nests are ready for a picture
+		if ()
+		
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
 		{
 			synchronized(requestedParts)
