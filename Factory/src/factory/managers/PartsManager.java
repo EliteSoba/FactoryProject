@@ -128,7 +128,6 @@ public class PartsManager extends Client implements WindowListener{
 	}
 
 	@Override
-	@Override
 public void doCommand(ArrayList<String> pCmd) {
 int size = pCmd.size();
 //parameters lay between i = 2 and i = size - 2
