@@ -10,20 +10,29 @@ import factory.KitRobotAgent.ConveyorStatus;
 
 public class KitRobotTests extends TestCase {
 	
+	MockStand stand;
+	MockConveyor conveyor;
+	KitRobotAgent kitrobot;
+	
+	public void initializeAgents() {
+		//Creating MockConveyor and MockStand
+		stand = new MockStand("Stand");
+		conveyor = new MockConveyor("Conveyor");
+		
+		//Creating KitRobot
+		kitrobot = new KitRobotAgent();
+		
+		//kitrobot.setStand(stand);
+		kitrobot.setConveyor(conveyor);
+		kitrobot.setStand(stand);
+	}
+	
 	@Test
 	public void testNewKitRequest() {
 		/**
 		 * Test case for the KitRobotAgent getting a request for an empty kit while there is nothing on the Conveyor currently
 		 */
-		//Creating MockConveyor and MockStand
-		MockStand stand = new MockStand("Stand");
-		MockConveyor conveyor = new MockConveyor("Conveyor");
-		
-		//Creating KitRobot
-		KitRobotAgent kitrobot = new KitRobotAgent();
-		
-		//kitrobot.setStand(stand);
-		kitrobot.setConveyor(conveyor);
+		initializeAgents();
 		
 		//Messaging the KitRobot about an empty slot in the Stand
 		kitrobot.msgNeedEmptyKitAtSlot("topSlot");
@@ -43,6 +52,34 @@ public class KitRobotTests extends TestCase {
 		
 		kitrobot.msgEmptyKitOnConveyor(); //Simulating the empty kit coming to the conveyor
 		
+		//Calling KitRobot Scheduler, KitRobot should now start trying to put the empty kit in the topSlot
+		kitrobot.pickAndExecuteAnAction();
+		
+		//KitRobot should be done putting the empty kit in the topSlot now
+	}
+	
+	@Test
+	public void testMovingToInspectionSlot() {
+		/**
+		 * Test case for the KitRobotAgent getting a request to move a completed kit to the inspection slot for inspection
+		 */
+		initializeAgents();
+	}
+	
+	@Test
+	public void testKitBad() {
+		/**
+		 * Test case for the the kitRobot checking the inspectionSlot and finding that it failed inspection
+		 */
+		initializeAgents();
+	}
+	
+	@Test
+	public void testKitGood() {
+		/**
+		 * Test case for the kitRobot checking the inspectionSlot and finding that the kit passed inspection
+		 */
+		initializeAgents();
 	}
 
 }

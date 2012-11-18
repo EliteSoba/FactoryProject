@@ -21,10 +21,4 @@ public class MockConveyorController extends MockAgent implements ConveyorControl
 		
 	}
 
-	@Override
-	public void msgKitExported(Kit k) {
-		log.add(new LoggedEvent("received msgKitExported() from the Conveyor for kit "+k));
-		
-	}
-	
 }
