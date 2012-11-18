@@ -98,9 +98,9 @@ public class GraphicFactoryProductionManager extends JFrame {
 		//kitRobot.msgAnimationDone();
 	}
 	
-	public void moveRobotToNest(int nestNum)
+	public void moveRobotToNest(int nestNum, int partNum)
 	{
-		panel.movePartsRobotToNest(nestNum);
+		panel.movePartsRobotToNest(nestNum, partNum);
 	}
 	
 	public void moveRobotToStation()
@@ -140,14 +140,19 @@ public class GraphicFactoryProductionManager extends JFrame {
 		panel.purgeBottomLane(feederNum);
 	}
 	
-	public void getBin()
+	public void getBin(String partName)
 	{
-		panel.moveGantryRobotToPickup("IMAGE FILE PATH GOES HERE LATER");
+		panel.moveGantryRobotToPickup(partName);
 	}
 	
-	public void moveGantryToFeeder1()
+	public void moveGantryToFeeder1Pickup()
 	{
-		panel.moveGantryRobotToFeeder(0);
+		panel.moveGantryRobotToFeederForPickup(0);
+	}
+
+	public void moveGantryToFeeder1Dropoff()
+	{
+		panel.moveGantryRobotToFeederForDropoff(0);
 	}
 	
 	public void takePictureFeeder1()

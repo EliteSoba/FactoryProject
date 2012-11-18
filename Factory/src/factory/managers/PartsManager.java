@@ -16,24 +16,16 @@ import factory.swing.PartsManPanel;
 public class PartsManager extends Client implements WindowListener{
 	private static final long serialVersionUID = -205350261062308096L;
 	
-	HashMap<String, Part> parts;
+	public HashMap<String, Part> parts;
 	// Kit Configurations ArrayList
 
 	public PartsManager() {
 		super(Client.Type.pm, null, null);
 		
+		parts = new HashMap<String, Part>();
 		loadData();
 		System.out.println(parts.size());
-		/*
-		parts.add(new Part("Eye",1,"This is used to see.","Images/eye.png",1));
-		parts.add(new Part("Body",2,"This is used as the base.","Images/body.png",5));
-		parts.add(new Part("Hat",3,"This is used to cover the head.","Images/hat.png",2));
-		parts.add(new Part("Arm",4,"This is used to grab things.","Images/arm.png",2));
-		parts.add(new Part("Shoe",5,"This is used to walk.","Images/shoe.png",2));
-		parts.add(new Part("Mouth",6,"This is used to talk.","Images/mouth.png",1));
-		parts.add(new Part("Nose",7,"This is used to smell.","Images/nose.png",1));
-		parts.add(new Part("Moustache",8,"This is used to look cool.","Images/moustache.png",1));
-		parts.add(new Part("Ear",9,"This is used to hear.","Images/ear.png",2));*/
+
 		UI = new PartsManPanel(this);
 		setInterface();
 		
@@ -49,76 +41,31 @@ public class PartsManager extends Client implements WindowListener{
 		
 		add(UI, BorderLayout.LINE_END);
 		pack();
+		this.setSize(460,600);
+		this.setResizable(false);
 		setVisible(true);
 	}
 	
-	public void sendMessage(String option, String itemName, String filePath){
+	public void sendMessage(String option, Part p1, Part p2){
 		String message = null;
 		
 		if(option.equals("add")){
-			message = "pm km cmd addpartname " + itemName + " " + filePath;
+			message = "pm multi cmd addpartname " + p1.name + " " + p1.id + " " + p1.imagePath + " " + p1.nestStabilizationTime + " " + p1.description;
+			System.out.println(message);
 		}
 		
 		else if (option.equals("remove")){
-			message = "pm km cmd rmpartname " + itemName + " " + filePath;
+			message = "pm multi cmd rmpartname " + p1.name; 
+		}else if (option.equals("edit")){
+			message = "pm multi cmd editpartname " + p2.name + " " + p1.name + " " + p1.id + " " + p1.imagePath + " " + p1.nestStabilizationTime + " " + p1.description;
+			
 		}
 		
-		sendCommand(message);
+		//sendCommand(message);
 		
 	}
 
-	@Override
-	public void doCommand(ArrayList<String> pCmd) {
-		int size = pCmd.size();
-	//parameters lay between i = 2 and i = size - 2
-		String action = pCmd.get(0);
-		String identifier = pCmd.get(1);
-		if(action.equals("cmd")){
-			/*if(identifier.equals(command1))
-			 * do(command1);
-			 * else if(identifier.equals(command2))
-			 * do(command2);
-			 */
-		}
-		else if(action.equals("req")){
-			/*if(identifier.equals(request1))
-			 * do(request1);
-			 * else if(identifier.equals(request2))
-			 * do(request2);
-			 */
-		}
-		else if(action.equals("get")){
-			/*if(identifier.equals(get1))
-			 * do(get1);
-			 * else if(identifier.equals(get2))
-			 * do(get2);
-			 */
-		}
-		else if(action.equals("set")){
-			/*if(identifier.equals(set1))
-			 * do(set1);
-			 * else if(identifier.equals(set2))
-			 * do(set2);
-			 */
-		}
-		else if(action.equals("cnf")){
-			/*if(identifier.equals(confirm1))
-			 * do(confirm1);
-			 * else if(identifier.equals(confirm2))
-			 * do(confirm2);
-			 */
-		}
-		else if(action.equals("err")){
-			String error;
-			error = new String();
-			for(int i = 1; i<this.parsedCommand.size(); i++)
-				error.concat(parsedCommand.get(i));
-			System.out.println(error);
 		
-			
-		}
-	}
-	
 	public HashMap<String, Part> getParts(){
 		return parts;
 	}
@@ -192,9 +139,17 @@ public class PartsManager extends Client implements WindowListener{
 			parts = (HashMap<String, Part>) o.readObject();
 			System.out.println("Good");
 		}catch(IOException e){
+			e.printStackTrace();
 			parts = new HashMap<String, Part>();
 		} catch(ClassNotFoundException c){
+			c.printStackTrace();
 			parts = new HashMap<String, Part>();
 		}
+	}
+
+	@Override
+	public void doCommand(ArrayList<String> pCmd) {
+		// TODO Auto-generated method stub
+		
 	}
 }

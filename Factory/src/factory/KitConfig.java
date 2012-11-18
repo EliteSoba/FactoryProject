@@ -1,8 +1,9 @@
 package factory;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class KitConfig {
+public class KitConfig implements Serializable{
 	
 	   public String kitName;
 

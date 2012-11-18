@@ -1,36 +1,55 @@
 package factory.graphics;
+
 import java.awt.*;
-import javax.swing.*;
-import java.util.*;
+
+/**
+ * @author Tobias Lee <p>
+ * <b>{@code GraphicKittingStation.java}</b> (80x300)<br>
+ * The graphical representation of a Kit Station.
+ * Holds up to two Kits and one more for Inspection.
+ */
 
 public class GraphicKittingStation {
 	
-	/*GraphicKittingStation.java (80x300) - Tobias Lee
-	 * This does nothing right now.
-	 * Eventually, it will be something like a graphical representation of the Kitting Station
-	 */
-	
-	private int x, y; //Coordinates
-	public static final int MAX_KITS = 2; //Max number of kits this station can hold
-	private GraphicKit[] kits; //The kits it is holding
-	private GraphicKit check; //The kit in the inspection area
+	/**The x coordinate of the Kit Station*/
+	private int x;
+	/**The y coordinate of the Kit Station*/
+	private int y;
+	/**The Kits the Kit Station holds*/
+	private GraphicKit[] kits;
+	/**The Kit in the Inspection Station*/
+	private GraphicKit check;
+	/**Timer for animation of Inspection Camera*/
 	private int timer;
-	GraphicPanel GKAM;
+	/**The GraphicPanel for intercomponent communication*/
+	GraphicPanel GP;
 	
-	public GraphicKittingStation(int x, int y, GraphicPanel GKAM) {
-		//Constructor
+	/**The maximum number of kits a station can hold*/
+	public static final int MAX_KITS = 2;
+	
+	/**
+	 * Creates a Kit Station at the given x and y coordinates
+	 * @param x The initial x coordinate of the Kit Station
+	 * @param y The initial y coordinate of the Kit Station
+	 * @param GP The GraphicPanel for intercomponent communication
+	 */
+	public GraphicKittingStation(int x, int y, GraphicPanel GP) {
 		this.x = x;
 		this.y = y;
+		this.GP = GP;
+		
 		timer = -1;
 		kits = new GraphicKit[MAX_KITS];
-		this.GKAM = GKAM;
 		for (int i = 0; i < MAX_KITS; i++)
 			kits[i] = null;
 		check = null;
 	}
 	
+	/**
+	 * Paints the Kit Station
+	 * @param g The specified graphics window
+	 */
 	public void paint(Graphics g) {
-		//Draws the Kitting Station
 		g.setColor(new Color(100, 50, 0));
 		g.fillRoundRect(x, y, 50, 300, 20, 20);
 		
@@ -40,28 +59,33 @@ public class GraphicKittingStation {
 		g.drawString("TRASH", x+5, y+365);
 		drawKits(g);
 		
+		//Camera flash
 		if (timer != -1) {
 			timer++;
 			g.setColor(Color.white);
 			g.fillOval(x-5*timer+25, y+250-5*timer, 10*timer, 10*timer);
 			if (timer == 5) {
 				timer = -1;
-				GKAM.takePictureOfInspectionSlotDone();
+				GP.takePictureOfInspectionSlotDone();
 			}
 		}
 	}
 	
+	/**
+	 * Repositions the Kits in the Kit Station
+	 */
 	public void revalidateKits() {
-		//Repositions kits to set positions
 		for (int i = 0; i < MAX_KITS; i++)
 			if (kits[i] != null)
 				kits[i].move(x+5, y+100*i+10);
 		if (hasCheck())
 			check.move(x+5, y+210);
 	}
-	
+	/**
+	 * Paints the Kits in the Kit Station
+	 * @param g The specified graphics window
+	 */
 	public void drawKits(Graphics g) {
-		//Draws the kits
 		revalidateKits();
 		
 		for (int i = 0; i < MAX_KITS; i++)
@@ -71,9 +95,13 @@ public class GraphicKittingStation {
 			check.paint(g);
 	}
 	
-	/**DO NOT USE*/
+	/**
+	 * Generically adds a Kit to whatever slot is available
+	 * @param kit The Kit being added
+	 * @return {@code true} if the Kit was added successfully; {@code false} otherwise
+	 * @deprecated Use addKit(GraphicKit kit, int index) instead
+	 */
 	public boolean addKit(GraphicKit kit) {
-		//Generically adds kit to slot 1 if available, slot 2 if 1 is open and 2 isn't, and returns false if both are full
 		if (kits[0] == null)
 			kits[0] = kit;
 		else if (kits[1] == null)
@@ -83,9 +111,14 @@ public class GraphicKittingStation {
 		return true;
 	}
 	
+	/**
+	 * Adds a Kit to the given slot
+	 * @param kit The Kit being added
+	 * @param index The slot to add the Kit to
+	 * @return {@code true} if the Kit was added successfully; {@code false} otherwise
+	 */
 	public boolean addKit(GraphicKit kit, int index) {
-		//Adds kit to index (0 or 1). Returns true if index is occupied, false otherwise
-		if (index != 0 && index != 1) //!(index == 0 || index == 1)
+		if (index != 0 && index != 1)
 			return addKit(kit);
 		if (kits[index] == null)
 			kits[index] = kit;
@@ -94,6 +127,11 @@ public class GraphicKittingStation {
 		return true;
 	}
 	
+	/**
+	 * Adds a Kit to the Inspection Station
+	 * @param kit The Kit being added
+	 * @return {@code true} if the Kit was added successfully; {@code} false otherwise
+	 */
 	public boolean addCheck(GraphicKit kit) {
 		if (hasCheck())
 			return false;
@@ -101,54 +139,80 @@ public class GraphicKittingStation {
 		return true;
 	}
 	
+	/**
+	 * Gets the Kit at the given index
+	 * @param index The slot to get the Kit from
+	 * @return The Kit at the given index
+	 */
 	public GraphicKit getKit(int index) {
-		//Gets the kit at the index
 		return kits[index];
 	}
 	
+	/**
+	 * Gets the Kit in the Inspection Station
+	 * @return the Kit at the Inspection Station
+	 */
 	public GraphicKit getCheck() {
 		return check;
 	}
 	
+	/**
+	 * Gets and removes the Kit at the given index
+	 * @param index The slot to get the Kit from
+	 * @return The Kit at the given index
+	 */
 	public GraphicKit popKit(int index) {
-		//Removes the kit at the index for transfer
 		GraphicKit temp = kits[index];
 		kits[index] = null;
 		return temp;
 	}
 	
+	/**
+	 * Gets and removes the Kit in the Inspection Station
+	 * @return The Kit in the Inspection Station
+	 */
 	public GraphicKit popCheck() {
-		//Removes the kit at the checking station for transfer
 		GraphicKit temp = check;
-		dropCheck();
+		check = null;
 		return temp;
 	}
 	
+	/**
+	 * Checks if the Kit Station has any Kits
+	 * @return {@code true} if the Kit Station has at least 1 Kit; {@code false} otherwise
+	 */
 	public boolean hasKits() {
-		//Returns if the station has any kits
 		return kits[0] != null || kits[1] != null;
 	}
 	
+	/**
+	 * Checks if the Kit Station is full
+	 * @return {@code true} if the Kit Station has the maximum number of Kits; {@code false} otherwise
+	 */
 	public boolean maxed() {
-		//Returns if the station is at maximum capacity or not
 		return kits[0] != null && kits[1] != null;
 	}
 	
+	/**
+	 * Checks if there is a Kit in the Inspection Station
+	 * @return {@code true} if there is a Kit in the Inspection Station; {@code false} otherwise
+	 */
 	public boolean hasCheck() {
-		//If the station has a kit in the checking location
 		return check != null;
 	}
 	
-	public void dropCheck() {
-		//Rather unnecessary, but kind of nice for readability
-		check = null;
-	}
-	
+	/**
+	 * Calls the Camera Flash
+	 */
 	public void checkKit() {
-		//Camera flashing
 		timer = 0;
 	}
 	
+	/**
+	 * Adds an Item to the Kit at the given slot
+	 * @param item The Item to add to the Kit
+	 * @param target The slot whose Kit should be added to
+	 */
 	public void addItem(GraphicItem item, int target) {
 		if (target != 0 && target != 1)
 			return;
@@ -157,10 +221,18 @@ public class GraphicKittingStation {
 		kits[target].addItem(item);
 	}
 	
+	/**
+	 * Gets the x coordinate of the Kit Station
+	 * @return The x coordinate of the Kit Station
+	 */
 	public int getX() {
 		return x;
 	}
 	
+	/**
+	 * Gets the y coordinate of the Kit Station
+	 * @return The y coordinate of the Kit Station
+	 */
 	public int getY() {
 		return y;
 	}

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import agent.Agent;
 import java.util.*;
 
-import factory.graphics.GraphicLaneMenuPanel;
+
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
 //test commit
@@ -14,7 +14,6 @@ public class GantryAgent extends Agent implements Gantry {
 		
 	}
 
-	public GraphicLaneMenuPanel glmp;
 	public ArrayList<MyBin> myBins = new ArrayList<MyBin>();   
 	BinConfig binConfig;
 
@@ -33,9 +32,6 @@ public class GantryAgent extends Agent implements Gantry {
 		}
 	}
 
-
-
-
 	// *** MESSAGES ***
 
 	public void msgFeederNeedsPart(Part part, Feeder feeder) {
@@ -52,7 +48,7 @@ public class GantryAgent extends Agent implements Gantry {
 	// *** SCHEDULER ***
 
 	public boolean pickAndExecuteAnAction() {
-
+		System.out.println("gantry scheduler called");
 		for(MyBin b: myBins){
 			if(b.state == MyBinState.NEEDED){
 				goFetchTheRequestedBin(b);
@@ -65,8 +61,16 @@ public class GantryAgent extends Agent implements Gantry {
 
 	// *** ACTIONS ***
 	private void goFetchTheRequestedBin(MyBin b) {
-		DoPickupPurgeBin(); //animation message
+		debug("goFetchTheRequestedBin");
+		if (b.fdr.getFeederHasABinUnderneath() == true)
+				DoPickupPurgeBin(b); //animation message
 		
+		System.out.println("1");
+		DoGoGetNewBin(b);
+		System.out.println("2");
+		DoBringNewBin(b);
+		System.out.println("3");
+
 //		DoRefillPurgeBin(binConfig.binList.get(b.pt));
 //		DoBringRequestedBin(binConfig.binList.get(b.pt),b.fdr,b.pt);
 		
@@ -76,18 +80,46 @@ public class GantryAgent extends Agent implements Gantry {
 		stateChanged();
 	}
 
-	private void DoBringRequestedBin(Integer integer,Feeder f,Part p) {
-		print("Bringing requested bin");
-		glmp.doBringRequestedBin(integer,f,p);
-	}
 
-	private void DoRefillPurgeBin(Integer integer) {
-		print("Refilling Purge Bin");
-		
-	}
-
-	private void DoPickupPurgeBin() {
+	private void DoPickupPurgeBin(MyBin b) {
 		print("Picking up Purge Bin");
+		server.command("ga fpm cmd pickuppurgebin " + b.fdr.getFeederNumber());
+		try{
+			animation.acquire();
+		}
+		catch (InterruptedException e){
+			e.printStackTrace();
+		}
+	}
+	
+	private void DoGoGetNewBin(MyBin b) {
+		print("Going to get new Bin");
+		server.command("ga fpm cmd getnewbin " + b.pt.name);
+		try{
+			animation.acquire();
+		}
+		catch (InterruptedException e){
+			e.printStackTrace();
+		}
+	}
+	
+	private void DoBringNewBin(MyBin b) {
+		print("Bringing new Bin to the feeder");
+		server.command("ga fpm cmd bringbin " + b.fdr.getFeederNumber());
+		try{
+			animation.acquire();
+		}
+		catch (InterruptedException e){
+			e.printStackTrace();
+		}
+	}
+
+	
+	// *** OTHER METHODS ***
+	/**
+	 * This is a temporary message to test executing an animation from swing
+	 */
+	public void msgTestGetPart() {
 		
 	}
 

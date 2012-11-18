@@ -6,8 +6,6 @@ import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
 import agent.Agent;
-import factory.graphics.GraphicLaneManagerClient;
-import factory.graphics.GraphicLaneMenuPanel;
 import factory.interfaces.Feeder;
 import factory.interfaces.Gantry;
 import factory.interfaces.Lane;
@@ -23,9 +21,8 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** DATA **/
 	private static int kOK_TO_PURGE_TIME = 10;
-	public GraphicLaneMenuPanel glmp;
 	private String name;
-	public int feederSlot;
+	public int feederNumber;
 	public ArrayList<MyPartRequest> requestedParts = new ArrayList<MyPartRequest>();   
 	public MyLane topLane;
 	public MyLane bottomLane;
@@ -39,7 +36,7 @@ public class FeederAgent extends Agent implements Feeder {
 	public Timer feederEmptyTimer = new Timer();
 	public Timer partResettleTimer = new Timer();
 	public boolean feederHasABinUnderneath = false; // no bin underneath the feeder initially
-	
+
 	public enum FeederState { EMPTY, WAITING_FOR_PARTS, CONTAINS_PARTS, OK_TO_PURGE, SHOULD_START_FEEDING, IS_FEEDING }
 	public enum DiverterState { FEEDING_TOP, FEEDING_BOTTOM }
 
@@ -91,13 +88,14 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 
-	public FeederAgent(String nameStr,int slot, Lane top, Lane bottom, Gantry g, MasterControl mc) {
+	public FeederAgent(String nameStr,int slot, Lane top, Lane bottom, Gantry g, Vision v, MasterControl mc) {
 		super(mc);
 		this.topLane = new MyLane(top);
 		this.bottomLane = new MyLane(bottom);
 		this.gantry = g;
-		this.name = nameStr+slot;
-		this.feederSlot = slot;
+		this.vision = v;
+		this.name = "f"+slot;
+		this.feederNumber = slot;
 	}
 
 
@@ -131,7 +129,7 @@ public class FeederAgent extends Agent implements Feeder {
 		String laneStr = "Top Lane";
 		if (bottomLane.lane == la)
 			laneStr = "Bottom Lane";
-		
+
 		debug("received msgNestWasDumped("+ laneStr + ")");
 		if (topLane.lane == la)
 		{
@@ -145,9 +143,11 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	public void msgLaneNeedsPart(Part part, Lane lane) {
-		String laneStr = "Top Lane";
+		String laneStr = null;
 		if (bottomLane.lane == lane)
 			laneStr = "Bottom Lane";
+		else if (topLane.lane == lane)
+			laneStr = "Top Lane";
 
 		debug("received msgLaneNeedsPart("+part.name + "," + laneStr + ")");
 		requestedParts.add(new MyPartRequest(part, lane));
@@ -156,11 +156,19 @@ public class FeederAgent extends Agent implements Feeder {
 
 	public void msgHereAreParts(Part part) {
 		debug("received msgHereAreParts("+part.name+")");
-		
+
 		feederHasABinUnderneath = true; // should never be false again
-		
+
 		for (MyPartRequest pr : requestedParts) {
-			if(pr.state == MyPartRequestState.ASKED_GANTRY && pr.pt == part) {
+			/*
+			 * // Checks to see if two parts are of the same type
+	public boolean isTheSameTypeOfPartAs(Part p)
+	{
+		
+		return true; // if ....
+	}
+			 */
+			if(pr.state == MyPartRequestState.ASKED_GANTRY && pr.pt.name.equals(part.name)) {
 				pr.state = MyPartRequestState.DELIVERED;
 			}
 		}
@@ -183,6 +191,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
 		{
+			//MAKE THIS SYNCHRONIZED
 			for (MyPartRequest p : requestedParts)
 			{
 				if (p.state == MyPartRequestState.NEEDED)
@@ -199,26 +208,50 @@ public class FeederAgent extends Agent implements Feeder {
 			//					"Trying to decide which lane to feed parts to."));
 
 			// Which lane should it feed to?
-			if (topLane.part == currentPart)
+			System.out.println("0.4");
+			if (topLane.part.name.equals(currentPart.name))
 			{
+				System.out.println("0.5a, lanestate = " + topLane.state);
 				if (topLane.state == MyLaneState.EMPTY || topLane.state == MyLaneState.CONTAINS_PARTS)
 				{
+					System.out.println("0.6a");
+					// check to see if the lane diverter needs to switch
+					if (diverter == DiverterState.FEEDING_BOTTOM) {
+						System.out.println("0.7a");
+						diverter = DiverterState.FEEDING_TOP;
+						DoSwitchLane();   // Animation to switch lane
+					}
+
+					System.out.println("0.8a");
 					state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
 					StartFeeding();
 					return true;
 				}
+				return true;
 			}
-			else if (bottomLane.part == currentPart)
+			else if (bottomLane.part.name.equals(currentPart.name))
 			{
+				System.out.println("0.5b");
 				if (bottomLane.state == MyLaneState.EMPTY || bottomLane.state == MyLaneState.CONTAINS_PARTS)
 				{
+					System.out.println("0.6b");
+					// check to see if the lane diverter needs to switch
+					if (diverter == DiverterState.FEEDING_TOP) {
+						System.out.println("0.7b");
+						diverter = DiverterState.FEEDING_BOTTOM;
+						DoSwitchLane();   // Animation to switch lane
+					}
+
+					System.out.println("0.8b");
 					state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
 					StartFeeding();
 					return true;
 				}
+				return true;
 			}
+			return true;
 		}
-		
+
 		for (MyPartRequest p : requestedParts) 
 		{
 			if (p.state == MyPartRequestState.DELIVERED)
@@ -295,8 +328,13 @@ public class FeederAgent extends Agent implements Feeder {
 
 	private void askGantryForPart(MyPartRequest partRequested) { 
 		debug("asking gantry for part " + partRequested.pt.name + ".");
-		if (this.currentPart == partRequested.pt && state != FeederState.EMPTY)
+
+		if (partRequested.pt.name == null)
+			System.out.println("ERRRORRRRORRR");
+		// This first if statement makes sure that the feeder doesn't unnecessarily purge itself
+		if (this.currentPart.name.equals(partRequested.pt.name) && state != FeederState.EMPTY)
 		{
+			debug("feeder doesn't need to purge.");
 			state = FeederState.IS_FEEDING;
 			partRequested.state = MyPartRequestState.DELIVERED;
 		}
@@ -330,19 +368,25 @@ public class FeederAgent extends Agent implements Feeder {
 		// A BUG IS HERE
 		if (topLane.lane == partRequested.lane && state == FeederState.OK_TO_PURGE)
 		{
-			if (topLane.part != partRequested.pt)
-			{
-				purging = true;
-				purgeLane(topLane);
+			if (topLane.part != null) // the topLane's part is initially null, which is always != to 
+			{						  // the partRequested.pt, but we don't want to purge when the lane is empty!
+				if (topLane.part != partRequested.pt)
+				{
+					purging = true;
+					purgeLane(topLane);
+				}
 			}
 		}
 
 		if (bottomLane.lane == partRequested.lane && state == FeederState.OK_TO_PURGE)
 		{
-			if (bottomLane.part != partRequested.pt)
-			{
-				purging = true;
-				purgeLane(bottomLane);
+			if (bottomLane.part != null) // the bottomlane's part is initially null, which is always != to
+			{						  	 // the partRequested.pt, but we don't want to purge when the lane is empty!
+				if (bottomLane.part != partRequested.pt)
+				{
+					purging = true;
+					purgeLane(bottomLane);
+				}
 			}
 		}
 
@@ -360,7 +404,7 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	private void purgeLane(MyLane myLane){
-
+		myLane.state = MyLaneState.PURGING; 		
 		if (myLane == topLane)
 		{
 			DoPurgeTopLane();
@@ -371,8 +415,7 @@ public class FeederAgent extends Agent implements Feeder {
 			DoPurgeBottomLane();
 		}
 
-		myLane.state = MyLaneState.PURGING; 
-		//myLane.state = MyLaneState.EMPTY; // for v.0, we will simply purge it "instantly"
+		myLane.state = MyLaneState.EMPTY; // we have received a message from the animation telling us that the lane has been purged
 
 		myLane.lane.msgPurge();
 	}
@@ -406,13 +449,18 @@ public class FeederAgent extends Agent implements Feeder {
 		mpr.state = MyPartRequestState.PROCESSING;
 		log.add(new LoggedEvent("Action ProcessFeederParts()"));
 		requestedParts.remove(mpr);
+		System.out.print("0.1");
 		currentPart = mpr.pt;
+		System.out.print("0.2");
+
 
 		if (bottomLane.lane == mpr.lane){
 			bottomLane.part = mpr.pt;
+			System.out.print("0.3a");
 		}
 		else {
 			topLane.part = mpr.pt;
+			System.out.print("0.3b");
 		}
 
 		state = FeederState.SHOULD_START_FEEDING;
@@ -423,12 +471,12 @@ public class FeederAgent extends Agent implements Feeder {
 	private void StartFeeding(){
 		debug("action start feeding.");
 		final MyLane currentLane;
-		if(currentPart == topLane.part)
+		if(currentPart.name.equals(topLane.part.name))
 			currentLane = topLane;
 		else 
 			currentLane = bottomLane;
 		// Switch Diverter
-		if (diverter == DiverterState.FEEDING_BOTTOM) {
+		/*if (diverter == DiverterState.FEEDING_BOTTOM) {
 			if (currentLane == topLane)
 			{
 				diverter = DiverterState.FEEDING_TOP;
@@ -439,7 +487,7 @@ public class FeederAgent extends Agent implements Feeder {
 			diverter = DiverterState.FEEDING_BOTTOM;
 			DoSwitchLane();   // Animation to switch lane
 		}
-
+		 */
 
 		okayToPurgeTimer.schedule(new TimerTask(){
 			public void run() {
@@ -451,30 +499,39 @@ public class FeederAgent extends Agent implements Feeder {
 		},(long) kOK_TO_PURGE_TIME * 1000); // okay to purge after this many seconds
 
 		feederEmptyTimer.schedule(new TimerTask(){
-			public void run(){		    
-				partResettleTimer.schedule(new TimerTask() {
-					public void run() {
-						debug("A lane is ready for a picture.");
-						currentLane.readyForPicture = true;
-
-						if (bottomLane.readyForPicture == true && topLane.readyForPicture == true)
-						{
-							debug("both of my nests are ready for a picture.");
-							vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
-							topLane.readyForPicture = false;
-							bottomLane.readyForPicture = false;
-						}
-						stateChanged();
-					}
-				}, 3000); // 3 seconds to resettle in the nest
+			public void run(){	
+					/** TODO: FIX THIS CODE, PERHAPS USE MSGING FROM THE ANIMATION. **/
+//				partResettleTimer.schedule(new TimerTask() {
+//					public void run() {
+//						debug("A lane is ready for a picture.");
+//						currentLane.readyForPicture = true;
+//
+//						if (bottomLane.readyForPicture == true && topLane.readyForPicture == true)
+//						{
+//							System.out.println("1.0");
+//							debug("both of my nests are ready for a picture.");
+//							vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
+//							topLane.readyForPicture = false;
+//							bottomLane.readyForPicture = false;
+//							System.out.println("1.1");
+//						}
+//						System.out.println("1.2");
+//						stateChanged();
+//						System.out.println("1.3");
+//					}
+//				}, 3000); // 3 seconds to resettle in the nest
+//				System.out.println("1.4");
 			}
 		}, (long) kOK_TO_PURGE_TIME * 1000); // time it takes the part to move down the lane and fill a nest 
+		System.out.println("1.5");
 
 		//	Timer.new(30000, { state = FeederState.OK_TO_PURGE; });
 		//		Timer.new(currentPart.averageDelayTime,{vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this) });
 		// need a timer so that we don't immediately purge the new ones
 
 		DoStartFeeding(currentPart);
+		System.out.println("1.6");
+
 		stateChanged();
 	}
 
@@ -507,53 +564,54 @@ public class FeederAgent extends Agent implements Feeder {
 	/** ANIMATIONS 
 	 * @throws InterruptedException **/
 	private void DoStartFeeding(Part part) {
-		server.command("fa fpm cmd startfeeding " + feederSlot);
-		debug("Feeder " + feederSlot + " started feeding.");
-		//		try {
-		//			animation.acquire();
-		//		} catch (InterruptedException e) {
-		//			// TODO Auto-generated catch block
-		//			e.printStackTrace();
-		//		}
+		server.command("fa fpm cmd startfeeding " + feederNumber);
+	
+		debug("Feeder " + feederNumber + " started feeding.");
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void DoStopFeeding() { 
-//		server.command("fa fpm cmd stopfeeding " + feederSlot);
+		server.command("fa fpm cmd stopfeeding " + feederNumber);
 		debug("stopped feeding.");
-		//		try {
-		//		animation.acquire();
-		//	} catch (InterruptedException e) {
-		//		// TODO Auto-generated catch block
-		//		e.printStackTrace();
-		//	}
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void DoPurgeFeeder() {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeFeeder()"));
 
-//		server.command("fa fpm cmd purgefeeder " + feederSlot);
+		server.command("fa fpm cmd purgefeeder " + feederNumber);
 		debug("purging feeder.");
-		//		try {
-		//		animation.acquire();
-		//	} catch (InterruptedException e) {
-		//		// TODO Auto-generated catch block
-		//		e.printStackTrace();
-		//	}
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void DoSwitchLane() {
 		log.add(new LoggedEvent(
 				"Animation DoSwitchLane()"));
 
-//		server.command("fa fpm cmd switchlane " + feederSlot);
+		server.command("fa fpm cmd switchlane " + feederNumber);
 		debug("switching lane");
-		//		try {
-		//		animation.acquire();
-		//	} catch (InterruptedException e) {
-		//		// TODO Auto-generated catch block
-		//		e.printStackTrace();
-		//	}
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void DoContinueFeeding(Part part) {
@@ -565,36 +623,41 @@ public class FeederAgent extends Agent implements Feeder {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeTopLane()"));
 
-//		server.command("fa fpm cmd purgetoplane " + feederSlot);
+		server.command("fa fpm cmd purgetoplane " + feederNumber);
 		debug("purging top lane");
-		//		try {
-		//		animation.acquire();
-		//	} catch (InterruptedException e) {
-		//		// TODO Auto-generated catch block
-		//		e.printStackTrace();
-		//	}
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void DoPurgeBottomLane() {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeBottomLane()"));
 
-//		server.command("fa fpm cmd purgebottomlane " + feederSlot);
+		server.command("fa fpm cmd purgebottomlane " + feederNumber);
 		debug("purging bottom lane");
-		//		try {
-		//		animation.acquire();
-		//	} catch (InterruptedException e) {
-		//		// TODO Auto-generated catch block
-		//		e.printStackTrace();
-		//	}
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	
+
 	/** OTHER **/
-	public boolean getFeederHasABinUnderneath() {
+	public boolean getFeederHasABinUnderneath() 
+	{
 		return feederHasABinUnderneath;
 	}
 
+	public int getFeederNumber()
+	{
+		return this.feederNumber;
+	}
 }
 
 

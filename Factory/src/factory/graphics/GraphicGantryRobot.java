@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import factory.Part;
 
-class GantryRobot
+class GraphicGantryRobot
 {
 	int x, y;							// current position
 	int dx, dy;						// change in position
@@ -21,18 +21,19 @@ class GantryRobot
 	GraphicBin bin;
 	boolean hasBin;
 	Image binImage;
+	String partPath;
 	
-	public GantryRobot()
+	public GraphicGantryRobot()
 	{
 		
 	}
-	public GantryRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
+	public GraphicGantryRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
 		bin = null;
 		hasBin = false;
 		arrived = false;
-		state = -1;		// 0 = moving to nest, 1 = waiting at nest, 2 = waiting for next action, 3 = moving to kitting station, 4 = waiting at kitting station
-						// 5 = moving to center, 6 = arrived at center
+		state = 0;					// 0 = idle, 1 = going to bin pickup, 2 = arrived at bin pickup, 3 = going to feeder (dropoff), 4 = arrived at feeder (dropoff),
+									// 5 = arrived at feeder (pickup), 6 = arrived at feeder (pickup)
 		destinationFeeder = -1;
 		x = init_x;
 		y = init_y;
@@ -46,6 +47,8 @@ class GantryRobot
 		imageHeight = init_imageHeight;
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
 		binImage = Toolkit.getDefaultToolkit().getImage("Images/binCrate.png");
+		
+		partPath = "Images/eyesItem.png";
 	}
 	
 	public void setDestination(int init_fx, int init_fy)
@@ -111,28 +114,34 @@ class GantryRobot
 	{
 		return imageHeight;
 	}
-	public GraphicBin takeBin()
+	public boolean hasBin()
+	{
+		return hasBin;
+	}
+	public void setPartPath(String path)
+	{
+		partPath = path;
+	}
+	public String getPartPath()
+	{
+		return partPath;
+	}
+	public void giveBin(GraphicBin init_bin)
+	{
+		bin = init_bin;
+		hasBin = true;
+	}
+	public GraphicBin popBin()
 	{
 		hasBin = false;
 		return bin;
 	}
 	public void move()
 	{
-		//System.out.println(fx + " " + fy);
 		if(y == fy && x == fx)	// robot has arrived at destination
 		{
-			if(state == 0)
-			{
-				state = 1;
-				hasBin = true;
-				bin = new GraphicBin(new Part("TestItem"));
-				System.out.println("Arrived at bin pickup point, waiting for bin pickup.");
-			}
-			else if(state == 4)
-			{
-				state = 5;
-				System.out.println("Arrived at feeder, waiting for feeder dumping.");
-			}
+			if(state % 2 == 1)
+				state += 1;
 		}
 		else if(x < fx)
 		{
@@ -172,6 +181,5 @@ class GantryRobot
 		}
 		if(theta < 0) theta = 360;
 		else if(theta > 360) theta = 0;
-		//System.out.println(theta);
 	}
 }

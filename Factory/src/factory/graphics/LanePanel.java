@@ -14,7 +14,7 @@ import factory.*;
 
 public class LanePanel extends GraphicPanel implements ActionListener{
 	
-	public static final int WIDTH = 500, HEIGHT = 720;
+	public static final int WIDTH = 400, HEIGHT = 720;
 	
 	public LanePanel(JFrame LM) {
 		super();
@@ -24,10 +24,10 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 			am = (Client)LM;
 		// Parts robot client
 		// Add 8 nests
-		nests = new ArrayList<Nest>();	
+		nests = new ArrayList<GraphicNest>();	
 		for(int i = 0; i < 8; i++)
 		{
-			Nest newNest = new Nest(50,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
+			GraphicNest newNest = new GraphicNest(35,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
 			Random randomGen = new Random();
 			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
 				newNest.addItem(new GraphicItem(20,20,"Images/eyesItem.png"));
@@ -35,7 +35,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		}
 		lane = new GraphicLaneManager [4];
 		for (int i = 0; i < lane.length; i++)
-			lane[i] = new GraphicLaneManager(50, 160*i + 50, i, this);
+			lane[i] = new GraphicLaneManager(35, 160*i + 50, i, this);
 		
 		(new Timer(delay, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -56,7 +56,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		lane[(laneNum) / 2].bin = new GraphicBin(new Part("eyes"));
 		lane[(laneNum) / 2].binExist = true;
 		//end Test*/
-		if(lane[(laneNum) / 2].binExist && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
+		if(lane[(laneNum) / 2].binExists && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
 			lane[(laneNum) / 2].laneStart = true;
 			lane[(laneNum) / 2].divergeUp = ((laneNum) % 2 == 0);
 			lane[(laneNum) / 2].feederOn = true;
@@ -100,7 +100,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 	
 	public void purgeFeeder(int feederNum){ // takes in lane 0 - 3
 		lane[(feederNum)].bin = null;
-		lane[(feederNum)].binExist = false;
+		lane[(feederNum)].binExists = false;
 		lane[(feederNum)].feederOn = false;
 	}
 	

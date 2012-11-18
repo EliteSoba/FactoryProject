@@ -11,5 +11,7 @@ public interface Gantry {
 
 	void msgFeederNeedsPart(Part pt, Feeder feederAgent);
 
+	void msgTestGetPart();
+
 
 }

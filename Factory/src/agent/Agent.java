@@ -11,8 +11,8 @@ public abstract class Agent {
 	Semaphore stateChange = new Semaphore(1,true);//binary semaphore, fair
 	private AgentThread agentThread;
 	
-	protected MasterControl server;
-	protected Semaphore animation = new Semaphore(0,true); // semaphore for animation interaction with server
+	public MasterControl server;
+	public Semaphore animation = new Semaphore(0,true); // semaphore for animation interaction with server
 
 	
 	protected Agent(MasterControl mc) {
@@ -89,6 +89,7 @@ public abstract class Agent {
 	
 	/** MESSAGE from the animation, notifying the agent that the animation is done. **/
 	public void msgAnimationDone() {
+		debug("msgAnimationDone() received by Agent");
 		animation.release();
 	}
 

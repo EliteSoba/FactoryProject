@@ -3,7 +3,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
-class AnimatedObject
+class GraphicAnimatedObject
 {
 	protected int x, y;							// current position
 	protected int dx, dy;						// change in position
@@ -14,11 +14,11 @@ class AnimatedObject
 	protected ArrayList<GraphicItem> items;			// inventory of items
 	
 	// Constructors
-	public AnimatedObject()
+	public GraphicAnimatedObject()
 	{
 		
 	}
-	public AnimatedObject(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
+	public GraphicAnimatedObject(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
 		items = new ArrayList<GraphicItem>();
 		x = init_x;
@@ -99,6 +99,18 @@ class AnimatedObject
 		GraphicItem lastItem = items.get(items.size()-1);		// get last item
 		items.remove(items.size()-1);					// remove last item
 		return lastItem;								// return last item
+	}
+	/**
+	 * Gets an Item at the provided index and removes the Item
+	 * @param index The index of the Item being taken
+	 * @return The Item at the provided index; returns {@code null} if the index is invalid
+	 */
+	public GraphicItem popItemAt(int index) {
+		if (index < 0 || index >= items.size())
+			return null;
+		GraphicItem returnedItem = items.get(index);
+		items.remove(index);
+		return returnedItem;
 	}
 	public int getSize()
 	{

@@ -1,7 +1,7 @@
 //Contributors: Ben Mayeux,Stephanie Reagle, Joey Huang, Tobias Lee, Ryan Cleary
 //CS 200
 
-// Last edited: 11/15/12 7:55pm by Joey Huang
+// Last edited: 11/16/12 10:12am by Joey Huang
 package factory.managers;
 
 import java.awt.BorderLayout;
@@ -15,6 +15,8 @@ import factory.graphics.FactoryProductionPanel;
 import factory.swing.FactoryProdManPanel;
 import factory.Part;
 import factory.KitConfig;
+import java.util.Iterator;
+import java.util.Map;
 
 public class FactoryProductionManager extends Client {
 	static final long serialVersionUID = -2074747328301562732L;
@@ -36,6 +38,7 @@ public class FactoryProductionManager extends Client {
 			kitConfigList = new HashMap<String,KitConfig>(); //Local version
 			
 			loadData();
+			populatePanelList();
 		}
 		public static void main(String[] args){
 		    FactoryProductionManager f = new FactoryProductionManager();
@@ -52,40 +55,69 @@ public class FactoryProductionManager extends Client {
 			setVisible(true);
 		}
 
-	public void sendCommand(String cmd){
-		//Swing Commands 
-		//Graphics Commands in Panel
-		
-	}
 		
 	public void doCommand(ArrayList<String> pCmd) {
 		int size = pCmd.size();
 		//parameters lay between i = 2 and i = size - 2
 		String action = pCmd.get(0);
 		String identifier = pCmd.get(1);
-		
-		if(action == "cmd"){
+		System.out.println("Got command");
+		System.out.println(action);
+		System.out.println(identifier);
+		if(action.equals("cmd")){
 			//Graphics Receive Commands
+			
+			// Commands from FeederAgent
 			if (identifier.equals("startfeeding"))
 			{
-				int feederSlot = Integer.valueOf(pCmd.get(3));
-				((FactoryProductionPanel) graphics).turnFeederOn(feederSlot);
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).feedFeeder(feederSlot);
 			}
 			else if (identifier.equals("stopfeeding"))
 			{
-				int feederSlot = Integer.valueOf(pCmd.get(3));
+				int feederSlot = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).turnFeederOff(feederSlot);
 			} 
 			else if (identifier.equals("purgefeeder"))
 			{
-				int feederSlot = Integer.valueOf(pCmd.get(3));
+				int feederSlot = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).purgeFeeder(feederSlot);
 			}
 			else if (identifier.equals("switchlane"))
 			{
-				int feederSlot = Integer.valueOf(pCmd.get(3));
+				int feederSlot = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).switchFeederLane(feederSlot);
 			}
+			else if (identifier.equals("purgetoplane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).purgeTopLane(feederSlot);
+			}
+			else if (identifier.equals("purgebottomlane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).purgeBottomLane(feederSlot);
+			}
+			
+			// Commands from GantryAgent:
+			else if (identifier.equals("pickuppurgebin"))
+			{
+				int feederNumber = Integer.valueOf(pCmd.get(2)); 
+				((FactoryProductionPanel) graphics).moveGantryRobotToFeederForPickup(feederNumber);
+			}
+			else if (identifier.equals("getnewbin"))
+			{
+				String desiredPartName = pCmd.get(2); 
+				((FactoryProductionPanel) graphics).moveGantryRobotToPickup(desiredPartName);
+			}
+			else if (identifier.equals("bringbin"))
+			{
+				int feederNumber = Integer.valueOf(pCmd.get(2)); 
+				((FactoryProductionPanel) graphics).moveGantryRobotToFeederForDropoff(feederNumber);
+			}
+
+
+			
 			//Swing Receive Commands
 			else if (identifier.equals("addkitname")) {		// add new kit configuration to kit configuration list
 				KitConfig newKit = new KitConfig(pCmd.get(2));
@@ -106,12 +138,17 @@ public class FactoryProductionManager extends Client {
 			}
 			else if (identifier.equals("addpartname")) {	// add new part to parts list
 				Part part = new Part(pCmd.get(3),Integer.parseInt(pCmd.get(4)),pCmd.get(7),pCmd.get(5),Double.parseDouble(pCmd.get(6)));
-				// server message sequence		Part part = new Part(pCmd.get(3),Integer.parseInt(pCmd.get(4)),pCmd.get(5),Double.parseDouble(pCmd.get(6)),pCmd.get(7));
 				partsList.put(pCmd.get(3),part);
 			}
 			else if (identifier.equals("rmpartname")) {		// remove part from parts list
 				partsList.remove(pCmd.get(2));
-				// need to check kits affected
+				// check kits affected and remove them
+				partsList.remove(pCmd.get(2));
+				ArrayList<String> affectedKits = kitConfigsContainingPart(pCmd.get(2));
+				for (String kit:affectedKits) {
+					kitConfigList.remove(kit);
+				}
+				((FactoryProdManPanel)UI).removePart(pCmd.get(2),affectedKits);
 			}
 		}
 		
@@ -123,7 +160,9 @@ public class FactoryProductionManager extends Client {
 		
 		else if(action.equals("set")){
 			if (identifier.equals("kitcontent")) { 			// modify content of a kit
-				
+				KitConfig kit = kitConfigList.get(pCmd.get(2));
+				String partName = pCmd.get(3);
+				//kit.listOfParts.set(pCmd.get(3),partsList.get(partName)); // commented out for now
 			}
 			else if (identifier.equals("kitsproduced")) { // updates number of kits produced for schedule
 				((FactoryProdManPanel) UI).kitProduced();
@@ -144,12 +183,12 @@ public class FactoryProductionManager extends Client {
 	}
 			
 
-// Load Data - remember to import the file - FOR EVERYONE
+// Load parts list and kit configuration list from file
     @SuppressWarnings("unchecked")
 	public void loadData(){
     FileInputStream f;
     ObjectInputStream o;
-    try{    // loads previously saved player data
+    try{    // parts
         f = new FileInputStream("InitialData/initialParts.ser");
         o = new ObjectInputStream(f);
         partsList = (HashMap<String,Part>) o.readObject();
@@ -160,7 +199,7 @@ public class FactoryProductionManager extends Client {
     } catch(ClassNotFoundException c){
         c.printStackTrace();
     }
-    try{    // loads previously saved player data
+    try{    // kit configurations
         f = new FileInputStream("InitialData/initialKitConfigs.ser");
         o = new ObjectInputStream(f);
         kitConfigList = (HashMap<String,KitConfig>) o.readObject();
@@ -172,7 +211,37 @@ public class FactoryProductionManager extends Client {
         c.printStackTrace();
     }
 }
-			
-			
+		
+    public void populatePanelList() { // adds list to panel display
+    	Iterator itr = kitConfigList.entrySet().iterator(); 
+    	while(itr.hasNext()) { 
+    		Map.Entry pairs = (Map.Entry)itr.next(); 
+    		String kitName= (String)pairs.getKey();
+    		((FactoryProdManPanel)UI).addKit(kitName);
+    	}
+    }
+
+// To search a list of kit configurations for kits containing a certain part
+ //returns ArrayList<String> kitNames;
+     public ArrayList<String> kitConfigsContainingPart(String str) {
+         KitConfig kitConfig = new KitConfig();
+         String kitName = new String();
+         ArrayList<String> affectedKits = new ArrayList<String>();
+
+
+         Iterator itr = kitConfigList.entrySet().iterator(); 
+         while(itr.hasNext()) {                  
+             Map.Entry pairs = (Map.Entry)itr.next();    
+             kitConfig = (KitConfig)pairs.getValue();
+             for (Part p:kitConfig.listOfParts) {
+                 if (p.name.equals(str)) {
+                     affectedKits.add((String)pairs.getKey());
+                     break;
+                 }
+             }
+         }
+         return affectedKits;
+
+     }		
 
 }
