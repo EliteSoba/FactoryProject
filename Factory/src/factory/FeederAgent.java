@@ -102,16 +102,6 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** MESSAGES **/
-
-	/**
-	 * Message from the server when the animation is done
-	 */
-	public void msgAnimationDone(){
-		debug("Received msgAnimationDone() from server");
-		animation.release();
-	}
-
-
 	public void msgEmptyNest(Nest n) {
 		debug("received msgEmptyNest()");
 		if (topLane.lane.getNest() == n) 
@@ -673,6 +663,8 @@ public class FeederAgent extends Agent implements Feeder {
 	{
 		return this.feederNumber;
 	}
+
+
 }
 
 

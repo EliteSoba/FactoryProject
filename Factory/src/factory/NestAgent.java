@@ -90,6 +90,16 @@ public class NestAgent extends Agent implements Nest {
 	public void setLane(Lane la) {
 		myLane = la;
 	}
+	
+
+	/** 
+	 * Message from the animation notifying the NestAgent 
+	 * that its parts have stabilized after resettling.
+	 */
+	public void msgNestHasStabilized() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
 

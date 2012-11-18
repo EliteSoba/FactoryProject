@@ -339,7 +339,7 @@ public class MasterControl {
 			// cmd.get(2) is CmdType
 			// cmd.get(3) is Command
 			// cmd.get(4+) are parameters
-			Agent destination;
+			Agent destination = null;
 
 			// FCSAgent Commands:
 			if (cmd.get(1).equals("fcsa"))
@@ -363,7 +363,46 @@ public class MasterControl {
 				}
 
 			}//End FCSAgent Commands
+			if(cmd.get(3).equals("rmpartname")){
+				//"#partname"
+				String partname = cmd.get(4);
+				//((FCSAgent) destination).
+				
+			}
+			
+			if(cmd.get(3).equals("editpartname")){
+					//" #originalpartname #newpartname #newpartid #newfilepath 
+					//#newstabalizationtime #newpartdescription"
+				String originalpartname = cmd.get(4);
+				String newpartname = cmd.get(5);
+				int newpartid = Integer.valueOf(cmd.get(6));
+				String newfilepath = cmd.get(7);
+				int newstabalizationtime = Integer.valueOf(cmd.get(8));
+				String newpartdescription = cmd.get(9);
+				((FCSAgent) destination).editPartType(originalpartname, newpartname,
+						newpartid, newfilepath, newstabalizationtime, newpartdescription);
+			}
 
+			// FeederAgent Commands:
+			else if (cmd.get(1).equals("fa"))
+			{
+				
+			}//End FeederAgent Commands
+			
+			// NestAgent Commands:
+			else if (cmd.get(1).equals("na"))
+			{
+				//"fa cmd neststabilized n" + laneManagerID + (i==0?"t":"b")
+				destination = nestAgentTreeMap.get(cmd.get(3)); 
+
+				if(cmd.get(3).equals("neststabilized")){	
+					((NestAgent) destination).msgNestHasStabilized();
+				}
+			}//End NestAgent Commands
+
+
+			
+			
 			/*
 			//MCS Commands: //MOVED ELSEWHERE
 
