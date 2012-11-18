@@ -59,6 +59,18 @@ public class StandAgent extends Agent implements Stand {
 		inspectionSlot = new MySlot("inspectionSlot");
 	}
 	
+	//UnitTesting Constructor
+	public StandAgent() {
+		super(null);
+		partsRobotWantsToDeliverParts = false;
+		kitRobotWantsToDeliverEmptyKit = false;
+		this.state = StandAgentState.FREE;
+		
+		topSlot = new MySlot("topSlot");
+		bottomSlot = new MySlot("bottomSlot");
+		inspectionSlot = new MySlot("inspectionSlot");
+	}
+	
 	/** MESSAGES **/
 	
 	/**
@@ -80,8 +92,8 @@ public class StandAgent extends Agent implements Stand {
 			stateChanged();
 		}
 		else {
-			debug("msgPartsRobotNoLongerUsingStand() called when it wasn't using it!!");
-			System.exit(1);
+			//debug("msgPartsRobotNoLongerUsingStand() called when it wasn't using it!!");
+			//System.exit(1);
 	   }
 	}
 	
@@ -342,5 +354,6 @@ public class StandAgent extends Agent implements Stand {
 			return inspectionSlot.state;
 		}
 	}
+
 
 }
