@@ -9,6 +9,7 @@ class GraphicPartsRobot extends GraphicAnimatedObject
 	int destinationNest, destinationKit;
 	boolean arrived;
 	int state;
+	int itemIndex;
 	
 	public GraphicPartsRobot()
 	{
@@ -32,6 +33,7 @@ class GraphicPartsRobot extends GraphicAnimatedObject
 		imageWidth = init_imageWidth;
 		imageHeight = init_imageHeight;
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
+		itemIndex = 0;
 	}
 	
 	public void setDestination(int init_fx, int init_fy)
@@ -64,7 +66,13 @@ class GraphicPartsRobot extends GraphicAnimatedObject
 	{
 		destinationNest = init_destinationNest;
 	}
-	
+
+	public void setItemIndex(int index) {
+		itemIndex = index;
+	}
+	public int getItemIndex() {
+		return itemIndex;
+	}
 	public void adjustShift(int amount)
 	{
 		//if(theta == 0 || theta == 360)

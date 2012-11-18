@@ -100,6 +100,18 @@ class GraphicAnimatedObject
 		items.remove(items.size()-1);					// remove last item
 		return lastItem;								// return last item
 	}
+	/**
+	 * Gets an Item at the provided index and removes the Item
+	 * @param index The index of the Item being taken
+	 * @return The Item at the provided index; returns {@code null} if the index is invalid
+	 */
+	public GraphicItem popItemAt(int index) {
+		if (index < 0 || index >= items.size())
+			return null;
+		GraphicItem returnedItem = items.get(index);
+		items.remove(index);
+		return returnedItem;
+	}
 	public int getSize()
 	{
 		return items.size();

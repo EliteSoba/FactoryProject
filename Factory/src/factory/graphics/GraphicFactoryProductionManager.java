@@ -98,9 +98,9 @@ public class GraphicFactoryProductionManager extends JFrame {
 		//kitRobot.msgAnimationDone();
 	}
 	
-	public void moveRobotToNest(int nestNum)
+	public void moveRobotToNest(int nestNum, int partNum)
 	{
-		panel.movePartsRobotToNest(nestNum);
+		panel.movePartsRobotToNest(nestNum, partNum);
 	}
 	
 	public void moveRobotToStation()
