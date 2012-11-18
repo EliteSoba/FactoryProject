@@ -94,11 +94,18 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			station.checkKit();
 	}
 	
+	public void dumpKitAtSlot(int target) {
+		if (isKitAssemblyManager || isFactoryProductionManager) {
+			kitRobot.setPurgeKit(true);
+			kitRobot.setStationTarget(target);
+		}
+	}
+	
 	public void dumpKitAtInspection() {
 		//Sends robot to move kit from inspection station to trash
 		//if (!kitRobot.kitted() && station.getCheck() != null)
 		if (isKitAssemblyManager || isFactoryProductionManager)
-			kitRobot.setPurgeKit(true);
+			kitRobot.setPurgeInspectionKit(true);
 	}
 	
 	public void moveKitFromInspectionToConveyor() {
