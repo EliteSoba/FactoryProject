@@ -145,7 +145,16 @@ public class MasterControl {
 		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,vision,this);
 		feederAgents = Arrays.asList(f0, f1, f2, f3);
 
-
+		// Set the Lane's Feeders
+		l0t.setFeeder(f0);
+		l0b.setFeeder(f0);
+		l1t.setFeeder(f1);
+		l1b.setFeeder(f1);
+		l2t.setFeeder(f2);
+		l2b.setFeeder(f2);
+		l3t.setFeeder(f3);
+		l3b.setFeeder(f3);
+		
 		// Instantiate the Conveyor and related Agents
 		conveyor = new ConveyorAgent();
 		conveyorController = new ConveyorControllerAgent();
