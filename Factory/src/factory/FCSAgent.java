@@ -19,15 +19,20 @@ import factory.test.mock.MockGantry;
 
 public class FCSAgent extends Agent implements FCS{
 
-	public Queue<KitConfig> orders = new LinkedList<KitConfig>(); //added this queue for kits
+	//queue of orders that is received from the panels
+	public Queue<KitConfig> orders = new LinkedList<KitConfig>();
+	
+	//agents
 	public PartsRobot partsRobot;
 	Gantry gantry;
-	BinConfig binConfig; //no need for this the way CS200 is designing the bins?
-	public boolean passBinConfigurationToGantry = false;
-	public boolean freeToMakeKit = true;
+	
+	//map to keep track of list of available parts
 	public Map<String, Part> partsList = new HashMap<String, Part>();
+	
+	//map to keep track of list of available recipes
 	public Map<String, KitConfig> kitRecipes = new HashMap<String, KitConfig>();
 
+	//enum to keep track of the state of the factory
 	public enum KitProductionState { PENDING, PRODUCING, FINISHED, PURGING }
 	public KitProductionState state = KitProductionState.PENDING;
 
@@ -43,14 +48,14 @@ public class FCSAgent extends Agent implements FCS{
 		this.masterControl = mc; // for testing purposes
 		this.gantry = gantry;
 		this.partsRobot = partsRobot;
-		loadData();
-		testImport();
+		//loadData();
+		//		testImport();
 	}
 	public FCSAgent(MasterControl mc){
 		super (mc);
 		this.masterControl = mc;
-		loadData();
-		testImport();
+		//loadData();
+		//		testImport();
 	}
 
 	// *** MESSAGES ***
@@ -112,8 +117,8 @@ public class FCSAgent extends Agent implements FCS{
 	private void sendKitConfigToPartRobot() { 
 
 		/**THIS IS TEMPORARY, //TODO for now send message to gantry instead of parts robot to test swing->agent->animation**/
-		this.gantry.msgFeederNeedsPart(partsList.get("Shoe"), this.masterControl.f0);
-		//		this.partsRobot.msgMakeKit(orders.peek()); //TODO uncomment this for v1 implementation
+		//		this.gantry.msgFeederNeedsPart(partsList.get("Shoe"), this.masterControl.f0); //comment this out for unit testing
+		this.partsRobot.msgMakeKit(orders.peek()); //TODO uncomment this for v1 implementation
 		this.state = KitProductionState.PRODUCING;
 		kitsExportedCount = 0;
 		stateChanged();
@@ -239,12 +244,16 @@ public class FCSAgent extends Agent implements FCS{
 
 	/**
 	 * This removes a kit configuration from the FCS Agent.
-	 * @param kitName The name of the kit yo uwant to remove.
+	 * @param kitName The name of the kit you want to remove.
 	 */
 	public void removeKitRecipe(String kitName){
 		kitRecipes.remove(kitName);
 	}
 
+	/**
+	 * This is a method to test whether or not the FCS was able to load the list of parts and kit configurations
+	 * from the text file.
+	 */
 	public void testImport() {
 		System.out.println("Recipes" + kitRecipes.keySet());
 		System.out.println("Parts" + partsList.keySet());
@@ -253,7 +262,7 @@ public class FCSAgent extends Agent implements FCS{
 			System.out.println(kitRecipes.get("Kit2").listOfParts.get(i).name);
 		}
 	}
-	
+
 	// Load Data - remember to import the file - FOR EVERYONE
 	/**
 	 * This function loads the data of existing parts and kit configurations from a text file.
