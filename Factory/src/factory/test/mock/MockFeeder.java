@@ -50,4 +50,26 @@ public class MockFeeder extends MockAgent implements Feeder {
 		
 	}
 
+	@Override
+	public boolean getFeederHasABinUnderneath() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getFeederNumber() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void msgNestHasStabilized(Lane lane) {
+		log.add(new LoggedEvent("msgNestHasStabilized()"));
+	}
+
+	@Override
+	public void msgNestHasDeStabilized(Lane lane) {
+		log.add(new LoggedEvent("msgNestHasDestabilized()"));
+	}
+
 }

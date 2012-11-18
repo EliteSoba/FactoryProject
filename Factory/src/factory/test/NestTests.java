@@ -75,12 +75,29 @@ public class NestTests extends TestCase {
 		nest.pickAndExecuteAnAction();
 		
 		// Check to see if lane receives appropriate message
-    	assertTrue("Lane should have been told msgNestNeedsPart(). Event log: "
+    	assertTrue("Lane should have been told msgNestHasStabilized(). Event log: "
     			+ lane.log.toString(), 
     			lane.log.containsString("msgNestHasStabilized()"));
     	
     	assertTrue(nest.nestState == NestState.NORMAL);
 
+	}
+	
+	public void testMsgNestHasDestabilized() {
+		
+		nest.msgNestHasDestabilized();
+		
+		assertTrue(nest.nestState == NestState.HAS_DESTABILIZED);
+		
+		nest.pickAndExecuteAnAction();
+		
+		// Check to see if lane receives appropriate message
+    	assertTrue("Lane should have been told msgNestHasDetabilized(). Event log: "
+    			+ lane.log.toString(), 
+    			lane.log.containsString("msgNestHasDetabilized()"));
+    	
+    	assertTrue(nest.nestState == NestState.NORMAL);
+    	
 	}
 	
 	

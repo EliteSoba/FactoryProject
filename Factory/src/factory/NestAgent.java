@@ -17,7 +17,7 @@ public class NestAgent extends Agent implements Nest {
 	/** DATA **/
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
 	public Lane myLane;
-	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILZIED}
+	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED}
 	public NestState nestState = NestState.NORMAL;
 	public enum MyPartState {  NEEDED, REQUESTED }
 	public class MyPart {
@@ -49,18 +49,39 @@ public class NestAgent extends Agent implements Nest {
 		nestState = NestState.HAS_STABILIZED;
 		stateChanged();
 	}
+	
+	/** 
+	 * Message notifying the NestAgent that its
+	 * parts have destabilized (become unstable!)
+	 */
+	public void msgNestHasDestabilized() {
+		nestState = NestState.HAS_DESTABILIZED;
+		stateChanged();
+	}
+	
+	/** 
+	 * Message notifying the NestAgent that the 
+	 * PartsRobot has grabbed one of the parts from its nest.
+	 */
+	public void msgPartsRobotGrabbingPartFromNest(int coordinate) {
+		//for all intensive purposes, this just means the nest has destabilized
+		msgNestHasDestabilized();
+	}
+	
 
-	
-	
 	
 	
 	
 
 	/** SCHEDULER **/
 	public boolean pickAndExecuteAnAction() {
+		if (nestState == NestState.HAS_DESTABILIZED)
+		{
+			tellMyLaneIHaveBecomeUnstable();
+		}
 		if (nestState == NestState.HAS_STABILIZED)
 		{
-			tellMyLaneIHaveStabilized();
+			tellMyLaneIHaveBecomeStable();
 		}
 		if (nestState == NestState.NEEDS_TO_DUMP)
 		{
@@ -72,7 +93,6 @@ public class NestAgent extends Agent implements Nest {
 
 			if (p.state == MyPartState.NEEDED)
 			{
-
 				askLaneToSendParts(p);
 				return true;
 			}
@@ -90,14 +110,14 @@ public class NestAgent extends Agent implements Nest {
 		stateChanged();
 	}
 	
-	public void tellMyLaneIHaveStabilized() {
-		nestState = NestState.NORMAL;
+	public void tellMyLaneIHaveBecomeStable() {
+		nestState = NestState.NORMAL; // we don't want to continue sending this message over and over again
 		myLane.msgNestHasStabilized();
 		stateChanged();
 	}
 	
 	public void tellMyLaneIHaveBecomeUnstable() {
-		nestState = NestState.HAS_DESTABILZIED;
+		nestState = NestState.NORMAL; // we don't want to continue sending this message over and over again
 		myLane.msgNestHasDestabilized();
 		stateChanged();
 	}
