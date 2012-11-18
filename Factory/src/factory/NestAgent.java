@@ -1,6 +1,7 @@
 package factory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import agent.Agent;
 import factory.interfaces.Lane;
@@ -18,8 +19,9 @@ public class NestAgent extends Agent implements Nest {
 
 	/** DATA **/
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
+	public ArrayList<Integer> partRemovals = new ArrayList<Integer>();
 	public Lane myLane;
-	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED}
+	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED, PART_REMOVED}
 	public NestState nestState = NestState.NORMAL;
 	public enum MyPartState {  NEEDED, REQUESTED }
 	public class MyPart {
@@ -31,6 +33,8 @@ public class NestAgent extends Agent implements Nest {
 			this.pt = partType;
 		}
 	}
+	
+	
 
 	/** MESSAGES **/
 	public void msgDump() {
@@ -68,9 +72,8 @@ public class NestAgent extends Agent implements Nest {
 	 * PartsRobot has grabbed one of the parts from its nest.
 	 */
 	public void msgPartsRobotGrabbingPartFromNest(int coordinate) {
-		//for all intensive purposes, this just means the nest has destabilized
 		debug("PARTS ROBOT GRABS PART FROM NEST");
-		nestState = NestState.HAS_DESTABILIZED;
+		nestState = NestState.PART_REMOVED;
 		stateChanged();
 	}
 	
@@ -85,11 +88,15 @@ public class NestAgent extends Agent implements Nest {
 		{
 			tellMyLaneIHaveBecomeUnstable();
 		}
-		if (nestState == NestState.HAS_STABILIZED)
+		else if (nestState == NestState.HAS_STABILIZED)
 		{
 			tellMyLaneIHaveBecomeStable();
 		}
-		if (nestState == NestState.NEEDS_TO_DUMP)
+		else if (nestState == NestState.PART_REMOVED)
+		{
+			tellMyLanePartRobotHasRemovedParts();
+		}
+		else if (nestState == NestState.NEEDS_TO_DUMP)
 		{
 			dump();
 			return true;
@@ -115,7 +122,19 @@ public class NestAgent extends Agent implements Nest {
 		nestState = NestState.NORMAL;
 		stateChanged();
 	}
-	
+	public void tellMyLanePartRobotHasRemovedParts()
+	{
+		int numberOfParts = 0;
+		for(Integer pr : partRemovals)
+		{
+			numberOfParts += pr;
+		}
+
+		nestState = NestState.NORMAL; 
+		myLane.msgNestHasDestabilized(); // it has also made the nest unstable
+		myLane.msgPartRobotHasRemovedParts(numberOfParts);
+		stateChanged();
+	}
 	public void tellMyLaneIHaveBecomeStable() {
 		nestState = NestState.NORMAL; // we don't want to continue sending this message over and over again
 		myLane.msgNestHasStabilized();

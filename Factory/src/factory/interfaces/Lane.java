@@ -23,4 +23,7 @@ public void msgNestHasStabilized();
 
 public void msgNestHasDestabilized();
 
+public void msgPartRobotHasRemovedParts(int numberOfParts);
+
+
 }

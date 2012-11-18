@@ -554,11 +554,17 @@ public class FeederTests extends TestCase{
 	 */
 	
 	public void testSendingVisionMessage1() {
-		feeder.msgLaneNeedsPart(p1,top); //eye to top
-		
-		feeder.msgLaneNeedsPart(p2,bottom); //shoe to bottom
-
-		feeder.msgLaneNeedsPart(p3,top); //sword to top
+//		feeder.msgLaneNeedsPart(p1,top); //eye to top
+//		
+//		feeder.pickAndExecuteAnAction();
+//		
+//		assertTrue(feeder.topLane.nestChecked == false);
+//		
+//		
+//		
+//		feeder.msgLaneNeedsPart(p2,bottom); //shoe to bottom
+//
+//		feeder.msgLaneNeedsPart(p3,top); //sword to top
 		
 	}
 	
