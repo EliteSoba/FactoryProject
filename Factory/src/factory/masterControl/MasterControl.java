@@ -706,7 +706,7 @@ public class MasterControl {
 		int debug = Integer.valueOf(args[0]);
 		MasterControl mc = new MasterControl(debug);
 
-		//This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
+/*		//This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
 		long timeToQuit = System.currentTimeMillis() + 5000;
 		while (System.currentTimeMillis() < timeToQuit);
 
@@ -724,7 +724,7 @@ public class MasterControl {
 		partList.add(p2);
 		partList.add(p3);
 		partList.add(p4);
-		partList.add(p5);
+		partList.add(p5);*/
 		
 		//mc.n0t.msgYouNeedPart(p0);
 
