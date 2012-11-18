@@ -1,6 +1,8 @@
 package factory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
@@ -23,7 +25,7 @@ public class FeederAgent extends Agent implements Feeder {
 	private static int kOK_TO_PURGE_TIME = 10;
 	private String name;
 	public int feederNumber;
-	public ArrayList<MyPartRequest> requestedParts = new ArrayList<MyPartRequest>();   
+	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());   
 	public MyLane topLane;
 	public MyLane bottomLane;
 	public Vision vision;
@@ -159,9 +161,12 @@ public class FeederAgent extends Agent implements Feeder {
 
 		feederHasABinUnderneath = true; // should never be false again
 
-		for (MyPartRequest pr : requestedParts) {
-			if(pr.state == MyPartRequestState.ASKED_GANTRY && pr.pt.id == part.id) {
-				pr.state = MyPartRequestState.DELIVERED;
+		synchronized(requestedParts)
+		{
+			for (MyPartRequest pr : requestedParts) {
+				if(pr.state == MyPartRequestState.ASKED_GANTRY && pr.pt.id == part.id) {
+					pr.state = MyPartRequestState.DELIVERED;
+				}
 			}
 		}
 		stateChanged();
@@ -183,13 +188,15 @@ public class FeederAgent extends Agent implements Feeder {
 
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
 		{
-			//MAKE THIS SYNCHRONIZED
-			for (MyPartRequest p : requestedParts)
+			synchronized(requestedParts)
 			{
-				if (p.state == MyPartRequestState.NEEDED)
+				for (MyPartRequest p : requestedParts)
 				{
-					askGantryForPart(p);
-					return true;
+					if (p.state == MyPartRequestState.NEEDED)
+					{
+						askGantryForPart(p);
+						return true;
+					}
 				}
 			}
 		}
@@ -244,12 +251,15 @@ public class FeederAgent extends Agent implements Feeder {
 			return true;
 		}
 
-		for (MyPartRequest p : requestedParts) 
+		synchronized(requestedParts)
 		{
-			if (p.state == MyPartRequestState.DELIVERED)
+			for (MyPartRequest p : requestedParts) 
 			{
-				processFeederParts(p);
-				return true;
+				if (p.state == MyPartRequestState.DELIVERED)
+				{
+					processFeederParts(p);
+					return true;
+				}
 			}
 		}
 
