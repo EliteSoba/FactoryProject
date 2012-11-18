@@ -1,10 +1,11 @@
-//Stephanie Reagle
+//Stephanie Reagle, Marc Mendiola
 //CS 200
 package factory.swing;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 
 import javax.swing.*;
 
@@ -12,12 +13,10 @@ import factory.managers.KitManager;
 import factory.managers.LaneManager;
 
 public class KitManPanel extends JPanel implements ActionListener{
-	
+
 	private static final long serialVersionUID = -5760501420685052853L;
-	
-	String[] kits = { "Default Kit", "Mr. Potato Head", "Mrs. Potato Head"}; //NEED REAL
-	String[] items = { "None", "Head", "Hand", "Nose", "Eyes", "Feet", "Ears" }; //NEED REAL
-	
+
+
 	//for Create Kit Tab
 	JLabel cLabel1 = new JLabel ("Item 1");
 	JLabel cLabel2 = new JLabel ("Item 2");
@@ -28,14 +27,14 @@ public class KitManPanel extends JPanel implements ActionListener{
 	JLabel cLabel7 = new JLabel ("Item 7");
 	JLabel cLabel8 = new JLabel ("Item 8");
 
-	JComboBox cItemComboBox1 = new JComboBox(items);
-	JComboBox cItemComboBox2 = new JComboBox(items);
-	JComboBox cItemComboBox3 = new JComboBox(items);
-	JComboBox cItemComboBox4 = new JComboBox(items);
-	JComboBox cItemComboBox5 = new JComboBox(items);
-	JComboBox cItemComboBox6 = new JComboBox(items);
-	JComboBox cItemComboBox7 = new JComboBox(items);
-	JComboBox cItemComboBox8 = new JComboBox(items);
+	JComboBox cItemComboBox1 = new JComboBox();
+	JComboBox cItemComboBox2 = new JComboBox();
+	JComboBox cItemComboBox3 = new JComboBox();
+	JComboBox cItemComboBox4 = new JComboBox();
+	JComboBox cItemComboBox5 = new JComboBox();
+	JComboBox cItemComboBox6 = new JComboBox();
+	JComboBox cItemComboBox7 = new JComboBox();
+	JComboBox cItemComboBox8 = new JComboBox();
 
 	JTextField cKitName = new JTextField( "Kit Name");
 	JLabel cMessages = new JLabel ("Messages:");
@@ -45,7 +44,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 
 
 
-	JComboBox mKitComboBox = new JComboBox(kits);
+	JComboBox mKitComboBox = new JComboBox();
 
 	JLabel mLabel1 = new JLabel ("Item 1");
 	JLabel mLabel2 = new JLabel ("Item 2");
@@ -56,25 +55,47 @@ public class KitManPanel extends JPanel implements ActionListener{
 	JLabel mLabel7 = new JLabel ("Item 7");
 	JLabel mLabel8 = new JLabel ("Item 8");
 
-	JComboBox mItemComboBox1 = new JComboBox(items);
-	JComboBox mItemComboBox2 = new JComboBox(items);
-	JComboBox mItemComboBox3 = new JComboBox(items);
-	JComboBox mItemComboBox4 = new JComboBox(items);
-	JComboBox mItemComboBox5 = new JComboBox(items);
-	JComboBox mItemComboBox6 = new JComboBox(items);
-	JComboBox mItemComboBox7 = new JComboBox(items);
-	JComboBox mItemComboBox8 = new JComboBox(items);
+	JComboBox mItemComboBox1 = new JComboBox();
+	JComboBox mItemComboBox2 = new JComboBox();
+	JComboBox mItemComboBox3 = new JComboBox();
+	JComboBox mItemComboBox4 = new JComboBox();
+	JComboBox mItemComboBox5 = new JComboBox();
+	JComboBox mItemComboBox6 = new JComboBox();
+	JComboBox mItemComboBox7 = new JComboBox();
+	JComboBox mItemComboBox8 = new JComboBox();
 
 	JTextField mKitName = new JTextField( "Default Kit");
 	JLabel mMessages = new JLabel ("Messages:");
 	JButton mSave = new JButton("Save Kit Configuration");
 	JButton mRemove = new JButton("Remove Kit");
-	
+
 	KitManager kitManager;
 
 	public KitManPanel(KitManager k){
 		kitManager = k;
 		
+		for(String key : kitManager.getPartsList().keySet()){
+			mItemComboBox1.addItem(key);
+			mItemComboBox2.addItem(key);
+			mItemComboBox3.addItem(key);
+			mItemComboBox4.addItem(key);
+			mItemComboBox5.addItem(key);
+			mItemComboBox6.addItem(key);
+			mItemComboBox7.addItem(key);
+			mItemComboBox8.addItem(key);
+			cItemComboBox1.addItem(key);
+			cItemComboBox2.addItem(key);
+			cItemComboBox3.addItem(key);
+			cItemComboBox4.addItem(key);
+			cItemComboBox5.addItem(key);
+			cItemComboBox6.addItem(key);
+			cItemComboBox7.addItem(key);
+			cItemComboBox8.addItem(key);
+		}
+		
+		for(String key : kitManager.getKitConfigList().keySet()){
+			mKitComboBox.addItem(key);
+		}
 		//Create Panel
 		cItemComboBox1.addActionListener(this);
 		cItemComboBox2.addActionListener(this);
@@ -84,9 +105,9 @@ public class KitManPanel extends JPanel implements ActionListener{
 		cItemComboBox6.addActionListener(this);
 		cItemComboBox7.addActionListener(this);
 		cItemComboBox8.addActionListener(this);
-		
+
 		JTabbedPane tabbedPane = new JTabbedPane();
-	    GridBagConstraints c = new GridBagConstraints();
+		GridBagConstraints c = new GridBagConstraints();
 
 		JPanel createKit = new JPanel();
 		createKit.setLayout(new GridBagLayout());
@@ -97,7 +118,7 @@ public class KitManPanel extends JPanel implements ActionListener{
 
 		c.gridy = 1;
 		createKit.add(cLabel2, c);
-		
+
 		c.gridy = 2;
 		createKit.add(cLabel3, c);
 
@@ -146,10 +167,10 @@ public class KitManPanel extends JPanel implements ActionListener{
 
 		c.gridy = 7;
 		createKit.add(cItemComboBox8, c);
-		
+
 		c.gridy = 8;
 		createKit.add(cMessages, c);
-		
+
 		JPanel modifyKit = new JPanel();
 		modifyKit.setLayout(new GridBagLayout());
 
@@ -219,20 +240,20 @@ public class KitManPanel extends JPanel implements ActionListener{
 
 		tabbedPane.addTab("Create Kit", createKit);
 		tabbedPane.addTab("Modify Kit", modifyKit);
-		
+
 		add(tabbedPane);	
 	}
 
-	  public void actionPerformed(ActionEvent ae) {
-		  String set = new String();
+	public void actionPerformed(ActionEvent ae) {
+		String set = new String();
 		if (ae.getSource() == cSave) {
-			for (int i = 0; i < kits.length; i++ ){
-				if (kits[i] == cKitName.getText()){
-					cMessages.setText("Kit Name already exists, try another name");
-				}
-			}
+			//for (int i = 0; i < kits.length; i++ ){
+				//if (kits[i] == cKitName.getText()){
+				//	cMessages.setText("Kit Name already exists, try another name");
+			//	}
+			//}
 			/*else if (false){
-				
+
 			}
 			else {
 				set = "km multi cmd addkitname " +
@@ -246,11 +267,12 @@ public class KitManPanel extends JPanel implements ActionListener{
 		}
 		else if (ae.getSource() == mSave) {
 		}
-		  
+
 		else if (ae.getSource() == mRemove){
 
 		}
-		
+
 	}
-		
+
+
 }

@@ -61,6 +61,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		flashImage = Toolkit.getDefaultToolkit().getImage("Images/flash3x3.png");
 	}
 	
+	/**TODO: Kit Assembly Methods*/
 	public void newEmptyKit() {
 		//Adds a kit into the factory via conveyer belt
 		//if (!belt.kitin())
@@ -112,13 +113,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			belt.exportKit();
 	}
 	
-	public void cameraFlash(int nestIndex) {
-		if (isLaneManager || isFactoryProductionManager) {
-			flashCounter = 10;
-			flashFeederIndex = nestIndex;
-		}
-	}
-	
+	/**TODO: Gantry Robot methods*/
 	public void moveGantryRobotToPickup(String path)
 	{
 		if (isGantryRobotManager || isFactoryProductionManager) {
@@ -173,9 +168,31 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		//}
 	}
 	
+	/**TODO: Parts Robot and Nest methods*/
+	public void cameraFlash(int nestIndex) {
+		if (isLaneManager || isFactoryProductionManager) {
+			flashCounter = 10;
+			flashFeederIndex = nestIndex;
+		}
+	}
+	
 	//CHANGE TO 0 BASE
+	/**
+	 * @deprecated
+	 * @param nestIndex
+	 */
 	public void movePartsRobotToNest(int nestIndex) {
 		if (isFactoryProductionManager) {
+			partsRobot.setState(1);
+			partsRobot.adjustShift(5);
+			partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-10,nests.get(nestIndex).getY()-15);
+			partsRobot.setDestinationNest(nestIndex);
+		}
+	}
+	
+	public void movePartsRobotToNest(int nestIndex, int itemIndex) {
+		if (isFactoryProductionManager) {
+			partsRobot.setItemIndex(itemIndex);
 			partsRobot.setState(1);
 			partsRobot.adjustShift(5);
 			partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-10,nests.get(nestIndex).getY()-15);
@@ -198,6 +215,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 	}
 	
+	/**TODO: Lane methods*/
 	public void feedFeeder(int feederNum) {
 		//if(!lane[feederNum].lane1PurgeOn){	//If purging is on, cannot feed!
 		if (isLaneManager || isFactoryProductionManager) {
@@ -290,6 +308,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 	}
 	
+	/**Movement methods*/
 	public void partsRobotStateCheck() {
 		// Has robot arrived at its destination?
 		//System.out.println(partsRobot.getState());
@@ -300,7 +319,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 				if(partsRobot.getSize() < 4)
 				{
 					if (nests.get(partsRobot.getDestinationNest()).hasItem())
-						partsRobot.addItem(nests.get(partsRobot.getDestinationNest()).popItem());
+						partsRobot.addItem(nests.get(partsRobot.getDestinationNest()).popItemAt(partsRobot.getItemIndex()));
 					partsRobot.setState(0);
 				}
 				partsRobotArrivedAtNest();

@@ -7,8 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import factory.Part;
+import javax.swing.JTextField;
 
 public class ControlPanel extends JPanel implements ActionListener{
 	
@@ -36,6 +35,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton gantryRobotFeeder1Dropoff, gantryRobotFeeder1Pickup;
 	JButton cameraFlash;
 	JButton feedLane1, feedLane2, purgeLane1, purgeLane2, purgeFeeder;
+	JTextField partName;
+	JTextField itemIndex;
 	
 	public ControlPanel(GraphicFactoryProductionManager fpm) {
 		//Constructor
@@ -61,6 +62,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 		purgeLane2 = new JButton("Purge Lane 2");
 		purgeFeeder = new JButton("purge Feeder");
 		cameraFlash = new JButton("Camera Flash Nest 1");
+		partName = new JTextField(10);
+		itemIndex = new JTextField(10);
 		for (int i = 0; i < 20; i++) {
 			blank[i] = new JLabel("   ");
 			blank[i].setPreferredSize(new Dimension(150, 10));
@@ -72,6 +75,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		/*this.add(outKit);
 		this.add(dumpKit);*/
 		this.addButton(test);
+		this.add(itemIndex);
 		this.addButton(partsRobotNest1);
 		this.addButton(partsRobotNest2);
 		this.addButton(partsRobotStation);
@@ -82,6 +86,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.addButton(purgeLane2);
 		this.addButton(purgeFeeder);
 		this.addButton(gantryRobotGoToStart);
+		this.add(partName);
 		this.addButton(gantryRobotGetBin);
 		this.addButton(gantryRobotFeeder1Dropoff);
 		this.addButton(gantryRobotFeeder1Pickup);
@@ -112,9 +117,9 @@ public class ControlPanel extends JPanel implements ActionListener{
 		else if (source == dumpKit)
 			am.dumpKit();
 		else if(source == partsRobotNest1)
-			am.moveRobotToNest(0);
+			am.moveRobotToNest(0, Integer.parseInt(itemIndex.getText()));
 		else if(source == partsRobotNest2)
-			am.moveRobotToNest(1);
+			am.moveRobotToNest(1, Integer.parseInt(itemIndex.getText()));
 		else if(source == partsRobotGoToCenter)
 			am.moveRobotToCenter();
 		else if(source == partsRobotStation)
@@ -130,7 +135,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		else if(source == purgeFeeder)
 			am.purgeFeeder(0);
 		else if(source == gantryRobotGetBin)
-			am.getBin();
+			am.getBin(partName.getText());
 		else if(source == gantryRobotFeeder1Dropoff)
 			am.moveGantryToFeeder1Dropoff();
 		else if(source == gantryRobotFeeder1Pickup)
