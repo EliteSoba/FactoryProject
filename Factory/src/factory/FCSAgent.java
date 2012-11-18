@@ -48,10 +48,7 @@ public class FCSAgent extends Agent implements FCS{
 		this.masterControl = mc;
 		loadData();
 		testImport();
-
 	}
-
-
 
 	// *** MESSAGES ***
 
