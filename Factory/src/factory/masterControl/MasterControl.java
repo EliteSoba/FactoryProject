@@ -665,7 +665,6 @@ public class MasterControl {
 		long timeToQuit = System.currentTimeMillis() + 5000;
 		while (System.currentTimeMillis() < timeToQuit);
 
-
 		// TEMPORARY, FOR TESTING PURPOSES:
 		Part p0 = new Part("eye",000,"desc","imgPath",2);
 		Part p1 = new Part("eye",000,"desc","imgPath",3);
@@ -674,7 +673,7 @@ public class MasterControl {
 		Part p4 = new Part("sword",002,"desc","imgPath",4);
 		
 		//mc.n0t.msgYouNeedPart(p0);
-
+		
 		// shortcut testing
 		//	public Part(String n,int i,String d,String p,double t) {
 
@@ -696,6 +695,18 @@ public class MasterControl {
 
 		mc.f1.msgLaneNeedsPart(p2,mc.l1t); //shoe to top
 
+		mc.f1.msgLaneNeedsPart(p3,mc.l1b); //shoe to bottom		
+		
+//		
+//		
+//
+//		mc.f2.msgLaneNeedsPart(p0,mc.l2t); //eye to top
+//
+//		mc.f2.msgLaneNeedsPart(p2,mc.l2b); //shoe to bottom
+//
+//		mc.f2.msgLaneNeedsPart(p4,mc.l2t); //sword to top
+
+		
 
 		//		mc.f0.msgLaneNeedsPart(p0, mc.l0t);		
 		// should make the gantry go get a bin of parts
