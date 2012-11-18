@@ -207,7 +207,7 @@ public class GraphicLaneManager{
 							bin.getBinItems().remove(0);
 							if(bin.getBinItems().size() == 0){
 								feederOn = false;
-								graphicPanel.feedLaneDone(laneManagerID * 2 + ((divergeUp)?0:1));
+								graphicPanel.feedLaneDone(laneManagerID);
 							}
 						}
 					}
