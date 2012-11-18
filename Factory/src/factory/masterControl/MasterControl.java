@@ -106,18 +106,6 @@ public class MasterControl {
 	private void startAgents(){
 		//Instantiate all of the agents!!!!!!
 
-
-		// Instantiate the Nests
-		n0t = new NestAgent(this);
-		n0b = new NestAgent(this);
-		n1t = new NestAgent(this);
-		n1b = new NestAgent(this);
-		n2t = new NestAgent(this);
-		n2b = new NestAgent(this);
-		n3t = new NestAgent(this);
-		n3b = new NestAgent(this);
-
-
 		// Instantiate the Lanes
 		l0t = new LaneAgent(this);
 		l0b = new LaneAgent(this);
@@ -127,6 +115,19 @@ public class MasterControl {
 		l2b = new LaneAgent(this);
 		l3t = new LaneAgent(this);
 		l3b = new LaneAgent(this);
+
+		// Instantiate the Nests
+		n0t = new NestAgent(this,l0t);
+		n0b = new NestAgent(this,l0b);
+		n1t = new NestAgent(this,l1t);
+		n1b = new NestAgent(this,l1b);
+		n2t = new NestAgent(this,l2t);
+		n2b = new NestAgent(this,l2b);
+		n3t = new NestAgent(this,l3t);
+		n3b = new NestAgent(this,l3b);
+
+
+		
 
 		// Instantiate the Gantry
 		gantry = new GantryAgent(this);
@@ -140,6 +141,7 @@ public class MasterControl {
 		f2 = new FeederAgent("f2",2,l2t,l2b,gantry,vision,this);
 		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,vision,this);
 		feederAgents = Arrays.asList(f0, f1, f2, f3);
+
 
 
 		// Instantiate the Conveyor and related Agents
@@ -438,8 +440,8 @@ public class MasterControl {
 			// NestAgent Commands:
 			else if (cmd.get(1).equals("na"))
 			{
-				//"fa cmd neststabilized n" + laneManagerID + (i==0?"t":"b")
-				destination = nestAgentTreeMap.get(cmd.get(3)); 
+				//"na cmd neststabilized n" + laneManagerID + (i==0?"t":"b")
+				destination = nestAgentTreeMap.get(cmd.get(4)); 
 
 				if(cmd.get(3).equals("neststabilized")){	
 					((NestAgent) destination).msgNestHasStabilized();
