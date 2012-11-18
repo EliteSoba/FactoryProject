@@ -106,7 +106,7 @@ public class GantryAgent extends Agent implements Gantry {
 	}
 	
 	/**
-	 * This is a method that tells the gantry to get the bin.
+	 * This is a method that tells the gantry to get the bin if there is already a bin underneath the feeder
 	 * @param b The bin that is requested.
 	 */
 	private void DoGoGetNewBin(MyBin b) {
@@ -121,7 +121,7 @@ public class GantryAgent extends Agent implements Gantry {
 	}
 	
 	/**
-	 * This is a method that tells the gantry to come back and drop off the bin
+	 * This is a method that tells the gantry to come back and drop off the bin if there is already a bin underneath the feeder
 	 * @param b The bin that is requested.
 	 */
 	private void DoBringNewBin(MyBin b) {
@@ -134,18 +134,6 @@ public class GantryAgent extends Agent implements Gantry {
 			e.printStackTrace();
 		}
 	}
-
-	
-	// *** OTHER METHODS ***
-	/**
-	 * This is a temporary message to test executing an animation from swing
-	 */
-	public void msgTestGetPart() {
-		
-	}
-
-
-
 }
 
 
