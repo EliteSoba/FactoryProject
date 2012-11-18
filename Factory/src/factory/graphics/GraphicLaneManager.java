@@ -43,6 +43,8 @@ public class GraphicLaneManager{
 	boolean binExists;			
 	boolean lane1PurgeOn;
 	boolean lane2PurgeOn;
+	boolean feederPurged;
+	int feederPurgeTimer;
 
 	GraphicPanel graphicPanel;
 
@@ -65,6 +67,7 @@ public class GraphicLaneManager{
 		binExists = false;
 		lane1PurgeOn = false;		//Nest purge is off unless turned on
 		lane2PurgeOn = false;		//Nest purge is off unless turned on
+		feederPurged = false;
 		timerCount = 1; binItemCount = 0; vibrationCount = 0; vibrationAmplitude = 2;
 
 		//Location of bin to appear. x is fixed
@@ -81,6 +84,8 @@ public class GraphicLaneManager{
 
 	public void setBin(GraphicBin bin){
 		this.bin = bin;
+		bin.getBinType().setX(feederX+35);
+		bin.getBinType().setY(feederY+55);
 		if (bin != null)
 			binExists = true;
 	}
@@ -100,6 +105,12 @@ public class GraphicLaneManager{
 		bin = null;
 		binExists = false;
 		return binCopy;
+	}
+	
+	public void purgeFeeder() {
+		feederOn = false;
+		feederPurged = true;
+		feederPurgeTimer = 0;
 	}
 	
 	public void paintLane(Graphics g){
@@ -130,11 +141,20 @@ public class GraphicLaneManager{
 		g.drawImage(feederIcon.getImage(), feederX, feederY, null);
 		g.setColor(new Color(60, 33, 0));
 		g.fillRect(feederX+34, feederY+54, 22, 22);
-		if (binExists)
-			g.drawImage(bin.getBinType().getImage().getImage(), feederX+35, feederY+55, null);
+		if (binExists && feederPurgeTimer < 7)
+			bin.getBinType().paint(g);
 	}
 
 	public void moveLane() {
+		if (feederPurged) {
+			feederPurgeTimer++;
+			if (feederPurgeTimer < 7)
+				bin.getBinType().moveX(5);
+			else {
+				feederPurged = false;
+				graphicPanel.purgeFeederDone(laneManagerID);
+			}
+		}
 		if(binExists){
 			if(laneStart){
 				if(feederOn){

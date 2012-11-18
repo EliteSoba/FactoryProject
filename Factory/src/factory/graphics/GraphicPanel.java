@@ -287,7 +287,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 //		lane[(feederNum)].bin = null;
 //		lane[(feederNum)].binExists = false;
 		if (isLaneManager || isFactoryProductionManager) {
-			lane[(feederNum)].feederOn = false;
+			lane[(feederNum)].purgeFeeder();
 			purgeFeederDone(feederNum); // send the confirmation
 		}
 	}
