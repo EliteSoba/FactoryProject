@@ -143,15 +143,22 @@ public class FCSTests extends TestCase{
 		//is the number of kits exported 2?
 		assertEquals("The kits exported should be 2, but instead is: " + fcs.kitsExportedCount
 				, 2, fcs.kitsExportedCount);
-		
-		assertEquals("The FCS state should be FINISHED, but instead is: " + fcs.state
-				, stateFinished, fcs.state);
+
 		
 		//the first order in the list should still be for typeA
 		assertEquals("The first order in the order list should be for kitConfig typeA, but instead is: " 
 				+ fcs.orders.peek().kitName, "typeA", fcs.orders.peek().kitName);
 		
 		fcs.pickAndExecuteAnAction();
+		
+		assertEquals("The FCS state should be FINISHED, but instead is: " + fcs.state
+				, stateFinished, fcs.state);
+		
+		fcs.pickAndExecuteAnAction();
+		
+		//does the FCS has 1 orders pending?
+		assertEquals("FCS should have 1 order in its list, but instead has: " + fcs.orders.size()
+				, 1, fcs.orders.size());
 		
 		//check the state of the fcs
 		assertEquals("The FCS state should be PENDING, but instead is: " + fcs.state
@@ -203,11 +210,23 @@ public class FCSTests extends TestCase{
 		assertEquals("The first order in the order list should be for kitConfig typeB, but instead is: " 
 				+ fcs.orders.peek().kitName, "typeB", fcs.orders.peek().kitName);
 		
+
+		
+		fcs.pickAndExecuteAnAction();
+		
 		//check the FCS state (should be PRODUCING)
 		assertEquals("The FCS state should be FINISHED, but instead is: " + fcs.state
 				, stateFinished, fcs.state);
 		
+		//does the FCS has 1 orders pending?
+		assertEquals("FCS should have 1 order in its list, but instead has: " + fcs.orders.size()
+				, 1, fcs.orders.size());
+		
 		fcs.pickAndExecuteAnAction();
+		
+		//does the FCS has 0 orders pending?
+		assertEquals("FCS should have 0 order in its list, but instead has: " + fcs.orders.size()
+				, 0, fcs.orders.size());
 		
 		//check the FCS state (should be PENDING)
 		assertEquals("The FCS state should be PENDING, but instead is: " + fcs.state
@@ -217,6 +236,7 @@ public class FCSTests extends TestCase{
 		assertEquals("The orders list should have no orders in it, but instead, has: " + fcs.orders.size()
 				, 0, fcs.orders.size());
 		
+		System.out.println("Size of orders: " + fcs.orders.size());
 		fcs.pickAndExecuteAnAction();
 		
 		//check the FCS state (should be PENDING)
