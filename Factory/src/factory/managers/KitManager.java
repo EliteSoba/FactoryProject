@@ -190,7 +190,7 @@ else if(action.equals("cnf")){
 			f = new FileInputStream("InitialData/initialKitConfigs.ser");
 			o = new ObjectInputStream(f);
 			setKitConfigList((HashMap<String,KitConfig>) o.readObject());
-			System.out.println("Good");
+			System.out.println("KitConfigList " + kitConfigList.size());
 			o.close();
 		}catch(IOException e){
 			e.printStackTrace();

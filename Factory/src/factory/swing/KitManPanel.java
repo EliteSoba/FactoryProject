@@ -67,13 +67,12 @@ public class KitManPanel extends JPanel{
 		scrollPane.setMaximumSize(new Dimension(460, 300));
 		table.setFillsViewportHeight(true);
 
-
-		for(int i = 1; i < kitManager.getKitConfigList().size(); i++){
-			for(KitConfig temp : kitManager.getKitConfigList().values()){
-				Object[] row = {temp.kitName};
-				model.insertRow(model.getRowCount(), row);
-			}
+		System.out.println(kitManager.getKitConfigList().size());
+		for(KitConfig temp : kitManager.getKitConfigList().values()){
+			Object[] row = {temp.kitName};
+			model.insertRow(model.getRowCount(), row);
 		}
+		
 		addPanel = new AddPanel();
 		editPanel = new EditPanel();
 
