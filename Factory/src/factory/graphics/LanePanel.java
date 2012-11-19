@@ -12,6 +12,13 @@ import java.util.Scanner;
 import factory.client.*;
 import factory.*;
 
+/**
+ * @author Minh La, Tobias Lee, George Li<p>
+ * <b>{@code LanePanel.java}</b> (450x720)<br>
+ * This is the graphical component of the Lane Manager.<br>
+ * This panel displays just the Lane, Nests, and Feeders
+ */
+
 public class LanePanel extends GraphicPanel implements ActionListener{
 	
 	public LanePanel(JFrame LM) {
@@ -28,9 +35,6 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		for(int i = 0; i < 8; i++)
 		{
 			GraphicNest newNest = new GraphicNest(35,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
-			Random randomGen = new Random();
-			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
-				newNest.addItem(new GraphicItem(20,20,"Images/eyesItem.png"));
 			nests.add(newNest);
 		}
 		lane = new GraphicLaneManager [4];
@@ -42,82 +46,6 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		this.setVisible(true);
 	}
 	
-	/*public void cameraFlash(int nestIndex) {
-		flashCounter = 10;
-		flashFeederIndex = nestIndex;
-	}
-	
-	public void loadLane(int laneNum, GraphicBin bin) {
-		lane[laneNum].setBin(bin);
-	}
-	
-	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
-		///Testing for quick feed
-		lane[(laneNum) / 2].bin = new GraphicBin(new Part("eyes"));
-		lane[(laneNum) / 2].binExist = true;
-		//end Test/
-		if(lane[(laneNum) / 2].binExists && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
-			lane[(laneNum) / 2].laneStart = true;
-			lane[(laneNum) / 2].divergeUp = ((laneNum) % 2 == 0);
-			lane[(laneNum) / 2].feederOn = true;
-		}
-		//System.out.println("bin size " + lane[(laneNum) / 2].bin.getBinItems().size());
-	}
-	
-	public void startLane(int laneNum){
-		lane[(laneNum) / 2].laneStart = true;
-	}
-	
-	public void switchLane(int laneNum){
-		lane[(laneNum) / 2].divergeUp = !lane[(laneNum) / 4].divergeUp;
-		lane[(laneNum) / 2].vY = -(lane[(laneNum) / 4].vY);
-	}
-	
-	public void switchFeederLane(int feederNum){
-		// MINH, CAN YOU MAKE THIS LIKE THE FUNCTION ABOVE, BUT BASED ON THE FEEDER NUMBER?
-		// thanks
-	}
-	
-	public void stopLane(int laneNum){
-		lane[(laneNum) / 2].laneStart = false;
-	}
-	
-	public void turnFeederOnLane(int laneNum){
-		lane[(laneNum) / 2].feederOn = true;
-	}
-	
-	public void turnFeederOffLane(int laneNum){
-		lane[(laneNum) / 2].feederOn = false;
-	}
-	
-	public void turnFeederOn(int feederNum){
-		lane[feederNum].feederOn = true;
-	}
-
-	public void turnFeederOff(int feederNum){
-		lane[feederNum].feederOn = false;
-	}
-	
-	public void purgeFeeder(int feederNum){ // takes in lane 0 - 3
-		lane[(feederNum)].bin = null;
-		lane[(feederNum)].binExists = false;
-		lane[(feederNum)].feederOn = false;
-	}
-	
-	public void purgeLane(int laneNum){
-		if((laneNum) % 2 == 0)
-			lane[(laneNum) / 2].lane1PurgeOn = true;
-		else
-			lane[(laneNum) / 2].lane2PurgeOn = true;
-		lane[(laneNum) / 2].feederOn = false;
-		lane[(laneNum) / 2].laneStart = false;
-	}
-	
-	public void moveLanes() {
-		for (int i = 0; i < lane.length; i++)
-			lane[i].moveLane();
-	}*/
-	
 	public void actionPerformed(ActionEvent arg0) {
 		moveLanes();
 		
@@ -125,6 +53,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 	}
 	
 	public static void main(String args[]) {
+		//For testing
 		JFrame f = new JFrame();
 		LanePanel lp = new LanePanel(f);
 		f.add(lp);

@@ -7,14 +7,14 @@ import factory.client.*;
 import factory.*;
 import java.util.Scanner;
 
+/**
+ * @author Minh La, Tobias Lee, George Li<p>
+ * <b>{@code KitAssemblyPanel.java}</b> (280x720)<br>
+ * This is the graphical component of the Kit Assembly Manager.<br>
+ * This panel displays the Kit Robot, Kit Station, and Conveyor Belt
+ */
+
 public class KitAssemblyPanel extends GraphicPanel implements ActionListener{
-	
-	/*GraphicKitAssemblyManager.java (280x720) - Tobias Lee
-	 * This is the graphical display of the Kit Assembly Manager
-	 * Currently, this displays a conveyer belt and its kits, and a kitting station
-	 * and animates the two.
-	 * TODO: Comments
-	 */
 	
 	public KitAssemblyPanel(JFrame FKAM) {
 		super();
@@ -41,6 +41,7 @@ public class KitAssemblyPanel extends GraphicPanel implements ActionListener{
 	}
 	
 	public static void main(String args[]) {
+		//Testing
 		JFrame f = new JFrame();
 		KitAssemblyPanel kam = new KitAssemblyPanel(f);
 		f.add(kam);
