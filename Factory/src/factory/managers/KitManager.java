@@ -69,21 +69,20 @@ public class KitManager extends Client implements WindowListener{
 			}
 			else if(identifier.equals("rmpartname"))//check directions
 			{
-				System.out.println("GOT HEREs");
+				System.out.println("Removing Part Name "+pCmd.get(2));
 				partsList.remove(pCmd.get(2));// remove part from partList
-
-				// iterate through the kitConfigList and find kitConfigurations with the removed part and remove them
-				Iterator itr = kitConfigList.entrySet().iterator();
-				Map.Entry pairs = (Map.Entry)itr.next();
-				String kitName = (String)pairs.getKey();
-				while(itr.hasNext())
+				List<String> kitNames = new ArrayList<String>();
+				for(String s: kitConfigList.keySet())
 				{
-					System.out.println("Iterator " + itr.toString());
-					//Map.Entry pairs = (Map.Entry)itr.next();
-					//String kitName = (String)pairs.getKey();
-					KitConfig configToCheck = kitConfigList.get(kitName);
+					kitNames.add(s);
+				}
+
+				for(int j = 0; j < kitNames.size(); j++)
+				{
+					KitConfig configToCheck = kitConfigList.get(kitNames.get(j));
 					for(int i = 0; i < configToCheck.listOfParts.size(); i++)//iterating through each part in a kit
 					{
+						hasPart = false;
 						Part partToCheck = configToCheck.listOfParts.get(i);
 						String name = partToCheck.name;
 						if(pCmd.get(2).equals(name))//check if the part name from the KitConfig matches the removedpart name
@@ -93,12 +92,8 @@ public class KitManager extends Client implements WindowListener{
 						}
 						if(hasPart)
 						{	//remove kitConfig send confirmations and put hasPart to false 
-							kitConfigList.remove(kitName);
-							//super.sendCommand("km fpm cmd rmkitname "+ kitName);
-							//super.sendCommand("km fcsa cmd rmkitname "+ kitName);
-							hasPart = false;
-							System.out.println("Removing a kit config" + kitName);
-							System.out.println(kitConfigList.size());
+							KitConfig kitconfig = kitConfigList.remove(kitNames.get(j));
+							System.out.println("The KitConfig "+kitconfig.kitName+" required a "+pCmd.get(2)+" so it was deleted");
 							((KitManPanel) UI).refreshAll();
 						}
 					}
@@ -172,6 +167,14 @@ public class KitManager extends Client implements WindowListener{
 
 
 		}
+		else if(action.equals("mcs")){
+			   try {
+					this.server.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				   System.exit(0);
+			   }
 		else 
 			System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 

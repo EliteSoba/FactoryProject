@@ -840,13 +840,28 @@ public class MasterControl {
 //        mc.n0t.msgYouNeedPart(p0);
 
 //        mc.n1t.msgYouNeedPart(p1);
-//        mc.n1t.msgYouNeedPart(p1);
+//        mc.n1b.msgYouNeedPart(p3);
+//        
+//        mc.n2t.msgYouNeedPart(p2);
+//        mc.n2b.msgYouNeedPart(p4);
+        
+//        mc.n2t.msgYouNeedPart(p2);
+//        mc.n2b.msgYouNeedPart(p4);
+//
+//        mc.n2t.msgYouNeedPart(p2);
+//        mc.n2b.msgYouNeedPart(p4);
+
+        
+//        mc.n3t.msgYouNeedPart(p0);
+//        mc.n3b.msgYouNeedPart(p4);
+        
+        
 //        mc.n1t.msgYouNeedPart(p1);
 //
 //        mc.n1b.msgYouNeedPart(p1);
 
         //mc.n0b.msgYouNeedPart(p3);
-        mc.partsRobot.msgMakeKit(firstKit);
+      //  mc.partsRobot.msgMakeKit(firstKit);
       		
       		//mc.n0b.msgYouNeedPart(p3);
 

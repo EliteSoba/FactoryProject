@@ -11,7 +11,6 @@ public class MockFCS extends MockAgent implements FCS {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
 	public void msgInitialize(BinConfig binConfig) {
 		// TODO Auto-generated method stub
 		
@@ -23,7 +22,6 @@ public class MockFCS extends MockAgent implements FCS {
 		
 	}
 
-	@Override
 	public void kitIsFinished() {
 		// TODO Auto-generated method stub
 		

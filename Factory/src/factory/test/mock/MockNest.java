@@ -29,9 +29,20 @@ public class MockNest extends MockAgent implements Nest {
 		log.add(new LoggedEvent("msgYouNeedPart("+part.name+")")); 
 	}
 
-	@Override
 	public void msgPartsRobotGrabbingPartFromNest(int coordinate) {
 
+	}
+
+	@Override
+	public Part getPart() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getPosition() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	
