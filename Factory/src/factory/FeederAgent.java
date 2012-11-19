@@ -480,7 +480,7 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 
 
-		if (this.currentPart != null)
+		if (this.currentPart != null && targetLane.part != null)
 		{
 			/* ### No purging at all ###
 			 * the current part inside the feeder is the same as the requested part 
@@ -503,8 +503,8 @@ public class FeederAgent extends Agent implements Feeder {
 		 * AND the targetLane's part is NOT the partRequested.
 		 */
 		boolean flag = false;
-		/** TODO: Move this if (this.currentPart != null) check elsewhere, perhaps check the empty state first. */
-		if (this.currentPart != null)
+		/** TODO: NULL POINTER HERE UNLESS I DO TARGETLANE.PART != NULL. */
+		if (this.currentPart != null && targetLane.part != null)
 		{
 			if (this.currentPart.id == partRequested.pt.id 
 					&& state != FeederState.EMPTY 
