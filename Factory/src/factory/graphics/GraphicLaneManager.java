@@ -161,8 +161,8 @@ public class GraphicLaneManager{
 		g.fillRect(feederX, feederY, 110, 110);
 		if(binExists && feederPurgeTimer < 7)
 				bin.getBinType().paint(g);
-		//if (binExists)
-			//g.drawImage(bin.getBinImage().getImage(), feederX + 50, feederY+15, null);
+		if (binExists)
+			g.drawImage(bin.getBinImage().getImage(), feederX+85, feederY+15, null);
 		g.drawImage(feederIcon.getImage(), feederX, feederY, null);
 	}
 

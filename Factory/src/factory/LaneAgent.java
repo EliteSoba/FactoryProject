@@ -41,6 +41,11 @@ public class LaneAgent extends Agent implements Lane {
 
 
 	/** MESSAGES **/
+	public void msgPartRobotHasRemovedParts(int numberOfParts) {
+		myFeeder.msgPartRobotHasRemovedPartsFromLane(numberOfParts,this);
+		stateChanged();
+	}
+	
 	public void msgIncreaseAmplitude() {
 		nestState = NestState.NEEDS_TO_INCREASE_AMPLITUDE;
 		stateChanged();
@@ -78,6 +83,17 @@ public class LaneAgent extends Agent implements Lane {
 
 	/** SCHEDULER **/
 	public boolean pickAndExecuteAnAction() {
+		
+
+		for(MyPart p : myParts)
+		{
+			if (p.state == MyPartState.NEEDED) 
+			{
+				askFeederToSendParts(p);
+				return true;
+			}
+		}
+		
 		if (nestState == NestState.HAS_DESTABILIZED)
 		{
 			tellFeederNestHasDeStabilized();
@@ -102,15 +118,6 @@ public class LaneAgent extends Agent implements Lane {
 		{
 			increaseAmplitude();
 			return true;
-		}
-
-		for(MyPart p : myParts)
-		{
-			if (p.state == MyPartState.NEEDED) 
-			{
-				askFeederToSendParts(p);
-				return true;
-			}
 		}
 
 
@@ -190,6 +197,20 @@ public class LaneAgent extends Agent implements Lane {
 	public void setFeeder(Feeder f) {
 		myFeeder = f;
 	}
+
+	@Override
+	public void msgFeedingParts(int numParts) {
+		debug("msgFeedingParts()");
+		myNest.msgFeedingParts(numParts);
+		stateChanged();
+	}
+	
+	public void msgNestIsOutOfParts() {
+		debug("msgNestIsOutOfParts()");
+		myFeeder.msgLaneIsOutOfParts();
+		stateChanged();
+	}
+
 
 
 

@@ -1,7 +1,13 @@
 //Contributors: Ben Mayeux,Stephanie Reagle, Joey Huang, Tobias Lee, Ryan Cleary
 //CS 200
 
-// Last edited: 11/16/12 10:12am by Joey Huang
+// Last edited: 11/18/12 4:51pm by Joey Huang
+
+/* This program is the Factory Production Manager which contains (1) a user interface that allows
+ * the user to submit orders to the factory (kit name and quantity),view the production schedule
+ *(showing all the submitted orders), and stop the factory, and (2) a graphics panel that shows a
+ *full view of the entire factory in real time. This manager handles communication with the server.
+ */
 package factory.managers;
 
 import java.awt.BorderLayout;
@@ -12,6 +18,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import factory.client.Client;
 import factory.graphics.FactoryProductionPanel;
+import factory.graphics.GraphicBin;
+import factory.graphics.GraphicItem;
+import factory.graphics.GraphicPanel;
 import factory.swing.FactoryProdManPanel;
 import factory.Part;
 import factory.KitConfig;
@@ -20,8 +29,8 @@ import java.util.Map;
 
 public class FactoryProductionManager extends Client {
 	static final long serialVersionUID = -2074747328301562732L;
-	HashMap<String,Part> partsList;
-	HashMap<String,KitConfig> kitConfigList;
+	HashMap<String,Part> partsList; // contains list of parts in system
+	HashMap<String,KitConfig> kitConfigList; // contains list of kit configurations in system
 
 	FactoryProdManPanel buttons;
 	FactoryProductionPanel animation;
@@ -192,8 +201,10 @@ public class FactoryProductionManager extends Client {
 
 			
 			//Swing Receive Commands
+// commands from kit manager
 			else if (identifier.equals("addkitname")) {		// add new kit configuration to kit configuration list
 				KitConfig newKit = new KitConfig(pCmd.get(2));
+newKit.quantity = 0;
 				int count = 3;
 				
 				while(!pCmd.get(count).equals("endcmd")) {
@@ -216,11 +227,12 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("rmpartname")) {		// remove part from parts list
 				partsList.remove(pCmd.get(2));
 				// check kits affected and remove them
-				partsList.remove(pCmd.get(2));
 				ArrayList<String> affectedKits = kitConfigsContainingPart(pCmd.get(2));
+if (affectedKits.size() > 0) {
 				for (String kit:affectedKits) {
 					kitConfigList.remove(kit);
 				}
+}
 				((FactoryProdManPanel)UI).removePart(pCmd.get(2),affectedKits);
 			}
 		}
@@ -234,13 +246,36 @@ public class FactoryProductionManager extends Client {
 		else if(action.equals("set")){
 			if (identifier.equals("kitcontent")) { 			// modify content of a kit
 				KitConfig kit = kitConfigList.get(pCmd.get(2));
-				String partName = pCmd.get(3);
-				//kit.listOfParts.set(pCmd.get(3),partsList.get(partName)); // commented out for now
+				kit.kitName = pCmd.get(3);
+				kit.listOfParts.clear();
+				for (int i = 4; i < 12; i++){
+				String partName = pCmd.get(i);
+				kit.listOfParts.add(partsList.get(partName));
+				}
 			}
 			else if (identifier.equals("kitsproduced")) { // updates number of kits produced for schedule
 				((FactoryProdManPanel) UI).kitProduced();
 			}
+			else if (identifier.equals("bintype")) { //Sets the bin for the LM
+				int feederNum = Integer.valueOf(pCmd.get(2));
+				GraphicBin bin = new GraphicBin(new Part(pCmd.get(3)));
+				((GraphicPanel) graphics).setFeederBin(feederNum, bin);
+			}
+			else if (identifier.equals("itemtype")) {
+				int kitNum = Integer.valueOf(pCmd.get(2));
+				GraphicItem item = new GraphicItem(-40, 0, pCmd.get(3));
+				((GraphicPanel) graphics).setKitItem(kitNum, item);
+			}
+			else if (identifier.equals("partconfig")) {
+				Part part = partsList.get(pCmd.get(2));
+				part.name = pCmd.get(3);
+				part.id = Integer.parseInt(pCmd.get(4));
+				part.imagePath = pCmd.get(5);
+				part.nestStabilizationTime = Integer.parseInt(pCmd.get(6));
+				part.description = pCmd.get(7);
+			}
 		}
+		
 		
 		else if(action.equals("cnf")){
 		}
@@ -267,7 +302,7 @@ public class FactoryProductionManager extends Client {
         f = new FileInputStream("InitialData/initialParts.ser");
         o = new ObjectInputStream(f);
         partsList = (HashMap<String,Part>) o.readObject();
-        System.out.println("Good");
+        System.out.println("Parts list loaded successfully.");
         o.close();
     }catch(IOException e){
         e.printStackTrace();
@@ -278,7 +313,7 @@ public class FactoryProductionManager extends Client {
         f = new FileInputStream("InitialData/initialKitConfigs.ser");
         o = new ObjectInputStream(f);
         kitConfigList = (HashMap<String,KitConfig>) o.readObject();
-        System.out.println("Good");
+        System.out.println("Kit configuration list loaded successfully.");
         o.close();
     }catch(IOException e){
         e.printStackTrace();

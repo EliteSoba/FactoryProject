@@ -172,7 +172,8 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	public void msgHereArePartCoordinatesForNest(Nest nest, Part part, int coordinate) {
 		debug("received msgHereArePartCoordinatesForNest("+nest.nestName+"," +part.name+","+coordinate+")");
 		for(int i = 0; i < nests.size(	); i++){
-			if(nests.get(i).nest == nest && nests.get(i).part == part){
+			debug(nests.get(i).nest + " == " + nest + " && " + nests.get(i).part.name + " == " + part.name);
+			if(nests.get(i).nest == nest && nests.get(i).part.name == part.name){
 				debug("PICK_UP_NEEDED");
 				nests.get(i).state = NestState.PICK_UP_NEEDED;
 				nests.get(i).partCoordinate = coordinate;
@@ -213,30 +214,9 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			}
 			// If there is a part to be picked up and space in the arms and the PartsRobot can get there without overlapping with the camera
 			for(int i = 0; i < 8; i++){
-				if (nests.get(i).state == NestState.PICK_UP_NEEDED)
-				{
-					debug("YEAH, the nest "+i+" is in need of a pick up.");
-				}
-				if (SpaceInArms() == true)
-				{
-					debug("YEAH, there is space in my arms.");
-				}
-				if (this.CanMoveToNest(i) == true)
-				{
-					debug("YEAH, I can move to nest " + i + ".");
-				}
-				if (IsPartFromNestNeed(i) == true)
-				{
-					debug("YEAH, I need part from nest " + i + ".");
-				}
 				if(nests.get(i).state == NestState.PICK_UP_NEEDED && SpaceInArms() && this.CanMoveToNest(i) && IsPartFromNestNeed(i)){
-					debug("-------- DO PICK UP PART -------");
 					DoPickUpPartFromNest(i);
 					return true;
-				}
-				else
-				{
-					debug("&&&&&& DONT PICK UP PART &&&&&&&");
 				}
 			}
 			
@@ -262,7 +242,6 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 				DoMovePartsRobotToCenter();
 				return true;
 			}
-			
 			if(!ArmsEmpty() && this.position == PartsRobotPositions.CENTER && this.standState == StandState.DOING_NOTHING){
 				DoAskPermisionToDeliverParts();
 				return true;
@@ -470,6 +449,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 * Function that asks the Stand permission to deliver items
 	 */
 	public void DoAskPermisionToDeliverParts(){
+		debug("Executing DoAskPermisionToDeliverParts()");
 		this.stand.msgPartRobotWantsToPlaceParts();
 		this.standState = StandState.WAITING_FOR_RESPONSE;
 	}
@@ -486,7 +466,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			// try to place in first kit
 			for(int i = 0; !placed && i < this.topSlot.listOfParts.size(); i++){
 				if(this.topSlot.listOfParts.get(i).name == this.armOne.name){
-					this.stand.topSlot.kit.parts.add(this.armOne);
+					this.stand.getSlotKit("topSlot").parts.add(this.armOne);
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armOne = null;
@@ -500,7 +480,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			// try to place in first kit
 			for(int i = 0; !placed && i < this.topSlot.listOfParts.size(); i++){
 				if(this.topSlot.listOfParts.get(i).name == this.armTwo.name){
-					this.stand.topSlot.kit.parts.add(this.armTwo);
+					Stand.topSlot.kit.parts.add(this.armTwo);
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armTwo = null;
@@ -514,7 +494,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			// try to place in first kit
 			for(int i = 0; !placed && i < this.topSlot.listOfParts.size(); i++){
 				if(this.topSlot.listOfParts.get(i).name == this.armThree.name){
-					this.stand.topSlot.kit.parts.add(this.armThree);
+					Stand.topSlot.kit.parts.add(this.armThree);
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armThree = null;
@@ -528,7 +508,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			// try to place in first kit
 			for(int i = 0; !placed && i < this.topSlot.listOfParts.size(); i++){
 				if(this.topSlot.listOfParts.get(i).name == this.armFour.name){
-					this.stand.topSlot.kit.parts.add(this.armFour);
+					Stand.topSlot.kit.parts.add(this.armFour);
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armFour = null;
@@ -545,7 +525,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					// try to place in first kit
 					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
 						if(this.bottomSlot.listOfParts.get(i).name == this.armOne.name){
-							this.stand.topSlot.kit.parts.add(this.armOne);
+							Stand.topSlot.kit.parts.add(this.armOne);
 							this.bottomSlot.listOfParts.remove(i);
 							placed = true;
 							this.armOne = null;
@@ -559,7 +539,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					// try to place in first kit
 					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
 						if(this.bottomSlot.listOfParts.get(i).name == this.armTwo.name){
-							this.stand.topSlot.kit.parts.add(this.armTwo);
+							Stand.topSlot.kit.parts.add(this.armTwo);
 							this.bottomSlot.listOfParts.remove(i);
 							placed = true;
 							this.armTwo = null;
@@ -573,7 +553,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					// try to place in first kit
 					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
 						if(this.bottomSlot.listOfParts.get(i).name == this.armThree.name){
-							this.stand.topSlot.kit.parts.add(this.armThree);
+							Stand.topSlot.kit.parts.add(this.armThree);
 							this.bottomSlot.listOfParts.remove(i);
 							placed = true;
 							this.armThree = null;
@@ -587,7 +567,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					// try to place in first kit
 					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
 						if(this.bottomSlot.listOfParts.get(i).name == this.armFour.name){
-							this.stand.topSlot.kit.parts.add(this.armFour);
+							Stand.topSlot.kit.parts.add(this.armFour);
 							this.bottomSlot.listOfParts.remove(i);
 							placed = true;
 							this.armFour = null;
@@ -1017,25 +997,29 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		
 		int countNeeded = 0;
 		
-		for(int i =0;i < this.topSlot.listOfParts.size(); i++){
-			if(this.topSlot.listOfParts.get(i).name.equals(this.nests.get(nest).part.name))
-				countNeeded++;
+		if(this.topSlot != null){
+			for(int i =0;i < this.topSlot.listOfParts.size(); i++){
+				if(this.topSlot.listOfParts.get(i).name.equals(this.nests.get(nest).part.name))
+					countNeeded++;
+			}
 		}
-		for(int i =0;i < this.bottomSlot.listOfParts.size(); i++){
-			if(this.bottomSlot.listOfParts.get(i).name.equals(this.nests.get(nest).part.name))
-				countNeeded++;
+		if(this.bottomSlot != null){
+			for(int i =0;i < this.bottomSlot.listOfParts.size(); i++){
+				if(this.bottomSlot.listOfParts.get(i).name.equals(this.nests.get(nest).part.name))
+					countNeeded++;
+			}
 		}
 		
-		if(this.armOne.name.equals(this.nests.get(nest).part.name))
+		if(this.armOne != null && this.armOne.name.equals(this.nests.get(nest).part.name))
 			countNeeded--;
 
-		if(this.armTwo.name.equals(this.nests.get(nest).part.name))
+		if(this.armTwo != null && this.armTwo.name.equals(this.nests.get(nest).part.name))
 			countNeeded--;
 
-		if(this.armThree.name.equals(this.nests.get(nest).part.name))
+		if(this.armThree != null && this.armThree.name.equals(this.nests.get(nest).part.name))
 			countNeeded--;
 
-		if(this.armFour.name.equals(this.nests.get(nest).part.name))
+		if(this.armFour != null && this.armFour.name.equals(this.nests.get(nest).part.name))
 			countNeeded--;
 		
 		return countNeeded > 0; 

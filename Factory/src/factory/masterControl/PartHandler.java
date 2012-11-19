@@ -19,7 +19,7 @@ public class PartHandler implements Runnable {
     String cmd = null;
     String message;
     MasterControl master = null;
-    String Client_id = null;
+    String client_id = null;
     boolean factoryDone;
 
 	public PartHandler(Socket s, BufferedReader b, PrintWriter p, String me, MasterControl mc){
@@ -28,7 +28,7 @@ public class PartHandler implements Runnable {
 		out = p;
 		in = b;
 		master = mc;
-		Client_id = me;
+		client_id = me;
         factoryDone = false;
 		//Sets up thread for the partHandler
 		(new Thread(this)).start();
