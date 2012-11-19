@@ -16,7 +16,7 @@ public class GantryAgent extends Agent implements Gantry {
 	// *** DATA ***
 
 	//This is an list of myBins object that keeps track of the bins that the feeders need
-	public ArrayList<MyBin> myBins = new ArrayList<MyBin>();   
+	public List<MyBin> myBins = Collections.synchronizedList(new ArrayList<MyBin>());   
 
 	//enum to keep track of the myBin object state.
 	enum MyBinState { NEEDED, DELIVERED}
@@ -61,10 +61,13 @@ public class GantryAgent extends Agent implements Gantry {
 
 	public boolean pickAndExecuteAnAction() {
 		System.out.println("gantry scheduler called");
-		for(MyBin b: myBins){
-			if(b.state == MyBinState.NEEDED){
-				goFetchTheRequestedBin(b);
-				return true;
+		synchronized(myBins)
+		{
+			for(MyBin b: myBins){
+				if(b.state == MyBinState.NEEDED){
+					goFetchTheRequestedBin(b);
+					return true;
+				}
 			}
 		}
 		return false;
@@ -78,7 +81,7 @@ public class GantryAgent extends Agent implements Gantry {
 	 * @param b This is the bin that the gantry is going to go fetch.
 	 */
 	private void goFetchTheRequestedBin(MyBin b) {
-		debug("goFetchTheRequestedBin");
+		//debug("goFetchTheRequestedBin");
 		if (b.fdr.getFeederHasABinUnderneath() == true)
 			DoPickupPurgeBin(b); //animation message
 

@@ -559,7 +559,10 @@ public class FeederAgent extends Agent implements Feeder {
 		debug("processing feeder parts of type "+mpr.pt.name);
 		mpr.state = MyPartRequestState.PROCESSING;
 		log.add(new LoggedEvent("Action ProcessFeederParts()"));
-		requestedParts.remove(mpr);
+		synchronized(requestedParts)
+		{
+			requestedParts.remove(mpr);
+		}
 		System.out.print("0.1");
 		currentPart = mpr.pt;
 		System.out.print("0.2");

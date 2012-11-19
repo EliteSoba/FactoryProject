@@ -61,7 +61,7 @@ public class GraphicRobot extends GraphicAnimatedObject
 				if(state % 2 == 1)	// increment the state of the robot
 					state += 1;
 			}
-			else if(theta-ftheta < 180)	// robot needs to turn counterclockwise
+			else if(theta-ftheta <= 180)	// robot needs to turn counterclockwise
 				theta -= dtheta;
 			else if(theta-ftheta > 180)	// robot needs to turn clockwise
 				theta += dtheta;
