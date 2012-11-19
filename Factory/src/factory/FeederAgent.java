@@ -124,8 +124,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** MESSAGES **/
 	public void msgPartRobotHasRemovedPartsFromLane(int numberOfParts, Lane lane) {
-		/** TODO: Make this do something */
-		
+		/** TODO: Make this do something */	
 	}
 
 	public void msgNestHasStabilized(Lane lane) {
