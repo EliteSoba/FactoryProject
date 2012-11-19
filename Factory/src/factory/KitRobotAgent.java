@@ -120,13 +120,18 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public boolean pickAndExecuteAnAction() {	
 
 		synchronized(actions){
-			if (actions.contains(StandInfo.CLEAR_OFF_UNFINISHED_KITS)) {
-				clearOffStand();
+			if (actions.contains(StandInfo.KIT_BAD)) {
+				dumpKit();
 				return true;
 			}
 			
-			if (actions.contains(StandInfo.KIT_BAD)) {
-				dumpKit();
+			if (actions.contains(StandInfo.KIT_GOOD) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
+				exportKit();
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.CLEAR_OFF_UNFINISHED_KITS)) {
+				clearOffStand();
 				return true;
 			}
 			
@@ -157,10 +162,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			}
 			
 			
-			if (actions.contains(StandInfo.KIT_GOOD) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
-				exportKit();
-				return true;
-			}
+			
 			
 			if ((actions.contains(StandInfo.NEED_EMPTY_TOP) || actions.contains(StandInfo.NEED_EMPTY_BOTTOM)) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
 				requestEmptyKit();
