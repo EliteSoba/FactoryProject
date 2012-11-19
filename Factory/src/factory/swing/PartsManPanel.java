@@ -117,12 +117,6 @@ public class PartsManPanel extends JPanel{
 		this.add("basePanel2", basePanel2);
 	}
 
-	public void setManager(PartsManager manager){
-		partsManager = manager;
-	}
-
-
-
 	// Internal Classes
 
 	private class AddPanel extends JPanel implements ActionListener{
@@ -161,8 +155,8 @@ public class PartsManPanel extends JPanel{
 			descriptionLabel = new JLabel("Description : ");
 			nestStabalizationTimeLabel = new JLabel ("Nest Stabalization Time : ");
 			nestStabalizationTime = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
-						JFormattedTextField tf = ((JSpinner.DefaultEditor) nestStabalizationTime.getEditor()).getTextField();
-						tf.setEditable(false);
+			JFormattedTextField tf = ((JSpinner.DefaultEditor) nestStabalizationTime.getEditor()).getTextField();
+			tf.setEditable(false);
 			description = new JTextArea("Enter description here", 2, 10);
 			description.setLineWrap(true);
 			description.setWrapStyleWord(true);
@@ -273,7 +267,7 @@ public class PartsManPanel extends JPanel{
 					messageAddPanel = "pm multi cmd addpartname " + p.name + " " + p.id + " " +
 							p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
 					partsManager.sendCommand(messageAddPanel);
-					
+
 					messageAddPanel = "pm fcsa cmd addpartname " + p.name + " " + p.id + " " +
 							p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
 					partsManager.sendCommand(messageAddPanel);
@@ -438,10 +432,10 @@ public class PartsManPanel extends JPanel{
 
 			if (ae.getSource() == removeItem){
 				System.out.println("I will remove a part and update the server.");
-				
+
 				messageEditPanel = "pm multi cmd rmpartname " + currentPart.name; 
 				partsManager.sendCommand(messageEditPanel);
-				
+
 				messageEditPanel = "pm fcsa cmd rmpartname " + currentPart.name; 
 				partsManager.sendCommand(messageEditPanel);
 				removeItem(currentPart);
