@@ -53,10 +53,12 @@ public class NestAgent extends Agent implements Nest {
 	
 	public void msgFeedingParts(int numParts) {
 		debug("received " + numParts + " from the lane.");
+		this.nestState = NestState.NORMAL;
 		this.numberOfParts += numParts;
 		stateChanged();
 	}
 
+	
 	
 	/** 
 	 * Message from the animation notifying the NestAgent 
@@ -88,10 +90,16 @@ public class NestAgent extends Agent implements Nest {
 		this.numberOfParts--;
 		
 		if(this.numberOfParts < 0)
+		{
 			this.numberOfParts = 0;
+		}
 		
 		nestState = NestState.PART_REMOVED;
-		stateChanged();
+
+		if (this.numberOfParts == 0)
+			tellMyLaneIAmOutOfParts();
+		else
+			stateChanged();
 	}
 	
 
@@ -132,12 +140,13 @@ public class NestAgent extends Agent implements Nest {
 			}
 		}
 		
-		if (this.numberOfParts <= 0 && nestState != NestState.OUT_OF_PARTS)
-		{
-			tellMyLaneIAmOutOfParts();
-			return true;
-		}
+//		if (this.numberOfParts <= 0 && nestState != NestState.INTENTIONALLY_EMPTY_NEST && nestState != NestState.OUT_OF_PARTS)
+//		{
+//			tellMyLaneIAmOutOfParts();
+//			return true;
+//		}
 
+		
 		return false;
 	}
 
@@ -152,7 +161,7 @@ public class NestAgent extends Agent implements Nest {
 	}
 	
 	private void tellMyLaneIAmOutOfParts() {
-		debug("tell my lane I am out of parts, i have " + this.numberOfParts + " many parts.");
+		debug("tell my lane I am out of parts, i have " + this.numberOfParts + " parts, my state is " + this.nestState);
 		nestState = NestState.OUT_OF_PARTS; // we don't want to continue sending this message over and over again
 		myLane.msgNestIsOutOfParts();
 		stateChanged();
