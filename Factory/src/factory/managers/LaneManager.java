@@ -56,32 +56,32 @@ public class LaneManager extends Client {
 			if (identifier.equals("startfeeding"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((FactoryProductionPanel) graphics).feedFeeder(feederSlot);
+				((LanePanel) graphics).feedFeeder(feederSlot);
 			}
 			else if (identifier.equals("stopfeeding"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((FactoryProductionPanel) graphics).turnFeederOff(feederSlot);
+				((LanePanel) graphics).turnFeederOff(feederSlot);
 			} 
 			else if (identifier.equals("purgefeeder"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((FactoryProductionPanel) graphics).purgeFeeder(feederSlot);
+				((LanePanel) graphics).purgeFeeder(feederSlot);
 			}
 			else if (identifier.equals("switchlane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((FactoryProductionPanel) graphics).switchFeederLane(feederSlot);
+				((LanePanel) graphics).switchFeederLane(feederSlot);
 			}
 			else if (identifier.equals("purgetoplane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((FactoryProductionPanel) graphics).purgeTopLane(feederSlot);
+				((LanePanel) graphics).purgeTopLane(feederSlot);
 			}
 			else if (identifier.equals("purgebottomlane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((FactoryProductionPanel) graphics).purgeBottomLane(feederSlot);
+				((LanePanel) graphics).purgeBottomLane(feederSlot);
 			}
 
 		}
