@@ -1,4 +1,4 @@
-//Minh La
+
 
 package factory.graphics;
 import java.awt.Color;
@@ -10,6 +10,12 @@ import javax.swing.ImageIcon;
 
 import factory.Part;
 
+/**
+ * @author Minh la <p>
+ * <b>{@code GraphicLaneManager.java}</b> (50x720) <br>
+ * This creates and processes the Lane Manager,
+ * As well as the lanes, nests, feeders, items, and bins
+ */
 
 public class GraphicLaneManager{
 
