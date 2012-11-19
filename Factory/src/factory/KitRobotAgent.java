@@ -54,6 +54,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		if (!actions.contains(StandInfo.CLEAR_OFF_UNFINISHED_KITS)) {
 			actions.add(StandInfo.CLEAR_OFF_UNFINISHED_KITS);
 		}
+		stateChanged();
 	}
 	
 	public void msgNeedEmptyKitAtSlot(String pos) {
@@ -90,6 +91,13 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stateChanged();
 	}
 	
+	public void msgKitExported() {
+		debug("Received msgKitExported() From the Conveyor");
+		conveyor_state = ConveyorStatus.EMPTY;
+		stateChanged();
+	}
+	
+	/*
 	public void msgInspectionAreaStatus(int status) {
 		debug("Received msgInspectionAreaStatus() from the Stand with a status of "+status);
 		if (status < 2 && status >= 0) {
@@ -97,6 +105,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			stateChanged();
 		}
 	}
+	*/
 	
 	public void msgComeProcessAnalyzedKitAtInspectionSlot() {
 		debug("Received msgComeProcessAnalayzedKitAtInspectionSlot from Stand");
@@ -355,25 +364,25 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	
 	private void DoMoveInspectedKitToConveyor() {
 		debug("doing moveInspectedKitToConveyor");
-		server.command("kra fpm cmd putinspectionkitonconveyor");
+		server.command("kra kam cmd putinspectionkitonconveyor");
 		waitForAnimation();
 	}
 	
 	private void DoPutEmptyKitAt(String pos) {
 		debug("doing PutEmptyKitAt Animation for the "+ pos);
-		server.command("kra fpm cmd putemptykitatslot "+pos);
+		server.command("kra kam cmd putemptykitatslot "+pos);
 		waitForAnimation();
 	}
 	
 	private void DoMoveKitToInspection(String pos) {
 		debug("doing MoveKitToInspection Animation.  moving the kit at the "+pos+" to the inspectionSlot");
-		server.command("kra fpm cmd movekittoinspectionslot " + pos);
+		server.command("kra kam cmd movekittoinspectionslot " + pos);
 		waitForAnimation();
 	}
 	
 	private void DoDumpKitAtSlot(String pos) {
 		debug("doing DoDumpKitAtSlot Animation.  dumping the kit at "+pos);
-		server.command("kra fpm cmd dumpkitatslot "+pos);
+		server.command("kra kam cmd dumpkitatslot "+pos);
 		waitForAnimation();
 	}
 	

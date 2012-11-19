@@ -93,6 +93,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 		}
 		debug("Export Animation Completed");
 	    fcs.msgKitIsExported(kitAtConveyor);
+	    kitRobot.msgKitExported();
 		kitAtConveyor = null;
 		stateChanged();
 	}
@@ -100,7 +101,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	////Animations
 	private void DoKitExportAnimation() {
 		debug("doing DoKitExport Animation");
-		server.command("ca fpm cmd exportkitfromcell");
+		server.command("ca kam cmd exportkitfromcell");
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
