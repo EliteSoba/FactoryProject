@@ -280,7 +280,7 @@ public class FactoryProductionManager extends Client {
 				part.description = pCmd.get(7);
 
 				System.out.println(part);
-				System.out.println(partsList.get(pCmd.get(2));
+				System.out.println(partsList.get(pCmd.get(2)));
 			}
 		}
 
