@@ -83,7 +83,7 @@ public class MasterControl {
 
 	// Constructor
 
-	public MasterControl(int debug){
+	public MasterControl(Integer debug){
 		partHandlers = new TreeMap<String, PartHandler>();
 		partOccupied = new TreeMap<String, Boolean>();
 		agentTreeMap = new TreeMap<String, Agent>();
@@ -689,7 +689,7 @@ public class MasterControl {
 	// connectAllSockets() is the function responsible for managing each socket connection
 	// It waits until each connection specified in 'dids' has been made, and then continues.
 
-	private void connectAllSockets(int debugnum){
+	private void connectAllSockets(Integer debugnum){
 		int numConnected = 0;
 		int numToConnect = (debugnum > 0 ? debugnum : clients.size());
 		while(numConnected != numToConnect){
@@ -725,8 +725,21 @@ public class MasterControl {
 	}
 
 	public static void main(String args[]){
-		int debug = Integer.valueOf(args[0]);
-		MasterControl mc = new MasterControl(debug);
+        Integer debug = null;
+        System.out.print("PRODUCTION MODE : Enter 0");
+        System.out.print("DEBUG MODE : Enter Number of Clients to Connect");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        while(debug == null){
+            try {
+                debug = Integer.valueOf(br.readLine());
+            } catch (Exception ioe) {
+                System.out.println("IO error trying to read your name!");
+            }
+        }
+
+        System.out.println("Waiting for "+(debug == 0 ? "all" : debug)+" clients to connect");
+
+        MasterControl mc = new MasterControl(debug);
 
 /*		//This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
 		long timeToQuit = System.currentTimeMillis() + 5000;
