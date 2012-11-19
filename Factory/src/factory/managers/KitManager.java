@@ -90,12 +90,13 @@ public class KitManager extends Client implements WindowListener{
 							hasPart = true;
 							break; // once the part is found no more checks needed to be done and can move to next kitConfig
 						}
-						if(hasPart)
-						{	//remove kitConfig send confirmations and put hasPart to false 
-							KitConfig kitconfig = kitConfigList.remove(kitNames.get(j));
-							System.out.println("The KitConfig "+kitconfig.kitName+" required a "+pCmd.get(2)+" so it was deleted");
-							((KitManPanel) UI).refreshAll();
-						}
+						
+					}
+					if(hasPart)
+					{	//remove kitConfig send confirmations and put hasPart to false 
+						KitConfig kitconfig = kitConfigList.remove(kitNames.get(j));
+						System.out.println("The KitConfig "+kitconfig.kitName+" required a "+pCmd.get(2)+" so it was deleted");
+						((KitManPanel) UI).refreshAll();
 					}
 
 				}
