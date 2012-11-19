@@ -160,26 +160,15 @@ public class VisionAgent extends Agent implements Vision {
 		    DoAnimationTakePictureOfNest(pr.nestOne);
 		   
 		    partsRobot.msgPictureTaken(pr.nestOne, pr.nestTwo);
-		   if(randomNumberOne == 0) {
+		   if(true) {
 		      partsRobot.msgHereArePartCoordinatesForNest(pr.nestOne, pr.nestOne.getPart(), r.nextInt(9));
 		   }
-		   else if(randomNumberOne == 1) {
-		      pr.feeder.msgBadNest(pr.nestOne);
-		   }
-		   else if(randomNumberOne == 2) {
-		      pr.feeder.msgEmptyNest(pr.nestOne);
-		   }
 
-		   if(randomNumberTwo == 0) {
+		   if(true) {
 		      
 		      partsRobot.msgHereArePartCoordinatesForNest(pr.nestTwo, pr.nestTwo.getPart(), r.nextInt(9));
 		   }
-		   else if(randomNumberTwo == 1) {
-		      pr.feeder.msgBadNest(pr.nestTwo);
-		   }
-		   else if(randomNumberTwo == 2) {
-		      pr.feeder.msgEmptyNest(pr.nestTwo);
-		   }
+		   
 		   picRequests.remove(pr);
 		   pictureAllowed.release();
 		   stateChanged();

@@ -22,7 +22,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public int WIDTH, HEIGHT;
 	public static final Image TILE_IMAGE = Toolkit.getDefaultToolkit().getImage("Images/Tiles/floorTileXGrill.png");
 	public static final int TILE_SIZE = 128;
-	public static final int DELAY = 40;
+	public static final int DELAY = 10;
 	
 	protected Client am; //The Client that holds this
 	
@@ -551,10 +551,20 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 	}
 	
+	/**
+	 * Sets the Bin for the specified feeder
+	 * @param feederNum
+	 * @param bin
+	 */
 	public void setFeederBin(int feederNum, GraphicBin bin) {
 		lane[feederNum].setBin(bin);
 	}
 	
+	/**
+	 * Adds an Part to the specified Kit
+	 * @param kitNum
+	 * @param item
+	 */
 	public void setKitItem(int kitNum, GraphicItem item) {
 		station.addItem(item, kitNum);
 	}
@@ -752,10 +762,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if(isLaneManager || isFactoryProductionManager) {
 			if(flashCounter >= 0)
 			{
-				int flashX = nests.get(flashFeederIndex*2).getX()-12;
+				int flashX = nests.get(flashFeederIndex*2).getX()-20;
 				int flashY = nests.get(flashFeederIndex*2).getY()-12;
 				g.drawImage(flashImage, flashX, flashY, null);
-				flashX = nests.get(flashFeederIndex*2+1).getX()-12;
+				flashX = nests.get(flashFeederIndex*2+1).getX()-20;
 				flashY = nests.get(flashFeederIndex*2+1).getY()-12;
 				g.drawImage(flashImage, flashX, flashY, null);
 				flashCounter --;
