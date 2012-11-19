@@ -177,8 +177,6 @@ public class FCSAgent extends Agent implements FCS{
 			addPartType(newPartName, id, description, nestStabilizationTime, imagePath);
 		}
 	}
-	//edit part
-	//old part, new part, new id, new imagepath, new stabilizaitontime, new description
 
 
 	/**
@@ -292,7 +290,6 @@ public class FCSAgent extends Agent implements FCS{
 		}
 	}
 
-	// Load Data - remember to import the file - FOR EVERYONE
 	/**
 	 * This function loads the data of existing parts and kit configurations from a text file.
 	 */
