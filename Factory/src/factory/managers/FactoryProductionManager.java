@@ -251,6 +251,7 @@ if (affectedKits.size() > 0) {
 				for (int i = 4; i < 12; i++){
 				String partName = pCmd.get(i);
 				kit.listOfParts.add(partsList.get(partName));
+				}
 			}
 			else if (identifier.equals("kitsproduced")) { // updates number of kits produced for schedule
 				((FactoryProdManPanel) UI).kitProduced();
@@ -268,9 +269,9 @@ if (affectedKits.size() > 0) {
 			else if (identifier.equals("partconfig")) {
 				Part part = partsList.get(pCmd.get(2));
 				part.name = pCmd.get(3);
-				part.id = pCmd.get(4);
+				part.id = Integer.parseInt(pCmd.get(4));
 				part.imagePath = pCmd.get(5);
-				part.nestStabilizationTime = pCmd.get(6);
+				part.nestStabilizationTime = Integer.parseInt(pCmd.get(6));
 				part.description = pCmd.get(7);
 			}
 		}
