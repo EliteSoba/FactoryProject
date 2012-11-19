@@ -582,6 +582,10 @@ public class MasterControl {
 		for(int i = 3; i < cmd.size(); i++){  // Command ... put command into string form
 			d+= cmd.get(i)+" ";
 		}
+        PartHandler fpmPH = null;
+        if(partHandlers.containsKey("fpm")){
+            fpmPH = determinePH("fpm");
+        }
 
 		String fullCmd = envelopeCmd(c, d);
 
@@ -598,14 +602,28 @@ public class MasterControl {
 						return false;
 					}
 				}
+                if(fpmPH != null){
+                    if(!sendCmd(fpmPH, fullCmd)){
+                        return false;
+                    }
+                }
 				return true;
 			}
 
 
-		} else {
-			PartHandler destinationPH = determinePH(b);
-			return sendCmd(destinationPH, fullCmd);
-		}
+		} else if(b.equals("fpm")){
+            return (fpmPH != null && sendCmd(fpmPH, fullCmd));
+
+        } else {
+            if(fpmPH != null){
+                if(!sendCmd(fpmPH, fullCmd)){
+                    return false;
+                }
+            }
+            PartHandler destinationPH = determinePH(b);
+            return sendCmd(destinationPH, fullCmd);
+        }
+
 
 
 	}
