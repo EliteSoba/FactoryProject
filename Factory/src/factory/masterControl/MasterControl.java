@@ -141,6 +141,9 @@ public class MasterControl {
 		// Instantiate the Gantry
 		gantry = new GantryAgent(this);
 
+		// Instantiate the Stand
+		stand = new StandAgent(this, null); 
+		
 		// Instantiate the Vision
 		vision = new VisionAgent(partsRobot,stand,this);
 
@@ -169,8 +172,6 @@ public class MasterControl {
 		// Instantiate the KitRobot
 		kitRobot = new KitRobotAgent(this,conveyor);
 
-		// Instantiate the Stand
-		//stand = new StandAgent(); // bad code
 
 
 		// Instantiate the FCS
@@ -222,6 +223,7 @@ public class MasterControl {
 		stand.setVision(vision);
 		stand.setPartsRobot(partsRobot);
 		conveyorController.setConveyor(conveyor);
+		stand.setKitRobot(kitRobot);
 
 		
 		
