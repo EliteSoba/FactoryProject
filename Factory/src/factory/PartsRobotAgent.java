@@ -191,6 +191,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		debug("####################");
 		this.currentKitConfiguration = null;
 		this.currentKitConfigurationState = KitConfigState.EMPTY;
+		this.stateChanged();
 	}
 /** ================================================================================ **/
 /** 									SCHEDULER 									 **/
