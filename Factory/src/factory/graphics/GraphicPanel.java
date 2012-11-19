@@ -551,10 +551,20 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 	}
 	
+	/**
+	 * Sets the Bin for the specified feeder
+	 * @param feederNum
+	 * @param bin
+	 */
 	public void setFeederBin(int feederNum, GraphicBin bin) {
 		lane[feederNum].setBin(bin);
 	}
 	
+	/**
+	 * Adds an Part to the specified Kit
+	 * @param kitNum
+	 * @param item
+	 */
 	public void setKitItem(int kitNum, GraphicItem item) {
 		station.addItem(item, kitNum);
 	}
