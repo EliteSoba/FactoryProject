@@ -60,7 +60,7 @@ public class PartHandler implements Runnable {
             }
             if(error == false)
             {
-            	master.command("err");
+            	out.println("err: command was invalid");
             }
             if(factoryDone){
                 break;
