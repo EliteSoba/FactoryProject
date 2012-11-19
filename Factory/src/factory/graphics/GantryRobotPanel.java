@@ -12,6 +12,13 @@ import java.util.Scanner;
 import factory.client.*;
 import factory.Part;
 
+/**
+ * @author Minh La, Tobias Lee, George Li<p>
+ * <b>{@code KitAssemblyPanel.java}</b> (300x720)<br>
+ * This is the graphical component of the Gantry Manager.<br>
+ * This panel displays the Gantry Robot, and the Feeders
+ */
+
 public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 	
 	public GantryRobotPanel(JFrame GR) {
@@ -33,30 +40,6 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 		this.setVisible(true);
 	}
 	
-	/*public void moveGantryRobotToPickup(String path) {
-		//System.out.println("Moving");
-		gantryRobot.setState(0);
-		gantryRobot.setDestination(WIDTH-100,-100);
-	}
-	
-	public void moveGantryRobotToFeeder(int feederIndex) {
-		gantryRobot.setState(3);
-		gantryRobot.setDestinationFeeder(feederIndex);
-		gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
-	}
-	
-	public void gantryRobotStateCheck() {
-		if(gantryRobot.getState() == 1)
-		{
-			gantryRobotArrivedAtPickup();
-		}
-		else if(gantryRobot.getState() == 4)
-		{
-			lane[gantryRobot.getDestinationFeeder()].setBin(gantryRobot.popBin());
-			gantryRobotArrivedAtFeederForDropoff();
-		}
-	}*/
-	
 	public void actionPerformed(ActionEvent arg0) {
 		gantryRobotStateCheck();
 		gantryRobot.move();
@@ -65,6 +48,7 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 	}
 	
 	public static void main(String args[]) {
+		//For testing
 		JFrame f = new JFrame();
 		GantryRobotPanel gr = new GantryRobotPanel(f);
 		f.add(gr);

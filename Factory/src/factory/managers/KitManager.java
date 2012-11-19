@@ -47,13 +47,19 @@ public class KitManager extends Client implements WindowListener{
 
 	@Override
 	public void doCommand(ArrayList<String> pCmd) {
-		
+
+//		System.out.println("GOT HERE: ");
+//		for (int i = 0; i < pCmd.size(); i++){
+//			System.out.println(pCmd.get(i));
+//		}
+
 		int size = pCmd.size();
 		//parameters lay between i = 2 and i = size - 2
 		String action = pCmd.get(0);
 		String identifier = pCmd.get(1);
 		if(action.equals("cmd"))
 		{	
+			System.out.println("GOT HEREs");
 			boolean hasPart = false;
 			if(identifier.equals("addpartname"))// check directions
 			{
@@ -63,7 +69,7 @@ public class KitManager extends Client implements WindowListener{
 			}
 			else if(identifier.equals("rmpartname"))//check directions
 			{
-				
+				System.out.println("GOT HEREs");
 				partsList.remove(pCmd.get(2));// remove part from partList
 
 				// iterate through the kitConfigList and find kitConfigurations with the removed part and remove them
@@ -89,7 +95,7 @@ public class KitManager extends Client implements WindowListener{
 						super.sendCommand("km fpm cmd rmkitname "+ kitName);
 						super.sendCommand("km fcsa cmd rmkitname "+ kitName);
 						hasPart = false;
-						System.out.println("Removing a kit config");
+						System.out.println("Removing a kit config" + kitName);
 						((KitManPanel) UI).refreshAll();
 					}
 				}

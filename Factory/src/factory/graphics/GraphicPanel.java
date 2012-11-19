@@ -10,6 +10,13 @@ import java.util.Random;
 import factory.Part;
 import factory.client.*;
 
+/**
+ * @author Minh La, Tobias Lee, George Li<p>
+ * <b>{@code GraphicPanel.java}</b> (*x720)<br>
+ * The superclass is what every Manager's graphical panel extends.<br>
+ * It contains every other graphical component as necessary.
+ */
+
 public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	public int WIDTH, HEIGHT;
@@ -300,6 +307,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 	}
 	
+	/**
+	 * Adds Item from the Parts Robot to the Kit Station it's in front of
+	 * @param itemIndex The index of the Item to remove
+	 */
 	public void partsRobotPopItemToCurrentKit(int itemIndex)
 	{
 		transferringItem = partsRobot.popItemAt(itemIndex);
@@ -584,6 +595,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			System.out.println(message + command);
 	}
 	/**TODO: THIS IS SO I CAN FIND THE DONES*/
+	/**These are pretty self-explanatory*/
 	public void newEmptyKitDone() {
 		sendMessage("cca cnf");
 	}
@@ -694,6 +706,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	/**TODO: Paint function*/
+	/**
+	 * Paints all the applicable parts for the given panel
+	 * @param g The specified graphics window
+	 */
 	public void paint(Graphics g) {
 		for(int j = 0; j < WIDTH; j += TILE_SIZE)
 		{
@@ -784,8 +800,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		return isFactoryProductionManager;
 	}
 	
+	/**
+	 * Moves the components that need moving
+	 */
 	public void actionPerformed(ActionEvent arg0) {
-	// TODO Auto-generated method stub
 			
 	}
 
