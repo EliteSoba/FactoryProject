@@ -12,11 +12,16 @@ public class StandAgent extends Agent implements Stand {
 
 	public enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
 	public enum MySlotState { EMPTY, EMPTY_KIT_REQUESTED, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION, KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT}
+	
+	public enum KitRobotState { WANTS_ACCESS, NO_ACCESS };
 
 	public StandAgentState state;
 	
 	public PartsRobot partsRobot;
 	public Boolean partsRobotWantsToDeliverParts = false;
+	
+	public KitRobotState kr_state = KitRobotState.NO_ACCESS;
+	
 	public Boolean kitRobotWantsToDeliverEmptyKit = false;
 	public Boolean needToClearStand = false;
 	
@@ -105,6 +110,12 @@ public class StandAgent extends Agent implements Stand {
 		stateChanged();
 	}
 	
+	public void msgKitRobotWantsStandAccess() {
+		debug("Received msgKitRobotWantsStandAccess() from the KitRobot");
+		kr_state = KitRobotState.WANTS_ACCESS;
+		stateChanged();
+	}
+	
 	/**
 	 * Message that is received from the KitRobot when it has moved out of the way
 	 */
@@ -160,6 +171,11 @@ public class StandAgent extends Agent implements Stand {
 			/**
 			 * If the stand is free and the kitRobot wants to deliver empty kit
 			 */
+			if (kr_state.equals(KitRobotState.WANTS_ACCESS)) {
+				DoTellKitRobotToGoAhead();
+				return true;
+			}
+			
 			if (state == StandAgentState.FREE && this.needToClearStand) {
 			   DoTellKitRobotToClearStand();
 			   return true;
@@ -315,13 +331,19 @@ public class StandAgent extends Agent implements Stand {
 	   this.partsRobotWantsToDeliverParts = false;
 	   state = StandAgentState.PARTS_ROBOT;                      
 	}   
+	
+	public void DoTellKitRobotToGoAhead() {
+		debug("Executing DoTellKitRobotToGoAhead()");
+		state = StandAgentState.KIT_ROBOT;
+		kr_state = KitRobotState.NO_ACCESS;
+		kitRobot.msgStandClear();
+	}
 	/**
 	 * Method that tells the KitRobot to move a Kit to the inspection slot
 	 */
 	private void DoTellKitRobotToMoveKitToInspectionSlot(MySlot slot) {
 		debug("Executing DoTellKitRobotToMoveKitToInspectionSlot("+slot.name+")");
 		kitRobot.msgComeMoveKitToInspectionSlot(slot.name);
-		state = StandAgentState.KIT_ROBOT;
 		slot.state = MySlotState.MOVING_KIT_TO_INSPECTION;                   
 	}
 	/**
@@ -340,16 +362,16 @@ public class StandAgent extends Agent implements Stand {
 	private void DoProcessAnalyzedKit() {
 		debug("Executing DoProcessAnalyzedKit()");
 		kitRobot.msgComeProcessAnalyzedKitAtInspectionSlot();
-		state = StandAgentState.KIT_ROBOT;
 		inspectionSlot.state = MySlotState.PROCESSING_ANALYZED_KIT;                    
 	}
 	
 	public void DoTellKitRobotToClearStand(){
 		debug("Executing DoTellKitRobotToClearStand()");
 		kitRobot.msgClearTheStandOff();
-		state = StandAgentState.KIT_ROBOT;
 		this.needToClearStand = false;
 	}
+	
+	
 	/**
 	 * Hacks and Misc
 	 */

@@ -15,6 +15,8 @@ public interface Stand {
 	void msgPartRobotWantsToPlaceParts();
 	void msgKitRobotWantsToExportKit();
 	
+	void msgKitRobotWantsStandAccess();
+	
 	public void msgClearStand();
 	
 	public boolean setSlotKit(String slot, Kit k);
