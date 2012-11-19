@@ -43,8 +43,11 @@ public class SaveTest {
 			newKitConfig.listOfParts.add(partsList.get("Body"));	
 			newKitConfig.listOfParts.add(partsList.get("Mouth"));
 			newKitConfig.listOfParts.add(partsList.get("Eye"));
+			newKitConfig.listOfParts.add(partsList.get("Eye"));
 			newKitConfig.listOfParts.add(partsList.get("Arm"));
 			newKitConfig.listOfParts.add(partsList.get("Arm"));
+			newKitConfig.listOfParts.add(partsList.get("Shoe"));
+			newKitConfig.listOfParts.add(partsList.get("Shoe"));
 			kitConfigList.put(newKitConfig.kitName,newKitConfig);
 
 			newKitConfig = new KitConfig("Cthulhu");
