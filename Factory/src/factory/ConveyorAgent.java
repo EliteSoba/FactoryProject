@@ -6,19 +6,22 @@ import agent.Agent;
 
 public class ConveyorAgent extends Agent implements Conveyor {
 	////Data	
-	enum ConveyorState { NO_ACTION, KR_WANTS_EMPTY_KIT, GETTING_EMPTY_KIT, EXPORTING };
+	public enum ConveyorState { NO_ACTION, KR_WANTS_EMPTY_KIT, GETTING_EMPTY_KIT, EXPORTING };
 	
 	public KitRobot kitRobot;
 	public ConveyorController conveyorController;
 	public FCS fcs;
 	
-	public Kit kitAtConveyor;  //Supposed to represent what is on the ConveyorAgent
+	public Kit kitAtConveyor = null;  //Supposed to represent what is on the ConveyorAgent
 	
-	ConveyorState state = ConveyorState.NO_ACTION;
+	public ConveyorState state = ConveyorState.NO_ACTION;
+	
+	boolean isUnitTesting = false;
 	
 	//UnitTesting Constructor
 	public ConveyorAgent() {
 		super(null);
+		isUnitTesting = true;
 	}
 	
 	/** Public Constructor **/
@@ -85,7 +88,9 @@ public class ConveyorAgent extends Agent implements Conveyor {
 
 	private void exportKit() {
 		debug("Exporting Kit");
-		DoKitExportAnimation();
+		if (!isUnitTesting) {
+			DoKitExportAnimation();
+		}
 		debug("Export Animation Completed");
 	    fcs.msgKitIsExported(kitAtConveyor);
 		kitAtConveyor = null;

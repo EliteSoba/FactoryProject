@@ -16,15 +16,13 @@ import factory.swing.PartsManPanel;
 public class PartsManager extends Client implements WindowListener{
 	private static final long serialVersionUID = -205350261062308096L;
 	
-	public HashMap<String, Part> parts;
-	// Kit Configurations ArrayList
+	public HashMap<String, Part> parts;  // parts list
 
 	public PartsManager() {
 		super(Client.Type.pm, null, null);
 		
 		parts = new HashMap<String, Part>();
 		loadData();
-		System.out.println(parts.size());
 
 		UI = new PartsManPanel(this);
 		setInterface();
@@ -65,7 +63,7 @@ public class PartsManager extends Client implements WindowListener{
 	@Override
 	public void windowClosing(WindowEvent e) {
 		// TODO Auto-generated method stub
-				//saveData();
+				saveData();  // saves upon exiting window
 	}
 
 	@Override
@@ -91,7 +89,7 @@ public class PartsManager extends Client implements WindowListener{
 		// TODO Auto-generated method stub
 		
 	}
-	/*
+	
 	public void saveData(){
 		FileOutputStream f;
 		ObjectOutputStream o;
@@ -101,14 +99,13 @@ public class PartsManager extends Client implements WindowListener{
 			o = new ObjectOutputStream(f);
 			o.writeObject(parts);
 			o.close();
-			System.out.println("It worked");
 			
 		} catch (FileNotFoundException ex) {
 			ex.printStackTrace();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-	}*/
+	}
 	
 	public void loadData(){
 		FileInputStream f;
@@ -117,7 +114,6 @@ public class PartsManager extends Client implements WindowListener{
 			f = new FileInputStream("InitialData/initialParts.ser");
 			o = new ObjectInputStream(f);
 			parts = (HashMap<String, Part>) o.readObject();
-			System.out.println("Good");
 		}catch(IOException e){
 			e.printStackTrace();
 			parts = new HashMap<String, Part>();
