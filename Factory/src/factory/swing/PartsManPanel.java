@@ -264,10 +264,11 @@ public class PartsManPanel extends JPanel{
 					Part p = new Part(name.getText(), currentID, description.getText(),"Images/" + (String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
 					addItem(p);
 					currentID++;
-					messageAddPanel = "pm multi cmd addpartname " + p.name + " " + p.id + " " +
+					//"pm km cmd addpartname #partname #partid #filepath #stabalizationtime #partdescription"
+					messageAddPanel = "pm km cmd addpartname " + p.name + " " + p.id + " " +
 							p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
 					partsManager.sendCommand(messageAddPanel);
-
+					//"pm fcsa cmd addpartname #partname #partid #filepath #stabalizationtime #partdescription" 
 					messageAddPanel = "pm fcsa cmd addpartname " + p.name + " " + p.id + " " +
 							p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
 					partsManager.sendCommand(messageAddPanel);
@@ -431,11 +432,11 @@ public class PartsManPanel extends JPanel{
 			String messageEditPanel = new String (" ");
 
 			if (ae.getSource() == removeItem){
-
-				messageEditPanel = "pm multi cmd rmpartname " + currentPart.name; 
+				//"pm km cmd rmpartname #partname"
+				messageEditPanel = "pm km cmd rmpartname " + currentPart.name; 
 				partsManager.sendCommand(messageEditPanel);
 				System.out.println(messageEditPanel);
-
+				//"pm fcsa cmd rmpartname #partname"
 				messageEditPanel = "pm fcsa cmd rmpartname " + currentPart.name; 
 				partsManager.sendCommand(messageEditPanel);
 				
@@ -462,8 +463,8 @@ public class PartsManPanel extends JPanel{
 
 					Part p = new Part(name.getText(), currentPart.id, description.getText(),"Images/" + 
 							(String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
-					// "pm multi set partconfig #originalpartname #newpartname #newpartid #newfilepath #newstabalizationtime #newpartdescription"
-					messageEditPanel = "pm multi set editpartname " + currentPart.name + " " + p.name + " " + 
+					// "pm km set partconfig #originalpartname #newpartname #newpartid #newfilepath #newstabalizationtime #newpartdescription"
+					messageEditPanel = "pm km set editpartname " + currentPart.name + " " + p.name + " " + 
 							p.id + " " + p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
 					partsManager.sendCommand(messageEditPanel);
 					
