@@ -16,9 +16,12 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	
 	public ConveyorState state = ConveyorState.NO_ACTION;
 	
+	boolean isUnitTesting = false;
+	
 	//UnitTesting Constructor
 	public ConveyorAgent() {
 		super(null);
+		isUnitTesting = true;
 	}
 	
 	/** Public Constructor **/
@@ -85,7 +88,9 @@ public class ConveyorAgent extends Agent implements Conveyor {
 
 	private void exportKit() {
 		debug("Exporting Kit");
-		DoKitExportAnimation();
+		if (!isUnitTesting) {
+			DoKitExportAnimation();
+		}
 		debug("Export Animation Completed");
 	    fcs.msgKitIsExported(kitAtConveyor);
 		kitAtConveyor = null;
