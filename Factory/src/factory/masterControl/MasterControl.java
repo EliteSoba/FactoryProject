@@ -327,11 +327,11 @@ public class MasterControl {
 
 		if(clients.contains(parsedCommand.get(1))){
             if(parsedCommand.get(1).equals("multi")){
-                clientCmd(parsedCommand);
+                return clientCmd(parsedCommand);
             } else {
                 for(PartHandler ph : partHandlerList){
                     if(ph.client_id.equals(parsedCommand.get(1))){
-                        clientCmd(parsedCommand);
+                        return clientCmd(parsedCommand);
                     }
                 }
                 return false; // This is called if in Debug mode and the client being sent to is not connected.
