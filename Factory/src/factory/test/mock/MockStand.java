@@ -78,10 +78,13 @@ public class MockStand extends MockAgent implements Stand {
 		
 	}
 
+<<<<<<< HEAD
 	@Override
 	public void msgKitRobotWantsStandAccess() {
 		// TODO Auto-generated method stub
 		
 	}
 
+=======
+>>>>>>> e04e378f20c39518304742d15ae6f4a2d3e9dbc4
 }

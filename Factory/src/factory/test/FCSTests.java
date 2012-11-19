@@ -154,6 +154,10 @@ public class FCSTests extends TestCase{
 		assertEquals("The FCS state should be FINISHED, but instead is: " + fcs.state
 				, stateFinished, fcs.state);
 		
+		//does the FCS has 2 orders pending?
+		assertEquals("FCS should have 2 order in its list, but instead has: " + fcs.orders.size()
+				, 2, fcs.orders.size());
+		
 		fcs.pickAndExecuteAnAction();
 		
 		//does the FCS has 1 orders pending?
@@ -209,8 +213,6 @@ public class FCSTests extends TestCase{
 		//the first order in the list should still be for typeB
 		assertEquals("The first order in the order list should be for kitConfig typeB, but instead is: " 
 				+ fcs.orders.peek().kitName, "typeB", fcs.orders.peek().kitName);
-		
-
 		
 		fcs.pickAndExecuteAnAction();
 		

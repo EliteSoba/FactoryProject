@@ -53,6 +53,7 @@ public class MasterControl {
     TreeMap<String, Agent> agentTreeMap;
 	TreeMap<String, PartHandler> partHandlers; 
 	TreeMap<String, Boolean> partOccupied;
+    TreeMap<List<String>, List<String>> multiCmdDsts;
 
     // Lists of Known Clients, Agents, CommandTypes, and supported Commands
 
@@ -61,7 +62,7 @@ public class MasterControl {
 	private static final List<String> cmdTypes = Arrays.asList("cmd", "req", "get", "set", "cnf");
 	private static final List<String> cmds = Arrays.asList(
 
-            "makekits", "addkitname", "rmkitname", "addpartame",
+            "makekits", "addkitname", "rmkitname", "addpartname",
 			"rmpartname", "lanepowertoggle", "vibration", "kitcontent",
 			"startfeeding", "stopfeeding", "purgefeeder", "switchlane",
 			"purgetoplane", "purgebottomlane", "stopfactory", "pickuppurgebin",
@@ -75,8 +76,10 @@ public class MasterControl {
 
 	// Lists of Commands with Multi Destinations and Lists of Destinations associated with those Commands
 
-	private static final List<String> multiCmd_1 = Arrays.asList("addpartname", "rmpartname", "partconfig");
-    private static final List<String> multiCmdDst_1 = Arrays.asList("km", "fpm");
+	private static final List<String> multiCmd_1 = Arrays.asList("purgefeeder", "purgetoplane", "purgebottomlane");
+    private static final List<String> multiCmdDst_1 = Arrays.asList("gm", "lm");
+    private static final List<List<String>> multiCmds = Arrays.asList(multiCmd_1);
+
 
     // MasterControl Server Socket
 
@@ -91,6 +94,7 @@ public class MasterControl {
 		laneAgentTreeMap = new TreeMap<String, LaneAgent>();
 		nestAgentTreeMap = new TreeMap<String, NestAgent>();
         partHandlerList = new ArrayList<PartHandler>();
+        multiCmdDsts = new TreeMap<List<String>, List<String>>();
 
 
 
@@ -103,9 +107,13 @@ public class MasterControl {
 
 		}
 		connectAllSockets(debug); // This waits for every client to start up before moving on.
+
+		multiCmdDsts.put(multiCmd_1, multiCmdDst_1);
+
 		// At this point, all of the sockets are connected, PartHandlers have been created
 		// The TreeMaps are updated with all of the relevant data, and the Factory can go.
-		startAgents();
+
+        startAgents();
 
 		sendConfirm();
 		// At this point, all of the parts have been notified that
@@ -327,11 +335,11 @@ public class MasterControl {
 
 		if(clients.contains(parsedCommand.get(1))){
             if(parsedCommand.get(1).equals("multi")){
-                clientCmd(parsedCommand);
+                return clientCmd(parsedCommand);
             } else {
                 for(PartHandler ph : partHandlerList){
                     if(ph.client_id.equals(parsedCommand.get(1))){
-                        clientCmd(parsedCommand);
+                        return clientCmd(parsedCommand);
                     }
                 }
                 return false; // This is called if in Debug mode and the client being sent to is not connected.
@@ -632,18 +640,18 @@ public class MasterControl {
 	private ArrayList<PartHandler> getDestinations(String myCmd){
 
 
-
-		if(multiCmd_1.contains(myCmd)){
-            ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
-            for(String dst : multiCmdDst_1){
-                if(partHandlers.containsKey(dst)){
-                    returnAL.add(partHandlers.get(dst));
+        for(List<String> l : multiCmds){
+            if(l.contains(myCmd)){
+                ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
+                for(String dst : multiCmdDsts.get(l)){
+                    if(partHandlers.containsKey(dst)){
+                        returnAL.add(partHandlers.get(dst));
+                    }
                 }
+                return returnAL;
             }
-            return returnAL;
-		} else {
-			return null;
-		}
+        }
+        return null;
 
 	}
 
@@ -825,35 +833,7 @@ public class MasterControl {
         long timeToQuit = System.currentTimeMillis() + 5000;
         while (System.currentTimeMillis() < timeToQuit);
 
-        Part p0 = new Part("eye",000,"desc","imgPath",2);
-        Part p1 = new Part("eye",000,"desc","imgPath",3);
-        Part p2 = new Part("shoe",001,"desc","imgPath",3);
-        Part p3 = new Part("shoe",001,"desc","imgPath",3);
-        Part p4 = new Part("sword",002,"desc","imgPath",4);
-        Part p5 = new Part("tentacle",003,"desc","imgPath",4);
-        Part p6 = new Part("tentacle",003,"desc","imgPath",4);
-        Part p7 = new Part("tentacle",003,"desc","imgPath",4);
-
-        List<Part> partList = new ArrayList<Part>();
-        partList.add(p0);
-        partList.add(p1);
-        partList.add(p2);
-        partList.add(p3);
-        partList.add(p4);
-        partList.add(p5);
-        partList.add(p6);
-        partList.add(p7);
-
-        KitConfig firstKit = new KitConfig();
-        firstKit.listOfParts = partList;
-
-        // Send the message that the FCS would send
-        mc.partsRobot.msgMakeKit(firstKit);
-
-
-
-        timeToQuit = System.currentTimeMillis() + 2000;
-        while (System.currentTimeMillis() < timeToQuit);
+       
 
 
 //        mc.n0b.msgYouNeedPart(p2);

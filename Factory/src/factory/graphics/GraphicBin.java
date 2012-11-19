@@ -43,7 +43,7 @@ public class GraphicBin{
 			binItems.add(new GraphicItem(-40, 0, "Images/"+partName+".png"));
 		}
 		binType = new GraphicItem(-40, 0, "Images/"+partName+".png");
-		stabilizationTime = part.nestStabilizationTime * 1000 / GraphicPanel.DELAY;
+		stabilizationTime = part.nestStabilizationTime;
 		
 		//binItemsStackImage = new ImageIcon("Images/binCrate.png");
 		binImage = new ImageIcon("Images/binCrate.png");

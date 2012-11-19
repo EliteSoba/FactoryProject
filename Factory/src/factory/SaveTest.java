@@ -43,8 +43,11 @@ public class SaveTest {
 			newKitConfig.listOfParts.add(partsList.get("Body"));	
 			newKitConfig.listOfParts.add(partsList.get("Mouth"));
 			newKitConfig.listOfParts.add(partsList.get("Eye"));
+			newKitConfig.listOfParts.add(partsList.get("Eye"));
 			newKitConfig.listOfParts.add(partsList.get("Arm"));
 			newKitConfig.listOfParts.add(partsList.get("Arm"));
+			newKitConfig.listOfParts.add(partsList.get("Shoe"));
+			newKitConfig.listOfParts.add(partsList.get("Shoe"));
 			kitConfigList.put(newKitConfig.kitName,newKitConfig);
 
 			newKitConfig = new KitConfig("Cthulhu");
@@ -52,19 +55,21 @@ public class SaveTest {
 			newKitConfig.listOfParts.add(partsList.get("Tentacle"));
 			newKitConfig.listOfParts.add(partsList.get("Tentacle"));
 			newKitConfig.listOfParts.add(partsList.get("Tentacle"));
-			newKitConfig.listOfParts.add(partsList.get("Tentacle"));
-			newKitConfig.listOfParts.add(partsList.get("Tentacle"));
-			newKitConfig.listOfParts.add(partsList.get("Tentacle"));
+			newKitConfig.listOfParts.add(partsList.get("Sword"));
+			newKitConfig.listOfParts.add(partsList.get("Sword"));
+			newKitConfig.listOfParts.add(partsList.get("Sword"));
 			newKitConfig.listOfParts.add(partsList.get("Sword"));
 			kitConfigList.put(newKitConfig.kitName,newKitConfig);
 
 
 			newKitConfig = new KitConfig("PotatoDragon");
-			newKitConfig.listOfParts.add(partsList.get("Body"));	
+			newKitConfig.listOfParts.add(partsList.get("Wing"));	
 			newKitConfig.listOfParts.add(partsList.get("Wing"));
-			newKitConfig.listOfParts.add(partsList.get("Arm"));
-			newKitConfig.listOfParts.add(partsList.get("Eye"));
 			newKitConfig.listOfParts.add(partsList.get("Wing"));
+			newKitConfig.listOfParts.add(partsList.get("Wing"));
+			newKitConfig.listOfParts.add(partsList.get("Cane"));
+			newKitConfig.listOfParts.add(partsList.get("Cane"));
+			newKitConfig.listOfParts.add(partsList.get("Cane"));
 			newKitConfig.listOfParts.add(partsList.get("Cane"));
 			kitConfigList.put(newKitConfig.kitName,newKitConfig);
 			
