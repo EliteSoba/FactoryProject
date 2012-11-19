@@ -738,12 +738,13 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			{
 				int flashX = nests.get(flashFeederIndex*2).getX();
 				int flashY = nests.get(flashFeederIndex*2).getY();
-				//System.out.println("==="+flashX+" "+flashY);
 				g.drawImage(flashImage, flashX, flashY, null);
 				flashX = nests.get(flashFeederIndex*2+1).getX();
 				flashY = nests.get(flashFeederIndex*2+1).getY();
 				g.drawImage(flashImage, flashX, flashY, null);
 				flashCounter --;
+				if(flashCounter == 1)
+					cameraFlashDone();
 			}
 		}
 		
