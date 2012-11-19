@@ -69,7 +69,7 @@ public class KitManager extends Client implements WindowListener{
 			}
 			else if(identifier.equals("rmpartname"))//check directions
 			{
-				System.out.println("GOT HEREs");
+				System.out.println("Removing Part Name");
 				partsList.remove(pCmd.get(2));// remove part from partList
 				List<String> kitNames = new ArrayList<String>();
 				// iterate through the kitConfigList and find kitConfigurations with the removed part and remove them
@@ -91,6 +91,7 @@ public class KitManager extends Client implements WindowListener{
 					//System.out.print(kitName);
 					for(int i = 0; i < configToCheck.listOfParts.size(); i++)//iterating through each part in a kit
 					{
+						hasPart = false;
 						Part partToCheck = configToCheck.listOfParts.get(i);
 						String name = partToCheck.name;
 						if(pCmd.get(2).equals(name))//check if the part name from the KitConfig matches the removedpart name
@@ -104,7 +105,7 @@ public class KitManager extends Client implements WindowListener{
 							kitConfigList.remove(kitNames.get(j));
 							//super.sendCommand("km fpm cmd rmkitname "+ kitName);
 							//super.sendCommand("km fcsa cmd rmkitname "+ kitName);
-							hasPart = false;
+							
 							//System.out.println("Removing a kit config" + kitName);
 							System.out.println(kitConfigList.size());
 							((KitManPanel) UI).refreshAll();
