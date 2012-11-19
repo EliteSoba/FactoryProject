@@ -54,12 +54,12 @@ class GraphicGantryRobot extends GraphicRobot
 		imageHeight = init_imageHeight;
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
 		binImage = Toolkit.getDefaultToolkit().getImage("Images/binCrate.png");
-		// The parts robot will prioritize: right, up, down, left
+		// The parts robot will prioritize: up, right, left, down
 		movementCheckingOrders = new int[4];
 		movementCheckingOrders[0] = 0;
-		movementCheckingOrders[0] = 1;
-		movementCheckingOrders[0] = 3;
-		movementCheckingOrders[0] = 2;
+		movementCheckingOrders[1] = 1;
+		movementCheckingOrders[2] = 3;
+		movementCheckingOrders[3] = 2;
 		partPath = "Images/eyesItem.png";
 	}
 	

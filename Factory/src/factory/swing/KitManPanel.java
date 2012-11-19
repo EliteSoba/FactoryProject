@@ -377,14 +377,23 @@ public class KitManPanel extends JPanel{
 
 		public void refreshAddPanel(){
 
-			cItemComboBox1 = new JComboBox();
-			cItemComboBox2 = new JComboBox();
-			cItemComboBox3 = new JComboBox();
-			cItemComboBox4 = new JComboBox();
-			cItemComboBox5 = new JComboBox();
-			cItemComboBox6 = new JComboBox();
-			cItemComboBox7 = new JComboBox();
-			cItemComboBox8 = new JComboBox();
+			cItemComboBox1.removeAllItems();
+			cItemComboBox2.removeAllItems();
+			cItemComboBox3.removeAllItems();
+			cItemComboBox4.removeAllItems();
+			cItemComboBox5.removeAllItems();
+			cItemComboBox6.removeAllItems();
+			cItemComboBox7.removeAllItems();
+			cItemComboBox8.removeAllItems();
+			
+			cItemComboBox1.addItem("None");
+			cItemComboBox2.addItem("None");
+			cItemComboBox3.addItem("None");
+			cItemComboBox4.addItem("None");
+			cItemComboBox5.addItem("None");
+			cItemComboBox6.addItem("None");
+			cItemComboBox7.addItem("None");
+			cItemComboBox8.addItem("None");
 
 			for(String name : kitManager.getPartsList().keySet()){
 				cItemComboBox1.addItem(name);
@@ -879,14 +888,23 @@ public class KitManPanel extends JPanel{
 		}
 
 		public void refreshEditPanel(){
-			mItemComboBox1 = new JComboBox();
-			mItemComboBox2 = new JComboBox();
-			mItemComboBox3 = new JComboBox();
-			mItemComboBox4 = new JComboBox();
-			mItemComboBox5 = new JComboBox();
-			mItemComboBox6 = new JComboBox();
-			mItemComboBox7 = new JComboBox();
-			mItemComboBox8 = new JComboBox();
+			mItemComboBox1.removeAllItems();
+			mItemComboBox2.removeAllItems();
+			mItemComboBox3.removeAllItems();
+			mItemComboBox4.removeAllItems();
+			mItemComboBox5.removeAllItems();
+			mItemComboBox6.removeAllItems();
+			mItemComboBox7.removeAllItems();
+			mItemComboBox8.removeAllItems();
+			
+			mItemComboBox1.addItem("None");
+			mItemComboBox2.addItem("None");
+			mItemComboBox3.addItem("None");
+			mItemComboBox4.addItem("None");
+			mItemComboBox5.addItem("None");
+			mItemComboBox6.addItem("None");
+			mItemComboBox7.addItem("None");
+			mItemComboBox8.addItem("None");
 
 			for(String name : kitManager.getPartsList().keySet()){
 				mItemComboBox1.addItem(name);
@@ -898,7 +916,8 @@ public class KitManPanel extends JPanel{
 				mItemComboBox7.addItem(name);
 				mItemComboBox8.addItem(name);
 			}
-
+			
+			
 			mItemComboBox1.setSelectedIndex(0);
 			mItemComboBox2.setSelectedIndex(0);
 			mItemComboBox3.setSelectedIndex(0);
@@ -1031,6 +1050,7 @@ public class KitManPanel extends JPanel{
 		refreshTable();
 		addPanel.refreshAddPanel();
 		editPanel.refreshEditPanel();
+		System.out.println("I refreshed!");
 
 	}
 
