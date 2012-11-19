@@ -64,7 +64,7 @@ public class MasterControl {
 			"getnewbin", "bringbin", "putinspectionkitonconveyor", "putemptykitatslot",
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
-            "movetocenter"
+            "movetocenter", "nestdestabilized", "neststabilized"
 
     );
 
@@ -163,6 +163,16 @@ public class MasterControl {
 		l2b.setFeeder(f2);
 		l3t.setFeeder(f3);
 		l3b.setFeeder(f3);
+		
+		// Set the Lane's Nests
+		l0t.setNest(n0t);
+		l0b.setNest(n0b);
+		l1t.setNest(n1t);
+		l1b.setNest(n1b);
+		l2t.setNest(n2t);
+		l2b.setNest(n2b);
+		l3t.setNest(n3t);
+		l3b.setNest(n3b);
 		
 
 		// Instantiate the Conveyor and related Agents
@@ -784,11 +794,11 @@ public class MasterControl {
       		mc.n0t.msgYouNeedPart(p0);
       		mc.n0b.msgYouNeedPart(p1);
       		
-      		mc.n1t.msgYouNeedPart(p2);
-      		mc.n1b.msgYouNeedPart(p3);
-      		
-      		mc.n2t.msgYouNeedPart(p4);
-      		mc.n2b.msgYouNeedPart(p5);
+//      		mc.n1t.msgYouNeedPart(p2);
+//      		mc.n1b.msgYouNeedPart(p3);
+//      		
+//      		mc.n2t.msgYouNeedPart(p4);
+//      		mc.n2b.msgYouNeedPart(p5);
       		
       
 		

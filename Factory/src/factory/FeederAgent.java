@@ -206,14 +206,17 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	public void msgLaneNeedsPart(Part part, Lane lane) {
-		String laneStr = null;
-		if (bottomLane.lane == lane)
-			laneStr = "Bottom Lane";
-		else if (topLane.lane == lane)
-			laneStr = "Top Lane";
+		if (lane != null && part != null)
+		{
+			String laneStr = null;
+			if (bottomLane.lane == lane)
+				laneStr = "Bottom Lane";
+			else if (topLane.lane == lane)
+				laneStr = "Top Lane";
 
-		debug("received msgLaneNeedsPart("+part.name + "," + laneStr + ")");
-		requestedParts.add(new MyPartRequest(part, lane));
+			//debug("received msgLaneNeedsPart("+part.name + "," + laneStr + ")");
+			requestedParts.add(new MyPartRequest(part, lane));
+		}
 		stateChanged();
 	}
 

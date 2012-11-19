@@ -29,6 +29,7 @@ public class FCSTests extends TestCase{
 	 */
 	public void testMsgProduceKit()
 	{
+
 		
 		KitConfig kitConfig = new KitConfig();
 		KitProductionState stateFinished = KitProductionState.FINISHED;
@@ -66,6 +67,10 @@ public class FCSTests extends TestCase{
 		//tests to see if the kit config state changed from PENDING to PRODUCING
 		assertEquals("FCS state should be changed from PENDING to PRODUCING, but instead is: " + fcs.state 
 				, stateProducing, fcs.state);
+		
+		System.out.println("==================================================");
+		System.out.println("===================TEST BREAK=====================");
+		System.out.println("==================================================");
 	}
 
 	/**
@@ -217,6 +222,10 @@ public class FCSTests extends TestCase{
 		//check the FCS state (should be PENDING)
 		assertEquals("The FCS state should be PENDING because there are no orders left, but instead is: " + fcs.state
 				, statePending, fcs.state);
+		
+		System.out.println("==================================================");
+		System.out.println("===================TEST BREAK=====================");
+		System.out.println("==================================================");
 	}
 	/**
 	 * This test tests all the part methods, which include adding, editing, and deleting parts.
@@ -271,7 +280,9 @@ public class FCSTests extends TestCase{
 		assertFalse("The part type \"arm\" should not exist anymore because it should have been removed",
 				fcs.partsList.containsKey("arm"));
 		
-//		System.out.println(fcs.partsList.keySet());
+		System.out.println("==================================================");
+		System.out.println("===================TEST BREAK=====================");
+		System.out.println("==================================================");
 		
 	}
 	
@@ -352,18 +363,28 @@ public class FCSTests extends TestCase{
 		//make sure the correct kit config got deleted
 		assertFalse("kit config \"config1\" should not exist anymore, but it does"
 				, fcs.kitRecipes.containsKey("config1"));
+		
+		System.out.println("==================================================");
+		System.out.println("===================TEST BREAK=====================");
+		System.out.println("==================================================");
 	}
 
 	/**
 	 * This tests to see if the FCS was succesfully able to import and load the data
 	 */
 	public void testImportListAndSwing(){
+		
+		
 		FCSAgent fcs = new FCSAgent(null);
 		
 		assertTrue(true);
 		
 		fcs.loadData();
 		fcs.testImport();
+		
+		System.out.println("==================================================");
+		System.out.println("===================TEST BREAK=====================");
+		System.out.println("==================================================");
 	}
 	
 	
