@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 import factory.Part;
 
 /**
- * @author Minh la <p>
+ * @author Minh La, George Li <p>
  * <b>{@code GraphicBin.java}</b> (50x720) <br>
  * This creates a bin,
  * Contains an array of items of type Part passed from Agents

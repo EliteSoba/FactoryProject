@@ -4,7 +4,7 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 
 /**
- * @author Minh la,George Li <p>
+ * @author Minh La, George Li <p>
  * <b>{@code GraphicNest.java}</b> (50x720) <br>
  * This creates a nest and an array of items in the nest,
  */

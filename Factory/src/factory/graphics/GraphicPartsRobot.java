@@ -4,6 +4,12 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
+/**
+ * @author George Li<p>
+ * <b>{@code GraphicPartsRobot.java}</b><br>
+ * The code for controlling the parts robot.<br>
+ */
+
 class GraphicPartsRobot extends GraphicRobot
 {
 	protected ArrayList<GraphicItem> items;			// inventory of items
@@ -18,15 +24,15 @@ class GraphicPartsRobot extends GraphicRobot
 	
 	/**
 	 * Initializes all variables of parts robot upon instantiation.
-	 * @param init_x
-	 * @param init_y
-	 * @param init_theta
-	 * @param init_dx
-	 * @param init_dy
-	 * @param init_dtheta
-	 * @param init_imageWidth
-	 * @param init_imageHeight
-	 * @param init_imagePath
+	 * @param init_x Initial x position.
+	 * @param init_y Initial y position.
+	 * @param init_theta Initial direction.
+	 * @param init_dx Initial speed in x direction.
+	 * @param init_dy Initial speed in y direction.
+	 * @param init_dtheta Initial rotation speed.
+	 * @param init_imageWidth Initial image width.
+	 * @param init_imageHeight Initial image height.
+	 * @param init_imagePath Initial image path.
 	 */
 	public GraphicPartsRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{

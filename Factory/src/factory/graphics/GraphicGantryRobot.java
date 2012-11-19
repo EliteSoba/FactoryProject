@@ -6,13 +6,19 @@ import java.util.ArrayList;
 
 import factory.Part;
 
+/**
+ * @author George Li<p>
+ * <b>{@code GraphicGantryRobot.java}</b><br>
+ * The code for controlling the gantry robot.<br>
+ */
+
 class GraphicGantryRobot extends GraphicRobot
 {
-	int destinationFeeder;
-	GraphicBin bin;
-	boolean hasBin;
-	Image binImage;
-	String partPath;
+	int destinationFeeder;		// The feeder the gantry robot should move to (zero-based indexing)
+	GraphicBin bin;				// The bin the gantry robot is carrying.
+	boolean hasBin;				// Whether or not the gantry robot has a bin.
+	Image binImage;				// Image of the bin.
+	String partPath;			// Filepath of the bin image.
 	
 	/**
 	 * @deprecated Use GraphicGantryRobot(...) constructor
@@ -23,15 +29,15 @@ class GraphicGantryRobot extends GraphicRobot
 	
 	/**
 	 * Initializes all variables of gantry robot upon instantiation.
-	 * @param init_x
-	 * @param init_y
-	 * @param init_theta
-	 * @param init_dx
-	 * @param init_dy
-	 * @param init_dtheta
-	 * @param init_imageWidth
-	 * @param init_imageHeight
-	 * @param init_imagePath
+	 * @param init_x Initial x position.
+	 * @param init_y Initial y position.
+	 * @param init_theta Initial direction.
+	 * @param init_dx Initial speed in x direction.
+	 * @param init_dy Initial speed in y direction.
+	 * @param init_dtheta Initial rotation speed.
+	 * @param init_imageWidth Initial image width.
+	 * @param init_imageHeight Initial image height.
+	 * @param init_imagePath Initial image path.
 	 */
 	public GraphicGantryRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{

@@ -2,6 +2,12 @@ package factory.graphics;
 
 import java.awt.Graphics;
 
+/**
+ * @author George Li<p>
+ * <b>{@code GraphicRobot.java}</b><br>
+ * The parent robot class with generic robot data and functions.<br>
+ */
+
 public class GraphicRobot extends GraphicAnimatedObject
 {
 	int fx, fy, ftheta;							// final position (destination) and final angle
