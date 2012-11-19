@@ -81,6 +81,7 @@ public class GraphicRobot extends GraphicAnimatedObject
 						theta += dtheta;
 					else
 						x += dx;
+					i = movementCheckingOrders.length;
 					break;
 				}
 			case 1 : 				// move up
@@ -92,6 +93,7 @@ public class GraphicRobot extends GraphicAnimatedObject
 						theta += dtheta;
 					else
 						y -= dy;
+					i = movementCheckingOrders.length;
 					break;
 				}
 			case 2 : 				// move left
@@ -103,6 +105,7 @@ public class GraphicRobot extends GraphicAnimatedObject
 						theta -= dtheta;
 					else
 						x -= dx;
+					i = movementCheckingOrders.length;
 					break;
 				}
 			case 3 : 				// move down
@@ -114,6 +117,7 @@ public class GraphicRobot extends GraphicAnimatedObject
 						theta -= dtheta;
 					else
 						y += dy;
+					i = movementCheckingOrders.length;
 					break;
 				}
 			}

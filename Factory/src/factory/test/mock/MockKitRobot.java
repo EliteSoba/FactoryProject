@@ -39,4 +39,10 @@ public class MockKitRobot extends MockAgent implements KitRobot {
 		log.add(new LoggedEvent("received msgClearTheStandOff() from the Stand"));
 	}
 
+	@Override
+	public void msgKitExported() {
+		log.add(new LoggedEvent("received msgKitExported() from the Conveyor"));
+		
+	}
+
 }

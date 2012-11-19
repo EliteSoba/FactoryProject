@@ -35,6 +35,7 @@ public class ConveyorControllerTests extends TestCase {
 		
 		assertEquals("Conveyor_State should now be EMPTY_KIT_SENDING while it is sending the kit but before it gets there, instead conveyor_state is "+conveyorController.conveyor_state, conveyorController.conveyor_state, Conveyor_State.EMPTY_KIT_SENDING);
 		
+		//This one is particularly hard to test because it relies on a timer
 		
 		Timer t = new Timer();
 		t.schedule(new TimerTask() {
