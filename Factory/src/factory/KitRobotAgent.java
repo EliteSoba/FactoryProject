@@ -125,6 +125,11 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				return true;
 			}
 			
+			if (actions.contains(StandInfo.KIT_BAD)) {
+				dumpKit();
+				return true;
+			}
+			
 			if (actions.contains(StandInfo.NEED_EMPTY_TOP) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
 				putEmptyKitOnStand("topSlot");
 				return true;
@@ -151,10 +156,6 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				return true;
 			}
 			
-			if (actions.contains(StandInfo.KIT_BAD)) {
-				dumpKit();
-				return true;
-			}
 			
 			if (actions.contains(StandInfo.KIT_GOOD) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
 				exportKit();

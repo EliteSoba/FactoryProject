@@ -230,7 +230,8 @@ public class StandAgent extends Agent implements Stand {
 			 * If there is an empty kit at the conveyor and there is a place to put it, ask the Kit Robot to fetch it
 			 * as long as the stand is not being used.
 			 */
-			if (state == StandAgentState.FREE && (topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY)) {
+			if (state == StandAgentState.FREE && (topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY)
+					&& (inspectionSlot.state ==  MySlotState.EMPTY)) {
 			   DoAskKitRobotToGetEmptyKit();
 			   return true;
 			}       

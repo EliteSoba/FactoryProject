@@ -555,11 +555,6 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		
 		// Animation to Stand to Kit 2
 		DoAnimationMovePartsRobotToStand(1);
-		debug("########################################################");
-		for(int i = 0; i < this.bottomSlot.listOfParts.size();i++){
-			debug(this.bottomSlot.listOfParts.get(i).name);
-		}
-		debug("########################################################");
 		if(this.armOne != null &&  this.bottomSlot != null){
 			boolean placed = false;
 			// try to place in first kit
