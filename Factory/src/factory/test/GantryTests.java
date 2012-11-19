@@ -5,13 +5,16 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import factory.*;
+import factory.masterControl.MasterControl;
 import factory.test.mock.*;
 
 public class GantryTests extends TestCase{
 
 	public void testMsgFeederNeedsPart() {
 		
+
 		GantryAgent gantry = new GantryAgent(null);
+		gantry.unitTesting = true;
 		Part part = new Part("Noses");
 		MockFeeder feeder = new MockFeeder(null);
 		gantry.msgFeederNeedsPart(part, feeder);
@@ -31,10 +34,15 @@ public class GantryTests extends TestCase{
 		//feeder should get the message here.
 		assertTrue("Feeder should have gotten a message to change bin config.", feeder.log
 				.containsString("msgHereAreParts"));
+		
+		//gantry should not have anymore bin requests
+		assertEquals("Gantry should not have anymore bin requests, but instead has: " + gantry.myBins.size()
+				, 0, gantry.myBins.size());
 	}
 	
 	public void testMultiplePartsRequestOneFeeder() {
 		GantryAgent gantry = new GantryAgent(null);
+		gantry.unitTesting = true;
 		Part p1 = new Part("Noses");
 		Part p2 = new Part("Ears");
 		MockFeeder feeder = new MockFeeder(null);
@@ -68,7 +76,7 @@ public class GantryTests extends TestCase{
 				.getMessage().contains("Noses"));
 		
 		
-		assertEquals("Gantry should still have 2 bins \"this will change\"", 2, gantry.myBins.size());
+		assertEquals("Gantry should now have 1 bin", 1, gantry.myBins.size());
 		
 		gantry.pickAndExecuteAnAction();
 		
@@ -87,6 +95,7 @@ public class GantryTests extends TestCase{
 	
 	public void testMultiplePartsRequestTwoFeeder() {
 		GantryAgent gantry = new GantryAgent(null);
+		gantry.unitTesting = true;
 		Part p1 = new Part("Noses");
 		Part p2 = new Part("Ears");
 		MockFeeder f1 = new MockFeeder("Feeder1");
@@ -133,7 +142,7 @@ public class GantryTests extends TestCase{
 		
 		
 		//this will change later depending if i want to remove the bins from mybins or not
-		assertEquals("Gantry should still have 2 bins \"this will change\"", 2, gantry.myBins.size());
+		assertEquals("Gantry should now have 1 bins", 1, gantry.myBins.size());
 		
 		gantry.pickAndExecuteAnAction();
 		

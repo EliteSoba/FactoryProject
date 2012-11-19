@@ -11,16 +11,19 @@ import factory.masterControl.MasterControl;
 public class GantryAgent extends Agent implements Gantry {
 	public GantryAgent(MasterControl mc) {
 		super(mc); // needed for the server 
-		
+
 	}
 	// *** DATA ***
-	
+
 	//This is an list of myBins object that keeps track of the bins that the feeders need
 	public ArrayList<MyBin> myBins = new ArrayList<MyBin>();   
 
 	//enum to keep track of the myBin object state.
 	enum MyBinState { NEEDED, DELIVERED}
 
+	//boolean to make unit testing work without trying to use animation
+	public boolean unitTesting = false;
+	
 	/**
 	 * Private class that keeps track of a requested bin, and which part is needed, and which feeder it goes to
 	 */
@@ -69,7 +72,7 @@ public class GantryAgent extends Agent implements Gantry {
 
 
 	// *** ACTIONS ***
-	
+
 	/**
 	 * This method tells the gantry to go fetch a bin.
 	 * @param b This is the bin that the gantry is going to go fetch.
@@ -77,18 +80,18 @@ public class GantryAgent extends Agent implements Gantry {
 	private void goFetchTheRequestedBin(MyBin b) {
 		debug("goFetchTheRequestedBin");
 		if (b.fdr.getFeederHasABinUnderneath() == true)
-				DoPickupPurgeBin(b); //animation message
-		
+			DoPickupPurgeBin(b); //animation message
+
 		DoGoGetNewBin(b);
 		DoBringNewBin(b);
-		
+
 		b.fdr.msgHereAreParts(b.pt);
 		myBins.remove(b);
 		stateChanged();
 	}
 
 	// *** ANIMATION METHODS ***
-	
+
 	/**
 	 * This is an animation method that tells the gantry to go pick up a bin and place it under a feeder that current
 	 * doesn't have a bin.
@@ -96,42 +99,48 @@ public class GantryAgent extends Agent implements Gantry {
 	 */
 	private void DoPickupPurgeBin(MyBin b) {
 		print("Picking up Purge Bin");
-		server.command("ga fpm cmd pickuppurgebin " + b.fdr.getFeederNumber());
-		try{
-			animation.acquire();
-		}
-		catch (InterruptedException e){
-			e.printStackTrace();
+		if(!unitTesting){
+			server.command("ga fpm cmd pickuppurgebin " + b.fdr.getFeederNumber());
+			try{
+				animation.acquire();
+			}
+			catch (InterruptedException e){
+				e.printStackTrace();
+			}
 		}
 	}
-	
+
 	/**
 	 * This is a method that tells the gantry to get the bin if there is already a bin underneath the feeder
 	 * @param b The bin that is requested.
 	 */
 	private void DoGoGetNewBin(MyBin b) {
 		print("Going to get new Bin");
-		server.command("ga fpm cmd getnewbin " + b.pt.name);
-		try{
-			animation.acquire();
-		}
-		catch (InterruptedException e){
-			e.printStackTrace();
+		if(!unitTesting){
+			server.command("ga fpm cmd getnewbin " + b.pt.name);
+			try{
+				animation.acquire();
+			}
+			catch (InterruptedException e){
+				e.printStackTrace();
+			}
 		}
 	}
-	
+
 	/**
 	 * This is a method that tells the gantry to come back and drop off the bin if there is already a bin underneath the feeder
 	 * @param b The bin that is requested.
 	 */
 	private void DoBringNewBin(MyBin b) {
 		print("Bringing new Bin to the feeder");
-		server.command("ga fpm cmd bringbin " + b.fdr.getFeederNumber());
-		try{
-			animation.acquire();
-		}
-		catch (InterruptedException e){
-			e.printStackTrace();
+		if(!unitTesting){
+			server.command("ga fpm cmd bringbin " + b.fdr.getFeederNumber());
+			try{
+				animation.acquire();
+			}
+			catch (InterruptedException e){
+				e.printStackTrace();
+			}
 		}
 	}
 }
