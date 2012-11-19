@@ -49,7 +49,7 @@ public class PartsManPanel extends JPanel{
 	public PartsManPanel(PartsManager p){
 		this.setLayout(new CardLayout());
 		partsManager = p;
-		currentID = partsManager.parts.size() + 1;
+		currentID = partsManager.parts.size()+1;
 		fileNames = new ArrayList<String>();
 		fileNames.add("eye");
 		fileNames.add("body");
