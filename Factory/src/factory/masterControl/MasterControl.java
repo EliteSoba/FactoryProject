@@ -32,7 +32,7 @@ public class MasterControl {
 	KitRobotAgent kitRobot;
 	ConveyorAgent conveyor;
 	ConveyorControllerAgent conveyorController;
-	public LaneAgent l0t, l0b, l1t, l1b, l2t, l2b, l3t, l3b;
+	LaneAgent l0t, l0b, l1t, l1b, l2t, l2b, l3t, l3b;
 	TreeMap<String, LaneAgent> laneAgentTreeMap;
 	NestAgent n0t, n0b, n1t, n1b, n2t, n2b, n3t, n3b;
 	TreeMap<String, NestAgent> nestAgentTreeMap;
@@ -550,6 +550,9 @@ public class MasterControl {
 
 		return false; // Default is false.
 	}
+
+
+
 	// command sent to client
 	// clientCmd figures out which partHandler to use sendCmd on
 	// and then sends it.
@@ -795,7 +798,7 @@ public class MasterControl {
 
         MasterControl mc = new MasterControl(debug);
 
-/*        //This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
+        //This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
         long timeToQuit = System.currentTimeMillis() + 5000;
         while (System.currentTimeMillis() < timeToQuit);
 
@@ -822,15 +825,19 @@ public class MasterControl {
         firstKit.listOfParts = partList;
 
         // Send the message that the FCS would send
-        mc.partsRobot.msgMakeKit(firstKit);
+        //mc.partsRobot.msgMakeKit(firstKit);
 
 
 
         timeToQuit = System.currentTimeMillis() + 2000;
-        while (System.currentTimeMillis() < timeToQuit);*/
+        while (System.currentTimeMillis() < timeToQuit);
 
             
-//      		mc.n0t.msgYouNeedPart(p3);
+      		mc.n0b.msgYouNeedPart(p2);
+      		mc.n0t.msgYouNeedPart(p0);
+      		
+      		//mc.n0b.msgYouNeedPart(p3);
+
 //      		
 //      		
 //      		mc.n1t.msgYouNeedPart(p2);

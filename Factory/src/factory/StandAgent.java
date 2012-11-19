@@ -18,6 +18,7 @@ public class StandAgent extends Agent implements Stand {
 	public PartsRobot partsRobot;
 	public Boolean partsRobotWantsToDeliverParts = false;
 	public Boolean kitRobotWantsToDeliverEmptyKit = false;
+	public Boolean needToClearStand = false;
 	
 	public boolean kitRobotWantsToExportKit = false;
 	
@@ -156,7 +157,14 @@ public class StandAgent extends Agent implements Stand {
 	public boolean pickAndExecuteAnAction() {
 		
 		synchronized(state) {
-
+			/**
+			 * If the stand is free and the kitRobot wants to deliver empty kit
+			 */
+			if (state == StandAgentState.FREE && this.needToClearStand) {
+			   DoTellKitRobotToClearStand();
+			   return true;
+			}
+			
 			/**
 			 * If there is a Kit in the Inspection Slot that hasn't been analyzed, then ask Vision to do so 
 			 */
@@ -164,6 +172,7 @@ public class StandAgent extends Agent implements Stand {
 				DoAskVisionToInspectKit();
 				return true;
 			}
+			
 			/**
 			 * If there is a Kit in the Inspection Slot that has been analyzed, then ask KitRobot to process it 
 			 */
@@ -335,6 +344,12 @@ public class StandAgent extends Agent implements Stand {
 		inspectionSlot.state = MySlotState.PROCESSING_ANALYZED_KIT;                    
 	}
 	
+	public void DoTellKitRobotToClearStand(){
+		debug("Executing DoTellKitRobotToClearStand()");
+		kitRobot.msgClearTheStandOff();
+		state = StandAgentState.KIT_ROBOT;
+		this.needToClearStand = false;
+	}
 	/**
 	 * Hacks and Misc
 	 */
@@ -404,8 +419,8 @@ public class StandAgent extends Agent implements Stand {
 
 	@Override
 	public void msgClearStand() {
-		// TODO Auto-generated method stub
-		
+		needToClearStand = true;
+		this.stateChanged();
 	}
 
 

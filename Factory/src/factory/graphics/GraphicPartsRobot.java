@@ -7,7 +7,7 @@ import java.util.ArrayList;
 class GraphicPartsRobot extends GraphicRobot
 {
 	protected ArrayList<GraphicItem> items;			// inventory of items
-	int itemIndex;
+	int itemIndex;									// item requested by the back-end
 	
 	public GraphicPartsRobot()
 	{
@@ -16,9 +16,11 @@ class GraphicPartsRobot extends GraphicRobot
 	
 	public GraphicPartsRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
+		// Initialize inventory to have 4 null slots
 		items = new ArrayList<GraphicItem>();
 		for(int i = 0; i < 4; i++)
 			items.add(null);
+		// Initialize properties of the robot to passed-in and default values
 		arrived = false;
 		state = 0;		// 0 = idle, 1 = going to nest, 2 = arrived at nest, 3 = going to station, 4 = arrived at station, 5 = going to center, 6 = arrived at center
 		destinationNest = -1;
@@ -36,68 +38,119 @@ class GraphicPartsRobot extends GraphicRobot
 		imageHeight = init_imageHeight;
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
 		itemIndex = 0;
+		// The parts robot will prioritize: up, right, left, down
 		movementCheckingOrders = new int[4];
 		movementCheckingOrders[0] = 1;
 		movementCheckingOrders[0] = 0;
 		movementCheckingOrders[0] = 2;
 		movementCheckingOrders[0] = 3;
 	}
+	
+	/**
+	 * Gets the kit that the parts robot is assigned to move to (zero-based indexing).
+	 * @return destinationKit
+	 */
 	public int getDestinationKit()
 	{
 		return destinationKit;
 	}
+	
+	/**
+	 * Sets the kit that the robot should move to (zero-based indexing).
+	 * @param init_destinationKit
+	 */
 	public void setDestinationKit(int init_destinationKit)
 	{
 		destinationKit = init_destinationKit;
 	}
+	
+	/**
+	 * Gets the nest that the parts robot is assigned to move to (zero-based indexing).
+	 * @return destinationNest
+	 */
 	public int getDestinationNest()
 	{
 		return destinationNest;
 	}
+	
+	/**
+	 * Sets the nest that the robot should move to (zero-based indexing).
+	 * @param init_destinationNest
+	 */
 	public void setDestinationNest(int init_destinationNest)
 	{
 		destinationNest = init_destinationNest;
 	}
+	
+	/**
+	 * Sets the index of the item requested by the back-end (zero-based indexing).
+	 * @param index
+	 */
 	public void setItemIndex(int index) {
 		itemIndex = index;
 	}
+	
+	/**
+	 * Gets the index of the item requested by the back-end (zero-based indexing).
+	 * @return itemIndex
+	 */
 	public int getItemIndex() {
 		return itemIndex;
 	}
+	
+	/**
+	 * Sets the first empty slot in the parts robot's inventory as newItem.
+	 * @param newItem The item being added to the parts robot's inventory.
+	 */
 	public void addItem(GraphicItem newItem)
 	{
-		System.out.println("additem");
 		for(int i = 0; i < 4; i++)
 			if(items.get(i) == null)
 			{
-				System.out.println("found");
 				items.set(i, newItem);
 				break;
 			}
 	}
+	
+	/**
+	 * Sets all items in the robot's inventory to null (essentially clearing all of its items).
+	 */
 	public void clearItems()
 	{
-		items.clear();
+		for(int i = 0; i < 4; i++)
+			items.set(i, null);
 	}
+	
+	/**
+	 * Returns true if the robot has at least 1 item, false otherwise.
+	 * @return If robot has items.
+	 */
 	public boolean hasItem()
 	{
-		if(items.size() >= 1)
-			return true;
-		else
-			return false;
+		for(int i = 0; i < items.size(); i++)
+			if(items.get(i) != null)		// non-null item found!
+				return true;
+		return false;
 	}
+	
+	/**
+	 * Gets the last item in parts robot's inventory.
+	 * @deprecated Use popItemAt(int)
+	 * @return lastItem
+	 */
 	public GraphicItem popItem()
 	{
 		if (items.size() == 0)
 			return null;
-		GraphicItem lastItem = items.get(items.size()-1);		// get last item
-		items.remove(items.size()-1);					// remove last item
-		return lastItem;								// return last item
+		GraphicItem lastItem = items.get(items.size()-1);	// get last item as a copy
+		items.set(items.size()-1, null);					// set last item to null
+		return lastItem;									// return copy of last item
 	}
+	
 	/**
-	 * Gets an Item at the provided index and sets the Item to null
-	 * @param index The index of the Item being taken
-	 * @return The Item at the provided index; returns {@code null} if the index is invalid
+	 * Gets an item at the provided index and sets the item to null.
+	 * @param index The index of the item being taken.
+	 * @return The item at the provided index; returns null if the index is invalid
 	 */
 	public GraphicItem popItemAt(int index) {
 		if (index < 0 || index >= items.size())
@@ -106,22 +159,37 @@ class GraphicPartsRobot extends GraphicRobot
 		items.set(index, null);
 		return returnedItem;
 	}
+	
+	/**
+	 * Gets the size of the parts robot's inventory.
+	 * @return Size of the inventory (4 by default).
+	 */
 	public int getSize()
 	{
 		return items.size();
 	}
+	
+	/**
+	 * Gets the item at the provided position in the parts robot's inventory.
+	 * @param i
+	 * @return The item at position i in the inventory (zero-based indexing).
+	 */
 	public GraphicItem getItemAt(int i)
 	{
 		return items.get(i);
 	}
+	
+	/**
+	 * Paints the robot (via superclass function) and paints the items the robot is carrying in its inventory.
+	 */
 	public void paint(Graphics g)
 	{
 		// Draw the robot
 		super.paint(g);
 		// Draw the items the robot is carrying
 		for(int i = 0; i < items.size(); i++)
-			if(items.get(i) != null)
-			items.get(i).paint(g, x+imageWidth-25,y+10+i*20);
+			if(items.get(i) != null)				// don't try to paint null items
+				items.get(i).paint(g, x+imageWidth-25,y+10+i*20);
 	}
 
 }

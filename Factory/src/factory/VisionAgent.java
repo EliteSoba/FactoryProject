@@ -1,7 +1,6 @@
 package factory;
 
 import java.util.ArrayList;
-import java.util.TimerTask;
 
 import agent.Agent;
 import java.util.*;
@@ -9,7 +8,6 @@ import java.util.concurrent.Semaphore;
 
 
 import factory.Kit.KitState;
-import factory.graphics.GraphicFactoryProductionManager;
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
 
@@ -48,8 +46,6 @@ public class VisionAgent extends Agent implements Vision {
 	      Nest nestTwo;
 	      PictureRequestState state;
 	      Feeder feeder;
-	      Coordinate coordinateOne;
-	      Coordinate coordinateTwo;
 
 	      public PictureRequest(Nest nestOne, Nest nestTwo, Feeder feeder){
 	            this.state = PictureRequestState.NESTS_READY;
@@ -140,17 +136,10 @@ public class VisionAgent extends Agent implements Vision {
 		try {
 			Thread.sleep(4000);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-//		server.takePicture();
-		try {
-			animation.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		DoTakePicture();
+	
 	   int randomNum = r.nextInt(11);
 	   if(randomNum < 4)
 		   stand.msgResultsOfKitAtInspection(KitState.PASSED_INSPECTION);
@@ -172,8 +161,7 @@ public class VisionAgent extends Agent implements Vision {
 		   
 		    partsRobot.msgPictureTaken(pr.nestOne, pr.nestTwo);
 		   if(randomNumberOne == 0) {
-		      pr.coordinateOne = new Coordinate(10, 10); //the parameters for coordinates don't mean anything in this case, or does it?
-		      partsRobot.msgHereArePartCoordinatesForNest(pr.nestOne, pr.nestOne.getPart(), randomNumberOne);
+		      partsRobot.msgHereArePartCoordinatesForNest(pr.nestOne, pr.nestOne.getPart(), r.nextInt(9));
 		   }
 		   else if(randomNumberOne == 1) {
 		      pr.feeder.msgBadNest(pr.nestOne);
@@ -184,7 +172,7 @@ public class VisionAgent extends Agent implements Vision {
 
 		   if(randomNumberTwo == 0) {
 		      
-		      partsRobot.msgHereArePartCoordinatesForNest(pr.nestTwo, pr.nestTwo.getPart(), randomNumberTwo);
+		      partsRobot.msgHereArePartCoordinatesForNest(pr.nestTwo, pr.nestTwo.getPart(), r.nextInt(9));
 		   }
 		   else if(randomNumberTwo == 1) {
 		      pr.feeder.msgBadNest(pr.nestTwo);
