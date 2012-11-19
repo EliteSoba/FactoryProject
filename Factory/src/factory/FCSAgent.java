@@ -180,12 +180,18 @@ public class FCSAgent extends Agent implements FCS{
 
 
 	/**
-	 * This method removes a part from the FCSAgent
+	 * This method removes a part from the FCSAgent.  It also removes any kitConfigs that use that part.
 	 * @param partname The name of the part you want to remove.
 	 */
 	public void removePartType(String partname){
 		if (partsList.containsKey(partname))
 			partsList.remove(partname);
+		List<String> recipes = new ArrayList<String>(kitRecipes.keySet());
+		for(String r: recipes){
+			if(kitRecipes.get(r).listOfParts.contains(partname)){
+				kitRecipes.remove(r);
+			}
+		}
 		testImport();
 	}
 

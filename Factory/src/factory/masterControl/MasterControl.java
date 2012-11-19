@@ -64,7 +64,7 @@ public class MasterControl {
 			"getnewbin", "bringbin", "putinspectionkitonconveyor", "putemptykitatslot",
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
-            "movetocenter", "nestdestabilized", "neststabilized"
+            "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection"
 
     );
 
@@ -130,14 +130,15 @@ public class MasterControl {
         l3b = new LaneAgent(this);
 
         // Instantiate the Nests
-        n0t = new NestAgent(this,l0t);
-        n0b = new NestAgent(this,l0b);
-        n1t = new NestAgent(this,l1t);
-        n1b = new NestAgent(this,l1b);
-        n2t = new NestAgent(this,l2t);
-        n2b = new NestAgent(this,l2b);
-        n3t = new NestAgent(this,l3t);
-        n3b = new NestAgent(this,l3b);
+        n0t = new NestAgent(this,l0t,0);
+        n0b = new NestAgent(this,l0b,1);
+        n1t = new NestAgent(this,l1t,2);
+        n1b = new NestAgent(this,l1b,3);
+        n2t = new NestAgent(this,l2t,4);
+        n2b = new NestAgent(this,l2b,5);
+        n3t = new NestAgent(this,l3t,6);
+        n3b = new NestAgent(this,l3b,7);
+                                          
 
 		// Instantiate the Gantry
 		gantry = new GantryAgent(this);
@@ -148,6 +149,16 @@ public class MasterControl {
 		// Instantiate the Vision
 		vision = new VisionAgent(partsRobot,stand,this);
 
+		// Set the Lane's Nests
+		l0t.setNest(n0t);
+		l0b.setNest(n0b);
+		l1t.setNest(n1t);
+		l1b.setNest(n1b);
+		l2t.setNest(n2t);
+		l2b.setNest(n2b);
+		l3t.setNest(n3t);
+		l3b.setNest(n3b);   
+		
 		// Instantiate the Feeders
 		f0 = new FeederAgent("f0",0,l0t,l0b,gantry,vision,this);
 		f1 = new FeederAgent("f1",1,l1t,l1b,gantry,vision,this);
@@ -235,6 +246,7 @@ public class MasterControl {
 		stand.setPartsRobot(partsRobot);
 		conveyorController.setConveyor(conveyor);
 		stand.setKitRobot(kitRobot);
+		vision.setPartsRobot(partsRobot);    
 
 		
 		
@@ -777,42 +789,41 @@ public class MasterControl {
 
         MasterControl mc = new MasterControl(debug);
 
-      //This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
-      		long timeToQuit = System.currentTimeMillis() + 5000;
-      		while (System.currentTimeMillis() < timeToQuit);
+        //This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
+        long timeToQuit = System.currentTimeMillis() + 5000;
+        while (System.currentTimeMillis() < timeToQuit);
 
-      		// TEMPORARY, FOR TESTING PURPOSES:
-      		Part p0 = new Part("eye",000,"desc","imgPath",2);
-      		Part p1 = new Part("eye",000,"desc","imgPath",3);
-      		Part p2 = new Part("shoe",001,"desc","imgPath",3);
-      		Part p3 = new Part("shoe",001,"desc","imgPath",3);
-      		Part p4 = new Part("sword",002,"desc","imgPath",4);
-      		Part p5 = new Part("tentacle",002,"desc","imgPath",4);
-      		
-      		List<Part> partList = new ArrayList<Part>();
-      		partList.add(p0);
-      		partList.add(p1);
-      		partList.add(p2);
-      		partList.add(p3);
-      		partList.add(p4);
-      		partList.add(p5);
-      		
-      		
-      		mc.n0t.msgYouNeedPart(p0);
-      		
-      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
-      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
-      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
-      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
-      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
-      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
-      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
-      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
-      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
-      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
-      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
+        Part p0 = new Part("eye",000,"desc","imgPath",2);
+        Part p1 = new Part("eye",000,"desc","imgPath",3);
+        Part p2 = new Part("shoe",001,"desc","imgPath",3);
+        Part p3 = new Part("shoe",001,"desc","imgPath",3);
+        Part p4 = new Part("sword",002,"desc","imgPath",4);
+        Part p5 = new Part("tentacle",003,"desc","imgPath",4);
+        Part p6 = new Part("tentacle",003,"desc","imgPath",4);
+        Part p7 = new Part("tentacle",003,"desc","imgPath",4);
 
-      		
+        List<Part> partList = new ArrayList<Part>();
+        partList.add(p0);
+        partList.add(p1);
+        partList.add(p2);
+        partList.add(p3);
+        partList.add(p4);
+        partList.add(p5);
+        partList.add(p6);
+        partList.add(p7);
+
+        KitConfig firstKit = new KitConfig();
+        firstKit.listOfParts = partList;
+
+        // Send the message that the FCS would send
+        mc.partsRobot.msgMakeKit(firstKit);
+
+
+
+        timeToQuit = System.currentTimeMillis() + 2000;
+        while (System.currentTimeMillis() < timeToQuit);
+
+            
 //      		mc.n0t.msgYouNeedPart(p3);
 //      		
 //      		

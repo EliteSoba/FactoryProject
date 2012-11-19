@@ -21,14 +21,10 @@ public class NestAgent extends Agent implements Nest {
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
 	public Lane myLane;
 	public int numberOfParts = 0;
-<<<<<<< HEAD
 	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED, PART_REMOVED, OUT_OF_PARTS}
-=======
-	public int position;
-	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED, PART_REMOVED}
->>>>>>> YEYEYEY
 	public NestState nestState = NestState.NORMAL;
 	public Part currentPart;
+	public int position;
 	public enum MyPartState {  NEEDED, REQUESTED }
 	public class MyPart {
 		public Part pt;
@@ -223,7 +219,6 @@ public class NestAgent extends Agent implements Nest {
 	
 
 }
-
 
 
 

@@ -61,6 +61,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			public NestState state;
 			public Part part;
 			public int partCoordinate;
+			public int partsTaken = 0;
 		
 			public MyNest(Nest nest){
 				this.nest = nest;
@@ -149,7 +150,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		for(int i = 0; i < nests.size(); i++){
 			
 			if(nests.get(i).nest == nestOne || nests.get(i).nest == nestTwo){
-				debug("############" + nests.get(i));
+				
 				nests.get(i).state = NestState.PICTURE_NEEDED;
 			}
 		}
@@ -160,8 +161,10 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 * Message that is received from Vision to tell us that a picture was taken
 	 */
 	public void msgPictureTaken(Nest nestOne, Nest nestTwo) {
+		debug("Received msgPictureTaken("+nestOne+", "+nestTwo+")");
 		for(int i = 0; i < nests.size(); i++){
 			if(nests.get(i).nest == nestOne || nests.get(i).nest == nestTwo){
+				debug("############" + nests.get(i));
 				nests.get(i).state = NestState.DOING_NOTHING;
 			}
 		}
@@ -172,7 +175,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 * Message that is received from Vision tells which nest has a good part and its coordinate
 	 */
 	public void msgHereArePartCoordinatesForNest(Nest nest, Part part, int coordinate) {
-		debug("received msgHereArePartCoordinatesForNest("+nest.nestName+"," +part.name+","+coordinate+")");
+		debug("received msgHereArePartCoordinatesForNest("+nest+"," +part.name+","+coordinate+")");
 		for(int i = 0; i < nests.size(	); i++){
 			debug(nests.get(i).nest + " == " + nest + " && " + nests.get(i).part.name + " == " + part.name);
 			if(nests.get(i).nest == nest && nests.get(i).part.name == part.name){
@@ -218,6 +221,13 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			for(int i = 0; i < 8; i++){
 				if(nests.get(i).state == NestState.PICK_UP_NEEDED && SpaceInArms() && this.CanMoveToNest(i) && IsPartFromNestNeed(i)){
 					DoPickUpPartFromNest(i);
+					return true;
+				}
+			}
+			// If there is a part to be picked up and space in the arms and the PartsRobot can get there without overlapping with the camera
+			for(int i = 0; i < 8; i++){
+				if(nests.get(i).partsTaken > 5){
+					DoReOrderParts(i);
 					return true;
 				}
 			}
@@ -318,6 +328,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			nests.get(currentNotNeeded.get(i)).partCoordinate = -1;
 			nests.get(currentNotNeeded.get(i)).nest.msgYouNeedPart(currentKitConfiguration.listOfParts.get(newNeeded.get(i)));
 			nests.get(currentNotNeeded.get(i)).state = NestState.DOING_NOTHING;
+			nests.get(currentNotNeeded.get(i)).partsTaken = 0;
 		}
 		
 		
@@ -431,6 +442,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		this.nests.get(nest).nest.msgPartsRobotGrabbingPartFromNest(this.nests.get(nest).partCoordinate);
 		
 		// Update the nest state
+		this.nests.get(nest).partsTaken++;
 		this.nests.get(nest).state = NestState.DOING_NOTHING;
 		this.nests.get(nest).partCoordinate = -1;
 	}
@@ -587,6 +599,14 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		
 		// Update position
 		this.position = PartsRobotPositions.CENTER;
+	}
+	
+	/**
+	 * Function to reorder parts
+	 */
+	public void DoReOrderParts(int nest){
+		nests.get(nest).nest.msgYouNeedPart(nests.get(nest).part);
+		this.nests.get(nest).partsTaken = 0;
 	}
 	
 /** ================================================================================ **/
