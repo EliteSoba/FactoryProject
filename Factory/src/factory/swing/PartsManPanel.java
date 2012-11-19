@@ -29,27 +29,27 @@ public class PartsManPanel extends JPanel{
 
 	private static final long serialVersionUID = -8456999510669881291L;
 	// Data
-	AddPanel addPanel;
+	AddPanel addPanel;    
 	EditPanel editPanel;
-	ArrayList<String> fileNames;
-	PartsManager partsManager;
-	JScrollPane scrollPane;
-	JPanel currentListPanel;
-	JTable table;
-	PartsTableModel model;
-	PartsTableCellRenderer renderer;
-	JPanel basePanel1;
-	JPanel basePanel2;
-	int currentID;
-
-	//New Part
+	ArrayList<String> fileNames;    // selection of image files
+	PartsManager partsManager;  
+	JScrollPane scrollPane;    // allows scrolling for table
+	JPanel currentListPanel;   // container for table
+	JTable table;    // contains current list of parts
+	PartsTableModel model;  // model for table
+	PartsTableCellRenderer renderer;   // renders data types in table
+	JPanel basePanel1;  // for add panel and table
+	JPanel basePanel2;   // for edit panel
+	int currentID;  // make sure that ID's are unique
 
 	// Methods
 
 	public PartsManPanel(PartsManager p){
-		this.setLayout(new CardLayout());
+		this.setLayout(new CardLayout());  // Card Layout to switch between panels
 		partsManager = p;
-		currentID = partsManager.parts.size()+1;
+		currentID = partsManager.parts.size()+1;  
+		
+		// loads 
 		fileNames = new ArrayList<String>();
 		fileNames.add("eye");
 		fileNames.add("body");
@@ -76,6 +76,8 @@ public class PartsManPanel extends JPanel{
 		table.setDefaultRenderer(String.class, renderer);
 		table.setAutoCreateRowSorter(true);
 		table.addMouseListener(new MouseListener());
+		
+		// sets the column widths
 		TableColumn column = null;
 		for (int i = 0; i < 2; i ++){
 			column = table.getColumnModel().getColumn(i);
@@ -89,12 +91,13 @@ public class PartsManPanel extends JPanel{
 				column.setPreferredWidth(4);
 			}
 		}
-		table.setRowHeight(30);
+	
+		table.setRowHeight(30);  // sets the row height
 
-		scrollPane = new JScrollPane(table);
+		scrollPane = new JScrollPane(table);  
 		scrollPane.setMaximumSize(new Dimension(460, 300));
 		table.setFillsViewportHeight(true);
-		for(int i = 0; i <= partsManager.parts.size(); i++){
+		for(int i = 0; i <= partsManager.parts.size(); i++){    // adds current parts to table
 			for(Part temp : partsManager.parts.values()){
 				if(i == temp.id){
 					ImageIcon image = new ImageIcon(temp.imagePath);
@@ -171,7 +174,7 @@ public class PartsManPanel extends JPanel{
 			saveItem = new JButton ("Save Item");
 			saveItem.addActionListener(this);
 
-			//currentList = new JScrollPane();
+			// adding up 
 
 			c.gridx = 0;
 			c.gridy = 0;

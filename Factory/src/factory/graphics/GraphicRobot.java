@@ -34,10 +34,11 @@ public class GraphicRobot extends GraphicAnimatedObject
 	{
 		if(y == fy && x == fx)	// robot has arrived at destination
 		{
-			if(state % 2 == 1)
-				state += 1;
 			if(theta-ftheta == 0)
-				theta += 0;
+			{
+				if(state % 2 == 1)
+					state += 1;
+			}
 			else if(theta-ftheta < 180)
 				theta -= dtheta;
 			else if(theta-ftheta > 180)

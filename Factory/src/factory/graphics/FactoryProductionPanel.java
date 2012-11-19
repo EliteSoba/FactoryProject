@@ -1,7 +1,5 @@
-
-//Minh La
-
 package factory.graphics;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -11,24 +9,15 @@ import javax.swing.Timer;
 
 import factory.*;
 import factory.client.*;
+
+/**
+ * @author Minh La, Tobias Lee, George Li<p>
+ * <b>{@code FactoryProductionPanel.java}</b> (1100x720)<br>
+ * This is the graphical component of the Factory Production Manager.<br>
+ * This panel displays every component.
+ */
+
 public class FactoryProductionPanel extends GraphicPanel implements ActionListener {
-	
-	// LANE MANAGER
-	/*GraphicLaneManagerClient client;
-	GraphicLaneManager [] lane;
-	
-	// KIT MANAGER
-	private FactoryProductionManager am; //The JFrame that holds this. Will be removed when gets integrated with the rest of the project
-	private GraphicConveyorBelt belt; //The conveyer belt
-	private GraphicKittingStation station; //The kitting station
-	private GraphicKittingRobot kitRobot;
-	
-	// PARTS MANAGER
-	private ArrayList<Nest> nests;
-	PartsRobot partsRobot;
-	
-	// GANTRY
-	GantryRobot gantryRobot;*/
 	
 	public FactoryProductionPanel(JFrame FKAM) {
 		super();
@@ -49,8 +38,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		{
 			GraphicNest newNest = new GraphicNest(510,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
 			Random randomGen = new Random();
-//			for(int j = 0; j < randomGen.nextInt(5)+4; j++)
-//				newNest.addItem(new GraphicItem(20,20,"Images/eyesItem.png"));
 			nests.add(newNest);
 		}
 
@@ -64,10 +51,6 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		(new Timer(DELAY, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		this.setVisible(true);
-	}
-
-	public void paint(Graphics g) {
-		super.paint(g);
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
