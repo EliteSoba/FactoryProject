@@ -200,7 +200,13 @@ public class VisionAgent extends Agent implements Vision {
 		}
 
 		private void DoTakePicture() {
-			debug("Taking Picture");
+			debug("Executing DoTakePicture()");
+			server.command("va fpm cmd takepictureofinspection");
+			try {
+				animation.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			
 			
 		}

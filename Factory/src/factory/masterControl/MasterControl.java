@@ -64,7 +64,7 @@ public class MasterControl {
 			"getnewbin", "bringbin", "putinspectionkitonconveyor", "putemptykitatslot",
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
-            "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest" 
+            "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection"
 
     );
 
