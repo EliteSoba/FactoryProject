@@ -279,7 +279,7 @@ public class FactoryProductionManager extends Client {
 				part.nestStabilizationTime = Integer.parseInt(pCmd.get(5));
 				part.description = pCmd.get(6);
 
-				System.out.println("blah");
+			
 				System.out.println(partsList.get(pCmd.get(2)));
 			}
 		}
