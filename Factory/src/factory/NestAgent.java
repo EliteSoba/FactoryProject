@@ -21,7 +21,7 @@ public class NestAgent extends Agent implements Nest {
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
 	public Lane myLane;
 	public int numberOfParts = 0;
-	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED, PART_REMOVED}
+	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED, PART_REMOVED, OUT_OF_PARTS}
 	public NestState nestState = NestState.NORMAL;
 	public Part currentPart;
 	public enum MyPartState {  NEEDED, REQUESTED }
@@ -52,7 +52,7 @@ public class NestAgent extends Agent implements Nest {
 	}
 	
 	public void msgFeedingParts(int numParts) {
-		debug("msgFeedingParts()");
+		debug("received " + numParts + " from the lane.");
 		this.numberOfParts += numParts;
 		stateChanged();
 	}
@@ -132,7 +132,7 @@ public class NestAgent extends Agent implements Nest {
 			}
 		}
 		
-		if (this.numberOfParts <= 0)
+		if (this.numberOfParts <= 0 && nestState != NestState.OUT_OF_PARTS)
 		{
 			tellMyLaneIAmOutOfParts();
 			return true;
@@ -152,8 +152,8 @@ public class NestAgent extends Agent implements Nest {
 	}
 	
 	private void tellMyLaneIAmOutOfParts() {
-		debug("tell my lane I am out of parts");
-		nestState = NestState.NORMAL; // we don't want to continue sending this message over and over again
+		debug("tell my lane I am out of parts, i have " + this.numberOfParts + " many parts.");
+		nestState = NestState.OUT_OF_PARTS; // we don't want to continue sending this message over and over again
 		myLane.msgNestIsOutOfParts();
 		stateChanged();
 	}
