@@ -1,26 +1,26 @@
 package factory.test;
-/*
+
+import junit.framework.TestCase;
+
+import org.junit.Test;
+import factory.test.mock.*;
+
 import factory.StandAgent;
+import factory.StandAgent.MySlotState;
+import factory.StandAgent.StandAgentState;
 
 public class StandTests extends TestCase {
 
 	StandAgent stand;
-	MockVisionAgent visionMock;
+	MockVision visionMock;
 	MockKitRobot kitRobotMock;
-	MockPartsRobotAgent partsRobotMock;
+	MockPartsRobot partsRobotMock;
 	MockConveyor conveyorMock;
 	
-	@Before
-	public void setUp() throws Exception {
-		stand = new StandAgent(conveyorMock, visionMock, kitRobotMock, partsRobotMock);
-	}
 
 	@Test
 	public void testStandAgent() {
-		// Test that the conveyor was saved in MyConveyor
-		assertEquals(stand.conveyor.conveyor,conveyorMock);
-		// Test that the conveyor state is empty
-		assertEquals(stand.conveyor.state,MyConveyorState.EMPTY);
+
 		
 		// Test that vision was saved
 		assertEquals(stand.vision,visionMock);
@@ -28,10 +28,7 @@ public class StandTests extends TestCase {
 		assertEquals(stand.kitRobot,kitRobotMock);
 		// Test that partsRobot was saved
 		assertEquals(stand.partsRobot,partsRobotMock);
-		
-
-		// Test that the partsRobot does not want to deliver parts
-		assertEquals(stand.partsRobotWantsToDeliverParts,false);
+	
 		
 
 		// Test that the state is FREE
@@ -106,4 +103,4 @@ public class StandTests extends TestCase {
 		fail("Not yet implemented");
 	}
 
-}*/
+}
