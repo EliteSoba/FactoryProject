@@ -43,7 +43,12 @@ public class FCSAgent extends Agent implements FCS{
 	//reference to the masterControl to communicate to server
 	public MasterControl masterControl;
 
-	//this is temporarily used for testing purposes.  Constructor will likely change.
+	/**
+	 * This is the constructor for the FCSAgent
+	 * @param gantry Instance of the gantry
+	 * @param partsRobot Instance of the partsRobot
+	 * @param mc Instance of MasterControl
+	 */
 	public FCSAgent(Gantry gantry, PartsRobot partsRobot, MasterControl mc) {
 		super(mc);
 		this.masterControl = mc; // for testing purposes
@@ -52,6 +57,7 @@ public class FCSAgent extends Agent implements FCS{
 		loadData();
 		//		testImport();
 	}
+	//this constructor is used for testing purposes
 	public FCSAgent(MasterControl mc){
 		super (mc);
 		this.masterControl = mc;

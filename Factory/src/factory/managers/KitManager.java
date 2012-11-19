@@ -62,6 +62,7 @@ String action = pCmd.get(0);
 String identifier = pCmd.get(1);
 if(action.equals("cmd"))
 {	
+	boolean hasPart = false;
 	if(identifier.equals("addpartname"))// check directions
 	{
 		partsList.put(pCmd.get(2), new Part(pCmd.get(2),
@@ -72,20 +73,28 @@ if(action.equals("cmd"))
 		partsList.remove(pCmd.get(2));// remove part from partList
 				
 		// iterate through the kitConfigList and find kitConfigurations with the removed part and remove them
-		for(String s : kitConfigList.keySet())
+		Iterator itr = kitConfigList.entrySet().iterator();
+		while(itr.hasNext())
 		{
-			KitConfig configToCheck = kitConfigList.get(s);
+			Map.Entry pairs = (Map.Entry)itr.next();
+			String kitName = (String)pairs.getKey();
+			KitConfig configToCheck = kitConfigList.get(kitName);
 			for(int i = 0; i < configToCheck.listOfParts.size(); i++)
 			{
 				Part partToCheck = configToCheck.listOfParts.get(i);
 				String name = partToCheck.name;
-				if(pCmd.get(2).equals(name))
+				if(pCmd.get(2).equals(name))//check if the part name from the KitConfig matches the removedpart name
 				{
-					kitConfigList.remove(s);
-							
-					super.sendCommand("km fpm cmd rmkitname "+ s);
-					super.sendCommand("km fcsa cmd rmkitname "+ s);
+					hasPart = true;
+					break; // once the part is found no more checks needed to be done and can move to next kitConfig
 				}
+			}
+			if(hasPart)
+			{	//remove kitConfig send confirmations and put hasPart to false 
+				kitConfigList.remove(kitName);
+				super.sendCommand("km fpm cmd rmkitname "+ kitName);
+				super.sendCommand("km fcsa cmd rmkitname "+ kitName);
+				hasPart = false;
 			}
 		}
 				
@@ -119,7 +128,7 @@ else if(action.equals("set"))
 	{	
 		kitConfigList.remove(oldKitName);
 		KitConfig kitConfigToAdd = new KitConfig(newKitName);
-		int i = 4;
+		int i = 4;//Use this in the loop to specify the partnames which need to be added
 		String endOfConfirm = "set kitcontent " + oldKitName + " " + newKitName;
 		
 		while(!pCmd.get(i).equals("endset"))
@@ -128,7 +137,7 @@ else if(action.equals("set"))
 			{
 				kitConfigToAdd.listOfParts.add(partsList.get(pCmd.get(i)));
 			}
-			if(!pCmd.get(i).equals("endset"))
+			if(!pCmd.get(i).equals("endset"))//adds partname to the command which will be sent to server
 			{
 				endOfConfirm = endOfConfirm + " " + pCmd.get(i);
 			}
