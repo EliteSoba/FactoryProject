@@ -431,9 +431,11 @@ public class PartsManPanel extends JPanel{
 
 				messageEditPanel = "pm multi cmd rmpartname " + currentPart.name; 
 				partsManager.sendCommand(messageEditPanel);
+				System.out.println(messageEditPanel);
 
 				messageEditPanel = "pm fcsa cmd rmpartname " + currentPart.name; 
 				partsManager.sendCommand(messageEditPanel);
+				
 				removeItem(currentPart);
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
@@ -457,9 +459,12 @@ public class PartsManPanel extends JPanel{
 
 					Part p = new Part(name.getText(), currentPart.id, description.getText(),"Images/" + 
 							(String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
+					// "pm multi set partconfig #originalpartname #newpartname #newpartid #newfilepath #newstabalizationtime #newpartdescription"
 					messageEditPanel = "pm multi set editpartname " + currentPart.name + " " + p.name + " " + 
 							p.id + " " + p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
 					partsManager.sendCommand(messageEditPanel);
+					
+					//"pm fcsa set partconfig #originalpartname #newpartname #newpartid #newfilepath #newstabalizationtime #newpartdescription" 
 					messageEditPanel = "pm fcsa set editpartname " + currentPart.name + " " + p.name + " " + 
 							p.id + " " + p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
 					partsManager.sendCommand(messageEditPanel);
