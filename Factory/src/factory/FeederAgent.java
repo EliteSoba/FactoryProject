@@ -680,7 +680,7 @@ public class FeederAgent extends Agent implements Feeder {
 	/** ANIMATIONS 
 	 * @throws InterruptedException **/
 	private void DoStartFeeding(Part part) {
-		server.command("fa lm cmd startfeeding " + feederNumber);
+		server.command("fa fpm cmd startfeeding " + feederNumber);
 	
 		debug("Feeder " + feederNumber + " started feeding.");
 		try {
@@ -691,7 +691,7 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	private void DoStopFeeding() { 
-		server.command("fa lm cmd stopfeeding " + feederNumber);
+		server.command("fa fpm cmd stopfeeding " + feederNumber);
 		debug("stopped feeding.");
 		try {
 			animation.acquire();
@@ -717,7 +717,7 @@ public class FeederAgent extends Agent implements Feeder {
 		log.add(new LoggedEvent(
 				"Animation DoSwitchLane()"));
 
-		server.command("fa lm cmd switchlane " + feederNumber);
+		server.command("fa fpm cmd switchlane " + feederNumber);
 		debug("switching lane");
 		try {
 			animation.acquire();
