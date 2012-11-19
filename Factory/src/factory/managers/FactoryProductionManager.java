@@ -273,13 +273,13 @@ public class FactoryProductionManager extends Client {
 			}
 			else if (identifier.equals("partconfig")) {
 				Part part = partsList.get(pCmd.get(2));
-				part.name = pCmd.get(3);
-				part.id = Integer.parseInt(pCmd.get(4));
-				part.imagePath = pCmd.get(5);
-				part.nestStabilizationTime = Integer.parseInt(pCmd.get(6));
-				part.description = pCmd.get(7);
+				part.name = pCmd.get(2);
+				part.id = Integer.parseInt(pCmd.get(3));
+				part.imagePath = pCmd.get(4);
+				part.nestStabilizationTime = Integer.parseInt(pCmd.get(5));
+				part.description = pCmd.get(6);
 
-				System.out.println(part);
+				System.out.println("blah");
 				System.out.println(partsList.get(pCmd.get(2)));
 			}
 		}
