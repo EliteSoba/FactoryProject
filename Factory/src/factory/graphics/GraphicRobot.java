@@ -81,10 +81,9 @@ public class GraphicRobot extends GraphicAnimatedObject
 						theta += dtheta;
 					else
 						x += dx;
-					i = 4;
+					i = movementCheckingOrders.length;
 					break;
 				}
-				
 			case 1 : 				// move up
 				if(y > fy)
 				{
@@ -94,10 +93,9 @@ public class GraphicRobot extends GraphicAnimatedObject
 						theta += dtheta;
 					else
 						y -= dy;
-					i = 4;
+					i = movementCheckingOrders.length;
 					break;
 				}
-				
 			case 2 : 				// move left
 				if(x > fx)
 				{
@@ -107,10 +105,9 @@ public class GraphicRobot extends GraphicAnimatedObject
 						theta -= dtheta;
 					else
 						x -= dx;
-					i = 4;
+					i = movementCheckingOrders.length;
 					break;
 				}
-				
 			case 3 : 				// move down
 				if(y < fy)
 				{
@@ -120,10 +117,9 @@ public class GraphicRobot extends GraphicAnimatedObject
 						theta -= dtheta;
 					else
 						y += dy;
-					i = 4;
+					i = movementCheckingOrders.length;
 					break;
 				}
-				
 			}
 		}
 		
