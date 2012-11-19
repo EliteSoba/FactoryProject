@@ -116,6 +116,17 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				return true;
 			}
 			
+			if (actions.contains(StandInfo.NEED_EMPTY_TOP) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
+				putEmptyKitOnStand("topSlot");
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.NEED_EMPTY_BOTTOM) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
+				actions.remove(StandInfo.NEED_EMPTY_BOTTOM);
+				putEmptyKitOnStand("bottomSlot");
+				return true;
+			}
+			
 			if (actions.contains(StandInfo.NEED_INSPECTION_TOP) && (inspectionAreaClear == 1)) {
 				moveToInspectionSpot("topSlot");
 				return true;
@@ -146,16 +157,6 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				return true;
 			}
 			
-			if (actions.contains(StandInfo.NEED_EMPTY_TOP) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
-				putEmptyKitOnStand("topSlot");
-				return true;
-			}
-			
-			if (actions.contains(StandInfo.NEED_EMPTY_BOTTOM) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
-				actions.remove(StandInfo.NEED_EMPTY_BOTTOM);
-				putEmptyKitOnStand("bottomSlot");
-				return true;
-			}
 		}
 		
 		return false;

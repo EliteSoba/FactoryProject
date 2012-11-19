@@ -54,7 +54,7 @@ public class MasterControl {
 	TreeMap<String, PartHandler> partHandlers; 
 	TreeMap<String, Boolean> partOccupied;
 
-    // Static Lists of Known Clients, Agents, CommandTypes, and supported Commands
+    // Lists of Known Clients, Agents, CommandTypes, and supported Commands
 
 	private static final List<String> clients = Arrays.asList("fpm", "gm", "kam", "km", "lm", "pm", "multi");
 	private static final List<String> agents = Arrays.asList("ca", "cca", "fcsa", "fa", "ga", "kra", "la", "na", "pra", "sa", "va");
@@ -77,8 +77,6 @@ public class MasterControl {
 
 	private static final List<String> multiCmd_1 = Arrays.asList("addpartname", "rmpartname", "partconfig");
     private static final List<String> multiCmdDst_1 = Arrays.asList("km", "fpm");
-
-    private static final List<List<String>> multiCmdList = Arrays.asList(multiCmd_1);
 
     // MasterControl Server Socket
 
@@ -240,6 +238,9 @@ public class MasterControl {
 
 		partsRobot = new PartsRobotAgent(this, fcs, vision, stand, nestAgentListForPartsRobot); 
 	
+		fcs.setPartsRobot(partsRobot);
+		
+		
 		//Hacking References
 		conveyor.setKitRobot(kitRobot);
 		kitRobot.setStand(stand);
@@ -632,19 +633,18 @@ public class MasterControl {
 	private ArrayList<PartHandler> getDestinations(String myCmd){
 
 
-        for(List<String> l : multiCmdList){
-            if(l.contains(myCmd)){
-                ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
-                for(String dst : multiCmdDst_1){
-                    if(partHandlers.containsKey(dst)){
-                        returnAL.add(partHandlers.get(dst));
-                    }
-                }
-                return returnAL;
-            }
-        }
 
-        return null;
+		if(multiCmd_1.contains(myCmd)){
+            ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
+            for(String dst : multiCmdDst_1){
+                if(partHandlers.containsKey(dst)){
+                    returnAL.add(partHandlers.get(dst));
+                }
+            }
+            return returnAL;
+		} else {
+			return null;
+		}
 
 	}
 
@@ -823,7 +823,7 @@ public class MasterControl {
         MasterControl mc = new MasterControl(debug);
 
         //This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
-/*        long timeToQuit = System.currentTimeMillis() + 5000;
+        long timeToQuit = System.currentTimeMillis() + 5000;
         while (System.currentTimeMillis() < timeToQuit);
 
         Part p0 = new Part("eye",000,"desc","imgPath",2);
@@ -849,16 +849,40 @@ public class MasterControl {
         firstKit.listOfParts = partList;
 
         // Send the message that the FCS would send
-        //mc.partsRobot.msgMakeKit(firstKit);
+        mc.partsRobot.msgMakeKit(firstKit);
 
 
 
         timeToQuit = System.currentTimeMillis() + 2000;
         while (System.currentTimeMillis() < timeToQuit);
 
-            
-      		mc.n0b.msgYouNeedPart(p2);
-      		mc.n0t.msgYouNeedPart(p0);*/
+
+//        mc.n0b.msgYouNeedPart(p2);
+//        mc.n0t.msgYouNeedPart(p0);
+
+//        mc.n1t.msgYouNeedPart(p1);
+//        mc.n1b.msgYouNeedPart(p3);
+//        
+//        mc.n2t.msgYouNeedPart(p2);
+//        mc.n2b.msgYouNeedPart(p4);
+        
+//        mc.n2t.msgYouNeedPart(p2);
+//        mc.n2b.msgYouNeedPart(p4);
+//
+//        mc.n2t.msgYouNeedPart(p2);
+//        mc.n2b.msgYouNeedPart(p4);
+
+        
+//        mc.n3t.msgYouNeedPart(p0);
+//        mc.n3b.msgYouNeedPart(p4);
+        
+        
+//        mc.n1t.msgYouNeedPart(p1);
+//
+//        mc.n1b.msgYouNeedPart(p1);
+
+        //mc.n0b.msgYouNeedPart(p3);
+      //  mc.partsRobot.msgMakeKit(firstKit);
       		
       		//mc.n0b.msgYouNeedPart(p3);
 

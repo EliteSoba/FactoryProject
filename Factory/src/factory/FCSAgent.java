@@ -325,5 +325,14 @@ public class FCSAgent extends Agent implements FCS{
 			c.printStackTrace();
 		}
 	}
+	
+	/**
+	 * This function sets the partsRobot to the FCS
+	 * @param p
+	 */
+	public void setPartsRobot(PartsRobot p){
+		this.partsRobot = p;
+		
+	}
 
 }
