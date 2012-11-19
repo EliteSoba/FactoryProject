@@ -617,10 +617,19 @@ public class MasterControl {
     private boolean checkAgentCmd(ArrayList<String> pCmd){
 
         // These are commands going to Agents
-        if(pCmd.size() < 4 && !pCmd.get(2).equals("cnf")){
-            System.out.println("there must be a command");
-            return false;
+        if(!pCmd.get(2).equals("cnf")){
+            if(pCmd.size() < 4){
+                System.out.println("there must be a command");
+                return false;
+            }
+            if(!cmds.contains(pCmd.get(3))){
+                System.out.println("this is not a valid command please check wiki documentation for correct syntax.");
+                return false;
+
+            }
         }
+
+
 
         if(!clients.contains(pCmd.get(0)) && !agents.contains(pCmd.get(0))){
             System.out.println("source is not valid client or agent id");
@@ -637,12 +646,6 @@ public class MasterControl {
             return false;
 
         }
-        if(!cmds.contains(pCmd.get(3))){
-            System.out.println("this is not a valid command please check wiki documentation for correct syntax.");
-            return false;
-
-        }
-
 
         return true;
 
