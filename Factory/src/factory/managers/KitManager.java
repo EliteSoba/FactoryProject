@@ -270,6 +270,8 @@ public class KitManager extends Client implements WindowListener{
 	@Override
 	public void windowClosing(WindowEvent arg0) {
 		// TODO Auto-generated method stub
+		savePartData();
+		saveKitData();
 
 	}
 	@Override
