@@ -31,14 +31,14 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 	GantryRobot gantryRobot;*/
 	
 	public FactoryProductionPanel(JFrame FKAM) {
-		super(0);
+		super();
 		WIDTH = 1100;
 		isFactoryProductionManager = true;
 		
 		if (FKAM instanceof Client)
 			am = (Client)FKAM;
 		
-		/*belt = new GraphicConveyorBelt(0, 0, this);
+		belt = new GraphicConveyorBelt(0, 0, this);
 		station = new GraphicKittingStation(200, 191, this);
 		kitRobot = new GraphicKittingRobot(this, 70, 250);
 		
@@ -59,7 +59,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 			lane[i] = new GraphicLaneManager(510, 160*i + 50, i, this);
 		
 		partsRobot = new GraphicPartsRobot(WIDTH/2-200,HEIGHT/2,0,5,5,10,100,100,"Images/robot1.png");
-		gantryRobot = new GraphicGantryRobot(WIDTH-150,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");*/
+		gantryRobot = new GraphicGantryRobot(WIDTH-150,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
 		
 		(new Timer(delay, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
