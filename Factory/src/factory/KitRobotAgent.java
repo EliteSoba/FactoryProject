@@ -54,6 +54,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		if (!actions.contains(StandInfo.CLEAR_OFF_UNFINISHED_KITS)) {
 			actions.add(StandInfo.CLEAR_OFF_UNFINISHED_KITS);
 		}
+		stateChanged();
 	}
 	
 	public void msgNeedEmptyKitAtSlot(String pos) {
@@ -90,6 +91,13 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stateChanged();
 	}
 	
+	public void msgKitExported() {
+		debug("Received msgKitExported() From the Conveyor");
+		conveyor_state = ConveyorStatus.EMPTY;
+		stateChanged();
+	}
+	
+	/*
 	public void msgInspectionAreaStatus(int status) {
 		debug("Received msgInspectionAreaStatus() from the Stand with a status of "+status);
 		if (status < 2 && status >= 0) {
@@ -97,6 +105,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			stateChanged();
 		}
 	}
+	*/
 	
 	public void msgComeProcessAnalyzedKitAtInspectionSlot() {
 		debug("Received msgComeProcessAnalayzedKitAtInspectionSlot from Stand");
@@ -113,6 +122,11 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		synchronized(actions){
 			if (actions.contains(StandInfo.CLEAR_OFF_UNFINISHED_KITS)) {
 				clearOffStand();
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.KIT_BAD)) {
+				dumpKit();
 				return true;
 			}
 			
@@ -142,10 +156,6 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				return true;
 			}
 			
-			if (actions.contains(StandInfo.KIT_BAD)) {
-				dumpKit();
-				return true;
-			}
 			
 			if (actions.contains(StandInfo.KIT_GOOD) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
 				exportKit();

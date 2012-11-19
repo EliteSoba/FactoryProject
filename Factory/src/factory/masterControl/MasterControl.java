@@ -61,7 +61,7 @@ public class MasterControl {
 	private static final List<String> cmdTypes = Arrays.asList("cmd", "req", "get", "set", "cnf");
 	private static final List<String> cmds = Arrays.asList(
 
-            "makekits", "addkitname", "rmkitname", "addpartame",
+            "makekits", "addkitname", "rmkitname", "addpartname",
 			"rmpartname", "lanepowertoggle", "vibration", "kitcontent",
 			"startfeeding", "stopfeeding", "purgefeeder", "switchlane",
 			"purgetoplane", "purgebottomlane", "stopfactory", "pickuppurgebin",
@@ -327,11 +327,11 @@ public class MasterControl {
 
 		if(clients.contains(parsedCommand.get(1))){
             if(parsedCommand.get(1).equals("multi")){
-                clientCmd(parsedCommand);
+                return clientCmd(parsedCommand);
             } else {
                 for(PartHandler ph : partHandlerList){
                     if(ph.client_id.equals(parsedCommand.get(1))){
-                        clientCmd(parsedCommand);
+                        return clientCmd(parsedCommand);
                     }
                 }
                 return false; // This is called if in Debug mode and the client being sent to is not connected.
@@ -610,11 +610,10 @@ public class MasterControl {
                 }
 				return true;
 			}
+        }
 
-
-		} else if(b.equals("fpm")){
+		if(b.equals("fpm")){
             return (fpmPH != null && sendCmd(fpmPH, fullCmd));
-
         } else {
             if(fpmPH != null){
                 if(!sendCmd(fpmPH, fullCmd)){
@@ -826,35 +825,7 @@ public class MasterControl {
         long timeToQuit = System.currentTimeMillis() + 5000;
         while (System.currentTimeMillis() < timeToQuit);
 
-        Part p0 = new Part("eye",000,"desc","imgPath",2);
-        Part p1 = new Part("eye",000,"desc","imgPath",3);
-        Part p2 = new Part("shoe",001,"desc","imgPath",3);
-        Part p3 = new Part("shoe",001,"desc","imgPath",3);
-        Part p4 = new Part("sword",002,"desc","imgPath",4);
-        Part p5 = new Part("tentacle",003,"desc","imgPath",4);
-        Part p6 = new Part("tentacle",003,"desc","imgPath",4);
-        Part p7 = new Part("tentacle",003,"desc","imgPath",4);
-
-        List<Part> partList = new ArrayList<Part>();
-        partList.add(p0);
-        partList.add(p1);
-        partList.add(p2);
-        partList.add(p3);
-        partList.add(p4);
-        partList.add(p5);
-        partList.add(p6);
-        partList.add(p7);
-
-        KitConfig firstKit = new KitConfig();
-        firstKit.listOfParts = partList;
-
-        // Send the message that the FCS would send
-        mc.partsRobot.msgMakeKit(firstKit);
-
-
-
-        timeToQuit = System.currentTimeMillis() + 2000;
-        while (System.currentTimeMillis() < timeToQuit);
+       
 
 
 //        mc.n0b.msgYouNeedPart(p2);
