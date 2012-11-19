@@ -61,7 +61,7 @@ public class MasterControl {
 	private static final List<String> cmdTypes = Arrays.asList("cmd", "req", "get", "set", "cnf");
 	private static final List<String> cmds = Arrays.asList(
 
-            "makekits", "addkitname", "rmkitname", "addpartame",
+            "makekits", "addkitname", "rmkitname", "addpartname",
 			"rmpartname", "lanepowertoggle", "vibration", "kitcontent",
 			"startfeeding", "stopfeeding", "purgefeeder", "switchlane",
 			"purgetoplane", "purgebottomlane", "stopfactory", "pickuppurgebin",
