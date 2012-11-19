@@ -831,7 +831,7 @@ public class MasterControl {
         firstKit.listOfParts = partList;
 
         // Send the message that the FCS would send
-        //mc.partsRobot.msgMakeKit(firstKit);
+        mc.partsRobot.msgMakeKit(firstKit);
 
 
 
