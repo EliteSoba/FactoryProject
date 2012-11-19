@@ -198,6 +198,13 @@ public class LaneAgent extends Agent implements Lane {
 		myFeeder = f;
 	}
 
+	@Override
+	public void msgFeedingParts(int numParts) {
+		debug("msgFeedingParts()");
+		myNest.msgFeedingParts(numParts);
+		stateChanged();
+	}
+
 
 
 

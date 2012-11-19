@@ -21,6 +21,7 @@ public class NestAgent extends Agent implements Nest {
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
 	public ArrayList<Integer> partRemovals = new ArrayList<Integer>();
 	public Lane myLane;
+	public int numberOfParts = 0;
 	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED, PART_REMOVED}
 	public NestState nestState = NestState.NORMAL;
 	public enum MyPartState {  NEEDED, REQUESTED }
@@ -46,6 +47,12 @@ public class NestAgent extends Agent implements Nest {
 		myParts.add(new MyPart(part));
 		stateChanged();
 	}
+	public void msgFeedingParts(int numParts) {
+		this.numberOfParts += numParts;
+		debug("msgFeedingParts()");
+		stateChanged();
+	}
+
 	
 	/** 
 	 * Message from the animation notifying the NestAgent 
@@ -132,7 +139,8 @@ public class NestAgent extends Agent implements Nest {
 
 		nestState = NestState.NORMAL; 
 		myLane.msgNestHasDestabilized(); // it has also made the nest unstable
-		myLane.msgPartRobotHasRemovedParts(numberOfParts);
+		
+		// myLane.msgPartRobotHasRemovedParts(numberOfParts); // no need to go all the way to the Feeder, keep track of the number of parts here!
 		stateChanged();
 	}
 	public void tellMyLaneIHaveBecomeStable() {
@@ -170,6 +178,7 @@ public class NestAgent extends Agent implements Nest {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	
 
 	
