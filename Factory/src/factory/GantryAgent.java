@@ -103,7 +103,7 @@ public class GantryAgent extends Agent implements Gantry {
 	private void DoPickupPurgeBin(MyBin b) {
 		print("Picking up Purge Bin");
 		if(!unitTesting){
-			server.command("ga gm cmd pickuppurgebin " + b.fdr.getFeederNumber());
+			server.command("ga fpm cmd pickuppurgebin " + b.fdr.getFeederNumber());
 			try{
 				animation.acquire();
 			}
@@ -120,7 +120,7 @@ public class GantryAgent extends Agent implements Gantry {
 	private void DoGoGetNewBin(MyBin b) {
 		print("Going to get new Bin");
 		if(!unitTesting){
-			server.command("ga gm cmd getnewbin " + b.pt.name);
+			server.command("ga fpm cmd getnewbin " + b.pt.name);
 			try{
 				animation.acquire();
 			}
@@ -137,7 +137,7 @@ public class GantryAgent extends Agent implements Gantry {
 	private void DoBringNewBin(MyBin b) {
 		print("Bringing new Bin to the feeder");
 		if(!unitTesting){
-			server.command("ga gm cmd bringbin " + b.fdr.getFeederNumber());
+			server.command("ga fpm cmd bringbin " + b.fdr.getFeederNumber());
 			try{
 				animation.acquire();
 			}
