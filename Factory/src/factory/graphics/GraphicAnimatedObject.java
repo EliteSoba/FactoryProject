@@ -3,6 +3,13 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
+/**
+ * @author George Li<p>
+ * <b>{@code GraphicAnimatedObject.java}</b><br>
+ * This is a parent class for GraphicNest and GraphicRobot.<br>
+ * Contains generic data and methods for position, movement, angle, and images.
+ */
+
 class GraphicAnimatedObject
 {
 	protected int x, y;							// current position
