@@ -198,6 +198,10 @@ public class FactoryProductionManager extends Client {
 				int nestIndex = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).cameraFlash(nestIndex);
 			}
+			
+			else if (identifier.equals("takepictureofinspection")) {
+				((FactoryProductionPanel) graphics).takePictureOfInspectionSlot();
+			}
 
 
 			//Swing Receive Commands
