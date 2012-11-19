@@ -101,7 +101,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 	////Animations
 	private void DoKitExportAnimation() {
 		debug("doing DoKitExport Animation");
-		server.command("ca kam cmd exportkitfromcell");
+		server.command("ca fpm cmd exportkitfromcell");
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
