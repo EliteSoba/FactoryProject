@@ -167,6 +167,14 @@ public class KitManager extends Client implements WindowListener{
 
 
 		}
+		else if(action.equals("mcs")){
+			   try {
+					this.server.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				   System.exit(0);
+			   }
 		else 
 			System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 

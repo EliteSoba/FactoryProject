@@ -2,6 +2,8 @@ package factory.graphics;
 
 import java.awt.*;
 
+import javax.swing.ImageIcon;
+
 /**
  * @author Tobias Lee <p>
  * <b>{@code GraphicKittingStation.java}</b> (80x300)<br>
@@ -26,6 +28,7 @@ public class GraphicKittingStation {
 	
 	/**The maximum number of kits a station can hold*/
 	public static final int MAX_KITS = 2;
+	public static final Image TRASH_CHUTE_IMAGE = new ImageIcon("Images/trashChute.png").getImage();
 	
 	/**
 	 * Creates a Kit Station at the given x and y coordinates
@@ -50,13 +53,14 @@ public class GraphicKittingStation {
 	 * @param g The specified graphics window
 	 */
 	public void paint(Graphics g) {
+		// Draw kitting station
 		g.setColor(new Color(100, 50, 0));
 		g.fillRoundRect(x, y, 50, 300, 20, 20);
 		
-		g.setColor(Color.black);
-		g.fillOval(x-15, y+320, 80, 80);
-		g.setColor(Color.white);
-		g.drawString("TRASH", x+5, y+365);
+		// Draw trash chute
+		g.drawImage(TRASH_CHUTE_IMAGE, x-15, y+313, null);
+
+		// Draw kits
 		drawKits(g);
 		
 		//Camera flash

@@ -286,8 +286,14 @@ public void doCommand(ArrayList<String> pCmd) {
 					error.concat(parsedCommand.get(i));
 				System.out.println(error);
 			}
-			else if(action.equals("mcs"))
-				   System.exit(0);
+			else if(action.equals("mcs")){
+				   try {
+						this.server.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					   System.exit(0);
+				   }
 			else 
 				System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 
