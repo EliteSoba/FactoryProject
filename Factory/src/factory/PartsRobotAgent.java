@@ -147,7 +147,9 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	public void msgClearLineOfSight(Nest nestOne, Nest nestTwo) {
 		debug("Received msgClearLineOfSight("+nestOne+", "+nestTwo+")");
 		for(int i = 0; i < nests.size(); i++){
+			
 			if(nests.get(i).nest == nestOne || nests.get(i).nest == nestTwo){
+				debug("############" + nests.get(i));
 				nests.get(i).state = NestState.PICTURE_NEEDED;
 			}
 		}
@@ -470,7 +472,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armOne = null;
-					DoAnimationPutPartInKit(1);
+					DoAnimationPutPartInKit(0);
 				}
 			}
 		}
@@ -484,7 +486,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armTwo = null;
-					DoAnimationPutPartInKit(2);
+					DoAnimationPutPartInKit(1);
 				}
 			}
 		}
@@ -498,7 +500,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armThree = null;
-					DoAnimationPutPartInKit(3);
+					DoAnimationPutPartInKit(2);
 				}
 			}
 		}
@@ -512,7 +514,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armFour = null;
-					DoAnimationPutPartInKit(4);
+					DoAnimationPutPartInKit(3);
 				}
 			}
 		}
@@ -529,7 +531,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 							this.bottomSlot.listOfParts.remove(i);
 							placed = true;
 							this.armOne = null;
-							DoAnimationPutPartInKit(1);
+							DoAnimationPutPartInKit(0);
 						}
 					}
 				}
@@ -543,7 +545,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 							this.bottomSlot.listOfParts.remove(i);
 							placed = true;
 							this.armTwo = null;
-							DoAnimationPutPartInKit(2);
+							DoAnimationPutPartInKit(1);
 						}
 					}
 				}
@@ -557,7 +559,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 							this.bottomSlot.listOfParts.remove(i);
 							placed = true;
 							this.armThree = null;
-							DoAnimationPutPartInKit(3);
+							DoAnimationPutPartInKit(2);
 						}
 					}
 				}
@@ -571,7 +573,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 							this.bottomSlot.listOfParts.remove(i);
 							placed = true;
 							this.armFour = null;
-							DoAnimationPutPartInKit(4);
+							DoAnimationPutPartInKit(3);
 						}
 					}
 				}

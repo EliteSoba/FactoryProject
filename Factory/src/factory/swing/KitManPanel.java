@@ -659,7 +659,7 @@ public class KitManPanel extends JPanel{
 						basePanel2.setVisible(false);
 
 						//"km fpm set kitcontent #oldkitname #kitname #partname1 #partname2 ... #partname8"
-						set = "km fpm set kitcontent " + (String)mKitComboBox.getSelectedItem() + " " + mKitName.getText() +
+						set = "km fpm set kitcontent " + (String)mKitComboBox.getSelectedItem() + " " + mKitName.getText() + " " +
 								(String)mItemComboBox1.getSelectedItem() + " " + (String)mItemComboBox2.getSelectedItem() + " " +  
 								(String)mItemComboBox3.getSelectedItem() + " " + (String)mItemComboBox4.getSelectedItem() + " " + 
 								(String)mItemComboBox5.getSelectedItem() + " " + (String)mItemComboBox6.getSelectedItem() + " " + 
@@ -668,7 +668,7 @@ public class KitManPanel extends JPanel{
 
 						//"km fcsa set kitcontent #oldkitname #kitname #partname1 #partname2 ... #partname8"
 
-						set = "km fcsa set kitcontent " + (String)mKitComboBox.getSelectedItem() + " " + mKitName.getText() +
+						set = "km fcsa set kitcontent " + (String)mKitComboBox.getSelectedItem() + " " + mKitName.getText() + " " +
 								(String)mItemComboBox1.getSelectedItem() + " " + (String)mItemComboBox2.getSelectedItem() + " " +  
 								(String)mItemComboBox3.getSelectedItem() + " " + (String)mItemComboBox4.getSelectedItem() + " " + 
 								(String)mItemComboBox5.getSelectedItem() + " " + (String)mItemComboBox6.getSelectedItem() + " " + 

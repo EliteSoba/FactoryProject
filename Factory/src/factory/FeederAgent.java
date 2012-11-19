@@ -29,7 +29,6 @@ public class FeederAgent extends Agent implements Feeder {
 	
 	private final static int kNUM_PARTS_FED = 15;
 	private final static int kOK_TO_PURGE_TIME = 4;
-	private String name;
 	public int feederNumber;
 	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());
 	
@@ -117,7 +116,6 @@ public class FeederAgent extends Agent implements Feeder {
 		this.bottomLane = new MyLane(bottom);
 		this.gantry = g;
 		this.vision = v;
-		this.name = "f"+slot;
 		this.feederNumber = slot;
 	}
 
@@ -678,11 +676,7 @@ public class FeederAgent extends Agent implements Feeder {
 		// need a timer so that we don't immediately purge the new ones
 	}
 
-	/** This method returns the name of the FeederAgent **/
-	public String getName() {
-		return name;
-	}
-
+	
 	/** This method sets up the pointers to this Feeder's Lanes. **/
 	public void setUpLanes(Lane top,Lane bottom) 
 	{

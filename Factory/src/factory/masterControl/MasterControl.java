@@ -72,7 +72,8 @@ public class MasterControl {
 
 	// The following are lists of commands that are to be received by multiple clients.
 
-	private static final List<String> partCmds = Arrays.asList("addpartname", "rmpartname", "partconfig");
+	private static final List<String> multiCmd_1 = Arrays.asList("addpartname", "rmpartname", "partconfig");
+    private static final List<String> multiCmdDst_1 = Arrays.asList("km", "fpm");
 
     // No longer necessary.
 	//private static final List<String> kitCmds = Arrays.asList("addkitname", "rmkitname", "kitcontent");
@@ -589,8 +590,14 @@ public class MasterControl {
 
 
 
-		if(partCmds.contains(myCmd)){
-			return new ArrayList<PartHandler>(Arrays.asList(partHandlers.get("km"), partHandlers.get("fpm")));
+		if(multiCmd_1.contains(myCmd)){
+            ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
+            for(String dst : multiCmdDst_1){
+                if(partHandlers.containsKey(dst)){
+                    returnAL.add(partHandlers.get(dst));
+                }
+            }
+            return returnAL;
 		} else {
 			return null;
 		}
@@ -792,8 +799,23 @@ public class MasterControl {
       		
       		
       		mc.n0t.msgYouNeedPart(p0);
-      		mc.n0b.msgYouNeedPart(p1);
       		
+      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
+      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
+      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
+      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
+      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
+      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
+      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
+      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
+      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
+      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
+      		mc.n0t.msgPartsRobotGrabbingPartFromNest(1);
+
+      		
+//      		mc.n0t.msgYouNeedPart(p3);
+//      		
+//      		
 //      		mc.n1t.msgYouNeedPart(p2);
 //      		mc.n1b.msgYouNeedPart(p3);
 //      		
