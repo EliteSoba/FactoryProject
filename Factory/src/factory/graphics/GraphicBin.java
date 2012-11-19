@@ -32,6 +32,10 @@ public class GraphicBin{
 		//binItemsStackImage = new ImageIcon("Images/binCrate.png");
 		binImage = new ImageIcon("Images/binCrate.png");
 	}
+	
+	public String getPartName() {
+		return partName;
+	}
 
 	public ArrayList<GraphicItem> getBinItems(){
 		return binItems;
