@@ -15,18 +15,18 @@ import factory.Part;
 public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 	
 	public GantryRobotPanel(JFrame GR) {
-		super(750);
+		super();
 		WIDTH = 300;
 		isGantryRobotManager = true;
 		
 		if (GR instanceof Client)
 			am = (Client)GR;
 		
-		/*lane = new GraphicLaneManager [4];
+		lane = new GraphicLaneManager [4];
 		for (int i = 0; i < lane.length; i++)
 			lane[i] = new GraphicLaneManager(-200, 160*i + 50, i, this);
 		
-		gantryRobot = new GraphicGantryRobot(WIDTH-125,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");*/
+		gantryRobot = new GraphicGantryRobot(WIDTH-125,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
 		
 		(new Timer(delay, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));

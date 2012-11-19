@@ -15,7 +15,7 @@ import factory.*;
 public class LanePanel extends GraphicPanel implements ActionListener{
 	
 	public LanePanel(JFrame LM) {
-		super(485);
+		super(/*485/**/);
 		isLaneManager = true;
 		
 		WIDTH = 450;
@@ -24,7 +24,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 			am = (Client)LM;
 		// Parts robot client
 		// Add 8 nests
-		/*nests = new ArrayList<GraphicNest>();	
+		nests = new ArrayList<GraphicNest>();	
 		for(int i = 0; i < 8; i++)
 		{
 			GraphicNest newNest = new GraphicNest(35,i*80+50,0,0,0,0,75,75,"Images/nest3x3.png");
@@ -35,7 +35,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		}
 		lane = new GraphicLaneManager [4];
 		for (int i = 0; i < lane.length; i++)
-			lane[i] = new GraphicLaneManager(35, 160*i + 50, i, this);*/
+			lane[i] = new GraphicLaneManager(35, 160*i + 50, i, this);
 		
 		(new Timer(delay, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));

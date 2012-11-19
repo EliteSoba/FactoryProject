@@ -242,9 +242,6 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 				DoMovePartsRobotToCenter();
 				return true;
 			}
-			debug("###################### " + !ArmsEmpty());
-			debug("###################### " + this.position);
-			debug("###################### " + this.standState);
 			if(!ArmsEmpty() && this.position == PartsRobotPositions.CENTER && this.standState == StandState.DOING_NOTHING){
 				DoAskPermisionToDeliverParts();
 				return true;

@@ -105,6 +105,7 @@ public class FeederAgent extends Agent implements Feeder {
 	/** MESSAGES **/
 	public void msgPartRobotHasRemovedPartsFromLane(int numberOfParts, Lane lane) {
 		/** TODO: Make this do something */
+		
 	}
 
 	public void msgNestHasStabilized(Lane lane) {
@@ -254,7 +255,7 @@ public class FeederAgent extends Agent implements Feeder {
 			}
 			if (topLane.part != null)
 			{
-				if (topLane.part.id == currentPart.id)
+				if (topLane.part == currentPart) // topLane.part is set in the processFeederParts() method
 				{
 					System.out.println("0.5a, lanestate = " + topLane.state);
 					if (topLane.state == MyLaneState.EMPTY || topLane.state == MyLaneState.CONTAINS_PARTS)
@@ -275,26 +276,29 @@ public class FeederAgent extends Agent implements Feeder {
 					return true;
 				}
 			} // note: bottomeLane.part should never be null
-			
-			if (bottomLane.part.id == currentPart.id)
-			{
-				System.out.println("0.5b");
-				if (bottomLane.state == MyLaneState.EMPTY || bottomLane.state == MyLaneState.CONTAINS_PARTS)
-				{
-					System.out.println("0.6b");
-					// check to see if the lane diverter needs to switch
-					if (diverter == DiverterState.FEEDING_TOP) {
-						System.out.println("0.7b");
-						diverter = DiverterState.FEEDING_BOTTOM;
-						DoSwitchLane();   // Animation to switch lane
-					}
 
-					System.out.println("0.8b");
-					state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
-					StartFeeding();
+			if (bottomLane.part != null) // bottomLane.part is set in the processFeederParts() method
+			{
+				if (bottomLane.part == currentPart)
+				{
+					System.out.println("0.5b");
+					if (bottomLane.state == MyLaneState.EMPTY || bottomLane.state == MyLaneState.CONTAINS_PARTS)
+					{
+						System.out.println("0.6b");
+						// check to see if the lane diverter needs to switch
+						if (diverter == DiverterState.FEEDING_TOP) {
+							System.out.println("0.7b");
+							diverter = DiverterState.FEEDING_BOTTOM;
+							DoSwitchLane();   // Animation to switch lane
+						}
+
+						System.out.println("0.8b");
+						state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
+						StartFeeding();
+						return true;
+					}
 					return true;
 				}
-				return true;
 			}
 			return true;
 		}
@@ -597,7 +601,7 @@ public class FeederAgent extends Agent implements Feeder {
 		// NOT NEEDED:
 //		feederEmptyTimer.schedule(new TimerTask(){
 //			public void run(){	
-//					/** TODO: FIX THIS CODE, PERHAPS USE MSGING FROM THE ANIMATION. **/
+//					/** */
 //				partResettleTimer.schedule(new TimerTask() {
 //					public void run() {
 //						if (currentLane == topLane)
