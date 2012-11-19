@@ -42,11 +42,13 @@ public class NestAgent extends Agent implements Nest {
 		nestState = NestState.NEEDS_TO_DUMP;
 		stateChanged();
 	}
+	
 	public void msgYouNeedPart(Part part) {
 		debug("received msgYouNeedPart("+part.name+").");
 		myParts.add(new MyPart(part));
 		stateChanged();
 	}
+	
 	public void msgFeedingParts(int numParts) {
 		this.numberOfParts += numParts;
 		debug("msgFeedingParts()");
@@ -81,7 +83,9 @@ public class NestAgent extends Agent implements Nest {
 	public void msgPartsRobotGrabbingPartFromNest(int numPartsRemoved) {
 		debug("PARTS ROBOT GRABS PART FROM NEST");
 		
-		if(--this.numberOfParts < 0)
+		this.numberOfParts--;
+		
+		if(this.numberOfParts < 0)
 			this.numberOfParts = 0;
 		
 		nestState = NestState.PART_REMOVED;
@@ -128,7 +132,7 @@ public class NestAgent extends Agent implements Nest {
 		
 		if (this.numberOfParts <= 0)
 		{
-			askLaneToSendParts(this.myCurrentPart);
+			tellMyLaneIAmOutOfParts();
 			return true;
 		}
 
@@ -143,13 +147,19 @@ public class NestAgent extends Agent implements Nest {
 		stateChanged();
 	}
 	
-	public void tellMyLaneIHaveBecomeStable() {
+	private void tellMyLaneIAmOutOfParts() {
+		nestState = NestState.NORMAL; // we don't want to continue sending this message over and over again
+		myLane.msgNestIsOutOfParts();
+		stateChanged();
+	}
+	
+	private void tellMyLaneIHaveBecomeStable() {
 		nestState = NestState.NORMAL; // we don't want to continue sending this message over and over again
 		myLane.msgNestHasStabilized();
 		stateChanged();
 	}
 	
-	public void tellMyLaneIHaveBecomeUnstable() {
+	private void tellMyLaneIHaveBecomeUnstable() {
 		nestState = NestState.NORMAL; // we don't want to continue sending this message over and over again
 		myLane.msgNestHasDestabilized();
 		stateChanged();

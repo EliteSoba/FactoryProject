@@ -204,6 +204,12 @@ public class LaneAgent extends Agent implements Lane {
 		myNest.msgFeedingParts(numParts);
 		stateChanged();
 	}
+	
+	public void msgNestIsOutOfParts() {
+		debug("msgNestIsOutOfParts()");
+		myFeeder.msgLaneIsOutOfParts();
+		stateChanged();
+	}
 
 
 

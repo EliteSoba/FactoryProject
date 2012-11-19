@@ -123,10 +123,9 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** MESSAGES **/
-	public void msgPartRobotHasRemovedPartsFromLane(int numberOfParts, Lane lane) {
-		/** TODO: Make this do something */	
+	public void msgLaneIsOutOfParts(Lane lane) {
+		
 	}
-
 	public void msgNestHasStabilized(Lane lane) {
 		myNestsHaveBeenChecked = false;
 		if(topLane.lane == lane)
@@ -786,6 +785,9 @@ public class FeederAgent extends Agent implements Feeder {
 	{
 		return this.feederNumber;
 	}
+
+
+	
 
 
 
