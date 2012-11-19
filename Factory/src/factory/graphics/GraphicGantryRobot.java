@@ -74,30 +74,54 @@ class GraphicGantryRobot extends GraphicRobot
 	
 	/**
 	 * Gets the feeder the gantry robot should move to (zero-based indexing).
-	 * @return
+	 * @return destinationFeeder
 	 */
 	public int getDestinationFeeder()
 	{
 		return destinationFeeder;
 	}
 	
+	/**
+	 * Checks if gantry robot has a bin.
+	 * @return hasBin
+	 */
 	public boolean hasBin()
 	{
 		return hasBin;
 	}
+	
+	/**
+	 * Sets the image path of the part being carried in the bin.
+	 * @param path
+	 */
 	public void setPartPath(String path)
 	{
 		partPath = path;
 	}
+	
+	/**
+	 * Gets the image path of the part being carried in the bin.
+	 * @return partPath
+	 */
 	public String getPartPath()
 	{
 		return partPath;
 	}
+	
+	/**
+	 * Sets the gantry robot's bin to the provided bin.
+	 * @param init_bin
+	 */
 	public void giveBin(GraphicBin init_bin)
 	{
 		bin = init_bin;
 		hasBin = true;
 	}
+	
+	/**
+	 * Gets the gantry robot's bin.
+	 * @return bin
+	 */
 	public GraphicBin popBin()
 	{
 		hasBin = false;
