@@ -19,6 +19,8 @@ public class GraphicItem {
 	private int vx;
 	/**The vertical velocity of the Item*/
 	private int vy;
+	/**The Item's image path*/
+	private String imagePath;
 	/**The Item's image*/
 	private ImageIcon image;
 	/**The number of horizontal steps down the Lane*/
@@ -37,7 +39,8 @@ public class GraphicItem {
 	public GraphicItem(int x, int y, String imagepath) {
 		this.x = x;
 		this.y = y;
-		image = new ImageIcon(imagepath);
+		imagePath = imagepath;
+		image = new ImageIcon(imagePath);
 		
 		//Related to Lane
 		vx = 0;
@@ -213,6 +216,14 @@ public class GraphicItem {
 	 */
 	public ImageIcon getImage() {
 		return image;
+	}
+	
+	/**
+	 * Gets the image path of the Item
+	 * @return The image path of the Item
+	 */
+	public String getImagePath() {
+		return imagePath;
 	}
 	
 }

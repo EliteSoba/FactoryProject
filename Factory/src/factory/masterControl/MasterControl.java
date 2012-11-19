@@ -141,6 +141,9 @@ public class MasterControl {
 		// Instantiate the Gantry
 		gantry = new GantryAgent(this);
 
+		// Instantiate the Stand
+		stand = new StandAgent(this, null); 
+		
 		// Instantiate the Vision
 		vision = new VisionAgent(partsRobot,stand,this);
 
@@ -169,8 +172,6 @@ public class MasterControl {
 		// Instantiate the KitRobot
 		kitRobot = new KitRobotAgent(this,conveyor);
 
-		// Instantiate the Stand
-		//stand = new StandAgent(); // bad code
 
 
 		// Instantiate the FCS
@@ -222,6 +223,7 @@ public class MasterControl {
 		stand.setVision(vision);
 		stand.setPartsRobot(partsRobot);
 		conveyorController.setConveyor(conveyor);
+		stand.setKitRobot(kitRobot);
 
 		
 		
@@ -230,7 +232,7 @@ public class MasterControl {
 		agentTreeMap.put("ga", gantry );
 		agentTreeMap.put("kra", kitRobot);
 		agentTreeMap.put("pra", partsRobot);
-		//agentTreeMap.put("sa", stand);
+		agentTreeMap.put("sa", stand);
 		agentTreeMap.put("va", vision);
 		agentTreeMap.put("fcsa", fcs);
 
@@ -295,7 +297,12 @@ public class MasterControl {
 
 
 		if(clients.contains(parsedCommand.get(1))){
-			return clientCmd(parsedCommand);
+			for(PartHandler ph : partHandlerList){
+                if(ph.client_id.equals(parsedCommand.get(1))){
+                    clientCmd(parsedCommand);
+                }
+            }
+            return false;                                                 // This is called if in Debug mode and the client being sent to is not connected.
 		} else if(agents.contains(parsedCommand.get(1))) {
 			return agentCmd(parsedCommand);
 		} else if(parsedCommand.get(1).equals("mcs")) {
@@ -615,10 +622,19 @@ public class MasterControl {
     private boolean checkAgentCmd(ArrayList<String> pCmd){
 
         // These are commands going to Agents
-        if(pCmd.size() < 4 && !pCmd.get(2).equals("cnf")){
-            System.out.println("there must be a command");
-            return false;
+        if(!pCmd.get(2).equals("cnf")){
+            if(pCmd.size() < 4){
+                System.out.println("there must be a command");
+                return false;
+            }
+            if(!cmds.contains(pCmd.get(3))){
+                System.out.println("this is not a valid command please check wiki documentation for correct syntax.");
+                return false;
+
+            }
         }
+
+
 
         if(!clients.contains(pCmd.get(0)) && !agents.contains(pCmd.get(0))){
             System.out.println("source is not valid client or agent id");
@@ -635,12 +651,6 @@ public class MasterControl {
             return false;
 
         }
-        if(!cmds.contains(pCmd.get(3))){
-            System.out.println("this is not a valid command please check wiki documentation for correct syntax.");
-            return false;
-
-        }
-
 
         return true;
 
@@ -698,7 +708,7 @@ public class MasterControl {
 
 	private void connectAllSockets(int debugnum){
 		int numConnected = 0;
-		int numToConnect = (debugnum > 0 ? debugnum : clients.size());
+		int numToConnect = (debugnum > 0 ? debugnum : (clients.size()-1));
 		while(numConnected != numToConnect){
 			try{
 				Socket s = myServerSocket.accept();
@@ -733,8 +743,8 @@ public class MasterControl {
 
 	public static void main(String args[]){
 
-        System.out.print("DEBUG MODE : Enter number of clients to connect.");
-        System.out.print("PRODUCTION MODE : Enter 0.");
+        System.out.println("DEBUG MODE : Enter number of clients to connect.");
+        System.out.println("PRODUCTION MODE : Enter 0.");
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -750,44 +760,49 @@ public class MasterControl {
 
         MasterControl mc = new MasterControl(debug);
 
-/*		//This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
-		long timeToQuit = System.currentTimeMillis() + 5000;
-		while (System.currentTimeMillis() < timeToQuit);
+      //This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
+      		long timeToQuit = System.currentTimeMillis() + 5000;
+      		while (System.currentTimeMillis() < timeToQuit);
 
-		// TEMPORARY, FOR TESTING PURPOSES:
-		Part p0 = new Part("eye",000,"desc","imgPath",2);
-		Part p1 = new Part("eye",000,"desc","imgPath",3);
-		Part p2 = new Part("shoe",001,"desc","imgPath",3);
-		Part p3 = new Part("shoe",001,"desc","imgPath",3);
-		Part p4 = new Part("sword",002,"desc","imgPath",4);
-		Part p5 = new Part("tentacle",002,"desc","imgPath",4);
+      		// TEMPORARY, FOR TESTING PURPOSES:
+      		Part p0 = new Part("eye",000,"desc","imgPath",2);
+      		Part p1 = new Part("eye",000,"desc","imgPath",3);
+      		Part p2 = new Part("shoe",001,"desc","imgPath",3);
+      		Part p3 = new Part("shoe",001,"desc","imgPath",3);
+      		Part p4 = new Part("sword",002,"desc","imgPath",4);
+      		Part p5 = new Part("tentacle",002,"desc","imgPath",4);
+      		
+      		List<Part> partList = new ArrayList<Part>();
+      		partList.add(p0);
+      		partList.add(p1);
+      		partList.add(p2);
+      		partList.add(p3);
+      		partList.add(p4);
+      		partList.add(p5);
+      		
+      		
+      		mc.n0t.msgYouNeedPart(p0);
+      		mc.n0b.msgYouNeedPart(p1);
+      		
+      		mc.n1t.msgYouNeedPart(p2);
+      		mc.n1b.msgYouNeedPart(p3);
+      		
+      		mc.n2t.msgYouNeedPart(p4);
+      		mc.n2b.msgYouNeedPart(p5);
+      		
+      
 		
-		List<Part> partList = new ArrayList<Part>();
-		partList.add(p0);
-		partList.add(p1);
-		partList.add(p2);
-		partList.add(p3);
-		partList.add(p4);
-		partList.add(p5);*/
 		
-		//mc.n0t.msgYouNeedPart(p0);
-
-		// shortcut testing
-		//	public Part(String n,int i,String d,String p,double t) {
-
-		//mc.kitRobot.msgNeedEmptyKitAtSlot("topSlot");
-		
-		/*
-		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
-
-		mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
-		
-		// TESTING PARTSROBOT:
-		KitConfig kc = new KitConfig();
-		kc.listOfParts = partList;
-		mc.partsRobot.topSlot = kc; // stand TOP SLOT position
-
-		mc.partsRobot.msgHereArePartCoordinatesForNest(mc.n0t,p0,0);
+//		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
+//
+//		mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
+//		
+//		// TESTING PARTSROBOT:
+//		KitConfig kc = new KitConfig();
+//		kc.listOfParts = partList;
+//		mc.partsRobot.topSlot = kc; // stand TOP SLOT position
+//
+//		mc.partsRobot.msgHereArePartCoordinatesForNest(mc.n0t,p0,0);
 		
 		
 		// partsRobot.armOne,partsRobot.armTwo //instances of part object, must be instantiated
@@ -827,7 +842,7 @@ public class MasterControl {
 		// should make the gantry go get a bin of parts
 		// should call DoSwitchLane() and then DoStartFeeding()
 		 
-		 */
+		 
 	}
 
 }

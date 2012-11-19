@@ -13,4 +13,5 @@ public interface Nest {
 	void msgYouNeedPart(Part part);
 	
 	void msgPartsRobotGrabbingPartFromNest(int coordinate);
+	void msgFeedingParts(int numParts);
 }

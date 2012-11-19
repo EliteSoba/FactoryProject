@@ -37,6 +37,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton feedLane1, feedLane2, purgeLane1, purgeLane2, purgeFeeder;
 	JTextField partName;
 	JTextField itemIndex;
+	JButton popItemToKit;
 	
 	public ControlPanel(GraphicFactoryProductionManager fpm) {
 		//Constructor
@@ -51,6 +52,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		partsRobotNest1 = new JButton("Nest 1 Full");
 		partsRobotNest2 = new JButton("Nest 2 Full");
 		partsRobotStation = new JButton("Station");
+		popItemToKit = new JButton("Pop Item to Kit");
 		gantryRobotGoToStart = new JButton("Go to Start");
 		gantryRobotGetBin = new JButton("Fetch a Bin");
 		gantryRobotFeeder1Dropoff = new JButton("Feeder 1 Dropoff");
@@ -79,6 +81,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.addButton(partsRobotNest1);
 		this.addButton(partsRobotNest2);
 		this.addButton(partsRobotStation);
+		this.addButton(popItemToKit);
 		this.addButton(partsRobotGoToCenter);
 		this.addButton(feedLane1);
 		this.addButton(feedLane2);
@@ -124,6 +127,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 			am.moveRobotToCenter();
 		else if(source == partsRobotStation)
 			am.moveRobotToStation();
+		else if(source == popItemToKit)
+			am.popItemToKit(Integer.parseInt(itemIndex.getText()));
 		else if(source == feedLane1)
 			am.feedLane(0);	//FEEDS THE LANE! Lane 1-8, NOT 0-7
 		else if(source == feedLane2)

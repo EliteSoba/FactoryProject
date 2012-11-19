@@ -19,10 +19,11 @@ public class NestAgent extends Agent implements Nest {
 
 	/** DATA **/
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
-	public ArrayList<Integer> partRemovals = new ArrayList<Integer>();
 	public Lane myLane;
+	public int numberOfParts = 0;
 	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED, PART_REMOVED}
 	public NestState nestState = NestState.NORMAL;
+	public MyPart myCurrentPart;
 	public enum MyPartState {  NEEDED, REQUESTED }
 	public class MyPart {
 		public Part pt;
@@ -41,11 +42,19 @@ public class NestAgent extends Agent implements Nest {
 		nestState = NestState.NEEDS_TO_DUMP;
 		stateChanged();
 	}
+	
 	public void msgYouNeedPart(Part part) {
 		debug("received msgYouNeedPart("+part.name+").");
 		myParts.add(new MyPart(part));
 		stateChanged();
 	}
+	
+	public void msgFeedingParts(int numParts) {
+		this.numberOfParts += numParts;
+		debug("msgFeedingParts()");
+		stateChanged();
+	}
+
 	
 	/** 
 	 * Message from the animation notifying the NestAgent 
@@ -71,8 +80,14 @@ public class NestAgent extends Agent implements Nest {
 	 * Message notifying the NestAgent that the 
 	 * PartsRobot has grabbed one of the parts from its nest.
 	 */
-	public void msgPartsRobotGrabbingPartFromNest(int coordinate) {
+	public void msgPartsRobotGrabbingPartFromNest(int numPartsRemoved) {
 		debug("PARTS ROBOT GRABS PART FROM NEST");
+		
+		this.numberOfParts--;
+		
+		if(this.numberOfParts < 0)
+			this.numberOfParts = 0;
+		
 		nestState = NestState.PART_REMOVED;
 		stateChanged();
 	}
@@ -87,20 +102,24 @@ public class NestAgent extends Agent implements Nest {
 		if (nestState == NestState.HAS_DESTABILIZED)
 		{
 			tellMyLaneIHaveBecomeUnstable();
+			return true;
 		}
 		else if (nestState == NestState.HAS_STABILIZED)
 		{
 			tellMyLaneIHaveBecomeStable();
-		}
-		else if (nestState == NestState.PART_REMOVED)
-		{
-			tellMyLanePartRobotHasRemovedParts();
+			return true;
 		}
 		else if (nestState == NestState.NEEDS_TO_DUMP)
 		{
 			dump();
 			return true;
 		}
+		else if (nestState == NestState.PART_REMOVED)
+		{
+			tellMyLaneIHaveBecomeUnstable(); // same thing as becoming unstable as far as the lane is concerned
+			return true;
+		}
+		
 		for(MyPart p : myParts)
 		{
 
@@ -111,6 +130,11 @@ public class NestAgent extends Agent implements Nest {
 			}
 		}
 		
+		if (this.numberOfParts <= 0)
+		{
+			tellMyLaneIAmOutOfParts();
+			return true;
+		}
 
 		return false;
 	}
@@ -122,26 +146,20 @@ public class NestAgent extends Agent implements Nest {
 		nestState = NestState.NORMAL;
 		stateChanged();
 	}
-	public void tellMyLanePartRobotHasRemovedParts()
-	{
-		int numberOfParts = 0;
-		for(Integer pr : partRemovals)
-		{
-			numberOfParts += pr;
-		}
-
-		nestState = NestState.NORMAL; 
-		myLane.msgNestHasDestabilized(); // it has also made the nest unstable
-		myLane.msgPartRobotHasRemovedParts(numberOfParts);
+	
+	private void tellMyLaneIAmOutOfParts() {
+		nestState = NestState.NORMAL; // we don't want to continue sending this message over and over again
+		myLane.msgNestIsOutOfParts();
 		stateChanged();
 	}
-	public void tellMyLaneIHaveBecomeStable() {
+	
+	private void tellMyLaneIHaveBecomeStable() {
 		nestState = NestState.NORMAL; // we don't want to continue sending this message over and over again
 		myLane.msgNestHasStabilized();
 		stateChanged();
 	}
 	
-	public void tellMyLaneIHaveBecomeUnstable() {
+	private void tellMyLaneIHaveBecomeUnstable() {
 		nestState = NestState.NORMAL; // we don't want to continue sending this message over and over again
 		myLane.msgNestHasDestabilized();
 		stateChanged();
@@ -170,6 +188,7 @@ public class NestAgent extends Agent implements Nest {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	
 
 	
