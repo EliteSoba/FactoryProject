@@ -30,6 +30,7 @@ class GraphicGantryRobot extends GraphicRobot
 		y = init_y;
 		fx = init_x;
 		fy = init_y;
+		ftheta = 0;
 		theta = init_theta;
 		dx = init_dx;
 		dy = init_dy;
@@ -39,6 +40,11 @@ class GraphicGantryRobot extends GraphicRobot
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
 		binImage = Toolkit.getDefaultToolkit().getImage("Images/binCrate.png");
 		
+		movementCheckingOrders = new int[4];
+		movementCheckingOrders[0] = 0;
+		movementCheckingOrders[0] = 1;
+		movementCheckingOrders[0] = 3;
+		movementCheckingOrders[0] = 2;
 		partPath = "Images/eyesItem.png";
 	}
 	

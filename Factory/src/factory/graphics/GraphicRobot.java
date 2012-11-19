@@ -5,15 +5,17 @@ import java.awt.Image;
 
 public class GraphicRobot extends GraphicAnimatedObject
 {
-	int fx, fy;		// final position (destination)
+	int fx, fy, ftheta;		// final position (destination) and final angle
 	int destinationNest, destinationKit;
 	boolean arrived;
 	int state;
+	int[] movementCheckingOrders;
 	
-	public void setDestination(int init_fx, int init_fy)
+	public void setDestination(int init_fx, int init_fy, int init_ftheta)
 	{
 		fx = init_fx;
 		fy = init_fy;
+		ftheta = init_ftheta;
 	}
 
 	public void setState(int init_state)
@@ -30,49 +32,67 @@ public class GraphicRobot extends GraphicAnimatedObject
 	}
 	public void move()
 	{
-		//System.out.println(fx + " " + fy);
-
-		if(x < fx)
-		{
-			if(theta <= 180 && theta > 0)
-				theta -= dtheta;
-			else if(theta > 180 && theta < 360)
-				theta += dtheta;
-			else
-				x += dx;
-		}
-		else if(y == fy && x == fx)	// robot has arrived at destination
+		if(y == fy && x == fx)	// robot has arrived at destination
 		{
 			if(state % 2 == 1)
 				state += 1;
-		}
-		else if(y > fy)
-		{
-			if(theta > 90 && theta < 270)
-				theta -= dtheta;
-			else if(theta < 90 || theta >= 270)
+			if(theta < ftheta)
 				theta += dtheta;
-			else
-				y -= dy;
-		}
-		else if(y < fy)
-		{
-			if(theta > 90 && theta < 270)
-				theta += dtheta;
-			else if(theta <= 90 || theta > 270)
+			else if(theta > ftheta)
 				theta -= dtheta;
-			else
-				y += dy;
 		}
-		else if(x > fx)
+		for(int i = 0; i < movementCheckingOrders.length; i++)
 		{
-			if(theta < 180 && theta >= 0)
-				theta += dtheta;
-			else if(theta > 180 && theta <= 360)
-				theta -= dtheta;
-			else
-				x -= dx;
+			switch(movementCheckingOrders[i])
+			{
+			case 0 : 	
+				if(x < fx)
+				{
+					if(theta <= 180 && theta > 0)
+						theta -= dtheta;
+					else if(theta > 180 && theta < 360)
+						theta += dtheta;
+					else
+						x += dx;
+					break;
+				}
+			case 1 : 
+				if(y > fy)
+				{
+					if(theta > 90 && theta < 270)
+						theta -= dtheta;
+					else if(theta < 90 || theta >= 270)
+						theta += dtheta;
+					else
+						y -= dy;
+					break;
+				}
+			case 2 : 
+				if(x > fx)
+				{
+					if(theta < 180 && theta >= 0)
+						theta += dtheta;
+					else if(theta > 180 && theta <= 360)
+						theta -= dtheta;
+					else
+						x -= dx;
+					break;
+				}
+			case 3 : 
+				if(y < fy)
+				{
+					if(theta > 90 && theta < 270)
+						theta += dtheta;
+					else if(theta <= 90 || theta > 270)
+						theta -= dtheta;
+					else
+						y += dy;
+					break;
+				}
+			}
 		}
+		//System.out.println(theta + " " + ftheta);
+		
 		if(theta < 0) theta = 360;
 		else if(theta > 360) theta = 0;
 	}

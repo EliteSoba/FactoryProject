@@ -186,7 +186,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(1);
 			gantryRobot.setPartPath(path);
-			gantryRobot.setDestination(WIDTH-100,-100);
+			gantryRobot.setDestination(WIDTH-100,-100,0);
 		}
 	}
 	
@@ -213,7 +213,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(3);
 			gantryRobot.setDestinationFeeder(feederIndex);
-			gantryRobot.setDestination(lane[feederIndex].feederX+115, lane[feederIndex].feederY+15);
+			gantryRobot.setDestination(lane[feederIndex].feederX+115, lane[feederIndex].feederY+15,180);
 		}
 			//gantryRobotArrivedAtFeederForDropoff();
 		//}
@@ -237,7 +237,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(5);
 			gantryRobot.setDestinationFeeder(feederIndex);
-			gantryRobot.setDestination(lane[feederIndex].feederX+115, lane[feederIndex].feederY+15);
+			gantryRobot.setDestination(lane[feederIndex].feederX+115, lane[feederIndex].feederY+15,180);
 		}
 		//}
 	}
@@ -266,7 +266,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isFactoryProductionManager) {
 			partsRobot.setState(1);
 			partsRobot.adjustShift(5);
-			partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-10,nests.get(nestIndex).getY()-15);
+			partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-10,nests.get(nestIndex).getY()-15,0);
 			partsRobot.setDestinationNest(nestIndex);
 		}
 	}
@@ -282,7 +282,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			partsRobot.setItemIndex(itemIndex);
 			partsRobot.setState(1);
 			partsRobot.adjustShift(5);
-			partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-10,nests.get(nestIndex).getY()-15);
+			partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-10,nests.get(nestIndex).getY()-15,0);
 			partsRobot.setDestinationNest(nestIndex);
 		}
 	}
@@ -295,7 +295,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void movePartsRobotToStation(int kitIndex) {
 		if (isFactoryProductionManager) {
 			partsRobot.setState(3);
-			partsRobot.setDestination(station.getX()+35,station.getY()-station.getY()%5);
+			partsRobot.setDestination(station.getX()+35,station.getY()-station.getY()%5,180);
 			partsRobot.setDestinationKit(kitIndex);
 		}
 	}
@@ -314,7 +314,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void movePartsRobotToCenter() {
 		if (isFactoryProductionManager) {
 			partsRobot.setState(5);
-			partsRobot.setDestination(WIDTH/2-200, HEIGHT/2);
+			partsRobot.setDestination(WIDTH/2-200, HEIGHT/2,0);
 		}
 	}
 	
