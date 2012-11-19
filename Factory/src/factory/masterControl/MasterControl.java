@@ -617,10 +617,19 @@ public class MasterControl {
     private boolean checkAgentCmd(ArrayList<String> pCmd){
 
         // These are commands going to Agents
-        if(pCmd.size() < 4 && !pCmd.get(2).equals("cnf")){
-            System.out.println("there must be a command");
-            return false;
+        if(!pCmd.get(2).equals("cnf")){
+            if(pCmd.size() < 4){
+                System.out.println("there must be a command");
+                return false;
+            }
+            if(!cmds.contains(pCmd.get(3))){
+                System.out.println("this is not a valid command please check wiki documentation for correct syntax.");
+                return false;
+
+            }
         }
+
+
 
         if(!clients.contains(pCmd.get(0)) && !agents.contains(pCmd.get(0))){
             System.out.println("source is not valid client or agent id");
@@ -637,12 +646,6 @@ public class MasterControl {
             return false;
 
         }
-        if(!cmds.contains(pCmd.get(3))){
-            System.out.println("this is not a valid command please check wiki documentation for correct syntax.");
-            return false;
-
-        }
-
 
         return true;
 
@@ -700,7 +703,7 @@ public class MasterControl {
 
 	private void connectAllSockets(int debugnum){
 		int numConnected = 0;
-		int numToConnect = (debugnum > 0 ? debugnum : clients.size());
+		int numToConnect = (debugnum > 0 ? debugnum : (clients.size()-1));
 		while(numConnected != numToConnect){
 			try{
 				Socket s = myServerSocket.accept();
@@ -735,8 +738,8 @@ public class MasterControl {
 
 	public static void main(String args[]){
 
-        System.out.print("DEBUG MODE : Enter number of clients to connect.");
-        System.out.print("PRODUCTION MODE : Enter 0.");
+        System.out.println("DEBUG MODE : Enter number of clients to connect.");
+        System.out.println("PRODUCTION MODE : Enter 0.");
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
