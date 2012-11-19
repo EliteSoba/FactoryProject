@@ -123,10 +123,23 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** MESSAGES **/
-	public void msgPartRobotHasRemovedPartsFromLane(int numberOfParts, Lane lane) {
-		/** TODO: Make this do something */	
+	public void msgLaneIsOutOfParts(Lane lane) {
+		MyLane currentLane = null;
+		if (topLane != null)
+		{
+			if (topLane.lane == lane)
+				currentLane = topLane;
+		}
+		if (bottomLane != null)
+		{
+			if (bottomLane.lane == lane)
+				currentLane = bottomLane;
+		}
+		
+		this.msgLaneNeedsPart(currentLane.part, currentLane.lane);
+		
+		stateChanged();
 	}
-
 	public void msgNestHasStabilized(Lane lane) {
 		myNestsHaveBeenChecked = false;
 		if(topLane.lane == lane)
@@ -510,7 +523,6 @@ public class FeederAgent extends Agent implements Feeder {
 		if (myLane == topLane)
 		{
 			DoPurgeTopLane();
-
 		}
 		else if (myLane == bottomLane)
 		{
@@ -786,6 +798,14 @@ public class FeederAgent extends Agent implements Feeder {
 	{
 		return this.feederNumber;
 	}
+
+
+	@Override
+	public void msgPartRobotHasRemovedPartsFromLane(int numberOfParts, Lane lane) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 
 
 

@@ -37,15 +37,6 @@ public class KitManager extends Client implements WindowListener{
 		KitManager k = new KitManager();
 	}
 
-//	public void sendMessage(String kitname, int setting, String message){
-//		String cmd = new String("");
-//		if (message == "power"){
-//			cmd =  "km kma set kitcontent #kitname #itemnumber #itemname";
-//			output.println(cmd);
-//		}
-//
-//	}
-
 	public void setInterface() {
 		
 		add(UI, BorderLayout.LINE_END);
@@ -190,7 +181,7 @@ else if(action.equals("cnf")){
 			f = new FileInputStream("InitialData/initialKitConfigs.ser");
 			o = new ObjectInputStream(f);
 			setKitConfigList((HashMap<String,KitConfig>) o.readObject());
-			System.out.println("Good");
+			System.out.println("KitConfigList " + kitConfigList.size());
 			o.close();
 		}catch(IOException e){
 			e.printStackTrace();

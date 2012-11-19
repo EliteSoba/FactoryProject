@@ -23,7 +23,7 @@ public class NestAgent extends Agent implements Nest {
 	public int numberOfParts = 0;
 	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED, PART_REMOVED}
 	public NestState nestState = NestState.NORMAL;
-	public MyPart myCurrentPart;
+	public Part currentPart;
 	public enum MyPartState {  NEEDED, REQUESTED }
 	public class MyPart {
 		public Part pt;
@@ -39,17 +39,21 @@ public class NestAgent extends Agent implements Nest {
 
 	/** MESSAGES **/
 	public void msgDump() {
+		debug("received msgDump()");
 		nestState = NestState.NEEDS_TO_DUMP;
 		stateChanged();
 	}
+	
 	public void msgYouNeedPart(Part part) {
 		debug("received msgYouNeedPart("+part.name+").");
+		this.currentPart = part;
 		myParts.add(new MyPart(part));
 		stateChanged();
 	}
+	
 	public void msgFeedingParts(int numParts) {
-		this.numberOfParts += numParts;
 		debug("msgFeedingParts()");
+		this.numberOfParts += numParts;
 		stateChanged();
 	}
 
@@ -81,7 +85,9 @@ public class NestAgent extends Agent implements Nest {
 	public void msgPartsRobotGrabbingPartFromNest(int numPartsRemoved) {
 		debug("PARTS ROBOT GRABS PART FROM NEST");
 		
-		if(--this.numberOfParts < 0)
+		this.numberOfParts--;
+		
+		if(this.numberOfParts < 0)
 			this.numberOfParts = 0;
 		
 		nestState = NestState.PART_REMOVED;
@@ -128,7 +134,7 @@ public class NestAgent extends Agent implements Nest {
 		
 		if (this.numberOfParts <= 0)
 		{
-			askLaneToSendParts(this.myCurrentPart);
+			tellMyLaneIAmOutOfParts();
 			return true;
 		}
 
@@ -138,18 +144,27 @@ public class NestAgent extends Agent implements Nest {
 
 	/** ACTIONS **/
 	public void dump() {
-		DoDumpNest();
+		//DoDumpNest();
+		debug("dumping nest.");
+		this.numberOfParts = 0;
 		nestState = NestState.NORMAL;
 		stateChanged();
 	}
 	
-	public void tellMyLaneIHaveBecomeStable() {
+	private void tellMyLaneIAmOutOfParts() {
+		debug("tell my lane I am out of parts");
+		nestState = NestState.NORMAL; // we don't want to continue sending this message over and over again
+		myLane.msgNestIsOutOfParts();
+		stateChanged();
+	}
+	
+	private void tellMyLaneIHaveBecomeStable() {
 		nestState = NestState.NORMAL; // we don't want to continue sending this message over and over again
 		myLane.msgNestHasStabilized();
 		stateChanged();
 	}
 	
-	public void tellMyLaneIHaveBecomeUnstable() {
+	private void tellMyLaneIHaveBecomeUnstable() {
 		nestState = NestState.NORMAL; // we don't want to continue sending this message over and over again
 		myLane.msgNestHasDestabilized();
 		stateChanged();
@@ -164,9 +179,9 @@ public class NestAgent extends Agent implements Nest {
 	
 	
 	/** ANIMATIONS **/
-	private void DoDumpNest() {
-		debug("dumping.");
-	}
+//	private void DoDumpNest() {
+//		debug("dumping.");
+//	}
 	
 	
 	/** OTHER **/
@@ -177,6 +192,10 @@ public class NestAgent extends Agent implements Nest {
 	public String getNestName() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public Part getPart() {
+		return this.currentPart;
 	}
 
 	

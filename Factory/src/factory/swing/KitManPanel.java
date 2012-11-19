@@ -67,13 +67,12 @@ public class KitManPanel extends JPanel{
 		scrollPane.setMaximumSize(new Dimension(460, 300));
 		table.setFillsViewportHeight(true);
 
-
-		for(int i = 1; i < kitManager.getKitConfigList().size(); i++){
-			for(KitConfig temp : kitManager.getKitConfigList().values()){
-				Object[] row = {temp.kitName};
-				model.insertRow(model.getRowCount(), row);
-			}
+		System.out.println(kitManager.getKitConfigList().size());
+		for(KitConfig temp : kitManager.getKitConfigList().values()){
+			Object[] row = {temp.kitName};
+			model.insertRow(model.getRowCount(), row);
 		}
+
 		addPanel = new AddPanel();
 		editPanel = new EditPanel();
 
@@ -287,9 +286,8 @@ public class KitManPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			String set = new String();
+			String cmd = new String();
 			if (ae.getSource() == cSave) {
-
-
 				String testName;
 				cKitName.setText(cKitName.getText().replaceAll("\\s","")) ;
 				testName = cKitName.getText().toUpperCase();
@@ -330,11 +328,26 @@ public class KitManPanel extends JPanel{
 						k.listOfParts.add(kitManager.getPartsList().get(cItemComboBox8.getSelectedItem()));
 					}
 					if(k.listOfParts.size() >=4){
-					addKit(k);
-					kitManager.addToKitConfigList(k);
-					editPanel.mKitComboBox.addItem(k.kitName);
-					basePanel1.setVisible(true);
-					basePanel2.setVisible(false);
+						addKit(k);
+						kitManager.addToKitConfigList(k);
+						editPanel.mKitComboBox.addItem(k.kitName);
+						basePanel1.setVisible(true);
+						basePanel2.setVisible(false);
+						//"km fpm cmd addkitname #kitname #partname1 #partname2 ... #partname8"
+						cmd = "km fpm cmd addkitname " + cKitName.getText() + (String)cItemComboBox1.getSelectedItem() + 
+								(String)cItemComboBox2.getSelectedItem() + (String)cItemComboBox3.getSelectedItem() + 
+								(String)cItemComboBox4.getSelectedItem() + (String)cItemComboBox5.getSelectedItem() +
+								(String)cItemComboBox6.getSelectedItem() + (String)cItemComboBox7.getSelectedItem() +
+								(String)cItemComboBox8.getSelectedItem();
+						kitManager.sendCommand(cmd);
+
+						// "km fcsa cmd addkitname #kitname #partname1 #partname2 ... #partname8" 
+						cmd = "km fpm cmd addkitname " + cKitName.getText() + (String)cItemComboBox1.getSelectedItem() + 
+								(String)cItemComboBox2.getSelectedItem() + (String)cItemComboBox3.getSelectedItem() + 
+								(String)cItemComboBox4.getSelectedItem() + (String)cItemComboBox5.getSelectedItem() +
+								(String)cItemComboBox6.getSelectedItem() + (String)cItemComboBox7.getSelectedItem() +
+								(String)cItemComboBox8.getSelectedItem();
+						kitManager.sendCommand(cmd);
 					}else{
 						cKitName.setText("must have >= 4 items");
 					}
@@ -587,8 +600,9 @@ public class KitManPanel extends JPanel{
 
 
 		public void actionPerformed(ActionEvent ae) {
+			String set = new String();
+			String cmd = new String();
 			if(ae.getSource() == mSave){
-				
 				String testName;
 				mKitName.setText(mKitName.getText().replaceAll("\\s","")) ;
 				testName = mKitName.getText().toUpperCase();
@@ -628,7 +642,7 @@ public class KitManPanel extends JPanel{
 					}if(!mItemComboBox8.getSelectedItem().equals("None")){
 						k.listOfParts.add(kitManager.getPartsList().get(mItemComboBox8.getSelectedItem()));
 					}
-					
+
 					if(k.listOfParts.size() >=4){
 						kitManager.removeFromKitConfigList(currentKit);
 						kitManager.addToKitConfigList(k);
@@ -644,9 +658,27 @@ public class KitManPanel extends JPanel{
 						basePanel1.setVisible(true);
 						basePanel2.setVisible(false);
 
+						//"km fpm set kitcontent #oldkitname #kitname #partname1 #partname2 ... #partname8"
+						set = "km fpm set kitcontent " + (String)mKitComboBox.getSelectedItem() + mKitName.getText() +
+								(String)mItemComboBox1.getSelectedItem() + (String)mItemComboBox2.getSelectedItem() + 
+								(String)mItemComboBox3.getSelectedItem() + (String)mItemComboBox4.getSelectedItem() +
+								(String)mItemComboBox5.getSelectedItem() + (String)mItemComboBox6.getSelectedItem() +
+								(String)mItemComboBox7.getSelectedItem() + (String)mItemComboBox8.getSelectedItem();
+						kitManager.sendCommand(set);
+
+						//"km fcsa set kitcontent #oldkitname #kitname #partname1 #partname2 ... #partname8"
+
+						set = "km fcsa set kitcontent " + (String)mKitComboBox.getSelectedItem() + mKitName.getText() +
+								(String)mItemComboBox1.getSelectedItem() + (String)mItemComboBox2.getSelectedItem() + 
+								(String)mItemComboBox3.getSelectedItem() + (String)mItemComboBox4.getSelectedItem() +
+								(String)mItemComboBox5.getSelectedItem() + (String)mItemComboBox6.getSelectedItem() +
+								(String)mItemComboBox7.getSelectedItem() + (String)mItemComboBox8.getSelectedItem();
+						kitManager.sendCommand(set);
+
+
 						if(kitManager.getKitConfigList().size() > 0)
 							mKitComboBox.setSelectedIndex(0);
-						
+
 					}else{
 						mKitName.setText("must have >= 4 items");
 					}
@@ -655,6 +687,12 @@ public class KitManPanel extends JPanel{
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
 				removeKit(currentKit);
+				//"km fpm cmd rmkitname #kitname"
+				cmd = "km fpm cmd rmkitname " + mKitName.getText();
+				kitManager.sendCommand(cmd);
+				//"km fcsa cmd rmkitname #kitname"
+				cmd = "km fcsa cmd rmkitname " + mKitName.getText();
+				kitManager.sendCommand(cmd);
 
 				kitManager.removeFromKitConfigList(currentKit);
 

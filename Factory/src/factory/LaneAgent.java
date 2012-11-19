@@ -77,7 +77,8 @@ public class LaneAgent extends Agent implements Lane {
 	}
 
 	public void msgPurge() {
-		// TODO Auto-generated method stub
+		debug("received msgPurge()");
+		myNest.msgDump();
 		stateChanged();
 	}
 
@@ -202,6 +203,12 @@ public class LaneAgent extends Agent implements Lane {
 	public void msgFeedingParts(int numParts) {
 		debug("msgFeedingParts()");
 		myNest.msgFeedingParts(numParts);
+		stateChanged();
+	}
+	
+	public void msgNestIsOutOfParts() {
+		debug("msgNestIsOutOfParts()");
+		myFeeder.msgLaneIsOutOfParts(this);
 		stateChanged();
 	}
 
