@@ -16,6 +16,7 @@ public class PartHandler implements Runnable {
     PrintWriter out = null;
     BufferedReader in = null;
     boolean haveCMD = false;
+    boolean error = true;
     String cmd = null;
     String message;
     MasterControl master = null;
@@ -53,9 +54,13 @@ public class PartHandler implements Runnable {
 	    for(;;) {
             cmd = gotCmd();
             if(haveCMD) {//if there was a command then call parseCmd and send the cmd to Server to assess
-                    master.command(cmd);
+                    error = master.command(cmd);
                     //sets haveCMD to false because parseCmd notified server
                     haveCMD = false;
+            }
+            if(error == false)
+            {
+            	out.println("err command was invalid");
             }
             if(factoryDone){
                 break;

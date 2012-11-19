@@ -185,6 +185,13 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		this.stateChanged();
 	}	
 	
+	public void msgNoMoreOrders() {
+		debug("####################");
+		debug("NO MORE ORDERS");
+		debug("####################");
+		this.currentKitConfiguration = null;
+		this.currentKitConfigurationState = KitConfigState.EMPTY;
+	}
 /** ================================================================================ **/
 /** 									SCHEDULER 									 **/
 /** ================================================================================ **/

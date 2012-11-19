@@ -148,6 +148,9 @@ public class FCSAgent extends Agent implements FCS{
 	private void startProducingNextKit(){
 		orders.remove();
 		kitsExportedCount = 0;
+		if (orders.isEmpty()){
+			partsRobot.msgNoMoreOrders();
+		}
 		this.state = KitProductionState.PENDING;
 		stateChanged();
 	}

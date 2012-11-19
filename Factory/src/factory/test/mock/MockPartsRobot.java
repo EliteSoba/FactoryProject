@@ -58,4 +58,10 @@ public class MockPartsRobot extends MockAgent implements PartsRobot {
 		
 	}
 
+	@Override
+	public void msgNoMoreOrders() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

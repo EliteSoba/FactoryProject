@@ -53,6 +53,7 @@ public class MasterControl {
     TreeMap<String, Agent> agentTreeMap;
 	TreeMap<String, PartHandler> partHandlers; 
 	TreeMap<String, Boolean> partOccupied;
+    TreeMap<List<String>, List<String>> multiCmdDsts;
 
     // Lists of Known Clients, Agents, CommandTypes, and supported Commands
 
@@ -75,8 +76,10 @@ public class MasterControl {
 
 	// Lists of Commands with Multi Destinations and Lists of Destinations associated with those Commands
 
-	private static final List<String> multiCmd_1 = Arrays.asList("addpartname", "rmpartname", "partconfig");
-    private static final List<String> multiCmdDst_1 = Arrays.asList("km", "fpm");
+	private static final List<String> multiCmd_1 = Arrays.asList("purgefeeder", "purgetoplane", "purgebottomlane");
+    private static final List<String> multiCmdDst_1 = Arrays.asList("gm", "lm");
+    private static final List<List<String>> multiCmds = Arrays.asList(multiCmd_1);
+
 
     // MasterControl Server Socket
 
@@ -91,6 +94,7 @@ public class MasterControl {
 		laneAgentTreeMap = new TreeMap<String, LaneAgent>();
 		nestAgentTreeMap = new TreeMap<String, NestAgent>();
         partHandlerList = new ArrayList<PartHandler>();
+        multiCmdDsts = new TreeMap<List<String>, List<String>>();
 
 
 
@@ -103,9 +107,13 @@ public class MasterControl {
 
 		}
 		connectAllSockets(debug); // This waits for every client to start up before moving on.
+
+		multiCmdDsts.put(multiCmd_1, multiCmdDst_1);
+
 		// At this point, all of the sockets are connected, PartHandlers have been created
 		// The TreeMaps are updated with all of the relevant data, and the Factory can go.
-		startAgents();
+
+        startAgents();
 
 		sendConfirm();
 		// At this point, all of the parts have been notified that
@@ -329,12 +337,7 @@ public class MasterControl {
             if(parsedCommand.get(1).equals("multi")){
                 return clientCmd(parsedCommand);
             } else {
-                for(PartHandler ph : partHandlerList){
-                    if(ph.client_id.equals(parsedCommand.get(1))){
-                        return clientCmd(parsedCommand);
-                    }
-                }
-                return false; // This is called if in Debug mode and the client being sent to is not connected.
+                return clientCmd(parsedCommand);
             }
 
 		} else if(agents.contains(parsedCommand.get(1))) {
@@ -599,9 +602,11 @@ public class MasterControl {
 				return false;
 			} else {
 				for(PartHandler x : destinations){
-					if(!sendCmd(x, fullCmd)){
-						return false;
-					}
+                    if(partHandlerList.contains(x)){
+                        if(!sendCmd(x, fullCmd)){
+                            return false;
+                        }
+                    }
 				}
                 if(fpmPH != null){
                     if(!sendCmd(fpmPH, fullCmd)){
@@ -613,7 +618,10 @@ public class MasterControl {
         }
 
 		if(b.equals("fpm")){
-            return (fpmPH != null && sendCmd(fpmPH, fullCmd));
+            if(fpmPH != null){
+                return sendCmd(fpmPH, fullCmd);
+            }
+            return false;
         } else {
             if(fpmPH != null){
                 if(!sendCmd(fpmPH, fullCmd)){
@@ -621,7 +629,11 @@ public class MasterControl {
                 }
             }
             PartHandler destinationPH = determinePH(b);
-            return sendCmd(destinationPH, fullCmd);
+            if(partHandlerList.contains(destinationPH)){
+                return sendCmd(destinationPH, fullCmd);
+            } else {
+                return false;
+            }
         }
 
 
@@ -632,18 +644,18 @@ public class MasterControl {
 	private ArrayList<PartHandler> getDestinations(String myCmd){
 
 
-
-		if(multiCmd_1.contains(myCmd)){
-            ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
-            for(String dst : multiCmdDst_1){
-                if(partHandlers.containsKey(dst)){
-                    returnAL.add(partHandlers.get(dst));
+        for(List<String> l : multiCmds){
+            if(l.contains(myCmd)){
+                ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
+                for(String dst : multiCmdDsts.get(l)){
+                    if(partHandlers.containsKey(dst)){
+                        returnAL.add(partHandlers.get(dst));
+                    }
                 }
+                return returnAL;
             }
-            return returnAL;
-		} else {
-			return null;
-		}
+        }
+        return null;
 
 	}
 

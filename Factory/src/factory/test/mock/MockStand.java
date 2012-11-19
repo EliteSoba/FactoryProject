@@ -72,4 +72,15 @@ public class MockStand extends MockAgent implements Stand {
 		log.add(new LoggedEvent("msgClearStand() received from the PartsRobot")); 
 	}
 
+	@Override
+	public void msgPartsRobotNoLongerUsingStand() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgKitRobotWantsStandAccess() {
+		// TODO Auto-generated method stub
+		
+	}
 }

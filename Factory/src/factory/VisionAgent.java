@@ -178,7 +178,7 @@ public class VisionAgent extends Agent implements Vision {
 
 		private void DoTakePicture() {
 			debug("Executing DoTakePicture()");
-			server.command("va fpm cmd takepictureofinspection");
+			server.command("va kam cmd takepictureofinspection");
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
@@ -190,7 +190,7 @@ public class VisionAgent extends Agent implements Vision {
 		private void DoAnimationTakePictureOfNest(Nest nest) {
 			
 			debug("Executing DoAnimationTakePicture()");
-			server.command("va fpm cmd takepictureofnest " + nest.getPosition()/2);
+			server.command("va lm cmd takepictureofnest " + nest.getPosition()/2);
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {

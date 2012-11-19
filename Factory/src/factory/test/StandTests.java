@@ -61,7 +61,7 @@ public class StandTests extends TestCase {
 
 
 	@Test
-	public void testMsgKitRobotNoLongerUsingStand() {
+	public void testMsgPartsRobotNoLongerUsingStand() {
 		stand.vision = visionMock;
 		stand.kitRobot = kitRobotMock;
 		stand.partsRobot = partsRobotMock;
@@ -79,11 +79,31 @@ public class StandTests extends TestCase {
 		//testing if kit robot can deliver an empty kit
 		assertEquals(StandAgentState.KIT_ROBOT, stand.state);
 		
+		//stand needToClearStand should be false
+		assertFalse(stand.needToClearStand);
+		
+		
 	}
 
 	@Test
 	public void testMsgPartRobotWantsToPlaceParts() {
-		fail("Not yet implemented");
+		stand.vision = visionMock;
+		stand.kitRobot = kitRobotMock;
+		stand.partsRobot = partsRobotMock;
+		
+		stand.msgPartRobotWantsToPlaceParts();
+		
+		
+		//partsRobotWantsToDeliverParts should be true
+		assertTrue(stand.partsRobotWantsToDeliverParts);
+		
+		stand.pickAndExecuteAnAction();
+		
+		//partsRobotWantsToDeliverParts should be true
+		assertTrue(stand.partsRobotWantsToDeliverParts);
+		
+		//state should be FREE
+		assertEquals(StandAgentState.FREE, stand.state);
 	}
 	
 	@Test
@@ -96,17 +116,37 @@ public class StandTests extends TestCase {
 		// Test that nothing gets executed if the Parts Robot wants to delivery parts but the slots are empty
 		stand.msgPartRobotWantsToPlaceParts();
 		assertEquals(stand.pickAndExecuteAnAction() , true);
+		
+		
 		//assertEquals(stand.pickAndExecuteAnAction() , false);
 	}
 
 	@Test
-	public void testMsgPartsRobotNoLongerUsingStand() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testMsgResultsOfKitAtInspection() {
-		fail("Not yet implemented");
+	public void testMsgKitRobotNoLongerUsingStand() {
+		stand.vision = visionMock;
+		stand.kitRobot = kitRobotMock;
+		stand.partsRobot = partsRobotMock;
+		
+		stand.state = StandAgentState.KIT_ROBOT;
+		
+		stand.msgKitRobotNoLongerUsingStand();
+		
+		//State should be FREE
+		assertEquals(StandAgentState.FREE, stand.state);
+		stand.needToClearStand = true;
+		
+		//state of the stand should be free
+		assertEquals(StandAgentState.FREE, stand.state);
+		
+		stand.pickAndExecuteAnAction();
+		
+		//testing if kit robot can deliver an empty kit
+		assertEquals(StandAgentState.KIT_ROBOT, stand.state);
+		
+		//stand needToClearStand should be false
+		assertFalse(stand.needToClearStand);
+		
+		
 	}
 
 }
