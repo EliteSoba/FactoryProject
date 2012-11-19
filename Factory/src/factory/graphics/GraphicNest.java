@@ -3,6 +3,12 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
+/**
+ * @author Minh la,George Li <p>
+ * <b>{@code GraphicNest.java}</b> (50x720) <br>
+ * This creates a nest and an array of items in the nest,
+ */
+
 class GraphicNest extends GraphicAnimatedObject
 {
 	/**An array of items in the nest**/
@@ -20,10 +26,10 @@ class GraphicNest extends GraphicAnimatedObject
 	 * Creates a nest with specific locations, image width, height and path.
 	 * @param init_x x-coordinate of the nest
 	 * @param init_y y-coordinate of the nest
-	 * @param init_theta
-	 * @param init_dx
-	 * @param init_dy
-	 * @param init_dtheta
+	 * @param init_theta the angle of where the nest is facing
+	 * @param init_dx speed/velocity in the x direction
+	 * @param init_dy speed/velocity in the y direction
+	 * @param init_dtheta direction of the the nest is facing
 	 * @param init_imageWidth the width of the image
 	 * @param init_imageHeight the height of the image
 	 * @param init_imagePath the image path of the image
