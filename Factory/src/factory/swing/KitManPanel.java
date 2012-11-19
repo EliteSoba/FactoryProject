@@ -334,18 +334,18 @@ public class KitManPanel extends JPanel{
 						basePanel1.setVisible(true);
 						basePanel2.setVisible(false);
 						//"km fpm cmd addkitname #kitname #partname1 #partname2 ... #partname8"
-						cmd = "km fpm cmd addkitname " + cKitName.getText() + (String)cItemComboBox1.getSelectedItem() + 
-								(String)cItemComboBox2.getSelectedItem() + (String)cItemComboBox3.getSelectedItem() + 
-								(String)cItemComboBox4.getSelectedItem() + (String)cItemComboBox5.getSelectedItem() +
-								(String)cItemComboBox6.getSelectedItem() + (String)cItemComboBox7.getSelectedItem() +
+						cmd = "km fpm cmd addkitname " + cKitName.getText() + " " + (String)cItemComboBox1.getSelectedItem() + " " + 
+								(String)cItemComboBox2.getSelectedItem() + " " + (String)cItemComboBox3.getSelectedItem() + " " + 
+								(String)cItemComboBox4.getSelectedItem() + " " + (String)cItemComboBox5.getSelectedItem() + " " +
+								(String)cItemComboBox6.getSelectedItem() + " " + (String)cItemComboBox7.getSelectedItem() + " " +
 								(String)cItemComboBox8.getSelectedItem();
 						kitManager.sendCommand(cmd);
 
 						// "km fcsa cmd addkitname #kitname #partname1 #partname2 ... #partname8" 
-						cmd = "km fpm cmd addkitname " + cKitName.getText() + (String)cItemComboBox1.getSelectedItem() + 
-								(String)cItemComboBox2.getSelectedItem() + (String)cItemComboBox3.getSelectedItem() + 
-								(String)cItemComboBox4.getSelectedItem() + (String)cItemComboBox5.getSelectedItem() +
-								(String)cItemComboBox6.getSelectedItem() + (String)cItemComboBox7.getSelectedItem() +
+						cmd = "km fcsa cmd addkitname " + cKitName.getText() + " " + (String)cItemComboBox1.getSelectedItem() + " " + 
+								(String)cItemComboBox2.getSelectedItem() + " " + (String)cItemComboBox3.getSelectedItem() + " " + 
+								(String)cItemComboBox4.getSelectedItem() + " " + (String)cItemComboBox5.getSelectedItem() + " " +
+								(String)cItemComboBox6.getSelectedItem() + " " + (String)cItemComboBox7.getSelectedItem() + " " +
 								(String)cItemComboBox8.getSelectedItem();
 						kitManager.sendCommand(cmd);
 					}else{
@@ -659,20 +659,20 @@ public class KitManPanel extends JPanel{
 						basePanel2.setVisible(false);
 
 						//"km fpm set kitcontent #oldkitname #kitname #partname1 #partname2 ... #partname8"
-						set = "km fpm set kitcontent " + (String)mKitComboBox.getSelectedItem() + mKitName.getText() +
-								(String)mItemComboBox1.getSelectedItem() + (String)mItemComboBox2.getSelectedItem() + 
-								(String)mItemComboBox3.getSelectedItem() + (String)mItemComboBox4.getSelectedItem() +
-								(String)mItemComboBox5.getSelectedItem() + (String)mItemComboBox6.getSelectedItem() +
-								(String)mItemComboBox7.getSelectedItem() + (String)mItemComboBox8.getSelectedItem();
+						set = "km fpm set kitcontent " + (String)mKitComboBox.getSelectedItem() + " " + mKitName.getText() +
+								(String)mItemComboBox1.getSelectedItem() + " " + (String)mItemComboBox2.getSelectedItem() + " " +  
+								(String)mItemComboBox3.getSelectedItem() + " " + (String)mItemComboBox4.getSelectedItem() + " " + 
+								(String)mItemComboBox5.getSelectedItem() + " " + (String)mItemComboBox6.getSelectedItem() + " " + 
+								(String)mItemComboBox7.getSelectedItem() + " " + (String)mItemComboBox8.getSelectedItem();
 						kitManager.sendCommand(set);
 
 						//"km fcsa set kitcontent #oldkitname #kitname #partname1 #partname2 ... #partname8"
 
-						set = "km fcsa set kitcontent " + (String)mKitComboBox.getSelectedItem() + mKitName.getText() +
-								(String)mItemComboBox1.getSelectedItem() + (String)mItemComboBox2.getSelectedItem() + 
-								(String)mItemComboBox3.getSelectedItem() + (String)mItemComboBox4.getSelectedItem() +
-								(String)mItemComboBox5.getSelectedItem() + (String)mItemComboBox6.getSelectedItem() +
-								(String)mItemComboBox7.getSelectedItem() + (String)mItemComboBox8.getSelectedItem();
+						set = "km fcsa set kitcontent " + (String)mKitComboBox.getSelectedItem() + " " + mKitName.getText() +
+								(String)mItemComboBox1.getSelectedItem() + " " + (String)mItemComboBox2.getSelectedItem() + " " +  
+								(String)mItemComboBox3.getSelectedItem() + " " + (String)mItemComboBox4.getSelectedItem() + " " + 
+								(String)mItemComboBox5.getSelectedItem() + " " + (String)mItemComboBox6.getSelectedItem() + " " + 
+								(String)mItemComboBox7.getSelectedItem() + " " + (String)mItemComboBox8.getSelectedItem();
 						kitManager.sendCommand(set);
 
 

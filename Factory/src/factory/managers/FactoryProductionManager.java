@@ -34,37 +34,37 @@ public class FactoryProductionManager extends Client {
 
 	FactoryProdManPanel buttons;
 	FactoryProductionPanel animation;
-	
-		public FactoryProductionManager() {
-			super(Client.Type.fpm, null, null);
-			
-			buttons = new FactoryProdManPanel(this);
-			animation = new FactoryProductionPanel(this);
-			
-			setInterface();
-			
-			partsList = new HashMap<String,Part>(); //Local version
-			kitConfigList = new HashMap<String,KitConfig>(); //Local version
-			
-			loadData();
-			populatePanelList();
-		}
-		public static void main(String[] args){
-		    FactoryProductionManager f = new FactoryProductionManager();
-		}
 
-		public void setInterface() {
-			graphics = animation;
-			UI = buttons;
-			
-			add(graphics, BorderLayout.CENTER);
-			
-			add(UI, BorderLayout.LINE_END);
-			pack();
-			setVisible(true);
-		}
+	public FactoryProductionManager() {
+		super(Client.Type.fpm, null, null);
 
-		
+		buttons = new FactoryProdManPanel(this);
+		animation = new FactoryProductionPanel(this);
+
+		setInterface();
+
+		partsList = new HashMap<String,Part>(); //Local version
+		kitConfigList = new HashMap<String,KitConfig>(); //Local version
+
+		loadData();
+		populatePanelList();
+	}
+	public static void main(String[] args){
+		FactoryProductionManager f = new FactoryProductionManager();
+	}
+
+	public void setInterface() {
+		graphics = animation;
+		UI = buttons;
+
+		add(graphics, BorderLayout.CENTER);
+
+		add(UI, BorderLayout.LINE_END);
+		pack();
+		setVisible(true);
+	}
+
+
 	public void doCommand(ArrayList<String> pCmd) {
 		int size = pCmd.size();
 		//parameters lay between i = 2 and i = size - 2
@@ -75,8 +75,8 @@ public class FactoryProductionManager extends Client {
 		System.out.println(identifier);
 		if(action.equals("cmd")){
 			//Graphics Receive Commands
-			
-		
+
+
 			// Commands from FeederAgent
 			if (identifier.equals("startfeeding"))
 			{
@@ -108,7 +108,7 @@ public class FactoryProductionManager extends Client {
 				int feederSlot = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).purgeBottomLane(feederSlot);
 			}
-			
+
 			// Commands from GantryAgent:
 			else if (identifier.equals("pickuppurgebin"))
 			{
@@ -125,8 +125,8 @@ public class FactoryProductionManager extends Client {
 				int feederNumber = Integer.valueOf(pCmd.get(2)); 
 				((FactoryProductionPanel) graphics).moveGantryRobotToFeederForDropoff(feederNumber);
 			}
-			
-			
+
+
 			// Commands from PartsRobotAgent
 			else if (identifier.equals("putpartinkit"))
 			{
@@ -154,7 +154,7 @@ public class FactoryProductionManager extends Client {
 			}
 
 			// End Commands from PartsRobotAgent
-			
+
 			// Commands from KitRobotAgent
 			else if (identifier.equals("putinspectionkitonconveyor")) {
 				((FactoryProductionPanel) graphics).moveKitFromInspectionToConveyor();
@@ -187,32 +187,33 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("exportkitfromcell")) {
 				((FactoryProductionPanel) graphics).exportKit();
 			}
-			
+
 			// Commands from ConveyorControllerAgent
 			else if (identifier.equals("emptykitenterscell")) {
 				((FactoryProductionPanel) graphics).newEmptyKit();
 			}
-			
+
 			//Commands from VisionAgent
 			else if (identifier.equals("takepictureofnest")) {
 				int nestIndex = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).cameraFlash(nestIndex);
 			}
 
-			
+
 			//Swing Receive Commands
-// commands from kit manager
+			// commands from kit manager
 			else if (identifier.equals("addkitname")) {		// add new kit configuration to kit configuration list
 				KitConfig newKit = new KitConfig(pCmd.get(2));
-newKit.quantity = 0;
+				System.out.println("Testing: " + pCmd);
+				newKit.quantity = 0;
 				int count = 3;
-				
+
 				while(!pCmd.get(count).equals("endcmd")) {
 					String partName = pCmd.get(count);
 					newKit.listOfParts.add(partsList.get(partName));		
 					count++;
 				}
-				
+
 				kitConfigList.put(newKit.kitName,newKit); 
 				((FactoryProdManPanel) UI).addKit(newKit.kitName);
 			}
@@ -228,29 +229,29 @@ newKit.quantity = 0;
 				partsList.remove(pCmd.get(2));
 				// check kits affected and remove them
 				ArrayList<String> affectedKits = kitConfigsContainingPart(pCmd.get(2));
-if (affectedKits.size() > 0) {
-				for (String kit:affectedKits) {
-					kitConfigList.remove(kit);
+				if (affectedKits.size() > 0) {
+					for (String kit:affectedKits) {
+						kitConfigList.remove(kit);
+					}
 				}
-}
 				((FactoryProdManPanel)UI).removePart(pCmd.get(2),affectedKits);
 			}
 		}
-		
+
 		else if(action.equals("req")){
 		}
-		
+
 		else if(action.equals("get")){
 		}
-		
+
 		else if(action.equals("set")){
 			if (identifier.equals("kitcontent")) { 			// modify content of a kit
 				KitConfig kit = kitConfigList.get(pCmd.get(2));
 				kit.kitName = pCmd.get(3);
 				kit.listOfParts.clear();
 				for (int i = 4; i < 12; i++){
-				String partName = pCmd.get(i);
-				kit.listOfParts.add(partsList.get(partName));
+					String partName = pCmd.get(i);
+					kit.listOfParts.add(partsList.get(partName));
 				}
 			}
 			else if (identifier.equals("kitsproduced")) { // updates number of kits produced for schedule
@@ -275,83 +276,83 @@ if (affectedKits.size() > 0) {
 				part.description = pCmd.get(7);
 			}
 		}
-		
-		
+
+
 		else if(action.equals("cnf")){
 		}
-		
-	   else if(action.equals("err")){
+
+		else if(action.equals("err")){
 			String error;
 			error = new String();
 			for(int i = 1; i<this.parsedCommand.size(); i++)
 				error.concat(parsedCommand.get(i));
 			System.out.println(error);
-	   }
-	   else 
-		   System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
-	
+		}
+		else 
+			System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
+
 	}
-			
 
-// Load parts list and kit configuration list from file
-    @SuppressWarnings("unchecked")
+
+	// Load parts list and kit configuration list from file
+	@SuppressWarnings("unchecked")
 	public void loadData(){
-    FileInputStream f;
-    ObjectInputStream o;
-    try{    // parts
-        f = new FileInputStream("InitialData/initialParts.ser");
-        o = new ObjectInputStream(f);
-        partsList = (HashMap<String,Part>) o.readObject();
-        System.out.println("Parts list loaded successfully.");
-        o.close();
-    }catch(IOException e){
-        e.printStackTrace();
-    } catch(ClassNotFoundException c){
-        c.printStackTrace();
-    }
-    try{    // kit configurations
-        f = new FileInputStream("InitialData/initialKitConfigs.ser");
-        o = new ObjectInputStream(f);
-        kitConfigList = (HashMap<String,KitConfig>) o.readObject();
-        System.out.println("Kit configuration list loaded successfully.");
-        o.close();
-    }catch(IOException e){
-        e.printStackTrace();
-    } catch(ClassNotFoundException c){
-        c.printStackTrace();
-    }
-}
-		
-    public void populatePanelList() { // adds list to panel display
-    	Iterator itr = kitConfigList.entrySet().iterator(); 
-    	while(itr.hasNext()) { 
-    		Map.Entry pairs = (Map.Entry)itr.next(); 
-    		String kitName= (String)pairs.getKey();
-    		((FactoryProdManPanel)UI).addKit(kitName);
-    	}
-    }
+		FileInputStream f;
+		ObjectInputStream o;
+		try{    // parts
+			f = new FileInputStream("InitialData/initialParts.ser");
+			o = new ObjectInputStream(f);
+			partsList = (HashMap<String,Part>) o.readObject();
+			System.out.println("Parts list loaded successfully.");
+			o.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		} catch(ClassNotFoundException c){
+			c.printStackTrace();
+		}
+		try{    // kit configurations
+			f = new FileInputStream("InitialData/initialKitConfigs.ser");
+			o = new ObjectInputStream(f);
+			kitConfigList = (HashMap<String,KitConfig>) o.readObject();
+			System.out.println("Kit configuration list loaded successfully.");
+			o.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		} catch(ClassNotFoundException c){
+			c.printStackTrace();
+		}
+	}
 
-// To search a list of kit configurations for kits containing a certain part
- //returns ArrayList<String> kitNames;
-     public ArrayList<String> kitConfigsContainingPart(String str) {
-         KitConfig kitConfig = new KitConfig();
-         String kitName = new String();
-         ArrayList<String> affectedKits = new ArrayList<String>();
+	public void populatePanelList() { // adds list to panel display
+		Iterator itr = kitConfigList.entrySet().iterator(); 
+		while(itr.hasNext()) { 
+			Map.Entry pairs = (Map.Entry)itr.next(); 
+			String kitName= (String)pairs.getKey();
+			((FactoryProdManPanel)UI).addKit(kitName);
+		}
+	}
+
+	// To search a list of kit configurations for kits containing a certain part
+	//returns ArrayList<String> kitNames;
+	public ArrayList<String> kitConfigsContainingPart(String str) {
+		KitConfig kitConfig = new KitConfig();
+		String kitName = new String();
+		ArrayList<String> affectedKits = new ArrayList<String>();
 
 
-         Iterator itr = kitConfigList.entrySet().iterator(); 
-         while(itr.hasNext()) {                  
-             Map.Entry pairs = (Map.Entry)itr.next();    
-             kitConfig = (KitConfig)pairs.getValue();
-             for (Part p:kitConfig.listOfParts) {
-                 if (p.name.equals(str)) {
-                     affectedKits.add((String)pairs.getKey());
-                     break;
-                 }
-             }
-         }
-         return affectedKits;
+		Iterator itr = kitConfigList.entrySet().iterator(); 
+		while(itr.hasNext()) {                  
+			Map.Entry pairs = (Map.Entry)itr.next();    
+			kitConfig = (KitConfig)pairs.getValue();
+			for (Part p:kitConfig.listOfParts) {
+				if (p.name.equals(str)) {
+					affectedKits.add((String)pairs.getKey());
+					break;
+				}
+			}
+		}
+		return affectedKits;
 
-     }		
+	}		
 
 }
