@@ -180,7 +180,7 @@ public class FCSAgent extends Agent implements FCS{
 
 
 	/**
-	 * This method removes a part from the FCSAgent
+	 * This method removes a part from the FCSAgent.  It also removes any kitConfigs that use that part.
 	 * @param partname The name of the part you want to remove.
 	 */
 	public void removePartType(String partname){
