@@ -177,9 +177,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	public void msgHereArePartCoordinatesForNest(Nest nest, Part part, int coordinate) {
 		debug("received msgHereArePartCoordinatesForNest("+nest+"," +part.name+","+coordinate+")");
 		for(int i = 0; i < nests.size(	); i++){
-			debug(nests.get(i).nest + " == " + nest + " && " + nests.get(i).part.name + " == " + part.name);
 			if(nests.get(i).nest == nest && nests.get(i).part.name == part.name){
-				debug("PICK_UP_NEEDED");
 				nests.get(i).state = NestState.PICK_UP_NEEDED;
 				nests.get(i).partCoordinate = coordinate;
 			}
@@ -437,9 +435,6 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		else if(this.armFour == null){
 			this.armFour = (Part) this.nests.get(nest).part.clone();
 		}
-		
-		// Message nest that part was taken
-		this.nests.get(nest).nest.msgPartsRobotGrabbingPartFromNest(this.nests.get(nest).partCoordinate);
 		
 		// Update the nest state
 		this.nests.get(nest).partsTaken++;

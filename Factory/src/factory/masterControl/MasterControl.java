@@ -835,9 +835,7 @@ public class MasterControl {
         timeToQuit = System.currentTimeMillis() + 2000;
         while (System.currentTimeMillis() < timeToQuit);
 
-            
-      		mc.n0b.msgYouNeedPart(p2);
-      		mc.n0t.msgYouNeedPart(p0);
+        mc.partsRobot.msgMakeKit(firstKit);
       		
       		//mc.n0b.msgYouNeedPart(p3);
 
