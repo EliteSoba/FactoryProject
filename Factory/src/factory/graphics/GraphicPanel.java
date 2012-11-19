@@ -762,10 +762,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if(isLaneManager || isFactoryProductionManager) {
 			if(flashCounter >= 0)
 			{
-				int flashX = nests.get(flashFeederIndex*2).getX()-12;
+				int flashX = nests.get(flashFeederIndex*2).getX()-20;
 				int flashY = nests.get(flashFeederIndex*2).getY()-12;
 				g.drawImage(flashImage, flashX, flashY, null);
-				flashX = nests.get(flashFeederIndex*2+1).getX()-12;
+				flashX = nests.get(flashFeederIndex*2+1).getX()-20;
 				flashY = nests.get(flashFeederIndex*2+1).getY()-12;
 				g.drawImage(flashImage, flashX, flashY, null);
 				flashCounter --;
