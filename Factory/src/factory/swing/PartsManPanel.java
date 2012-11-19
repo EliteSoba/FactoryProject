@@ -49,7 +49,7 @@ public class PartsManPanel extends JPanel{
 	public PartsManPanel(PartsManager p){
 		this.setLayout(new CardLayout());
 		partsManager = p;
-		currentID = partsManager.parts.size();
+		currentID = partsManager.parts.size() + 1;
 		fileNames = new ArrayList<String>();
 		fileNames.add("eye");
 		fileNames.add("body");
@@ -94,7 +94,6 @@ public class PartsManPanel extends JPanel{
 		scrollPane = new JScrollPane(table);
 		scrollPane.setMaximumSize(new Dimension(460, 300));
 		table.setFillsViewportHeight(true);
-		System.out.println("Parts : " + partsManager.parts.size());
 		for(int i = 0; i <= partsManager.parts.size(); i++){
 			for(Part temp : partsManager.parts.values()){
 				if(i == temp.id){
@@ -258,9 +257,7 @@ public class PartsManPanel extends JPanel{
 				}else if ((Integer)nestStabalizationTime.getValue() <= 0){
 					name.setText("Invalid time.");	
 				}else{
-					System.out.println("I will create a new part and send it to the server.");
 
-					System.out.println("parts size : " + partsManager.parts.size());
 					Part p = new Part(name.getText(), currentID, description.getText(),"Images/" + (String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
 					addItem(p);
 					currentID++;
@@ -431,7 +428,6 @@ public class PartsManPanel extends JPanel{
 			String messageEditPanel = new String (" ");
 
 			if (ae.getSource() == removeItem){
-				System.out.println("I will remove a part and update the server.");
 
 				messageEditPanel = "pm multi cmd rmpartname " + currentPart.name; 
 				partsManager.sendCommand(messageEditPanel);
@@ -498,7 +494,6 @@ public class PartsManPanel extends JPanel{
 			nestStabalizationTime.setValue((int)p.nestStabilizationTime);
 			for(int i = 0; i < fileNames.size(); i++){
 				if(p.imagePath.equals("Images/" + fileNames.get(i) + ".png")){
-					System.out.println("Image : " + fileNames.get(i));
 					imageSelection.setSelectedIndex(i);
 					break;
 				}
@@ -532,7 +527,6 @@ public class PartsManPanel extends JPanel{
 	}
 
 	public void removeItem(Part p){
-		System.out.println("Removing " + p.name + " " + p.id);
 		for(int i = 0; i < model.getRowCount(); i++){
 			if((Integer)p.id == (Integer)model.getValueAt(i, 0)){
 				model.removeRow(i);
@@ -588,7 +582,7 @@ public class PartsManPanel extends JPanel{
 				addPanel.name.setText("");
 				addPanel.description.setText("Enter description here");
 				addPanel.imageSelection.setSelectedIndex(0);
-				addPanel.nestStabalizationTime.setValue(0);
+				addPanel.nestStabalizationTime.setValue(1);
 
 			}
 		}
