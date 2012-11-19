@@ -51,12 +51,12 @@ class GraphicPartsRobot extends GraphicRobot
 		imageHeight = init_imageHeight;
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
 		itemIndex = 0;
-		// The parts robot will prioritize: up, right, left, down
+		// The parts robot will prioritize: right, up, down, left
 		movementCheckingOrders = new int[4];
 		movementCheckingOrders[0] = 1;
-		movementCheckingOrders[0] = 0;
-		movementCheckingOrders[0] = 2;
-		movementCheckingOrders[0] = 3;
+		movementCheckingOrders[1] = 0;
+		movementCheckingOrders[2] = 2;
+		movementCheckingOrders[3] = 3;
 	}
 	
 	/**
