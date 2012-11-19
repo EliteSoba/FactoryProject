@@ -47,17 +47,12 @@ public class KitManager extends Client implements WindowListener{
 
 	@Override
 	public void doCommand(ArrayList<String> pCmd) {
-<<<<<<< HEAD
-		System.out.println("Command");
-		for(int i = 0; i < pCmd.size(); i++){
-			System.out.println(pCmd.get(i));
-		}
-=======
+
 //		System.out.println("GOT HERE: ");
 //		for (int i = 0; i < pCmd.size(); i++){
 //			System.out.println(pCmd.get(i));
 //		}
->>>>>>> debugggin
+
 		int size = pCmd.size();
 		//parameters lay between i = 2 and i = size - 2
 		String action = pCmd.get(0);
