@@ -53,6 +53,7 @@ public class MasterControl {
     TreeMap<String, Agent> agentTreeMap;
 	TreeMap<String, PartHandler> partHandlers; 
 	TreeMap<String, Boolean> partOccupied;
+    TreeMap<List<String>, List<String>> multiCmdDsts;
 
     // Lists of Known Clients, Agents, CommandTypes, and supported Commands
 
@@ -75,8 +76,10 @@ public class MasterControl {
 
 	// Lists of Commands with Multi Destinations and Lists of Destinations associated with those Commands
 
-	private static final List<String> multiCmd_1 = Arrays.asList("addpartname", "rmpartname", "partconfig");
-    private static final List<String> multiCmdDst_1 = Arrays.asList("km", "fpm");
+	private static final List<String> multiCmd_1 = Arrays.asList("purgefeeder", "purgetoplane", "purgebottomlane");
+    private static final List<String> multiCmdDst_1 = Arrays.asList("gm", "lm");
+    private static final List<List<String>> multiCmds = Arrays.asList(multiCmd_1);
+
 
     // MasterControl Server Socket
 
@@ -103,9 +106,13 @@ public class MasterControl {
 
 		}
 		connectAllSockets(debug); // This waits for every client to start up before moving on.
+
+		multiCmdDsts.put(multiCmd_1, multiCmdDst_1);
+
 		// At this point, all of the sockets are connected, PartHandlers have been created
 		// The TreeMaps are updated with all of the relevant data, and the Factory can go.
-		startAgents();
+
+        startAgents();
 
 		sendConfirm();
 		// At this point, all of the parts have been notified that
@@ -632,18 +639,18 @@ public class MasterControl {
 	private ArrayList<PartHandler> getDestinations(String myCmd){
 
 
-
-		if(multiCmd_1.contains(myCmd)){
-            ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
-            for(String dst : multiCmdDst_1){
-                if(partHandlers.containsKey(dst)){
-                    returnAL.add(partHandlers.get(dst));
+        for(List<String> l : multiCmds){
+            if(l.contains(myCmd)){
+                ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
+                for(String dst : multiCmdDsts.get(l)){
+                    if(partHandlers.containsKey(dst)){
+                        returnAL.add(partHandlers.get(dst));
+                    }
                 }
+                return returnAL;
             }
-            return returnAL;
-		} else {
-			return null;
-		}
+        }
+        return null;
 
 	}
 
