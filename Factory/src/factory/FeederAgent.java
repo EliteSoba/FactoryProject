@@ -27,8 +27,8 @@ public class FeederAgent extends Agent implements Feeder {
 	public Vision vision;
 	public Gantry gantry;
 	
-	
-	private static int kOK_TO_PURGE_TIME = 4;
+	private final static int kNUM_PARTS_FED = 15;
+	private final static int kOK_TO_PURGE_TIME = 4;
 	private String name;
 	public int feederNumber;
 	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());
@@ -574,7 +574,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	private void StartFeeding(){
 		debug("action start feeding.");
-		MyLane currentLane;
+		MyLane currentLane = null;
 		
 		if (topLane.part != null)
 		{
@@ -617,6 +617,14 @@ public class FeederAgent extends Agent implements Feeder {
 		},(long) kOK_TO_PURGE_TIME * 1000); // okay to purge after this many seconds
 
 		
+		DoStartFeeding(currentPart);
+		currentLane.lane.msgFeedingParts(kNUM_PARTS_FED); // we feed a constant number of parts into the lane each time
+		
+		System.out.println("1.6");
+
+		stateChanged();
+
+		
 		// NOT NEEDED:
 //		feederEmptyTimer.schedule(new TimerTask(){
 //			public void run(){	
@@ -653,11 +661,6 @@ public class FeederAgent extends Agent implements Feeder {
 		//	Timer.new(30000, { state = FeederState.OK_TO_PURGE; });
 		//		Timer.new(currentPart.averageDelayTime,{vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this) });
 		// need a timer so that we don't immediately purge the new ones
-
-		DoStartFeeding(currentPart);
-		System.out.println("1.6");
-
-		stateChanged();
 	}
 
 	/** This method returns the name of the FeederAgent **/
