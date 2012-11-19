@@ -28,7 +28,7 @@ public class FeederAgent extends Agent implements Feeder {
 	public Gantry gantry;
 	
 	private final static int kNUM_PARTS_FED = 15;
-	private final static int kOK_TO_PURGE_TIME = 4;
+	private final static int kOK_TO_PURGE_TIME = 6;
 	public int feederNumber;
 	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());
 	
@@ -497,6 +497,10 @@ public class FeederAgent extends Agent implements Feeder {
 			}
 		}
 
+		if (purging == true)
+			debug("yep, purging.");
+		else
+			debug("nope, not purging.");
 
 		return purging;
 	}
@@ -524,6 +528,7 @@ public class FeederAgent extends Agent implements Feeder {
 		myLane.state = MyLaneState.EMPTY; // we have received a message from the animation telling us that the lane has been purged
 
 		myLane.lane.msgPurge();
+		
 	}
 
 	// Old way was using a DELETED state, and was looking at all the requestedParts
@@ -622,7 +627,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 		
 		DoStartFeeding(currentPart);
-		currentLane.lane.msgFeedingParts(kNUM_PARTS_FED); // we feed a constant number of parts into the lane each time
+		//currentLane.lane.msgFeedingParts(kNUM_PARTS_FED); // we feed a constant number of parts into the lane each time
 		
 		System.out.println("1.6");
 

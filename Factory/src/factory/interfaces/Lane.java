@@ -23,9 +23,9 @@ public void msgNestHasStabilized();
 
 public void msgNestHasDestabilized();
 
-public void msgFeedingParts(int numParts);
-
-public void msgNestIsOutOfParts();
+//public void msgFeedingParts(int numParts);
+//
+//public void msgNestIsOutOfParts();
 
 
 }

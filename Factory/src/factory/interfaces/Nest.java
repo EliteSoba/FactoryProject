@@ -13,6 +13,6 @@ public interface Nest {
 	int getPosition();
 	void msgYouNeedPart(Part part);
 	
-	void msgPartsRobotGrabbingPartFromNest(int coordinate);
-	void msgFeedingParts(int numParts);
+//	void msgPartsRobotGrabbingPartFromNest(int coordinate);
+//	void msgFeedingParts(int numParts);
 }
