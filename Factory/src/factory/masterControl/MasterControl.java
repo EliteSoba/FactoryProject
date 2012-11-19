@@ -219,8 +219,8 @@ public class MasterControl {
 		conveyor.setKitRobot(kitRobot);
 		kitRobot.setStand(stand);
 		conveyor.setFCS(fcs);
-		stand.setVision(vision);
-		stand.setPartsRobot(partsRobot);
+		//stand.setVision(vision);
+		//stand.setPartsRobot(partsRobot);
 		conveyorController.setConveyor(conveyor);
 
 		
@@ -332,8 +332,10 @@ public class MasterControl {
 	// what method to call on what agent.
 
 	public boolean agentCmd(ArrayList<String> cmd){ 		//GO HERE
-
-		Agent destination;
+        if(!checkAgentCmd(cmd)){
+            return false;
+        }
+        Agent destination;
 		// 0 = Source
 		// 1 = Destination
 		// 2 = CmdType
@@ -519,7 +521,7 @@ public class MasterControl {
 
 
 	public boolean clientCmd(ArrayList<String> cmd){	
-		String s = checkCmd(cmd);
+		String s = checkClientCmd(cmd);
 		System.out.println(s);
 		String a = cmd.get(0); // Source
 		if(s != null){
@@ -673,21 +675,26 @@ public class MasterControl {
 		return partHandlers.get(id);
 	}
 
+    private boolean checkAgentCmd(ArrayList<String> pCmd){
+
+        // These are commands going to Agents
+
+
+        return true;
+
+    }
+
 
 	// checkCmd is called by parseCmd with the command received to check for errors
 	// Therefore, it should be private.
 
-	private String checkCmd(ArrayList<String> pCmd) {
+	private String checkClientCmd(ArrayList<String> pCmd) {
 
 		// Check that the cmd is of a valid length
 
 		if(pCmd.size() < 4){
 			return "there must be a command";
 		}
-
-//		if(pCmd.size() == 4){
-//			return "missing parameters for command";
-//		}
 
 		// Check that the source is a valid DID
 
@@ -782,8 +789,10 @@ public class MasterControl {
 		Part p2 = new Part("shoe",001,"desc","imgPath",3);
 		Part p3 = new Part("shoe",001,"desc","imgPath",3);
 		Part p4 = new Part("sword",002,"desc","imgPath",4);
-		Part p5 = new Part("tentacle",002,"desc","imgPath",4);
-		
+		Part p5 = new Part("tentacle",003,"desc","imgPath",4);
+		Part p6 = new Part("tentacle",003,"desc","imgPath",4);
+		Part p7 = new Part("eye",000,"desc","imgPath",4);
+
 		List<Part> partList = new ArrayList<Part>();
 		partList.add(p0);
 		partList.add(p1);
@@ -798,6 +807,33 @@ public class MasterControl {
 		//	public Part(String n,int i,String d,String p,double t) {
 
 		//mc.kitRobot.msgNeedEmptyKitAtSlot("topSlot");
+//		
+//		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
+//		
+//		mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
+//
+//		mc.f0.msgLaneNeedsPart(p4,mc.l0t); //sword to top
+//
+//		mc.f0.msgLaneNeedsPart(p1,mc.l0t); //eye to top
+//
+//		mc.f0.msgLaneNeedsPart(p5,mc.l0b); //tentacle to bottom
+//		
+//		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
+//		
+//		mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
+
+		mc.n0t.msgYouNeedPart(p0);
+		mc.n0b.msgYouNeedPart(p2);
+		
+		mc.n1b.msgYouNeedPart(p2);
+		mc.n1t.msgYouNeedPart(p3);
+
+		mc.n2b.msgYouNeedPart(p4);
+		mc.n2t.msgYouNeedPart(p5);
+
+		mc.n3b.msgYouNeedPart(p6);
+		mc.n3t.msgYouNeedPart(p7);
+
 		
 		/*
 		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
@@ -817,11 +853,6 @@ public class MasterControl {
 		
 		
 		
-//				mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
-//		
-//				mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
-//		
-//				mc.f0.msgLaneNeedsPart(p4,mc.l0t); //sword to top
 //		
 //				mc.f0.msgLaneNeedsPart(p5,mc.l0b); //tentacle to bottom
 //		

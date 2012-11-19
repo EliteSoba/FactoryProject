@@ -183,6 +183,12 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("emptykitenterscell")) {
 				((FactoryProductionPanel) graphics).newEmptyKit();
 			}
+			
+			//Commands from VisionAgent
+			else if (identifier.equals("takepictureofnest")) {
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).cameraFlash(nestIndex);
+			}
 
 			
 			//Swing Receive Commands

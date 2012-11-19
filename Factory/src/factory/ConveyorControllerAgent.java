@@ -11,7 +11,6 @@ import agent.Agent;
 public class ConveyorControllerAgent extends Agent implements ConveyorController {
 	////Data	
 	Conveyor conveyor;
-	List<Kit> exported_kits = new ArrayList<Kit>();
 	public enum Conveyor_State { WANTS_EMPTY_KIT, EMPTY_KIT_SENDING, NO_ACTION };
 	Conveyor_State conveyor_state = Conveyor_State.NO_ACTION;
 	
@@ -31,8 +30,8 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		debug("received msgConveyorWantsEmptyKit() from the Conveyor");
 		if (conveyor_state.equals(Conveyor_State.NO_ACTION)) {
 			conveyor_state = Conveyor_State.WANTS_EMPTY_KIT;
-			stateChanged();
 		}
+		stateChanged();
 	}
 	
 	
