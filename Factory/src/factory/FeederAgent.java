@@ -28,7 +28,7 @@ public class FeederAgent extends Agent implements Feeder {
 	public Gantry gantry;
 	
 	private final static int kNUM_PARTS_FED = 15;
-	private final static int kOK_TO_PURGE_TIME = 6;
+	private final static int kOK_TO_PURGE_TIME = 7;
 	public int feederNumber;
 	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());
 	
@@ -142,12 +142,12 @@ public class FeederAgent extends Agent implements Feeder {
 		myNestsHaveBeenChecked = false;
 		if(topLane.lane == lane)
 		{
-			debug("My top lane has stabilized and so it's ready for a picture.");
+			debug("My TOP lane has stabilized and so it's ready for a picture.");
 			topLane.picState = PictureState.STABLE;
 		}
 		else if(bottomLane.lane == lane)
 		{
-			debug("My bottom lane has stabilized and so it's ready for a picture.");
+			debug("My BOTTOM lane has stabilized and so it's ready for a picture.");
 			bottomLane.picState = PictureState.STABLE;
 		}
 		
@@ -160,12 +160,12 @@ public class FeederAgent extends Agent implements Feeder {
 		myNestsHaveBeenChecked = false;
 		if(topLane.lane == lane)
 		{
-			debug("Uhoh, my top lane has destabilized!");
+			debug("Uhoh, my TOP lane has destabilized!");
 			topLane.picState = PictureState.UNSTABLE;
 		}
 		else if(bottomLane.lane == lane)
 		{
-			debug("Uhoh, my bottom lane has destabilized!");
+			debug("Uhoh, my BOTTOM lane has destabilized!");
 			bottomLane.picState = PictureState.UNSTABLE;
 		}
 		
@@ -559,7 +559,10 @@ public class FeederAgent extends Agent implements Feeder {
 		debug("processing feeder parts of type "+mpr.pt.name);
 		mpr.state = MyPartRequestState.PROCESSING;
 		log.add(new LoggedEvent("Action ProcessFeederParts()"));
-		requestedParts.remove(mpr);
+		synchronized(requestedParts)
+		{
+			requestedParts.remove(mpr);
+		}
 		System.out.print("0.1");
 		currentPart = mpr.pt;
 		System.out.print("0.2");

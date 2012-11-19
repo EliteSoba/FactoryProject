@@ -302,7 +302,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void movePartsRobotToStation(int kitIndex) {
 		if (isFactoryProductionManager) {
 			partsRobot.setState(3);
-			partsRobot.setDestination(station.getX()+35,station.getY()-station.getY()%5,180);
+			partsRobot.setDestination(station.getX()+35,station.getY()+100*kitIndex-station.getY()%5,180);
 			partsRobot.setDestinationKit(kitIndex);
 		}
 	}
@@ -671,7 +671,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void partsRobotPopItemToCurrentKitDone() {
 		if (isFactoryProductionManager)
 			sendMessage("kam set itemtype " + partsRobot.getDestinationKit() + " " + transferringItem.getImagePath());
-		sendMessage("kra cnf");
+		sendMessage("pra cnf");
 	}
 
 	public void feedLaneDone(int feederNum){

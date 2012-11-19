@@ -20,6 +20,7 @@ import factory.Part;
 public class GraphicLaneManager{
 
 	//Image Icons
+	/**The image icons of all the paintable objects in Lane Manager**/
 	ImageIcon lane1Icon, lane2Icon;
 	ImageIcon divergeLaneIcon;
 	ImageIcon feederIcon;
@@ -27,11 +28,14 @@ public class GraphicLaneManager{
 	GraphicBin bin;
 
 	//Bin coordinates
+	/**The relative coordinates of the feeder**/
 	int feederX,feederY;
 
 	//Items
+	/**The Arraylist of items for each lane**/
 	ArrayList <GraphicItem> lane1Items;
 	ArrayList <GraphicItem> lane2Items;
+	/**Arraylist of booleans for the queues**/
 	ArrayList <Boolean> lane1QueueTaken;			//The queue
 	ArrayList <Boolean> lane2QueueTaken;			//The queue
 
