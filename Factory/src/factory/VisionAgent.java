@@ -133,11 +133,7 @@ public class VisionAgent extends Agent implements Vision {
 			
 		}
 
-		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
+		
 		DoTakePicture();
 	
 	   int randomNum = r.nextInt(11);

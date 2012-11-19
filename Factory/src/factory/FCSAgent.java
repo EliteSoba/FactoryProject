@@ -74,7 +74,7 @@ public class FCSAgent extends Agent implements FCS{
 	 * @param kitName This is the name of the kit configuration that you want to produce.
 	 */
 	public void msgProduceKit(int quantity, String kitName) {
-		//		System.out.println("IT WORKS!");
+		debug("Got message to produce Kit");
 		KitConfig recipe = new KitConfig();
 		recipe = kitRecipes.get(kitName);
 		recipe.quantity = quantity;
