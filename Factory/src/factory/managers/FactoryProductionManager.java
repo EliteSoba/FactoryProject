@@ -1,7 +1,7 @@
 //Contributors: Ben Mayeux,Stephanie Reagle, Joey Huang, Tobias Lee, Ryan Cleary
 //CS 200
 
-// Last edited: 11/18/12 4:45pm by Joey Huang
+// Last edited: 11/18/12 4:51pm by Joey Huang
 
 /* This program is the Factory Production Manager which contains (1) a user interface that allows
  * the user to submit orders to the factory (kit name and quantity),view the production schedule
@@ -248,7 +248,7 @@ if (affectedKits.size() > 0) {
 				KitConfig kit = kitConfigList.get(pCmd.get(2));
 				kit.kitName = pCmd.get(3);
 				kit.listOfParts.clear();
-				for (int 4 = 0; i < 12; i++){
+				for (int i = 4; i < 12; i++){
 				String partName = pCmd.get(i);
 				kit.listOfParts.add(partsList.get(partName));
 			}
