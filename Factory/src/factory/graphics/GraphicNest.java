@@ -3,14 +3,37 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
+/**
+ * @author Minh la,George Li <p>
+ * <b>{@code GraphicNest.java}</b> (50x720) <br>
+ * This creates a nest and an array of items in the nest,
+ */
+
 class GraphicNest extends GraphicAnimatedObject
 {
+	/**An array of items in the nest**/
 	protected ArrayList<GraphicItem> items;			// inventory of items
 	
+	/**
+	 * Default constructor
+	 */
 	public GraphicNest()
 	{
 		
 	}
+	
+	/**
+	 * Creates a nest with specific locations, image width, height and path.
+	 * @param init_x x-coordinate of the nest
+	 * @param init_y y-coordinate of the nest
+	 * @param init_theta the angle of where the nest is facing
+	 * @param init_dx speed/velocity in the x direction
+	 * @param init_dy speed/velocity in the y direction
+	 * @param init_dtheta direction of the the nest is facing
+	 * @param init_imageWidth the width of the image
+	 * @param init_imageHeight the height of the image
+	 * @param init_imagePath the image path of the image
+	 */
 	public GraphicNest(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
 		items = new ArrayList<GraphicItem>();
@@ -25,19 +48,39 @@ class GraphicNest extends GraphicAnimatedObject
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
 	}
 	
+	/**
+	 * Paints the nest along with all its items
+	 * @param g the specified graphics windows
+	 */
 	public void paint(Graphics g) {
 		g.drawImage(image, x, y, null);							// paint nest
 		for(int i = 0; i < items.size(); i++)					// paint each item in the nest
 			items.get(i).paint(g, 3+x+(i/3)*25, 3+y+(i%3)*25);
 	}
+	
+	/**
+	 * Add items to the array of items in Nest
+	 * @param newItem one item
+	 */
 	public void addItem(GraphicItem newItem)
 	{
 		items.add(newItem);
 	}
+	
+	/**
+	 * Clear out the items in the nest
+	 */
 	public void clearItems()
 	{
 		items.clear();
 	}
+	
+	/**
+	 *returns if the nest has items or not. 
+	 *True - has items
+	 *False - empty 
+	 * @return
+	 */
 	public boolean hasItem()
 	{
 		if(items.size() >= 1)
@@ -45,6 +88,11 @@ class GraphicNest extends GraphicAnimatedObject
 		else
 			return false;
 	}
+	
+	/**
+	 * Erases the last item and returns it
+	 * @return the last item in the nest
+	 */
 	public GraphicItem popItem()
 	{
 		if (items.size() == 0)
@@ -65,10 +113,20 @@ class GraphicNest extends GraphicAnimatedObject
 		items.remove(index);
 		return returnedItem;
 	}
+	/**
+	 * returns the size of the items in the nest
+	 * @return size of items in the nest
+	 */
 	public int getSize()
 	{
 		return items.size();
 	}
+	
+	/**
+	 * returns the item at the wanted index
+	 * @param i the index of item to be returned
+	 * @return the item at i position in the array of items
+	 */
 	public GraphicItem getItemAt(int i)
 	{
 		return items.get(i);

@@ -27,7 +27,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton inspect2;
 	JButton dumpKit;
 	JButton partsRobotNest1;
-	JButton partsRobotNest2;
+	JButton partsRobotNest7;
 	JButton partsRobotStation;
 	JButton partsRobotGoToCenter;
 	JButton gantryRobotGoToStart;
@@ -50,7 +50,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		test = new JButton("Quit");
 		blank = new JLabel[20];
 		partsRobotNest1 = new JButton("Nest 1 Full");
-		partsRobotNest2 = new JButton("Nest 2 Full");
+		partsRobotNest7 = new JButton("Nest 7 Full");
 		partsRobotStation = new JButton("Station");
 		popItemToKit = new JButton("Pop Item to Kit");
 		gantryRobotGoToStart = new JButton("Go to Start");
@@ -79,7 +79,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.addButton(test);
 		this.add(itemIndex);
 		this.addButton(partsRobotNest1);
-		this.addButton(partsRobotNest2);
+		this.addButton(partsRobotNest7);
 		this.addButton(partsRobotStation);
 		this.addButton(popItemToKit);
 		this.addButton(partsRobotGoToCenter);
@@ -121,8 +121,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 			am.dumpKit();
 		else if(source == partsRobotNest1)
 			am.moveRobotToNest(0, Integer.parseInt(itemIndex.getText()));
-		else if(source == partsRobotNest2)
-			am.moveRobotToNest(1, Integer.parseInt(itemIndex.getText()));
+		else if(source == partsRobotNest7)
+			am.moveRobotToNest(6, Integer.parseInt(itemIndex.getText()));
 		else if(source == partsRobotGoToCenter)
 			am.moveRobotToCenter();
 		else if(source == partsRobotStation)
