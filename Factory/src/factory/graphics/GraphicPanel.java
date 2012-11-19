@@ -44,6 +44,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	// GANTRY
 	protected GraphicGantryRobot gantryRobot;
 	
+	protected GraphicItem transferringItem;
+	
 	public GraphicPanel(/*int offset/**/) {
 		WIDTH = 1100;
 		HEIGHT = 720;
@@ -62,6 +64,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		isFactoryProductionManager = false;*/
 		
 		flashImage = Toolkit.getDefaultToolkit().getImage("Images/flash3x3.png");
+		transferringItem = null;
 		
 		/*belt = new GraphicConveyorBelt(0-offset, 0, this);
 		station = new GraphicKittingStation(200-offset, 191, this);
@@ -299,7 +302,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	public void partsRobotPopItemToCurrentKit(int itemIndex)
 	{
-		station.addItem(partsRobot.popItemAt(partsRobot.getItemIndex()),partsRobot.getDestinationKit());
+		transferringItem = partsRobot.popItemAt(itemIndex);
+		station.addItem(partsRobot.popItemAt(itemIndex),partsRobot.getDestinationKit());
 		partsRobotPopItemToCurrentKitDone();
 	}
 	
@@ -540,6 +544,14 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 	}
 	
+	public void setFeederBin(int feederNum, GraphicBin bin) {
+		lane[feederNum].setBin(bin);
+	}
+	
+	public void setKitItem(int kitNum, GraphicItem item) {
+		station.addItem(item, kitNum);
+	}
+	
 	/**
 	 * Moves Parts down the Lanes
 	 */
@@ -613,6 +625,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 
 	public void gantryRobotArrivedAtFeederForDropoff() {
+		sendMessage("lm set " + gantryRobot.getDestinationFeeder() + " "+ lane[gantryRobot.getDestinationFeeder()].getBin().getPartName());
 		sendMessage("ga cnf");
 	}
 
@@ -638,6 +651,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void partsRobotPopItemToCurrentKitDone() {
+		if (isFactoryProductionManager)
+			sendMessage("kam set itemtype " + partsRobot.getDestinationKit() + " " + transferringItem.getImagePath());
 		sendMessage("kra cnf");
 	}
 

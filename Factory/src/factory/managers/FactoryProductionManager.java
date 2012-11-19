@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import factory.client.Client;
 import factory.graphics.FactoryProductionPanel;
+import factory.graphics.GraphicBin;
+import factory.graphics.GraphicItem;
+import factory.graphics.GraphicPanel;
 import factory.swing.FactoryProdManPanel;
 import factory.Part;
 import factory.KitConfig;
@@ -240,7 +243,18 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("kitsproduced")) { // updates number of kits produced for schedule
 				((FactoryProdManPanel) UI).kitProduced();
 			}
+			else if (identifier.equals("bintype")) { //Sets the bin for the LM
+				int feederNum = Integer.valueOf(pCmd.get(2));
+				GraphicBin bin = new GraphicBin(new Part(pCmd.get(3)));
+				((GraphicPanel) graphics).setFeederBin(feederNum, bin);
+			}
+			else if (identifier.equals("itemtype")) {
+				int kitNum = Integer.valueOf(pCmd.get(2));
+				GraphicItem item = new GraphicItem(-40, 0, pCmd.get(3));
+				((GraphicPanel) graphics).setKitItem(kitNum, item);
+			}
 		}
+		
 		
 		else if(action.equals("cnf")){
 		}
