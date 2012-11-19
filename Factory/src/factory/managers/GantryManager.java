@@ -165,6 +165,8 @@ public class GantryManager extends Client {
 				error.concat(parsedCommand.get(i));
 			System.out.println(error);
 	   }
+	   else if(action.equals("mcs"))
+		   System.exit(0);
 		else 
    		   System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 	}

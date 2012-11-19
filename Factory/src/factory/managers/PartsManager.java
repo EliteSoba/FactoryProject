@@ -173,6 +173,8 @@ else if(action.equals("cnf")){
 
 	
 }
+          else if(action.equals("mcs"))
+   		   System.exit(0);
  else 
      System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 }
