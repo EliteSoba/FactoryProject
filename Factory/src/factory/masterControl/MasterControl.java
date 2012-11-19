@@ -232,7 +232,7 @@ public class MasterControl {
 		agentTreeMap.put("ga", gantry );
 		agentTreeMap.put("kra", kitRobot);
 		agentTreeMap.put("pra", partsRobot);
-		//agentTreeMap.put("sa", stand);
+		agentTreeMap.put("sa", stand);
 		agentTreeMap.put("va", vision);
 		agentTreeMap.put("fcsa", fcs);
 
@@ -297,7 +297,12 @@ public class MasterControl {
 
 
 		if(clients.contains(parsedCommand.get(1))){
-			return clientCmd(parsedCommand);
+			for(PartHandler ph : partHandlerList){
+                if(ph.client_id.equals(parsedCommand.get(1))){
+                    clientCmd(parsedCommand);
+                }
+            }
+            return false;                                                 // This is called if in Debug mode and the client being sent to is not connected.
 		} else if(agents.contains(parsedCommand.get(1))) {
 			return agentCmd(parsedCommand);
 		} else if(parsedCommand.get(1).equals("mcs")) {

@@ -486,13 +486,9 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isFactoryProductionManager) {
 			if(partsRobot.getState() == 2)		// partsRobot has arrived at nest
 			{
-				// Give item to partsRobot
-				if(partsRobot.getSize() < 4)
-				{
-					if (nests.get(partsRobot.getDestinationNest()).hasItem())
-						partsRobot.addItem(nests.get(partsRobot.getDestinationNest()).popItemAt(partsRobot.getItemIndex()));
-					partsRobot.setState(0);
-				}
+				if (nests.get(partsRobot.getDestinationNest()).hasItem())
+					partsRobot.addItem(nests.get(partsRobot.getDestinationNest()).popItemAt(partsRobot.getItemIndex()));
+				partsRobot.setState(0);
 				partsRobotArrivedAtNest();
 			}
 			else if(partsRobot.getState() == 4)	// partsRobot has arrived at kitting station
