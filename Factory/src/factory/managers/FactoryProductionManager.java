@@ -227,7 +227,9 @@ public class FactoryProductionManager extends Client {
 			}
 			else if (identifier.equals("addpartname")) {	// add new part to parts list
 				Part part = new Part(pCmd.get(2),Integer.parseInt(pCmd.get(3)),pCmd.get(6),pCmd.get(4),Integer.parseInt(pCmd.get(5)));
-				partsList.put(pCmd.get(3),part);
+				System.out.println(pCmd);
+				partsList.put(pCmd.get(2),part);
+				System.out.println(pCmd.get(2));
 			}
 			else if (identifier.equals("rmpartname")) {		// remove part from parts list
 				partsList.remove(pCmd.get(2));
