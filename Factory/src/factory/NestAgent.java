@@ -10,9 +10,9 @@ import factory.masterControl.MasterControl;
 
 public class NestAgent extends Agent implements Nest {
 	
-	public NestAgent(MasterControl mc, Lane lane) {
+	public NestAgent(MasterControl mc, Lane lane, int position) {
 		super(mc); // needed for the server 
-		
+		this.position = position;
 		this.myLane = lane;
 	}
 
@@ -21,7 +21,12 @@ public class NestAgent extends Agent implements Nest {
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
 	public Lane myLane;
 	public int numberOfParts = 0;
+<<<<<<< HEAD
 	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED, PART_REMOVED, OUT_OF_PARTS}
+=======
+	public int position;
+	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED, PART_REMOVED}
+>>>>>>> YEYEYEY
 	public NestState nestState = NestState.NORMAL;
 	public Part currentPart;
 	public enum MyPartState {  NEEDED, REQUESTED }
@@ -205,6 +210,12 @@ public class NestAgent extends Agent implements Nest {
 	
 	public Part getPart() {
 		return this.currentPart;
+	}
+
+	@Override
+	public int getPosition() {
+		// TODO Auto-generated method stub
+		return this.position;
 	}
 
 	

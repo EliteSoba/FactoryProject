@@ -61,7 +61,7 @@ public class FactoryProductionPanel extends GraphicPanel implements ActionListen
 		partsRobot = new GraphicPartsRobot(WIDTH/2-200,HEIGHT/2,0,5,5,10,100,100,"Images/robot1.png");
 		gantryRobot = new GraphicGantryRobot(WIDTH-150,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
 		
-		(new Timer(delay, this)).start();
+		(new Timer(DELAY, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		this.setVisible(true);
 	}

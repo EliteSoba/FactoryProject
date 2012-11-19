@@ -37,7 +37,7 @@ public class LanePanel extends GraphicPanel implements ActionListener{
 		for (int i = 0; i < lane.length; i++)
 			lane[i] = new GraphicLaneManager(35, 160*i + 50, i, this);
 		
-		(new Timer(delay, this)).start();
+		(new Timer(DELAY, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		this.setVisible(true);
 	}

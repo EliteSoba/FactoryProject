@@ -8,8 +8,9 @@ public interface Nest {
 	String nestName = "";
 	void msgDump();
 	String getNestName();
-	
+	Part getPart();
 
+	int getPosition();
 	void msgYouNeedPart(Part part);
 	
 	void msgPartsRobotGrabbingPartFromNest(int coordinate);

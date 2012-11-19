@@ -15,7 +15,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public int WIDTH, HEIGHT;
 	public static final Image TILE_IMAGE = Toolkit.getDefaultToolkit().getImage("Images/Tiles/floorTileXGrill.png");
 	public static final int TILE_SIZE = 128;
-	public static final int delay = 10;
+	public static final int DELAY = 40;
 	
 	protected Client am; //The Client that holds this
 	
@@ -738,12 +738,13 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			{
 				int flashX = nests.get(flashFeederIndex*2).getX();
 				int flashY = nests.get(flashFeederIndex*2).getY();
-				//System.out.println("==="+flashX+" "+flashY);
 				g.drawImage(flashImage, flashX, flashY, null);
 				flashX = nests.get(flashFeederIndex*2+1).getX();
 				flashY = nests.get(flashFeederIndex*2+1).getY();
 				g.drawImage(flashImage, flashX, flashY, null);
 				flashCounter --;
+				if(flashCounter == 1)
+					cameraFlashDone();
 			}
 		}
 		

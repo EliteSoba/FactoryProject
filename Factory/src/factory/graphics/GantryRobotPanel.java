@@ -28,7 +28,7 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 		
 		gantryRobot = new GraphicGantryRobot(WIDTH-125,HEIGHT/2,0,5,5,10,100,100,"Images/robot2.png");
 		
-		(new Timer(delay, this)).start();
+		(new Timer(DELAY, this)).start();
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		this.setVisible(true);
 	}
