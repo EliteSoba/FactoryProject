@@ -825,35 +825,7 @@ public class MasterControl {
         long timeToQuit = System.currentTimeMillis() + 5000;
         while (System.currentTimeMillis() < timeToQuit);
 
-        Part p0 = new Part("eye",000,"desc","imgPath",2);
-        Part p1 = new Part("eye",000,"desc","imgPath",3);
-        Part p2 = new Part("shoe",001,"desc","imgPath",3);
-        Part p3 = new Part("shoe",001,"desc","imgPath",3);
-        Part p4 = new Part("sword",002,"desc","imgPath",4);
-        Part p5 = new Part("tentacle",003,"desc","imgPath",4);
-        Part p6 = new Part("tentacle",003,"desc","imgPath",4);
-        Part p7 = new Part("tentacle",003,"desc","imgPath",4);
-
-        List<Part> partList = new ArrayList<Part>();
-        partList.add(p0);
-        partList.add(p1);
-        partList.add(p2);
-        partList.add(p3);
-        partList.add(p4);
-        partList.add(p5);
-        partList.add(p6);
-        partList.add(p7);
-
-        KitConfig firstKit = new KitConfig();
-        firstKit.listOfParts = partList;
-
-        // Send the message that the FCS would send
-        mc.partsRobot.msgMakeKit(firstKit);
-
-
-
-        timeToQuit = System.currentTimeMillis() + 2000;
-        while (System.currentTimeMillis() < timeToQuit);
+       
 
 
 //        mc.n0b.msgYouNeedPart(p2);
