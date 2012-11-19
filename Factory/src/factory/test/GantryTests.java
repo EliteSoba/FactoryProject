@@ -140,8 +140,7 @@ public class GantryTests extends TestCase{
 		assertEquals("Feeder 2 log should still be empty since the message should have been given to feeder 1; however, feeder 2 got message: "
 						+ f2.log.toString(), 0, f2.log.size());
 		
-		
-		//this will change later depending if i want to remove the bins from mybins or not
+		//gantry should have only have 1 bin request
 		assertEquals("Gantry should now have 1 bins", 1, gantry.myBins.size());
 		
 		gantry.pickAndExecuteAnAction();
