@@ -12,4 +12,5 @@ public interface PartsRobot {
 	public void msgClearLineOfSight(Nest nestOne, Nest nestTwo);
 	public void msgPictureTaken(Nest nestOne, Nest nestTwo);
 	public void msgHereArePartCoordinatesForNest(Nest nest, Part part, int coordinate);
+	public void msgNoMoreOrders();
 }

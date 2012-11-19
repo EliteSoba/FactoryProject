@@ -177,6 +177,17 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		//action for checking the inspected kit and then doing the correct action.
 		debug("Executing processKitAtInspection()");
 		
+		stand.msgKitRobotWantsStandAccess();
+		
+		if (!isUnitTesting) {
+			try {
+				debug("Waiting for the stand to tell KitRobot it is clear to go");
+				standApproval.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		if (stand.getSlotKit("inspectionSlot").state.equals(KitState.PASSED_INSPECTION)) {
 			//kit passed inspection
 			debug("KitRobot sees that the kit passed inspection");
@@ -218,7 +229,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		//action for exporting a good kit
 		debug("KitRobot picking up kit from inspection to export");
 		
-		stand.msgKitRobotWantsToExportKit();
+		stand.msgKitRobotWantsStandAccess();
 		if (!isUnitTesting) {
 			try {
 				debug("Waiting for the stand to tell KitRobot it is clear to go");
@@ -248,7 +259,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		debug("Executing putEmptyKitOnStand "+ pos);
 		
 		
-		stand.msgEmptyKitIsHereAndWantToDeliver();
+		stand.msgKitRobotWantsStandAccess();
 		
 		if (!isUnitTesting) {
 			try {
@@ -271,9 +282,8 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		
 		stand.setSlotKit(pos, this.holding);
 		stand.setSlotState(pos, MySlotState.EMPTY_KIT_JUST_PLACED);
-		
 		holding = null;
-		stand.msgKitRobotNoLongerUsingStand();
+		
 		debug("Done putting empty kit in "+pos);
 		
 		if (pos.equals("topSlot")) {
@@ -282,6 +292,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			actions.remove(StandInfo.NEED_EMPTY_BOTTOM);
 		}
 		
+		stand.msgKitRobotNoLongerUsingStand();
 		stateChanged();
 	}
 	
@@ -290,7 +301,17 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		 * KitRobot will dump any Kits that are not yet completed.
 		 * the kits that are are already in need of inspection or in the inspectionSlot will not be disturbed
 		 */
-		//assuming that exclusive access to the stand was given to the KitRobot at this time.
+		stand.msgKitRobotWantsStandAccess();
+		
+		if (!isUnitTesting) {
+			try {
+				debug("Waiting for the stand to tell KitRobot it is clear to go");
+				standApproval.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		if (stand.getSlotKit("topSlot") != null) {
 			if (stand.getSlotKit("topSlot").state.equals(KitState.INCOMPLETE)) {
 				//do animation of dumping topSlot
@@ -330,6 +351,17 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public void moveToInspectionSpot(String pos) {
 		//method for KitRobot moving a kit to the inspection slot
 		//Can assume that has exclusive access to the Stand during this
+		stand.msgKitRobotWantsStandAccess();
+		
+		if (!isUnitTesting) {
+			try {
+				debug("Waiting for the stand to tell KitRobot it is clear to go");
+				standApproval.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		debug("Executing moveToInspectionSpot for the" + pos);
 		
 		if (!isUnitTesting) {
@@ -343,12 +375,13 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stand.setSlotState("inspectionSlot", MySlotState.KIT_JUST_PLACED_AT_INSPECTION);
 		stand.setSlotState(pos, MySlotState.EMPTY);
 		
-		stand.msgKitRobotNoLongerUsingStand();
+		
 		if (pos.equals("bottomSlot")) {
 			actions.remove(StandInfo.NEED_INSPECTION_BOTTOM);
 		} else if (pos.equals("topSlot")) {
 			actions.remove(StandInfo.NEED_INSPECTION_TOP);
 		}
+		stand.msgKitRobotNoLongerUsingStand();
 		
 		stateChanged();
 	}
@@ -365,25 +398,25 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	
 	private void DoMoveInspectedKitToConveyor() {
 		debug("doing moveInspectedKitToConveyor");
-		server.command("kra fpm cmd putinspectionkitonconveyor");
+		server.command("kra kam cmd putinspectionkitonconveyor");
 		waitForAnimation();
 	}
 	
 	private void DoPutEmptyKitAt(String pos) {
 		debug("doing PutEmptyKitAt Animation for the "+ pos);
-		server.command("kra fpm cmd putemptykitatslot "+pos);
+		server.command("kra kam cmd putemptykitatslot "+pos);
 		waitForAnimation();
 	}
 	
 	private void DoMoveKitToInspection(String pos) {
 		debug("doing MoveKitToInspection Animation.  moving the kit at the "+pos+" to the inspectionSlot");
-		server.command("kra fpm cmd movekittoinspectionslot " + pos);
+		server.command("kra kam cmd movekittoinspectionslot " + pos);
 		waitForAnimation();
 	}
 	
 	private void DoDumpKitAtSlot(String pos) {
 		debug("doing DoDumpKitAtSlot Animation.  dumping the kit at "+pos);
-		server.command("kra fpm cmd dumpkitatslot "+pos);
+		server.command("kra kam cmd dumpkitatslot "+pos);
 		waitForAnimation();
 	}
 	
