@@ -46,8 +46,14 @@ public class MockPartsRobot extends MockAgent implements PartsRobot {
 		
 	}
 
-	@Override
 	public void msgHereArePartCoordiantes(Part part, Coordinate coordinateTwo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgHereArePartCoordinatesForNest(Nest nest, Part part,
+			int coordinate) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -16,7 +16,6 @@ public class MockGantry extends MockAgent implements Gantry {
 	} 
 
 
-	@Override
 	public void msgChangeGantryBinConfig(BinConfig binConfig) {
 		log.add(new LoggedEvent(
 				"Received message msgChangeGantryBinConfig from the FCS"));

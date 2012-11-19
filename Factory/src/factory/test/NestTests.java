@@ -14,7 +14,7 @@ public class NestTests extends TestCase {
 	Part p1;
 
 	protected void setUp() throws Exception {
-		nest = new NestAgent(null);
+		nest = new NestAgent(null, lane, 0);
 		lane = new MockLane("lane");
 		nest.setLane(lane);
 		nest.startThread();

@@ -72,4 +72,16 @@ public class MockFeeder extends MockAgent implements Feeder {
 		log.add(new LoggedEvent("msgNestHasDestabilized()"));
 	}
 
+	@Override
+	public void msgPartRobotHasRemovedPartsFromLane(int numberOfParts, Lane lane) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgLaneIsOutOfParts(Lane lane) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
