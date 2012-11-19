@@ -83,7 +83,7 @@ public class GraphicKittingStation {
 			if (kits[i] != null)
 				kits[i].move(x+15, y+100*i+15);
 		if (hasCheck())
-			check.move(x+5, y+210);
+			check.move(x+15, y+215);
 	}
 	/**
 	 * Paints the Kits in the Kit Station
