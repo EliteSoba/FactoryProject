@@ -54,7 +54,7 @@ public class MasterControl {
 	TreeMap<String, PartHandler> partHandlers; 
 	TreeMap<String, Boolean> partOccupied;
 
-    // Lists of Known Clients, Agents, CommandTypes, and supported Commands
+    // Static Lists of Known Clients, Agents, CommandTypes, and supported Commands
 
 	private static final List<String> clients = Arrays.asList("fpm", "gm", "kam", "km", "lm", "pm", "multi");
 	private static final List<String> agents = Arrays.asList("ca", "cca", "fcsa", "fa", "ga", "kra", "la", "na", "pra", "sa", "va");
@@ -77,6 +77,8 @@ public class MasterControl {
 
 	private static final List<String> multiCmd_1 = Arrays.asList("addpartname", "rmpartname", "partconfig");
     private static final List<String> multiCmdDst_1 = Arrays.asList("km", "fpm");
+
+    private static final List<List<String>> multiCmdList = Arrays.asList(multiCmd_1);
 
     // MasterControl Server Socket
 
@@ -612,18 +614,19 @@ public class MasterControl {
 	private ArrayList<PartHandler> getDestinations(String myCmd){
 
 
-
-		if(multiCmd_1.contains(myCmd)){
-            ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
-            for(String dst : multiCmdDst_1){
-                if(partHandlers.containsKey(dst)){
-                    returnAL.add(partHandlers.get(dst));
+        for(List<String> l : multiCmdList){
+            if(l.contains(myCmd)){
+                ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
+                for(String dst : multiCmdDst_1){
+                    if(partHandlers.containsKey(dst)){
+                        returnAL.add(partHandlers.get(dst));
+                    }
                 }
+                return returnAL;
             }
-            return returnAL;
-		} else {
-			return null;
-		}
+        }
+
+        return null;
 
 	}
 
@@ -802,7 +805,7 @@ public class MasterControl {
         MasterControl mc = new MasterControl(debug);
 
         //This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
-        long timeToQuit = System.currentTimeMillis() + 5000;
+/*        long timeToQuit = System.currentTimeMillis() + 5000;
         while (System.currentTimeMillis() < timeToQuit);
 
         Part p0 = new Part("eye",000,"desc","imgPath",2);
@@ -837,7 +840,7 @@ public class MasterControl {
 
             
       		mc.n0b.msgYouNeedPart(p2);
-      		mc.n0t.msgYouNeedPart(p0);
+      		mc.n0t.msgYouNeedPart(p0);*/
       		
       		//mc.n0b.msgYouNeedPart(p3);
 
