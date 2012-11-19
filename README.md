@@ -22,6 +22,11 @@ Members:<p>
     Stephanie Reagle <-- Manager
 
 Start Instructions<p>
+Compilation:<br>
+WHEN IN src/:<br>
+javac -sourcepath . factory/masterControl/*.java<br>
+javac -sourcepath . factory/managers/*.java<br>
+Running:<p>
    To begin the Factory there are a few procedural steps which must be taken.
    First, the user must start the MasterControl server, the agents will start within the MasterControl. 
    There is no need to start the agents seperatley.<p>
