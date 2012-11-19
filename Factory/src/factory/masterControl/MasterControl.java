@@ -832,11 +832,17 @@ public class MasterControl {
         timeToQuit = System.currentTimeMillis() + 2000;
         while (System.currentTimeMillis() < timeToQuit);
 
-            
-      		mc.n0b.msgYouNeedPart(p2);
-      		mc.n0t.msgYouNeedPart(p0);
-      		
-      		//mc.n0b.msgYouNeedPart(p3);
+
+        mc.n0b.msgYouNeedPart(p2);
+        mc.n0t.msgYouNeedPart(p0);
+
+//        mc.n1t.msgYouNeedPart(p1);
+//        mc.n1t.msgYouNeedPart(p1);
+//        mc.n1t.msgYouNeedPart(p1);
+//
+//        mc.n1b.msgYouNeedPart(p1);
+
+        //mc.n0b.msgYouNeedPart(p3);
 
 //      		
 //      		
