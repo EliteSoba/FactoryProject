@@ -610,11 +610,10 @@ public class MasterControl {
                 }
 				return true;
 			}
+        }
 
-
-		} else if(b.equals("fpm")){
+		if(b.equals("fpm")){
             return (fpmPH != null && sendCmd(fpmPH, fullCmd));
-
         } else {
             if(fpmPH != null){
                 if(!sendCmd(fpmPH, fullCmd)){
