@@ -40,12 +40,7 @@ public class LaneAgent extends Agent implements Lane {
 	}
 
 
-	/** MESSAGES **/
-	public void msgPartRobotHasRemovedParts(int numberOfParts) {
-		myFeeder.msgPartRobotHasRemovedPartsFromLane(numberOfParts,this);
-		stateChanged();
-	}
-	
+	/** MESSAGES **/	
 	public void msgIncreaseAmplitude() {
 		nestState = NestState.NEEDS_TO_INCREASE_AMPLITUDE;
 		stateChanged();

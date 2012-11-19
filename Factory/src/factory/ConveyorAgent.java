@@ -93,6 +93,7 @@ public class ConveyorAgent extends Agent implements Conveyor {
 		}
 		debug("Export Animation Completed");
 	    fcs.msgKitIsExported(kitAtConveyor);
+	    kitRobot.msgKitExported();
 		kitAtConveyor = null;
 		stateChanged();
 	}

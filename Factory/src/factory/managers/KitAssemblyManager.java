@@ -329,14 +329,6 @@ public void doCommand(ArrayList<String> pCmd) {
 			}
 		}
 
-		public void populatePanelList() { // adds list to panel display
-			Iterator itr = kitConfigList.entrySet().iterator(); 
-			while(itr.hasNext()) { 
-				Map.Entry pairs = (Map.Entry)itr.next(); 
-				String kitName= (String)pairs.getKey();
-				((FactoryProdManPanel)UI).addKit(kitName);
-			}
-		}
 
 		// To search a list of kit configurations for kits containing a certain part
 		//returns ArrayList<String> kitNames;

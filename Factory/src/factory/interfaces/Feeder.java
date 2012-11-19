@@ -24,8 +24,4 @@ public interface Feeder {
 
 	public void msgNestHasDeStabilized(Lane lane);
 
-	public void msgPartRobotHasRemovedPartsFromLane(int numberOfParts,Lane lane);
-
-
-	public void msgLaneIsOutOfParts(Lane lane);
 }

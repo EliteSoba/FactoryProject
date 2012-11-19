@@ -21,14 +21,14 @@ public class FCSAgent extends Agent implements FCS{
 
 	//queue of orders that is received from the panels
 	public Queue<KitConfig> orders = new LinkedList<KitConfig>();
-	
+
 	//agents
 	public PartsRobot partsRobot;
 	Gantry gantry;
-	
+
 	//map to keep track of list of available parts
 	public Map<String, Part> partsList = new HashMap<String, Part>();
-	
+
 	//map to keep track of list of available recipes
 	public Map<String, KitConfig> kitRecipes = new HashMap<String, KitConfig>();
 
@@ -74,7 +74,7 @@ public class FCSAgent extends Agent implements FCS{
 	 * @param kitName This is the name of the kit configuration that you want to produce.
 	 */
 	public void msgProduceKit(int quantity, String kitName) {
-//		System.out.println("IT WORKS!");
+		//		System.out.println("IT WORKS!");
 		KitConfig recipe = new KitConfig();
 		recipe = kitRecipes.get(kitName);
 		recipe.quantity = quantity;
@@ -90,10 +90,6 @@ public class FCSAgent extends Agent implements FCS{
 	 */
 	public void msgKitIsExported(Kit kit){
 		kitsExportedCount++;
-		if(kitsExportedCount >= orders.peek().quantity){
-			this.state = KitProductionState.FINISHED;
-		}
-		//send message to manager to say that kit is exported
 		stateChanged();
 	}
 
@@ -101,23 +97,39 @@ public class FCSAgent extends Agent implements FCS{
 	// *** SCHEDULER ***
 	public boolean pickAndExecuteAnAction() {
 
-
 		//if the order is finished, start producing next kit
 		if (this.state == KitProductionState.FINISHED){
 			startProducingNextKit();
 			return true;
 		}
 
+
+		//if the number of kits exported is greater than or equal to the quantity of the order, state should be finished
+		if(!orders.isEmpty()){
+			if(kitsExportedCount >= orders.peek().quantity){
+				finishKits();
+				return true;
+			}
+		}
 		//if there is a kit pending and the order list isn't empty, then send an order to parts robot
 		if (this.state == KitProductionState.PENDING && !orders.isEmpty()){
 			sendKitConfigToPartRobot();
 			return true;
 		}
+
+
 		return false;
 	}
 
 	// *** ACTIONS ***
 
+	/**
+	 * This method is called whenever the factory finishes enough kits to move on to the next order
+	 */
+	private void finishKits() {
+		this.state = KitProductionState.FINISHED;
+		stateChanged();
+	}
 	/**
 	 * Passes down the new Kit Configuration to the PartsRobot Agent
 	 */
@@ -127,7 +139,6 @@ public class FCSAgent extends Agent implements FCS{
 		//		this.gantry.msgFeederNeedsPart(partsList.get("Shoe"), this.masterControl.f0); //comment this out for unit testing
 		this.partsRobot.msgMakeKit(orders.peek()); //TODO uncomment this for v1 implementation
 		this.state = KitProductionState.PRODUCING;
-		kitsExportedCount = 0;
 		stateChanged();
 	}
 
@@ -136,6 +147,7 @@ public class FCSAgent extends Agent implements FCS{
 	 */
 	private void startProducingNextKit(){
 		orders.remove();
+		kitsExportedCount = 0;
 		this.state = KitProductionState.PENDING;
 		stateChanged();
 	}
@@ -274,7 +286,7 @@ public class FCSAgent extends Agent implements FCS{
 		System.out.println("Recipes" + kitRecipes.keySet() + "\n");
 		System.out.println("========== LIST OF PARTS ==========");
 		System.out.println("Parts" + partsList.keySet() + "\n");
-		
+
 		List<String> parts = new ArrayList<String>(partsList.keySet());
 		for (int a=0; a < partsList.size(); a++){
 			System.out.println("***" + partsList.get(parts.get(a)).name + "***");
@@ -283,9 +295,9 @@ public class FCSAgent extends Agent implements FCS{
 			System.out.println("Image Path: " + partsList.get(parts.get(a)).imagePath);
 			System.out.println("Nest Stabilization Time: " + partsList.get(parts.get(a)).nestStabilizationTime + "\n\n");
 		}
-		
+
 		List<String> configs = new ArrayList<String>(kitRecipes.keySet());
-		
+
 		System.out.println("========== LIST OF PARTS IN EACH RECIPE ==========\n");
 		for (int i=0; i < configs.size(); i++){
 			System.out.println("KIT CONFIG: " + configs.get(i));
@@ -325,14 +337,14 @@ public class FCSAgent extends Agent implements FCS{
 			c.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * This function sets the partsRobot to the FCS
 	 * @param p
 	 */
 	public void setPartsRobot(PartsRobot p){
 		this.partsRobot = p;
-		
+
 	}
 
 }
