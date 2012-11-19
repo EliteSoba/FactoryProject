@@ -140,14 +140,22 @@ public abstract class Client extends JFrame implements ActionListener {
 		@Override
 		public void windowClosing(WindowEvent e) {
 			try {
+				
+				client.dispose();
+				System.out.println("resources released");
 				if(client.input != null)
+					System.out.println("input stream closing...");
 					client.input.close();
+					System.out.println("input closed");
+				
 				if(client.output != null)
+					System.out.println("output stream closing...");
 					client.output.close();
+					System.out.println("output closed");
 				} catch (IOException e1) {
 					//never executes but wont compile w/o
 				}
-			System.out.println("closed");
+			System.out.println("window closed");
 		}
 
 		@Override
