@@ -171,7 +171,7 @@ public class StandAgent extends Agent implements Stand {
 			/**
 			 * If the stand is free and the kitRobot wants to deliver empty kit
 			 */
-			if (kr_state.equals(KitRobotState.WANTS_ACCESS)) {
+			if (kr_state.equals(KitRobotState.WANTS_ACCESS) && state.equals(StandAgentState.FREE)) {
 				DoTellKitRobotToGoAhead();
 				return true;
 			}
