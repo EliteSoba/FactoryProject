@@ -71,17 +71,24 @@ public class KitManager extends Client implements WindowListener{
 			{
 				System.out.println("GOT HEREs");
 				partsList.remove(pCmd.get(2));// remove part from partList
-
+				List<String> kitNames = new ArrayList<String>();
 				// iterate through the kitConfigList and find kitConfigurations with the removed part and remove them
-				Iterator itr = kitConfigList.entrySet().iterator();
-				Map.Entry pairs = (Map.Entry)itr.next();
-				String kitName = (String)pairs.getKey();
-				while(itr.hasNext())
+				for(String s: kitConfigList.keySet())
 				{
-					System.out.println("Iterator " + itr.toString());
+					kitNames.add(s);
+				}
+				//Iterator itr = kitConfigList.entrySet().iterator();
+				//Map.Entry pairs = (Map.Entry)itr.next();
+				//String kitName = (String)pairs.getKey();
+				//while(itr.hasNext())
+				for(int j = 0; j < kitNames.size(); j++)
+				{
+					//System.out.println("Iterator " + itr.toString());
 					//Map.Entry pairs = (Map.Entry)itr.next();
 					//String kitName = (String)pairs.getKey();
-					KitConfig configToCheck = kitConfigList.get(kitName);
+					//KitConfig configToCheck = kitConfigList.get(kitName);
+					KitConfig configToCheck = kitConfigList.get(kitNames.get(j));
+					//System.out.print(kitName);
 					for(int i = 0; i < configToCheck.listOfParts.size(); i++)//iterating through each part in a kit
 					{
 						Part partToCheck = configToCheck.listOfParts.get(i);
@@ -93,11 +100,12 @@ public class KitManager extends Client implements WindowListener{
 						}
 						if(hasPart)
 						{	//remove kitConfig send confirmations and put hasPart to false 
-							kitConfigList.remove(kitName);
+							//kitConfigList.remove(kitName);
+							kitConfigList.remove(kitNames.get(j));
 							//super.sendCommand("km fpm cmd rmkitname "+ kitName);
 							//super.sendCommand("km fcsa cmd rmkitname "+ kitName);
 							hasPart = false;
-							System.out.println("Removing a kit config" + kitName);
+							//System.out.println("Removing a kit config" + kitName);
 							System.out.println(kitConfigList.size());
 							((KitManPanel) UI).refreshAll();
 						}
@@ -172,8 +180,6 @@ public class KitManager extends Client implements WindowListener{
 
 
 		}
-		else if(action.equals("mcs"))
-			   System.exit(0);
 		else 
 			System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 
