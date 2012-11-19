@@ -37,7 +37,7 @@ public class GantryManager extends Client {
 
 		add(graphics, BorderLayout.CENTER);
 		
-		add(UI, BorderLayout.LINE_END);
+		//add(UI, BorderLayout.LINE_END);
 		pack();
 		setVisible(true);
 	}
