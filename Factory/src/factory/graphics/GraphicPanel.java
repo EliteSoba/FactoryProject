@@ -671,7 +671,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void partsRobotPopItemToCurrentKitDone() {
 		if (isFactoryProductionManager)
 			sendMessage("kam set itemtype " + partsRobot.getDestinationKit() + " " + transferringItem.getImagePath());
-		sendMessage("kra cnf");
+		sendMessage("pra cnf");
 	}
 
 	public void feedLaneDone(int feederNum){
