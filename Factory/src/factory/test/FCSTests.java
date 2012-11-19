@@ -304,15 +304,54 @@ public class FCSTests extends TestCase{
 		assertEquals("There should be 2 kit configs in the kit config map, but instead there is: " + fcs.kitRecipes.size()
 				, 2, fcs.kitRecipes.size());
 		
-		//edit a new kit recipe
-		fcs.editKitRecipe("config2", "newConfig", "hat", "hat", "hat", "hat", "hat", "hat", "None", "None");
+		//config2 should have 4 parts in it
+		assertEquals("There should be 4 parts in \"config2\", but instead there is: " + fcs.kitRecipes.get("config2").listOfParts.size()
+				, 4, fcs.kitRecipes.get("config2").listOfParts.size());
 		
+		//edit a new kit recipe
+		fcs.editKitRecipe("config2", "editConfig", "hat", "hat", "hat", "hat", "hat", "hat", "None", "None");
+		
+		//make sure config2 is gone.
 		assertFalse("The fcs should have removed \"config2\", but it didn't"
 				, fcs.kitRecipes.containsKey("config2"));
 		
-		assertTrue("The fcs should have edited \"config2\" recipe to be called \"newConfig\", but it didn't"
+		//make sure config 2 name is edited to newConfig
+		assertTrue("The fcs should have edited \"config2\" recipe to be called \"editConfig\", but it didn't"
+				, fcs.kitRecipes.containsKey("editConfig"));
+		
+		//make sure no kit configs got deleted
+		assertEquals("The size of the kit configs map should still be 2, but instead it is: " + fcs.kitRecipes.size()
+				, 2, fcs.kitRecipes.size());
+		
+		//the number of parts in the edited list should be 6
+		assertEquals("There should be 6 parts in \"config2\", but instead there is: " + fcs.kitRecipes.get("editConfig").listOfParts.size()
+				, 6, fcs.kitRecipes.get("editConfig").listOfParts.size());
+		
+		//adding a new kit config
+		fcs.addKitRecipe("newConfig", "arm", "arm", "arm", "arm", "arm", "None", "None", "None");
+		
+		//making sure there are now 3 kit configs
+		assertEquals("There should be 3 kit configs in the fcs, but instead there is: " + fcs.kitRecipes.size()
+				, 3, fcs.kitRecipes.size());
+		
+		//make sure kit recipe now contains the new config
+		assertTrue("The fcs should contain the new configuration, but it doesn't"
 				, fcs.kitRecipes.containsKey("newConfig"));
+		
+		//make sure there are 5 parts in the new kit config
+		assertEquals("There should be 5 parts in the new kit configuration, but instead, there are: " + fcs.kitRecipes.get("newConfig").listOfParts.size()
+				, 5, fcs.kitRecipes.get("newConfig").listOfParts.size());
+		
+		//test removing a kit recipe
+		fcs.removeKitRecipe("config1");
 
+		//make sure there are now only 2 recipes
+		assertEquals("There should be only 2 kit configs in the fcs, but instead there are: " + fcs.kitRecipes.size()
+				, 2, fcs.kitRecipes.size());
+		
+		//make sure the correct kit config got deleted
+		assertFalse("kit config \"config1\" should not exist anymore, but it does"
+				, fcs.kitRecipes.containsKey("config1"));
 	}
 
 	/**
