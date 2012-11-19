@@ -217,7 +217,8 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			}
 			// If there is a part to be picked up and space in the arms and the PartsRobot can get there without overlapping with the camera
 			for(int i = 0; i < 8; i++){
-				if(nests.get(i).state == NestState.PICK_UP_NEEDED && SpaceInArms() && this.CanMoveToNest(i) && IsPartFromNestNeed(i)){
+				if(this.standState != StandState.DELIVERY_AUTHORIZED && nests.get(i).state == NestState.PICK_UP_NEEDED 
+						&& SpaceInArms() && this.CanMoveToNest(i) && IsPartFromNestNeed(i)){
 					DoPickUpPartFromNest(i);
 					return true;
 				}
@@ -228,6 +229,15 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					DoReOrderParts(i);
 					return true;
 				}
+			}
+			
+			if(this.position != PartsRobotPositions.CENTER){
+				DoMovePartsRobotToCenter();
+				return true;
+			}
+			if(this.position == PartsRobotPositions.CENTER && this.standState == StandState.DOING_NOTHING && !ArmsEmpty()){
+				DoAskPermisionToDeliverParts();
+				return true;
 			}
 			
 			// If a picture is needed, check if we are not in the way and tell camera it is clear
@@ -245,15 +255,6 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			}
 			if(nests.get(6).state == NestState.PICTURE_NEEDED && nests.get(7).state == NestState.PICTURE_NEEDED && IsVisionClear(6,7)){
 				DoTellVisionNestsAreClearToTakePicture(6,7);
-				return true;
-			}
-			
-			if( this.position != PartsRobotPositions.CENTER){
-				DoMovePartsRobotToCenter();
-				return true;
-			}
-			if(!ArmsEmpty() && this.position == PartsRobotPositions.CENTER && this.standState == StandState.DOING_NOTHING){
-				DoAskPermisionToDeliverParts();
 				return true;
 			}
 		}	
@@ -589,6 +590,8 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		// Animation to Return
 		DoAnimationMovePartsRobotToCenter();
 		
+		// Tell stand
+		this.stand.msgPartsRobotNoLongerUsingStand();
 		// Update stand state
 		this.standState = StandState.DOING_NOTHING;
 		

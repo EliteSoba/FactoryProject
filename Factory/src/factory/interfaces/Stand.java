@@ -11,6 +11,7 @@ public interface Stand {
 	void msgResultsOfKitAtInspection(KitState results);
 	void msgEmptyKitIsHereAndWantToDeliver();
 	void msgKitRobotNoLongerUsingStand();
+	void msgPartsRobotNoLongerUsingStand();
 	void msgPartRobotWantsToPlaceParts();
 	void msgKitRobotWantsToExportKit();
 	
