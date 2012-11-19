@@ -836,8 +836,8 @@ public class MasterControl {
         while (System.currentTimeMillis() < timeToQuit);
 
 
-        mc.n0b.msgYouNeedPart(p2);
-        mc.n0t.msgYouNeedPart(p0);
+//        mc.n0b.msgYouNeedPart(p2);
+//        mc.n0t.msgYouNeedPart(p0);
 
 //        mc.n1t.msgYouNeedPart(p1);
 //        mc.n1t.msgYouNeedPart(p1);
@@ -846,6 +846,9 @@ public class MasterControl {
 //        mc.n1b.msgYouNeedPart(p1);
 
         //mc.n0b.msgYouNeedPart(p3);
+        mc.partsRobot.msgMakeKit(firstKit);
+      		
+      		//mc.n0b.msgYouNeedPart(p3);
 
 //      		
 //      		
