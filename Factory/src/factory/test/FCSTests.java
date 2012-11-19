@@ -24,13 +24,9 @@ import factory.FCSAgent.KitProductionState;;
 
 public class FCSTests extends TestCase{
 
-//	MockGantry mockGantry;
-//	MockPartsRobotAgent partsRobot;
-//	FCSAgent FCSagent;
-//	BinConfig binConfig;
-//	boolean passBinConfigurationToGantry;
-	
-	
+	/**
+	 * This test tests if the fcs can get an order and successfully send a message to the parts robot.
+	 */
 	public void testMsgProduceKit()
 	{
 		
@@ -42,7 +38,6 @@ public class FCSTests extends TestCase{
 		MockPartsRobot partsRobot = new MockPartsRobot("parts robot");
 		FCSAgent fcs = new FCSAgent(gantry, partsRobot, null);
 		fcs.kitRecipes.put("typeA", kitConfig);
-//		fcs.partsList = createPartsList();
 		
 		//create message for FCS.  Should eventually call this.partsRobot.msgMakeKit(mkc.kitConfig);
 		fcs.msgProduceKit(5, "typeA");
@@ -73,7 +68,10 @@ public class FCSTests extends TestCase{
 				, stateProducing, fcs.state);
 	}
 
-	
+	/**
+	 * This test adds 2 kit orders to the fcs, then tests if the fcs correctly creates the kits, and moves on to the next
+	 * order once the order is complete
+	 */
 	public void testAddingAndFinishingKitConfig(){
 		
 		//this test tests the fcs robot handling incoming orders.  It takes in 2 initial orders, and simulates
@@ -220,7 +218,9 @@ public class FCSTests extends TestCase{
 		assertEquals("The FCS state should be PENDING because there are no orders left, but instead is: " + fcs.state
 				, statePending, fcs.state);
 	}
-	
+	/**
+	 * This test tests all the part methods, which include adding, editing, and deleting parts.
+	 */
 	//test if the parts robot can add/edit/remove a part type
 	public void testPartTypeMethods(){
 		
@@ -275,6 +275,49 @@ public class FCSTests extends TestCase{
 		
 	}
 	
+	/**
+	 * This test tests all the kitConfig methods, which include adding, editing, and deleting kitConfigs.
+	 */
+	public void testKitConfigMethods(){
+		
+		//set up the kitConfigs
+		FCSAgent fcs = new FCSAgent(null);
+		Map<String, KitConfig> kitConfigs = new HashMap<String, KitConfig>();
+		Map<String, Part> partsList = new HashMap<String, Part>();
+		partsList = createPartsList();
+		fcs.partsList = partsList;
+		KitConfig k1 = new KitConfig();
+		k1.listOfParts.add(partsList.get("nose"));
+		k1.listOfParts.add(partsList.get("ears"));
+		k1.listOfParts.add(partsList.get("arm"));
+		k1.listOfParts.add(partsList.get("arm"));
+		fcs.kitRecipes.put("config1", k1);
+
+		KitConfig k2 = new KitConfig();
+		k2.listOfParts.add(partsList.get("hat"));
+		k2.listOfParts.add(partsList.get("mouth"));
+		k2.listOfParts.add(partsList.get("leg"));
+		k2.listOfParts.add(partsList.get("leg"));
+		fcs.kitRecipes.put("config2", k2);
+		
+		//there should be 2 kit configs in the kit config map
+		assertEquals("There should be 2 kit configs in the kit config map, but instead there is: " + fcs.kitRecipes.size()
+				, 2, fcs.kitRecipes.size());
+		
+		//edit a new kit recipe
+		fcs.editKitRecipe("config2", "newConfig", "hat", "hat", "hat", "hat", "hat", "hat", "None", "None");
+		
+		assertFalse("The fcs should have removed \"config2\", but it didn't"
+				, fcs.kitRecipes.containsKey("config2"));
+		
+		assertTrue("The fcs should have edited \"config2\" recipe to be called \"newConfig\", but it didn't"
+				, fcs.kitRecipes.containsKey("newConfig"));
+
+	}
+
+	/**
+	 * This tests to see if the FCS was succesfully able to import and load the data
+	 */
 	public void testImportListAndSwing(){
 		FCSAgent fcs = new FCSAgent(null);
 		
