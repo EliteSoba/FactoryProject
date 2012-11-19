@@ -124,7 +124,21 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** MESSAGES **/
 	public void msgLaneIsOutOfParts(Lane lane) {
+		MyLane currentLane = null;
+		if (topLane != null)
+		{
+			if (topLane.lane == lane)
+				currentLane = topLane;
+		}
+		if (bottomLane != null)
+		{
+			if (bottomLane.lane == lane)
+				currentLane = bottomLane;
+		}
 		
+		this.msgLaneNeedsPart(currentLane.part, currentLane.lane);
+		
+		stateChanged();
 	}
 	public void msgNestHasStabilized(Lane lane) {
 		myNestsHaveBeenChecked = false;
@@ -787,6 +801,11 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 
+	@Override
+	public void msgPartRobotHasRemovedPartsFromLane(int numberOfParts, Lane lane) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
 
