@@ -94,6 +94,7 @@ public class MasterControl {
 		laneAgentTreeMap = new TreeMap<String, LaneAgent>();
 		nestAgentTreeMap = new TreeMap<String, NestAgent>();
         partHandlerList = new ArrayList<PartHandler>();
+        multiCmdDsts = new TreeMap<List<String>, List<String>>();
 
 
 
