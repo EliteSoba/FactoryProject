@@ -7,71 +7,82 @@ import java.util.concurrent.Semaphore;
 
 import factory.Kit.KitState;
 import factory.StandAgent.MySlotState;
-import factory.graphics.FrameKitAssemblyManager;
 import factory.interfaces.*;
+import factory.masterControl.MasterControl;
 import agent.*;
 
 public class KitRobotAgent extends Agent implements KitRobot {
 	////Data
-	StandAgent stand;
-	Conveyor conveyor;
-	FrameKitAssemblyManager server;
-	
-	Kit holding = null;
-	Semaphore standApproval = new Semaphore(0); //Semaphore for waiting for stand
-	Semaphore animation = new Semaphore(0); //Semaphore for animation
-	int inspectionAreaClear = 1; //0 = not clear, 1 = clear, -1 = need to find out	starting at empty
-	ConveyorStatus conveyor_state;
-	List<StandInfo> actions = Collections.synchronizedList(new ArrayList<StandInfo>());
+	public Stand stand;
+	public Conveyor conveyor;
 
-	enum ConveyorStatus {EMPTY, GETTING_KIT, EMPTY_KIT, COMPLETED_KIT};
-	enum StandInfo {NEED_EMPTY_TOP, NEED_EMPTY_BOTTOM, NEED_INSPECTION_TOP, NEED_INSPECTION_BOTTOM, INSPECTION_SLOT_DONE, KIT_GOOD, KIT_BAD };
+	public String name;
 	
-	public KitRobotAgent(StandAgent stand, FrameKitAssemblyManager server, ConveyorAgent conveyor){
-		this.conveyor = conveyor;
-		this.stand = stand;
-		this.server = server;
+	public Kit holding = null;
+	Semaphore standApproval = new Semaphore(0); //Semaphore for waiting for stand
+	int inspectionAreaClear = 1; //0 = not clear, 1 = clear, -1 = need to find out	starting at empty
+	public ConveyorStatus conveyor_state = ConveyorStatus.EMPTY;
+	public List<StandInfo> actions = Collections.synchronizedList(new ArrayList<StandInfo>());
+	
+	boolean isUnitTesting = false; 
+	
+	public enum ConveyorStatus {EMPTY, GETTING_KIT, EMPTY_KIT, COMPLETED_KIT};
+	public enum StandInfo { NEED_EMPTY_TOP, NEED_EMPTY_BOTTOM, NEED_INSPECTION_TOP, NEED_INSPECTION_BOTTOM, INSPECTION_SLOT_DONE, KIT_GOOD, KIT_BAD, CLEAR_OFF_UNFINISHED_KITS };
+	
+	//Constructor used for UnitTesting only
+	public KitRobotAgent() {
+		super(null);
+		isUnitTesting = true;
+	}
+	
+	public KitRobotAgent(MasterControl mc, Conveyor c) {
+		super(mc);
+		this.conveyor = c;
 	}
 	
 	////Messages
-	public void msgDeliverEmptyKit() {
-		debug("Received msgDeliverEmptyKit() from Stand");
+	public void msgStandClear() {
+		debug("Received msgStandClear() from Stand");
 		standApproval.release();
 	}
 	
-	public void msgAnimationDone(){
-		debug("Received msgAnimationDone() from server");
-		animation.release();
+	public void msgClearTheStandOff() {
+		/**
+		 * Telling the KitRobot to dump any Kits that are not yet completed.
+		 * the kits that are are already in need of inspection or in the inspectionSlot will not be disturbed
+		 */
+		if (!actions.contains(StandInfo.CLEAR_OFF_UNFINISHED_KITS)) {
+			actions.add(StandInfo.CLEAR_OFF_UNFINISHED_KITS);
+		}
+		stateChanged();
 	}
 	
 	public void msgNeedEmptyKitAtSlot(String pos) {
 		debug("Received msgNeedEmptyKitAtSlot() from the Stand for "+ pos);
-		if (pos.equals("TopSlot")) {
+		if (pos.equals("topSlot")) {
 			if (!actions.contains(StandInfo.NEED_EMPTY_TOP)) {
 				actions.add(StandInfo.NEED_EMPTY_TOP);
-				stateChanged();
 			}
-		} else if (pos.equals("BottomSlot")) {
+		} else if (pos.equals("bottomSlot")) {
 			if (!actions.contains(StandInfo.NEED_EMPTY_BOTTOM)) {
 				actions.add(StandInfo.NEED_EMPTY_BOTTOM);
-				stateChanged();
 			}
 		}
+		stateChanged();
 	}
 	
 	public void msgComeMoveKitToInspectionSlot(String pos) {
 		debug("Received msgComeMoveKitToInspectionSlot() From Stand for " + pos);
-		if (pos.equals("TopSlot")) {
+		if (pos.equals("topSlot")) {
 			if (!actions.contains(StandInfo.NEED_INSPECTION_TOP)) {
 				actions.add(StandInfo.NEED_INSPECTION_TOP);
-				stateChanged();
 			}
-		} else if (pos.equals("BottomSlot")) {
+		} else if (pos.equals("bottomSlot")) {
 			if (!actions.contains(StandInfo.NEED_INSPECTION_BOTTOM)) {
 				actions.add(StandInfo.NEED_INSPECTION_BOTTOM);
-				stateChanged();
 			}
 		}
+		stateChanged();
 	}
 		
 	public void msgEmptyKitOnConveyor() {
@@ -80,6 +91,13 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stateChanged();
 	}
 	
+	public void msgKitExported() {
+		debug("Received msgKitExported() From the Conveyor");
+		conveyor_state = ConveyorStatus.EMPTY;
+		stateChanged();
+	}
+	
+	/*
 	public void msgInspectionAreaStatus(int status) {
 		debug("Received msgInspectionAreaStatus() from the Stand with a status of "+status);
 		if (status < 2 && status >= 0) {
@@ -87,134 +105,155 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			stateChanged();
 		}
 	}
+	*/
 	
 	public void msgComeProcessAnalyzedKitAtInspectionSlot() {
 		debug("Received msgComeProcessAnalayzedKitAtInspectionSlot from Stand");
 		if (!actions.contains(StandInfo.INSPECTION_SLOT_DONE)) {
 			actions.add(StandInfo.INSPECTION_SLOT_DONE);
 		}
+		stateChanged();
 	}
 	
 	
 	////Scheduler
-	protected boolean pickAndExecuteAnAction() {	
+	public boolean pickAndExecuteAnAction() {	
 
-		if (actions.contains(StandInfo.KIT_BAD)) {
-			actions.remove(StandInfo.KIT_BAD);
-			dumpKit();
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.KIT_GOOD) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
-			actions.remove(StandInfo.KIT_GOOD);
-			exportKit();
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.INSPECTION_SLOT_DONE)) {
-			actions.remove(StandInfo.INSPECTION_SLOT_DONE);
-			processKitAtInspection(); 
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.NEED_INSPECTION_TOP) && (inspectionAreaClear == 1)) {
-			actions.remove(StandInfo.NEED_INSPECTION_TOP);
-			moveToInspectionSpot("TopSlot");
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.NEED_INSPECTION_BOTTOM) && (inspectionAreaClear == 1)) {
-			actions.remove(StandInfo.NEED_INSPECTION_BOTTOM);
-			moveToInspectionSpot("BottomSlot");
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.NEED_EMPTY_TOP) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
-			requestEmptyKit();
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.NEED_EMPTY_BOTTOM) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
-			requestEmptyKit();
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.NEED_EMPTY_TOP) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
-			actions.remove(StandInfo.NEED_EMPTY_TOP);
-			putEmptyKitOnStand("TopSlot");
-			return true;
-		}
-		
-		if (actions.contains(StandInfo.NEED_EMPTY_BOTTOM) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
-			actions.remove(StandInfo.NEED_EMPTY_BOTTOM);
-			putEmptyKitOnStand("BottomSlot");
-			return true;
+		synchronized(actions){
+			if (actions.contains(StandInfo.KIT_BAD)) {
+				dumpKit();
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.KIT_GOOD) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
+				exportKit();
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.CLEAR_OFF_UNFINISHED_KITS)) {
+				clearOffStand();
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.NEED_EMPTY_TOP) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
+				putEmptyKitOnStand("topSlot");
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.NEED_EMPTY_BOTTOM) && conveyor_state.equals(ConveyorStatus.EMPTY_KIT)) {
+				actions.remove(StandInfo.NEED_EMPTY_BOTTOM);
+				putEmptyKitOnStand("bottomSlot");
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.NEED_INSPECTION_TOP) && (inspectionAreaClear == 1)) {
+				moveToInspectionSpot("topSlot");
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.NEED_INSPECTION_BOTTOM) && (inspectionAreaClear == 1)) {
+				moveToInspectionSpot("bottomSlot");
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.INSPECTION_SLOT_DONE)) {
+				processKitAtInspection(); 
+				return true;
+			}
+			
+			
+			
+			
+			if ((actions.contains(StandInfo.NEED_EMPTY_TOP) || actions.contains(StandInfo.NEED_EMPTY_BOTTOM)) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
+				requestEmptyKit();
+				return true;
+			}
+			
 		}
 		
 		return false;
 	}
 	
 	//Actions
-	public void processKitAtInspection(){
+	public void processKitAtInspection() {
 		//action for checking the inspected kit and then doing the correct action.
 		debug("Executing processKitAtInspection()");
 		
-		if (stand.inspectionSlot.kit.equals(KitState.PASSED_INSPECTION)) {
+		stand.msgKitRobotWantsStandAccess();
+		
+		if (!isUnitTesting) {
+			try {
+				debug("Waiting for the stand to tell KitRobot it is clear to go");
+				standApproval.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (stand.getSlotKit("inspectionSlot").state.equals(KitState.PASSED_INSPECTION)) {
 			//kit passed inspection
+			debug("KitRobot sees that the kit passed inspection");
 			if (!actions.contains(StandInfo.KIT_GOOD) && !actions.contains(StandInfo.KIT_BAD)) {
 				actions.add(StandInfo.KIT_GOOD);
-				stateChanged();
+				actions.remove(StandInfo.INSPECTION_SLOT_DONE);
+				stand.msgKitRobotNoLongerUsingStand();
 			}
 		} else {
 			//kit failed inspection
+			debug("KitRobot sees that the kit failed inspection");
 			if (!actions.contains(StandInfo.KIT_GOOD) && !actions.contains(StandInfo.KIT_BAD)) {
 				actions.add(StandInfo.KIT_BAD);
-				stateChanged();
+				actions.remove(StandInfo.INSPECTION_SLOT_DONE);
 			}
 		}
+		stateChanged();
 	}
 	
 	public void dumpKit() {
 		//action for dumping a bad kit
 		debug("KitRobot dumping bad kit");
-		server.dumpKit();
-
-		// Wait until the animation is done
-		try {
-			debug("Waiting on the server to finish the animation dumpKit()");
-			animation.acquire();
-			debug("Animation dumpKit() was completed");
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		
+		if (!isUnitTesting) {
+			DoDumpKitAtSlot("inspectionSlot");
 		}
+		debug("Dumping animation complete");
 		
 		holding = null;
-		stand.inspectionSlot.kit = null;
-		stand.inspectionSlot.state = MySlotState.EMPTY;
+		stand.setSlotKit("inspectionSlot", null);
+		stand.setSlotState("inspectionSlot", MySlotState.EMPTY);
+		actions.remove(StandInfo.KIT_BAD);
 		stand.msgKitRobotNoLongerUsingStand();
+		
+		stateChanged();
 	}
 	
 	public void exportKit() {
 		//action for exporting a good kit
 		debug("KitRobot picking up kit from inspection to export");
-		holding = stand.inspectionSlot.kit;
-		server.exportKit(); //This should be the call for the animation for hte KitRobot to take the Kit at the inspection slot and put it on the conveyor
 		
-		// Wait until the animation is done
-		try {
-			debug("Waiting on the server to finish the animation outKit()");
-			animation.acquire();
-			debug("Animation outKit() was completed");
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		stand.msgKitRobotWantsStandAccess();
+		if (!isUnitTesting) {
+			try {
+				debug("Waiting for the stand to tell KitRobot it is clear to go");
+				standApproval.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			DoMoveInspectedKitToConveyor();
 		}
 		
 		//Animation is now done, kit is on the conveyor
-		conveyor.msgExportKit(this, holding);
-	
-		stand.inspectionSlot.kit = null;
-		stand.inspectionSlot.state = MySlotState.EMPTY;
+		holding = stand.getSlotKit("inspectionSlot");
+		conveyor.msgExportKit(holding);
+
+		stand.setSlotKit("inspectionSlot", null);
+		stand.setSlotState("inspectionSlot", MySlotState.EMPTY);
+		conveyor_state = ConveyorStatus.COMPLETED_KIT;
+		actions.remove(StandInfo.KIT_GOOD);
 		stand.msgKitRobotNoLongerUsingStand();
+		
+		stateChanged();
 	}
 	
 	public void putEmptyKitOnStand(String pos) {
@@ -222,104 +261,174 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		
 		debug("Executing putEmptyKitOnStand "+ pos);
 		
-		//Here do the animation for picking up the kit from the conveyor
-		if(pos == "topSlot")
-			server.moveEmptyKitToSlot(0); //Animation for hte kit robot to go to the conveyor and pick up the kit
-		else if (pos == "bottomSlot")
-			server.moveEmptyKitToSlot(1); //Animation for hte kit robot to go to the conveyor and pick up the kit
-
-		try {
-			debug("Kit robot is taking empty kit from conveyor");
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		
+		stand.msgKitRobotWantsStandAccess();
+		
+		if (!isUnitTesting) {
+			try {
+				debug("Waiting for the stand to tell KitRobot it is clear to go");
+				standApproval.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
-		//new kit is picked up by the kit robot from the conveyor
+		
+		debug("Got the go from the Stand");
+		//Can assume that the kit robot has exclusive access to the stand here
 		holding = new Kit();
+		conveyor_state = ConveyorStatus.EMPTY;
+		conveyor.setAtConveyor(null);
 		
-		
-		stand.msgEmptyKitIsHereAndWantToDeliver();
-		
-		try {
-			debug("Waiting for the stand to tell KitRobot it is clear to go");
-			standApproval.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if (!isUnitTesting) {
+			DoPutEmptyKitAt(pos);
 		}
 		
-		//Here the stand gave the kit robot clearance
-		//Can assume that hte kit robot has exclusive access to the stand here
-		
-		if (pos.equals("TopSlot")) {
-			server.moveEmptyKitToSlot(0); //Animation to put the kit in the top slot
-		} else {
-			server.moveEmptyKitToSlot(1); //Animation for kitRobot to place into bottom slot
-		}
-		
-		try {
-			debug("Kit robot is placing empty kit in "+pos);
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		if (pos.equals("TopSlot")) {
-			//top slot
-			stand.topSlot.kit = new Kit();
-			stand.topSlot.state = MySlotState.EMPTY_KIT_JUST_PLACED;
-		} else {
-			//bottom slot
-			stand.bottomSlot.kit = new Kit();
-			stand.bottomSlot.state = MySlotState.EMPTY_KIT_JUST_PLACED;
-		}
-		
+		stand.setSlotKit(pos, this.holding);
+		stand.setSlotState(pos, MySlotState.EMPTY_KIT_JUST_PLACED);
 		holding = null;
-		stand.msgKitRobotNoLongerUsingStand();
 		
+		debug("Done putting empty kit in "+pos);
+		
+		if (pos.equals("topSlot")) {
+			actions.remove(StandInfo.NEED_EMPTY_TOP);
+		} else if (pos.equals("bottomSlot")) {
+			actions.remove(StandInfo.NEED_EMPTY_BOTTOM);
+		}
+		
+		stand.msgKitRobotNoLongerUsingStand();
+		stateChanged();
+	}
+	
+	public void clearOffStand() {
+		/**
+		 * KitRobot will dump any Kits that are not yet completed.
+		 * the kits that are are already in need of inspection or in the inspectionSlot will not be disturbed
+		 */
+		stand.msgKitRobotWantsStandAccess();
+		
+		if (!isUnitTesting) {
+			try {
+				debug("Waiting for the stand to tell KitRobot it is clear to go");
+				standApproval.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (stand.getSlotKit("topSlot") != null) {
+			if (stand.getSlotKit("topSlot").state.equals(KitState.INCOMPLETE)) {
+				//do animation of dumping topSlot
+				if (!isUnitTesting) {
+					DoDumpKitAtSlot("topSlot");
+				}
+				stand.setSlotKit("topSlot", null);
+				stand.setSlotState("topSlot", MySlotState.EMPTY);
+			}
+		}
+		if (stand.getSlotKit("bottomSlot") != null) {
+			if (stand.getSlotKit("bottomSlot").state.equals(KitState.INCOMPLETE)) {
+				//do animation of dumping bottomSlot
+				if (!isUnitTesting) {
+					DoDumpKitAtSlot("bottomSlot");
+				}
+				stand.setSlotKit("bottomSlot", null);
+				stand.setSlotState("bottomSlot", MySlotState.EMPTY);
+			}
+		}
+		
+		actions.remove(StandInfo.CLEAR_OFF_UNFINISHED_KITS);
+		stand.msgKitRobotNoLongerUsingStand();
+
+		stateChanged();
 	}
 	
 	public void requestEmptyKit() {
 		//method for asking for a new kit from the conveyor
-		debug("requesting an Empty Kit from the Conveyor");
-		 conveyor.msgNeedEmptyKit(this);
-		 conveyor_state = ConveyorStatus.GETTING_KIT;
+		debug("Requesting an Empty Kit from the Conveyor");
+		conveyor.msgNeedEmptyKit();
+		conveyor_state = ConveyorStatus.GETTING_KIT;
+		
+		stateChanged();
 	}
 	
 	public void moveToInspectionSpot(String pos) {
 		//method for KitRobot moving a kit to the inspection slot
 		//Can assume that has exclusive access to the Stand during this
-		debug("Executing moveToInspectionSpot for the" + pos);
-		int slot;
-		if (pos.equals("TopSlot")) {
-			slot = 0;
-		} else {
-			slot = 1;
-		}
-		server.moveKitFromSlotToInspection(slot);
+		stand.msgKitRobotWantsStandAccess();
 		
-		// Wait until the animation is done
+		if (!isUnitTesting) {
+			try {
+				debug("Waiting for the stand to tell KitRobot it is clear to go");
+				standApproval.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		debug("Executing moveToInspectionSpot for the" + pos);
+		
+		if (!isUnitTesting) {
+			DoMoveKitToInspection(pos);
+		}
+		
+		debug("Animation moveKitFromSlotToInspection() was completed");
+		
+		stand.setSlotKit("inspectionSlot", stand.getSlotKit(pos));
+		stand.setSlotKit(pos, null);
+		stand.setSlotState("inspectionSlot", MySlotState.KIT_JUST_PLACED_AT_INSPECTION);
+		stand.setSlotState(pos, MySlotState.EMPTY);
+		
+		
+		if (pos.equals("bottomSlot")) {
+			actions.remove(StandInfo.NEED_INSPECTION_BOTTOM);
+		} else if (pos.equals("topSlot")) {
+			actions.remove(StandInfo.NEED_INSPECTION_TOP);
+		}
+		stand.msgKitRobotNoLongerUsingStand();
+		
+		stateChanged();
+	}
+	
+	////Animations
+	
+	private void waitForAnimation() {
 		try {
-			debug("Waiting on the server to finish the animation moveEmptyKitToSlot()");
 			animation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		debug("Animation moveKitFromSlotToInspection() was completed");
-		if(slot == 0) {
-			// Put an empty kit in the topSlot of the stand
-			stand.inspectionSlot.kit = stand.topSlot.kit;
-			stand.topSlot.kit = null;
-			stand.inspectionSlot.state = MySlotState.KIT_JUST_PLACED_AT_INSPECTION;
-			stand.topSlot.state = MySlotState.EMPTY;
-		}
-		else {
-			// Put an empty kit in the bottomSlot of the stand
-			stand.inspectionSlot.kit = stand.bottomSlot.kit;
-			stand.bottomSlot.kit = null;
-			stand.inspectionSlot.state = MySlotState.KIT_JUST_PLACED_AT_INSPECTION;
-			stand.bottomSlot.state = MySlotState.EMPTY;
-		}
-		
-		stand.msgKitRobotNoLongerUsingStand();
+	}
+	
+	private void DoMoveInspectedKitToConveyor() {
+		debug("doing moveInspectedKitToConveyor");
+		server.command("kra kam cmd putinspectionkitonconveyor");
+		waitForAnimation();
+	}
+	
+	private void DoPutEmptyKitAt(String pos) {
+		debug("doing PutEmptyKitAt Animation for the "+ pos);
+		server.command("kra kam cmd putemptykitatslot "+pos);
+		waitForAnimation();
+	}
+	
+	private void DoMoveKitToInspection(String pos) {
+		debug("doing MoveKitToInspection Animation.  moving the kit at the "+pos+" to the inspectionSlot");
+		server.command("kra kam cmd movekittoinspectionslot " + pos);
+		waitForAnimation();
+	}
+	
+	private void DoDumpKitAtSlot(String pos) {
+		debug("doing DoDumpKitAtSlot Animation.  dumping the kit at "+pos);
+		server.command("kra kam cmd dumpkitatslot "+pos);
+		waitForAnimation();
+	}
+	
+	////Hacks / MISC
+	public void setStand(Stand s) {
+		this.stand = s;
+	}
+	
+	public void setConveyor(Conveyor c) {
+		this.conveyor = c;
 	}
 }

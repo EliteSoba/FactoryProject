@@ -1,41 +1,75 @@
 package factory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 
 import agent.Agent;
-import factory.graphics.GraphicLaneManagerClient;
-import factory.graphics.GraphicLaneMenuPanel;
 import factory.interfaces.Feeder;
 import factory.interfaces.Gantry;
 import factory.interfaces.Lane;
 import factory.interfaces.Nest;
 import factory.interfaces.Vision;
+import factory.masterControl.MasterControl;
+import factory.test.mock.EventLog;
+import factory.test.mock.LoggedEvent;
+
+
 
 public class FeederAgent extends Agent implements Feeder {
 
 	/** DATA **/
-	public GraphicLaneMenuPanel glmp;
-	private String name;
-	public int feederSlot;
-	public ArrayList<MyPartRequest> requestedParts = new ArrayList<MyPartRequest>();   
-	public MyLane topLane;
-	public MyLane bottomLane;
+	
+	//agents
 	public Vision vision;
-	public DiverterState diverter = DiverterState.FEEDING_BOTTOM;
 	public Gantry gantry;
+	
+	private final static int kNUM_PARTS_FED = 15;
+	private final static int kOK_TO_PURGE_TIME = 7;
+	public int feederNumber;
+	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());
+	
+	public boolean myNestsHaveBeenChecked = false;
 	public Part currentPart;
 	Bin dispenserBin; // need to use this
-	public FeederState state = FeederState.EMPTY;
+	
+	//list of lanes per feeder
+	public MyLane topLane;
+	public MyLane bottomLane;
+
+	//list of timers to indicate when it's OK to feed, when the feeder is empty, and when the part is resettled
 	public Timer okayToPurgeTimer = new Timer();
 	public Timer feederEmptyTimer = new Timer();
 	public Timer partResettleTimer = new Timer();
+	public boolean feederHasABinUnderneath = false; // no bin underneath the feeder initially
 
+	//enum for the feeder state
 	public enum FeederState { EMPTY, WAITING_FOR_PARTS, CONTAINS_PARTS, OK_TO_PURGE, SHOULD_START_FEEDING, IS_FEEDING }
+	public FeederState state = FeederState.EMPTY;
+	
+	//enum for the diverter state
 	public enum DiverterState { FEEDING_TOP, FEEDING_BOTTOM }
+	public DiverterState diverter = DiverterState.FEEDING_BOTTOM;
+	
+	//enum for part request state
+	public enum MyPartRequestState { NEEDED, ASKED_GANTRY, DELIVERED, PROCESSING }
+	
+	//enum for picture state
+	public enum PictureState {UNSTABLE, STABLE, TOLD_VISION_TO_TAKE_PICTURE }
+	
+	//enum for lane state
+	public enum MyLaneState {EMPTY, PURGING, CONTAINS_PARTS, BAD_NEST, 
+		TOLD_NEST_TO_DUMP, NEST_SUCCESSFULLY_DUMPED}
+	
+	//enum for jam state
+	public enum JamState {MIGHT_BE_JAMMED, TOLD_TO_INCREASE_AMPLITUDE, 
+		AMPLITUDE_WAS_INCREASED, NOT_JAMMED }
 
-	public enum MyPartRequestState { NEEDED, ASKED_GANTRY, DELIVERED }
+	public EventLog log = new EventLog();
+
 
 	public class MyPartRequest {
 		public Part pt;
@@ -59,18 +93,14 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 
-	public enum MyLaneState {EMPTY, PURGING, CONTAINS_PARTS, BAD_NEST, 
-		TOLD_NEST_TO_DUMP, NEST_SUCCESSFULLY_DUMPED}
-	public enum JamState {MIGHT_BE_JAMMED, TOLD_TO_INCREASE_AMPLITUDE, 
-		AMPLITUDE_WAS_INCREASED, NOT_JAMMED }
 
 	public class MyLane {
 
 		public Lane lane;
 		public MyLaneState state = MyLaneState.EMPTY;
+		public PictureState picState = PictureState.UNSTABLE; // initially it should be empty. essentially unstbale
 		public JamState jamState;
 		public Part part;
-		public boolean readyForPicture = false;
 
 		public MyLane(Lane lane){
 			this.state = MyLaneState.EMPTY;
@@ -80,14 +110,71 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 
-	public FeederAgent(String nameStr,int slot) {
-		super();
-		this.name = nameStr+slot;
-		this.feederSlot = slot;
+	public FeederAgent(String nameStr,int slot, Lane top, Lane bottom, Gantry g, Vision v, MasterControl mc) {
+		super(mc);
+		this.topLane = new MyLane(top);
+		this.bottomLane = new MyLane(bottom);
+		this.gantry = g;
+		this.vision = v;
+		this.feederNumber = slot;
 	}
 
 
 	/** MESSAGES **/
+	
+	/**
+	 *  The Lane sends this message to the Feeder notifying 
+	 *  him that his nest has become stable.
+	 */ 
+	public void msgNestHasStabilized(Lane lane) {
+		myNestsHaveBeenChecked = false;
+		
+		// figure out which lane sent the message
+		if(topLane.lane == lane)
+		{
+			debug("My TOP lane has stabilized and so it's ready for a picture.");
+			topLane.picState = PictureState.STABLE;
+		}
+		else if(bottomLane.lane == lane)
+		{
+			debug("My BOTTOM lane has stabilized and so it's ready for a picture.");
+			bottomLane.picState = PictureState.STABLE;
+		}
+		
+		// One of the nests has stabilized, let's check
+		// to see if the nests are ready for a picture:
+		areMyNestsReadyForAPicture();
+		
+		stateChanged();
+	}
+
+	/**
+	 *  The Lane sends this message to the Feeder notifying him that his nest has become unstable.
+	 */ 
+	public void msgNestHasDeStabilized(Lane lane) {
+		myNestsHaveBeenChecked = false;
+		
+		// figure out which lane sent the message
+		if(topLane.lane == lane)
+		{
+			debug("Uhoh, my TOP lane has destabilized!");
+			topLane.picState = PictureState.UNSTABLE;
+		}
+		else if(bottomLane.lane == lane)
+		{
+			debug("Uhoh, my BOTTOM lane has destabilized!");
+			bottomLane.picState = PictureState.UNSTABLE;
+		}
+		
+		stateChanged();
+	}
+	
+	
+	/**
+	 *  The vision sends this message notifying 
+	 *  the Feeder that it had a empty nest. 
+	 *  v.2
+	 * */
 	public void msgEmptyNest(Nest n) {
 		debug("received msgEmptyNest()");
 		if (topLane.lane.getNest() == n) 
@@ -103,8 +190,16 @@ public class FeederAgent extends Agent implements Feeder {
 		stateChanged();
 	}
 
+	
+	/** One of the Feeder's lanes sends this message to the
+	 *  Feeder telling him that his nest was sucessfully dumped.
+	 */
 	public void msgNestWasDumped(Lane la) {
-		debug("received msgNestWasDumped("+ la.getName() + ")");
+		String laneStr = "Top Lane";
+		if (bottomLane.lane == la)
+			laneStr = "Bottom Lane";
+
+		debug("received msgNestWasDumped("+ laneStr + ")");
 		if (topLane.lane == la)
 		{
 			topLane.state = MyLaneState.NEST_SUCCESSFULLY_DUMPED;
@@ -116,23 +211,42 @@ public class FeederAgent extends Agent implements Feeder {
 		stateChanged();
 	}
 
+	
+	/** One of the Feeder's lanes sends this message to the Feeder when he wants a part. 
+	 *  It is the end of a chain of messages originally sent by the PartsRobot.
+	 */
 	public void msgLaneNeedsPart(Part part, Lane lane) {
-		debug("received msgLaneNeedsPart("+part.name + "," + lane.getName() + ")");
-		requestedParts.add(new MyPartRequest(part, lane));
+		if (lane != null && part != null)
+		{
+			requestedParts.add(new MyPartRequest(part, lane)); // add this part request to the list of part requests
+		}
 		stateChanged();
 	}
 
+	
+	/** The Gantry sends this message when he is 
+	 *  delivering parts to the Feeder. */
 	public void msgHereAreParts(Part part) {
 		debug("received msgHereAreParts("+part.name+")");
 
-		for (MyPartRequest pr : requestedParts) {
-			if(pr.state == MyPartRequestState.ASKED_GANTRY && pr.pt == part) {
-				pr.state = MyPartRequestState.DELIVERED;
+		feederHasABinUnderneath = true; // should never be false again
+
+		synchronized(requestedParts)
+		{
+			for (MyPartRequest pr : requestedParts) {
+				if(pr.state == MyPartRequestState.ASKED_GANTRY && pr.pt.id == part.id) {
+					pr.state = MyPartRequestState.DELIVERED;
+				}
 			}
 		}
 		stateChanged();
 	}
 
+	/**
+	 *  The vision sends this message notifying 
+	 *  the Feeder that it had a bad nest. 
+	 *  v.2
+	 * */
 	public void msgBadNest(Nest n) {
 		debug("received msgBadNest()");
 		if (topLane.lane.getNest() == n) 
@@ -147,41 +261,86 @@ public class FeederAgent extends Agent implements Feeder {
 	@Override
 	public boolean pickAndExecuteAnAction() {
 
+		// Determine if the Nests need to be checked to see if they are ready for a picture
+		if (myNestsHaveBeenChecked == false)
+		{
+			return areMyNestsReadyForAPicture();
+		}
+		
+		
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
 		{
-			for (MyPartRequest p : requestedParts)
+			synchronized(requestedParts)
 			{
-				if (p.state == MyPartRequestState.NEEDED)
+				for (MyPartRequest p : requestedParts)
 				{
-					askGantryForPart(p);
-					return true;
+					if (p.state == MyPartRequestState.NEEDED)
+					{
+						askGantryForPart(p);
+						return true;
+					}
 				}
-			}
-		}
-
-		for (MyPartRequest p : requestedParts) 
-		{
-			if (p.state == MyPartRequestState.DELIVERED)
-			{
-				processFeederParts(p);
-				return true;
 			}
 		}
 
 		if (state == FeederState.SHOULD_START_FEEDING) 
 		{ 
+			//			log.add(new LoggedEvent(
+			//					"Trying to decide which lane to feed parts to."));
+
 			// Which lane should it feed to?
-			if (topLane.part == currentPart && topLane.state == MyLaneState.EMPTY)
+			
+			if (topLane.part != null)
 			{
-				state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
-				StartFeeding();
-				return true;
+				if (topLane.part == currentPart) // topLane.part is set in the processFeederParts() method
+				{
+					if (topLane.state == MyLaneState.EMPTY || topLane.state == MyLaneState.CONTAINS_PARTS)
+					{
+						// check to see if the lane diverter needs to switch
+						if (diverter == DiverterState.FEEDING_BOTTOM) {
+							diverter = DiverterState.FEEDING_TOP;
+							DoSwitchLane();   // Animation to switch lane
+						}
+
+						state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
+						startFeeding();
+						return true;
+					}
+					return true;
+				}
+			} // note: bottomeLane.part should never be null
+
+			if (bottomLane.part != null) // bottomLane.part is set in the processFeederParts() method
+			{
+				if (bottomLane.part == currentPart)
+				{
+					if (bottomLane.state == MyLaneState.EMPTY || bottomLane.state == MyLaneState.CONTAINS_PARTS)
+					{
+						// check to see if the lane diverter needs to switch
+						if (diverter == DiverterState.FEEDING_TOP) {
+							diverter = DiverterState.FEEDING_BOTTOM;
+							DoSwitchLane();   // Animation to switch lane
+						}
+
+						state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
+						startFeeding();
+						return true;
+					}
+					return true;
+				}
 			}
-			else if (bottomLane.part == currentPart && bottomLane.state == MyLaneState.EMPTY)
+			return true;
+		}
+
+		synchronized(requestedParts)
+		{
+			for (MyPartRequest p : requestedParts) 
 			{
-				state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
-				StartFeeding();
-				return true;
+				if (p.state == MyPartRequestState.DELIVERED)
+				{
+					processFeederParts(p);
+					return true;
+				}
 			}
 		}
 
@@ -218,8 +377,43 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** ACTIONS **/
+	
+	/** This action checks to see if the 
+	 * Feeder's 2 nests are ready for a picture. */
+	private boolean areMyNestsReadyForAPicture() {
+		myNestsHaveBeenChecked = true;
+		
+		// Determine if the Feeder's associated Nests are ready for a picture
+		boolean bothNestsStable = topLane.picState == PictureState.STABLE && 
+									bottomLane.picState == PictureState.STABLE;
+		
+		boolean topNestStableBottomWaitingForPicture = topLane.picState == PictureState.STABLE && 
+										bottomLane.picState == PictureState.TOLD_VISION_TO_TAKE_PICTURE;
+		
+		boolean bottomNestStableTopWaitingForPicture = bottomLane.picState == PictureState.STABLE && 
+				topLane.picState == PictureState.TOLD_VISION_TO_TAKE_PICTURE;
+		
+		// Now check if any of the above conditions are true
+		if (bothNestsStable || topNestStableBottomWaitingForPicture || bottomNestStableTopWaitingForPicture)
+		{
+			topLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;   // we have told the vision to take a picture, only send this once
+			bottomLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE; // we have told the vision to take a picture, only send this once
+			debug("Feeder sends msgMyNestsReadyForPicture() to vision.");
+			vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this); // send the message to the vision
+			myNestsHaveBeenChecked = true;
+			stateChanged();
+			return true;
+		}
+		
+		stateChanged();
+		return false;
+	}
 	private void nestWasDumped(MyLane la) {
-		debug("has dumped nest of lane " + la.lane.getName() + ".");
+		String laneStr = "Top Lane";
+		if (bottomLane == la)
+			laneStr = "Bottom Lane";
+
+		debug("has dumped nest of lane " + laneStr + ".");
 		if (this.state == FeederState.CONTAINS_PARTS)
 		{
 			// only if the feeder is actually feeding
@@ -234,22 +428,36 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	private void dumpNest(MyLane la) {
-		debug("Go dump nest of lane "+la.lane.getName() + ".");
-		DoStopFeeding();
-		la.state = MyLaneState.TOLD_NEST_TO_DUMP;
-		la.lane.msgDumpNest();
+		// Print the correct lane name
+		String laneStr = "Top Lane";
+		if (bottomLane == la)
+			laneStr = "Bottom Lane";
+
+		debug("Go dump nest of lane "+ laneStr + ".");
+		
+		DoStopFeeding(); // stop feeding the parts into the lane
+		la.state = MyLaneState.TOLD_NEST_TO_DUMP; // the lane has been told to dump its nest
+		la.lane.msgDumpNest(); // tell the lane to dump its nest
 		stateChanged();
 
 	}
 
 	private void askGantryForPart(MyPartRequest partRequested) { 
 		debug("asking gantry for part " + partRequested.pt.name + ".");
-		if (this.currentPart == partRequested.pt && state != FeederState.EMPTY)
+
+		// The feeder won't need to be purged:
+		if (this.currentPart != null)
 		{
-			state = FeederState.IS_FEEDING;
-			partRequested.state = MyPartRequestState.DELIVERED;
+			if (this.currentPart.id == partRequested.pt.id && state != FeederState.EMPTY)
+			{
+				debug("feeder doesn't need to purge.");
+				state = FeederState.IS_FEEDING;
+				partRequested.state = MyPartRequestState.DELIVERED;
+			}
 		}
-		if (purgeIfNecessary(partRequested) || this.state == FeederState.EMPTY)
+		
+		// The feeder MIGHT need to be purged (or it could just be empty):
+		if (purgeIfNecessary(partRequested) || this.state == FeederState.EMPTY )
 		{
 			state = FeederState.WAITING_FOR_PARTS;
 			partRequested.state = MyPartRequestState.ASKED_GANTRY;
@@ -261,7 +469,10 @@ public class FeederAgent extends Agent implements Feeder {
 
 	private boolean purgeIfNecessary(MyPartRequest partRequested) { 
 		debug("purging if necessary.");
-		boolean purging = false;
+		log.add(new LoggedEvent(
+				"Action purgeIfNecessary()"));
+
+		boolean purging = false; // assume we won't be purging
 
 		// Check if Feeder needs to be purged
 		if (this.currentPart != partRequested.pt && state == FeederState.OK_TO_PURGE)
@@ -271,76 +482,88 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 
 		// Check if lane needs to be purged
-		if (topLane.lane == partRequested.lane && topLane.part != null && state == FeederState.OK_TO_PURGE)
+		// A BUG IS HERE
+		if (topLane.lane == partRequested.lane && state == FeederState.OK_TO_PURGE)
 		{
-			purging = true;
-			purgeLane(topLane);
+			if (topLane.part != null) // the topLane's part is initially null, which is always != to 
+			{						  // the partRequested.pt, but we don't want to purge when the lane is empty!
+				if (topLane.part.id != partRequested.pt.id)
+				{
+					purging = true;
+					purgeLane(topLane);
+				}
+			}
 		}
 
-		if (bottomLane.lane == partRequested.lane && bottomLane.part != null && state == FeederState.OK_TO_PURGE)
+		if (bottomLane.lane == partRequested.lane && state == FeederState.OK_TO_PURGE)
 		{
-			purging = true;
-			purgeLane(bottomLane);
+			if (bottomLane.part != null) // the bottomlane's part is initially null, which is always != to
+			{						  	 // the partRequested.pt, but we don't want to purge when the lane is empty!
+				if (bottomLane.part.id != partRequested.pt.id)
+				{
+					purging = true;
+					purgeLane(bottomLane);
+				}
+			}
 		}
 
+		if (purging == true)
+			debug("yep, purging.");
+		else
+			debug("nope, not purging.");
 
 		return purging;
 	}
 
 	private void purgeFeeder(){
-		
-		DoStopFeeding();
-		DoPurgeFeeder();
 
-		currentPart = null;
-	
+		DoStopFeeding(); // Stop sending parts into the lane(s)
+		DoPurgeFeeder(); // Purge the feeder 
+
+		currentPart = null; // and the feeder no longer has a part in it, so its current part is null
+
 	}
 
 	private void purgeLane(MyLane myLane){
+		myLane.state = MyLaneState.PURGING; // The lane is now purging		
+		
+		// Call the purge lane animation for the appropriate lane
 		if (myLane == topLane)
 		{
 			DoPurgeTopLane();
-
 		}
 		else if (myLane == bottomLane)
 		{
 			DoPurgeBottomLane();
 		}
-		//myLane.state = MyLaneState.PURGING; // for future versions
-		myLane.state = MyLaneState.EMPTY; // for v.0, we will simply purge it "instantly"
 
-		myLane.lane.msgPurge();
+		myLane.state = MyLaneState.EMPTY; // we have received a message from the animation telling us that the lane has been purged
+
+		myLane.lane.msgPurge(); // tell the lane to purge
+		
 	}
 
-	// Old way was using a DELETED state, and was looking at all the requestedParts
-	/*private void processFeederParts(){
-		MyPartRequest rq = null;
-		for (MyPartRequest p : requestedParts) {
-			if( p.state == MyPartRequestState.DELETED){ 
-				rq = p;
-				break;
-			}
-		}
-
-		requestedParts.remove(rq);
-		currentPart = rq.pt;
-
-		if (bottomLane.lane == rq.lane){
-			bottomLane.part = rq.pt;
-		}
-		else {
-			topLane.part = rq.pt;
-		}
-		state = FeederState.SHOULD_START_FEEDING;
-	}
-	 */
-
-
+	/** This action processes the Feeder parts after 
+	 * they have been delivered to the Feeder. */
 	private void processFeederParts(MyPartRequest mpr){
 		debug("processing feeder parts of type "+mpr.pt.name);
-		requestedParts.remove(mpr);
-		currentPart = mpr.pt;
+		
+		mpr.state = MyPartRequestState.PROCESSING; // the part request is being processed
+		log.add(new LoggedEvent("Action ProcessFeederParts()"));
+		
+		// Remove the part request, it is no longer needed
+		synchronized(requestedParts)
+		{
+			requestedParts.remove(mpr);
+		}
+		
+		currentPart = mpr.pt; // Set the current part to be the requested part
 
+		// Check to see if the request part is null (this would be an error)
+		if (mpr.pt == null)
+			debug("Mpr.pt IS NULL");
+
+		// Set the target lane's part to be the requested part
 		if (bottomLane.lane == mpr.lane){
 			bottomLane.part = mpr.pt;
 		}
@@ -348,71 +571,55 @@ public class FeederAgent extends Agent implements Feeder {
 			topLane.part = mpr.pt;
 		}
 
+		// The feeder should start feeding now
 		state = FeederState.SHOULD_START_FEEDING;
 
 		stateChanged();
 	}
 
-	private void StartFeeding(){
+	
+	private void startFeeding(){
 		debug("action start feeding.");
-		final MyLane currentLane;
-		if(currentPart == topLane.part)
-			currentLane = topLane;
-		else 
-			currentLane = bottomLane;
-		// Switch Diverter
-		if (currentLane == topLane && diverter == DiverterState.FEEDING_BOTTOM) {
-			diverter = DiverterState.FEEDING_TOP;
-			DoSwitchLane();   // Animation to switch lane
+		
+		// Make a reference to the correct MyLane that must be fed
+		MyLane currentLane = null;
+		if (topLane.part != null)
+		{
+			if(currentPart.id == topLane.part.id)
+			{
+				currentLane = topLane;
+			}
 		}
-		else if (currentLane == bottomLane && diverter == DiverterState.FEEDING_TOP) {
-			diverter = DiverterState.FEEDING_BOTTOM;
-			DoSwitchLane();   // Animation to switch lane
+		if (bottomLane.part != null)
+		{
+			if(currentPart.id == bottomLane.part.id)
+			{
+				currentLane = bottomLane;
+			}
 		}
-
-
+		
+		
+		// This timer will run so that we don't automatically purge a
+		// lane when a second request comes to the feeder (note: the 
+		// feeder almost always has multiple requests coming in at once)
 		okayToPurgeTimer.schedule(new TimerTask(){
 			public void run() {
 				state = FeederState.OK_TO_PURGE;
-				DoStopFeeding(); // for v.0
+				DoStopFeeding(); // for v.0/v.1
 				debug("it is now okay to purge this feeder.");
 				stateChanged();
 			}
-		},(long) (currentPart.averageDelayTime / 2) * 1000); // okay to purge after this many seconds
+		},(long) kOK_TO_PURGE_TIME * 1000); // okay to purge after this many seconds
 
-		feederEmptyTimer.schedule(new TimerTask(){
-			public void run(){		    
-				partResettleTimer.schedule(new TimerTask() {
-					public void run() {
-						debug(currentLane.lane.getName() + " is ready for a picture.");
-						currentLane.readyForPicture = true;
+		
+		DoStartFeeding(currentPart); // Feed the part that is currently in the Feeder 
+									 // into its appropriate lane
+		
 
-						if (bottomLane.readyForPicture == true && topLane.readyForPicture == true)
-						{
-							debug("both of my nests are ready for a picture.");
-							vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
-							topLane.readyForPicture = false;
-							bottomLane.readyForPicture = false;
-						}
-						stateChanged();
-					}
-				}, 3000); // 3 seconds to resettle in the nest
-			}
-		}, (long) (currentPart.averageDelayTime / 2) * 1000); // time it takes the part to move down the lane and fill a nest 
-
-		//	Timer.new(30000, { state = FeederState.OK_TO_PURGE; });
-		//		Timer.new(currentPart.averageDelayTime,{vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this) });
-		// need a timer so that we don't immediately purge the new ones
-
-		DoStartFeeding(currentPart);
 		stateChanged();
 	}
 
-	/** This method returns the name of the FeederAgent **/
-	public String getName() {
-		return name;
-	}
-
+	
 	/** This method sets up the pointers to this Feeder's Lanes. **/
 	public void setUpLanes(Lane top,Lane bottom) 
 	{
@@ -434,41 +641,122 @@ public class FeederAgent extends Agent implements Feeder {
 		requestedParts.add(new MyPartRequest(p,l,s));
 	}
 
-	/** ANIMATIONS **/
+	
+	
+	
+	
+	
+	/** ANIMATIONS */
+	
+	/** Animation that makes the Feeder START feeding parts into the lane. */
 	private void DoStartFeeding(Part part) {
-		debug("Feeder " + feederSlot + " started feeding.");
-		glmp.doStartFeeding(feederSlot,part);
+		server.command("fa lm cmd startfeeding " + feederNumber);
+	
+		debug("Feeder " + feederNumber + " started feeding.");
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
+	
+	/** Animation that makes the Feeder STOP feeding parts into the lane. */
 	private void DoStopFeeding() { 
+		server.command("fa lm cmd stopfeeding " + feederNumber);
 		debug("stopped feeding.");
-		glmp.doStopFeeding(feederSlot);
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
+	
+	/** Animation that clears all of the parts out of the Feeder. */
 	private void DoPurgeFeeder() {
+		log.add(new LoggedEvent(
+				"Animation DoPurgeFeeder()"));
+
+		server.command("fa multi cmd purgefeeder " + feederNumber); /** TODO: MULTI **/
 		debug("purging feeder.");
-		glmp.doPurgeFeeder(feederSlot);
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
+	
+	/** Animation that switches the lane that the Feeder is feeding to. */
 	private void DoSwitchLane() {
+		log.add(new LoggedEvent(
+				"Animation DoSwitchLane()"));
+
+		server.command("fa lm cmd switchlane " + feederNumber);
 		debug("switching lane");
-		glmp.doSwitchLane(feederSlot);
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
+	/** Animation that makes the Feeder continue feeding after a jam or error condition. (v.2) */
 	private void DoContinueFeeding(Part part) {
 		debug("continued feeding.");
-		// worry about this later (not in v.0)
+		// worry about this later (v.2)
 	}
 
+	
+	/** Animation that clears all of the parts out of the Feeder's top lane. */
 	private void DoPurgeTopLane() {
+		log.add(new LoggedEvent(
+				"Animation DoPurgeTopLane()"));
+
+		server.command("fa multi cmd purgetoplane " + feederNumber); /** TODO: MULTI **/
 		debug("purging top lane");
-		glmp.doPurgeTopLane(feederSlot);
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
+	
+	/** Animation that clears all of the parts out of the Feeder's bottom lane. */
 	private void DoPurgeBottomLane() {
+		log.add(new LoggedEvent(
+				"Animation DoPurgeBottomLane()"));
+
+		server.command("fa multi cmd purgebottomlane " + feederNumber); /** TODO: MULTI **/
 		debug("purging bottom lane");
-		glmp.doPurgeBottomLane(feederSlot);
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
+
+
+	/** OTHER **/
+	
+	/** Returns true if the Feeder has a bin underneath it. 
+	 *  Will be pretty much all of the time except for start-up. */
+	public boolean getFeederHasABinUnderneath() 
+	{
+		return feederHasABinUnderneath;
+	}
+
+	/** Method that returns the number of this feeder (0-3). */
+	public int getFeederNumber()
+	{
+		return this.feederNumber;
+	}
+
+	
+
+
 
 
 }

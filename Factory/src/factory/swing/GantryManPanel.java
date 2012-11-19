@@ -8,13 +8,13 @@ Contains non-normative scenario controls for the Gantry Robot.
 
 package factory.swing;
 
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import factory.managers.*;
 
 public class GantryManPanel extends JPanel implements ActionListener {
+	private static final long serialVersionUID = -1457280420297402950L;
 	JButton robotRevoltButton;
 	GantryManager gantryManager;
 
@@ -42,7 +42,7 @@ public class GantryManPanel extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent ae) {
-		if(ae.getSource() == robotRevoltButton) 		{
+		if(ae.getSource() == robotRevoltButton){
 			// do something v.2
 			// gantry manager send message
 		}

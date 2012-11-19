@@ -1,5 +1,6 @@
 package factory.test.mock;
 
+import factory.test.mock.LoggedEvent;
 import factory.BinConfig;
 import factory.Part;
 import factory.interfaces.Feeder;
@@ -15,9 +16,10 @@ public class MockGantry extends MockAgent implements Gantry {
 	} 
 
 
-	@Override
 	public void msgChangeGantryBinConfig(BinConfig binConfig) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent(
+				"Received message msgChangeGantryBinConfig from the FCS"));
+
 		
 	}
 

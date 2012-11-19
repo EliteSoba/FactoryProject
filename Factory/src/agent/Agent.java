@@ -1,25 +1,34 @@
 package agent;
 
+import java.io.*;
+import java.util.*;
 import java.util.concurrent.*;
+
+import factory.masterControl.MasterControl;
 
 /** Base class for simple agents */
 public abstract class Agent {
 	Semaphore stateChange = new Semaphore(1,true);//binary semaphore, fair
 	private AgentThread agentThread;
+	
+	public MasterControl server;
+	public Semaphore animation = new Semaphore(0,true); // semaphore for animation interaction with server
 
-	protected Agent() {
+	
+	protected Agent(MasterControl mc) {
+		server = mc;
 	}
 
 	/** This should be called whenever state has changed that might cause
 	 * the agent to do something. */
-	public void stateChanged() {
+	protected void stateChanged() {
 		stateChange.release(); 
 	}
 
 	/** Agents must implement this scheduler to perform any actions appropriate for the
 	 * current state.  Will be called whenever a state change has occurred,
 	 * and will be called repeated as long as it returns true.
-	 * @return true if and only if some action was executed that might have changed the
+	 * @return true iff some action was executed that might have changed the
 	 * state.
 	 */
 	protected abstract boolean pickAndExecuteAnAction();
@@ -38,13 +47,13 @@ public abstract class Agent {
 	protected void print(String msg) {
 		print(msg, null);
 	}
-	
-    protected void debug(String msg){
-    	if(true){
-    		print(msg, null);
-    	}
-    }
 
+	protected void debug(String msg) {
+		if(true) {
+			print(msg, null);
+		}
+	}
+	
 	/** Print message with exception stack trace */
 	protected void print(String msg, Throwable e) {
 		StringBuffer sb = new StringBuffer();
@@ -76,6 +85,12 @@ public abstract class Agent {
 			agentThread.stopAgent();
 			agentThread = null;
 		}
+	}
+	
+	/** MESSAGE from the animation, notifying the agent that the animation is done. **/
+	public void msgAnimationDone() {
+		debug("msgAnimationDone() received by Agent");
+		animation.release();
 	}
 
 	/** Agent scheduler thread, calls respondToStateChange() whenever a state

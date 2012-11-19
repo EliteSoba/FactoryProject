@@ -16,5 +16,12 @@ public interface Feeder {
 	
 	public void setGantry(Gantry g);
 
+	public boolean getFeederHasABinUnderneath();
 	
+	public int getFeederNumber();
+
+	public void msgNestHasStabilized(Lane lane);
+
+	public void msgNestHasDeStabilized(Lane lane);
+
 }

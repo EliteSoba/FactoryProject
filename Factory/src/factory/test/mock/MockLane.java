@@ -51,4 +51,14 @@ public class MockLane extends MockAgent implements Lane {
 		log.add(new LoggedEvent("msgNestNeedsPart()"));
 	}
 
+	@Override
+	public void msgNestHasStabilized() {
+		log.add(new LoggedEvent("msgNestHasStabilized()"));
+	}
+	
+	public void msgNestHasDestabilized() {
+		log.add(new LoggedEvent("msgNestHasDetabilized()"));
+	}
+
+
 }

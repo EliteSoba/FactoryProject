@@ -4,6 +4,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import factory.managers.*;
+
 /*
 * This class is the GUI for the Kit Assembly Manaager. This will be
 * instantiated in the general KitAssManager class (which extends JFrame).
@@ -18,8 +20,12 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 	JLabel subtitle;
 	JButton incorrectKits;
 	JButton kitRobotFreeze;
+	KitAssemblyManager kitAssemblyManager;
 	
-	public KitAssManPanel(){
+	
+	public KitAssManPanel(KitAssemblyManager k){
+		kitAssemblyManager = k;
+		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
@@ -47,13 +53,16 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 		this.add(kitRobotFreeze, c);
 	}
 
-	@Override
 	public void actionPerformed(ActionEvent ae) {
-		// TODO Auto-generated method stub
+		String set = new String (" ");
 		if(ae.getSource() == incorrectKits){
-			System.out.println("Initiating non-normative case : Incorrect Kits");
-		}else if (ae.getSource() == kitRobotFreeze){
-			System.out.println("Initiating non-normative case : Kit Robot Freeze");
+			kitAssemblyManager.sendCommand("incorrectKits");
+			//to be implemented in v.2
+		}
+		
+		else if (ae.getSource() == kitRobotFreeze){
+			kitAssemblyManager.sendCommand("kitRobotFreeze");
+			//to be implemented in v.2
 		}
 	}
 

@@ -6,97 +6,97 @@ package factory.masterControl;
 // 	Prof. Crowley
 // Another test
 
-import java.io.*;
-
-//	Server-Socket Team -- Devon, Mher & Ben
-//	CSCI-200 Factory Project Team 2
-//	Fall 2012
-// 	Prof. Crowley
-// Another test
-
 import java.io.BufferedReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
-public class PartHandler {
+public class PartHandler implements Runnable {
 
-Socket mySocket = null;
-PrintWriter out = null;
-BufferedReader in = null;
-boolean haveCMD = false; 
-String cmd = null;
-MasterControl myMC;
+    Socket mySocket = null;
+    PrintWriter out = null;
+    BufferedReader in = null;
+    boolean haveCMD = false;
+    boolean error = true;
+    String cmd = null;
+    String message;
+    MasterControl master = null;
+    String client_id = null;
+    boolean factoryDone;
 
 	public PartHandler(Socket s, BufferedReader b, PrintWriter p, String me, MasterControl mc){
-		//need to add other initializations
-		Socket mySocket = s;
-        myMC = mc;
+		//Get all the required variables set so PartHandler can function correctly
+		mySocket = s;
+		out = p;
+		in = b;
+		master = mc;
+		client_id = me;
+        factoryDone = false;
+		//Sets up thread for the partHandler
+		(new Thread(this)).start();
 	}
-	
-	public void run() {
-	    try {
-		//Create the 2 streams for talking to the client
-		//second one may be for server though
-		out = new PrintWriter( mySocket.getOutputStream(), true );
-		in = new BufferedReader( new InputStreamReader( mySocket.getInputStream() ) );
-	    } catch (Exception e) {
-		e.printStackTrace();
-		System.exit(0);
-	    }
 
-	    System.out.println("got streams");
+    public void endClient(){
+        //Need to send a final message to the client
+        String closeCmd = "mcs close";
+        //Send closeCmd to the client
+        //Then set the factoryDone flag to true, allowing the thread to exit.
 
+        out.println(closeCmd);
+
+        factoryDone = true;
+
+    }
+
+	public void run() 
+	{
 	    //This thread loops to get confirmations sent by clients 
 
-	    while(true /*condition goes here*/) {
-			cmd = gotCmd();
-			if(haveCMD)
-			{//if there was a command then call parseCmd and send the cmd to Server to assess
-				myMC.parseCmd(cmd, this);
-				//sets haveCMD to false because parseCmd notified server?
-				haveCMD = false;
-			}
-		}
+	    for(;;) {
+            cmd = gotCmd();
+            if(haveCMD) {//if there was a command then call parseCmd and send the cmd to Server to assess
+                    error = master.command(cmd);
+                    //sets haveCMD to false because parseCmd notified server
+                    haveCMD = false;
+            }
+            if(error == false)
+            {
+            	out.println("err command was invalid");
+            }
+            if(factoryDone){
+                break;
+            }
+        }
 	}
 	
 	public boolean send(String cmd) {
 		boolean result = false;
-		String confirmation = null;
-		out.println(cmd);
-			try //check if client recived sent cmd, not too sure on how to update result yeto r what results is suposed to be
-			{
-				confirmation =  in.readLine();
-				if(confirmation != null)
-					result = true;
-			}
-			catch(IOException e)
-			{
-				System.err.print("Something went wrong when sent");
-				System.exit(1);
-			}
+
+		out.println(cmd);	//output command
+		result = true;
+		if(out.checkError())
+		{
+			result = false;
+		}
 		return result;
 	}
 	
 	//this loops until it gets a cmd from client 
 	private String gotCmd()
 	{
-		String message = null;
-        try {
+		try {
 		    //Wait for the client to send a String 
 		    message = in.readLine();
 		    
-		    //Send back a response
-		    // maybe out.println( message );
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
 
-		//sets haveCMD to true is ther was a command sent so can call parseCmd
+		//sets haveCMD to true is there was a command sent so can call parseCmd
 		if(message != null)
 		{
 			haveCMD = true;
 		}
 		return message;
 	}
-	
 	
 }

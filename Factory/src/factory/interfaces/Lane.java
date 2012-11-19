@@ -13,12 +13,19 @@ public void msgDumpNest();
 
 public void msgPurge();
 
-public String getName();
-
 public void setNest(Nest n); // used for testing purposes only
 
 public void msgNestWasDumped();
 
 public void msgNestNeedsPart(Part pt);
+
+public void msgNestHasStabilized();
+
+public void msgNestHasDestabilized();
+
+//public void msgFeedingParts(int numParts);
+//
+//public void msgNestIsOutOfParts();
+
 
 }

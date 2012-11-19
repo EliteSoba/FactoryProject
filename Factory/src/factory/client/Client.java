@@ -107,7 +107,7 @@ public abstract class Client extends JFrame implements ActionListener {
 		output.println(cmd);
 	}
 
-	@Override
+	
 	public void actionPerformed(ActionEvent arg0) {
 		/*if(arg0.getSource() == updater)
 			if(graphics != null)
@@ -126,65 +126,74 @@ public abstract class Client extends JFrame implements ActionListener {
 			client = client2;
 		}
 		
-		@Override
+
 		public void windowActivated(WindowEvent e) {
 			// TODO Auto-generated method stub
 			
 		}
 
-		@Override
+
 		public void windowClosed(WindowEvent e) {
 			
 		}
 
-		@Override
+
+	
 		public void windowClosing(WindowEvent e) {
-			try {
-				if(client.type == Type.fpm)
-					client.sendCommand("fpm mcs cmd stopfactory");
-				client.dispose();
-				System.out.println("resources released");
-				if(client.input != null)
-				{	
-					System.out.println("input stream closing...");
-					client.input.close();
-					System.out.println("input closed");
-				}
-				if(client.output != null)
-					System.out.println("output stream closing...");
-					client.output.close();
-					System.out.println("output closed");
-				} catch (IOException e1) {
-					//never executes but wont compile w/o
-				}
-			System.out.println("window closed");
-			this.client.setDefaultCloseOperation(EXIT_ON_CLOSE);
+			
+			if(client.type == Type.fpm && connected == true)
+				client.sendCommand("fpm mcs cmd stopfactory");
+				
+			client.quit();
 		}
 
-		@Override
+		
+
 		public void windowDeactivated(WindowEvent e) {
 			// TODO Auto-generated method stub
 			
 		}
 
-		@Override
+
 		public void windowDeiconified(WindowEvent e) {
 			// TODO Auto-generated method stub
 			
 		}
 
-		@Override
+
 		public void windowIconified(WindowEvent e) {
 			// TODO Auto-generated method stub
 			
 		}
 
-		@Override
 		public void windowOpened(WindowEvent e) {
 			// TODO Auto-generated method stub
 			System.out.println("Window opened");
 		}
     }
+
+	public void quit() {
+		if(connected){
+		try{
+		dispose();
+		System.out.println("resources released");
+		if(input != null)
+		{	
+			System.out.println("input stream closing...");
+			input.close();
+			System.out.println("input closed");
+		}
+		if(output != null)
+			System.out.println("output stream closing...");
+			output.close();
+			System.out.println("output closed");
+		} catch (IOException e1) {
+			//never executes but wont compile w/o
+		}}
+	System.out.println("window closed");
+		if(type == Type.fpm || connected == false)
+			System.exit(0);
+	}
     
     
 }
