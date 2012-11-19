@@ -238,6 +238,9 @@ public class MasterControl {
 
 		partsRobot = new PartsRobotAgent(this, fcs, vision, stand, nestAgentListForPartsRobot); 
 	
+		fcs.setPartsRobot(partsRobot);
+		
+		
 		//Hacking References
 		conveyor.setKitRobot(kitRobot);
 		kitRobot.setStand(stand);
