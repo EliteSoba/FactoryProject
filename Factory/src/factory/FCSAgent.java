@@ -186,6 +186,12 @@ public class FCSAgent extends Agent implements FCS{
 	public void removePartType(String partname){
 		if (partsList.containsKey(partname))
 			partsList.remove(partname);
+		List<String> recipes = new ArrayList<String>(kitRecipes.keySet());
+		for(String r: recipes){
+			if(kitRecipes.get(r).listOfParts.contains(partname)){
+				kitRecipes.remove(r);
+			}
+		}
 		testImport();
 	}
 
