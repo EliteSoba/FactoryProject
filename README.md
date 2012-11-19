@@ -50,28 +50,7 @@ Running:<p>
      modify and delete the part.<p>
    *The other Managers are pretty self-explanatory.<p>
    
-   **Test Cases**<p>
-   MasterControl Test<p>
-   These has the potential to cause the factory to break.<p>
-   Command line argument > 5<p>
-   Command line argument "not a number"<p> 
-   Command line argument "5 6" <-- spaces inbetween valid answers<p>
-   <p>
-   Why won't they break the Factory?<p>
-   <p>
-   <p>
-   
-   KitManager<p>
-   Try the addKit function and see if it works correctly. Add the same Configurations multiple times.<p>
-   Try remove part, check if the correct part is removed and also check if the correct KitConfigurations are 
-   removed as well. Try readding the same part with the same specifications. Does anything strange happen?<p>
-   Try Modify kit configurations, did that delete the kitconfiguration by accident.<p>
-   
-   Other Managers<p>
-   Pushing buttons that send commands to the server queue constantly and continuously to try and break
-   the queue or mix up what the agents or other clients would have to do.
-   
-   
+ 
    
    
    
