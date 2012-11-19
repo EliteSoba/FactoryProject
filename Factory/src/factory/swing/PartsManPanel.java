@@ -49,7 +49,7 @@ public class PartsManPanel extends JPanel{
 		partsManager = p;
 		currentID = partsManager.parts.size()+1;  
 		
-		// loads 
+		// loads filenames
 		fileNames = new ArrayList<String>();
 		fileNames.add("eye");
 		fileNames.add("body");
@@ -156,7 +156,7 @@ public class PartsManPanel extends JPanel{
 			idLabel = new JLabel("ID# : " + currentID);
 			descriptionLabel = new JLabel("Description : ");
 			nestStabalizationTimeLabel = new JLabel ("Nest Stabalization Time : ");
-			nestStabalizationTime = new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
+			nestStabalizationTime = new JSpinner(new SpinnerNumberModel(1, 1, 2, 1));
 			JFormattedTextField tf = ((JSpinner.DefaultEditor) nestStabalizationTime.getEditor()).getTextField();
 			tf.setEditable(false);
 			description = new JTextArea("Enter description here", 2, 10);
@@ -237,14 +237,15 @@ public class PartsManPanel extends JPanel{
 
 		}
 
-		public void updatePicture(String item){
+		public void updatePicture(String item){  // This updates the image previews
 			ImageIcon imagePreview = new ImageIcon("Images/" + item + ".png");
 			previewFrame.setIcon(imagePreview);
 		}
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			String messageAddPanel = new String (" ");
-			if (ae.getSource() == saveItem){
+			if (ae.getSource() == saveItem){   // save item button
+				//Error Checking
 				String testName;
 				name.setText(name.getText().replaceAll("\\s","")) ;
 				testName = name.getText().toUpperCase();
@@ -273,7 +274,7 @@ public class PartsManPanel extends JPanel{
 							p.imagePath + " " + p.nestStabilizationTime + " " + p.description;
 					partsManager.sendCommand(messageAddPanel);
 					System.out.println("Client: got here");
-					idLabel.setText("ID# : " + currentID);
+					idLabel.setText("ID# : " + currentID);    // resets text fields
 					name.setText("");
 					description.setText("Enter description here");
 					imageSelection.setSelectedIndex(0);
@@ -290,7 +291,7 @@ public class PartsManPanel extends JPanel{
 
 	}
 
-	private class EditPanel extends JPanel implements ActionListener{
+	private class EditPanel extends JPanel implements ActionListener{  // This is for the edit panel
 		// Data
 
 		private static final long serialVersionUID = -5141689953794161944L;
@@ -321,7 +322,9 @@ public class PartsManPanel extends JPanel{
 			this.setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
 			currentPart = new Part();
-
+			
+			// initializing parts
+			
 			title = new JLabel ("Parts Manager");
 			title.setFont(new Font("Serif", Font.BOLD, 16));
 			nameLabel = new JLabel ("New Item : ");
@@ -330,7 +333,7 @@ public class PartsManPanel extends JPanel{
 			idLabel = new JLabel("ID# : " + currentID);
 			descriptionLabel = new JLabel("Description : ");
 			nestStabalizationTimeLabel = new JLabel ("Nest Stabalization Time : ");
-			nestStabalizationTime = new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
+			nestStabalizationTime = new JSpinner(new SpinnerNumberModel(1, 1, 2, 1));
 			JFormattedTextField tf = ((JSpinner.DefaultEditor) nestStabalizationTime.getEditor()).getTextField();
 			description = new JTextArea("Enter description here", 2, 10);
 			description.setLineWrap(true);
@@ -350,6 +353,9 @@ public class PartsManPanel extends JPanel{
 			removeItem.addActionListener(this);
 			cancel = new JButton ("Cancel");
 			cancel.addActionListener(this);
+			
+			// layout out components
+			
 			c.gridx = 0;
 			c.gridy = 0;
 			c.gridwidth = 2;
@@ -423,7 +429,7 @@ public class PartsManPanel extends JPanel{
 
 		}
 
-		public void updatePicture(String path){
+		public void updatePicture(String path){  // updates image preview 
 			ImageIcon imagePreview = new ImageIcon(path);
 			previewFrame.setIcon(imagePreview);
 		}
@@ -431,7 +437,7 @@ public class PartsManPanel extends JPanel{
 		public void actionPerformed(ActionEvent ae) {
 			String messageEditPanel = new String (" ");
 
-			if (ae.getSource() == removeItem){
+			if (ae.getSource() == removeItem){  // remove item button
 				//"pm km cmd rmpartname #partname"
 				messageEditPanel = "pm km cmd rmpartname " + currentPart.name; 
 				partsManager.sendCommand(messageEditPanel);
@@ -443,9 +449,9 @@ public class PartsManPanel extends JPanel{
 				removeItem(currentPart);
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
-			}else if(ae.getSource() == saveItem){
+			}else if(ae.getSource() == saveItem){  // save item button
 
-				String testName; //hi
+				String testName; //error checking
 				name.setText(name.getText().replaceAll("\\s","")) ;
 				testName = name.getText().toUpperCase();
 				boolean nameTaken = false;
@@ -479,19 +485,19 @@ public class PartsManPanel extends JPanel{
 					basePanel1.setVisible(true);
 					basePanel2.setVisible(false);
 				}
-			}else if(ae.getSource() == cancel){
+			}else if(ae.getSource() == cancel){  // cancel button
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
 
-			}else{
-				JComboBox cb = (JComboBox)ae.getSource();
+			}else{  // if j combo box changes
+				JComboBox cb = (JComboBox)ae.getSource();  
 				String selectedItem = (String)cb.getSelectedItem();
 				updatePicture("Images/" + selectedItem + ".png");
 			}
 
 		}
 
-		public void updateEditPanel(JTable tempTable, int tempRow){
+		public void updateEditPanel(JTable tempTable, int tempRow){  // updates the edit panel
 			String tempName;
 			Part p;
 			tempName = (String) tempTable.getValueAt(tempRow, 1);
@@ -512,7 +518,7 @@ public class PartsManPanel extends JPanel{
 	}
 
 
-	public void addItem(Part p){
+	public void addItem(Part p){  // adds item to the table
 		partsManager.parts.put(p.name, p);
 		ImageIcon image = new ImageIcon(p.imagePath);
 		Object[] rowData = {p.id,p.name, p.nestStabilizationTime, image};
@@ -520,7 +526,7 @@ public class PartsManPanel extends JPanel{
 		table.revalidate();
 	}
 
-	public void editItem(Part p){
+	public void editItem(Part p){  //edits table
 		ImageIcon image = new ImageIcon(p.imagePath);
 		Object[] rowData = {p.id,p.name, p.nestStabilizationTime, image};
 		for(int i = 0; i < model.getRowCount(); i++){
@@ -535,7 +541,7 @@ public class PartsManPanel extends JPanel{
 		table.revalidate();
 	}
 
-	public void removeItem(Part p){
+	public void removeItem(Part p){  // removes table
 		for(int i = 0; i < model.getRowCount(); i++){
 			if((Integer)p.id == (Integer)model.getValueAt(i, 0)){
 				model.removeRow(i);
