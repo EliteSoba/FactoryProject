@@ -715,10 +715,11 @@ public class MasterControl {
 		}
 
 		// Check that the destination is not currently busy
-
-		if(partOccupied.get(pCmd.get(1))){
-			return "destination is busy cannot send message.";
-		}
+        if(partOccupied.containsKey(pCmd.get(1))){
+            if(partOccupied.get(pCmd.get(1))){
+                return "destination is busy cannot send message.";
+            }
+        }
 
 		// Check that the cmdType is a valid cmdType
 
