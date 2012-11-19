@@ -96,6 +96,8 @@ public class StandTests extends TestCase {
 		// Test that nothing gets executed if the Parts Robot wants to delivery parts but the slots are empty
 		stand.msgPartRobotWantsToPlaceParts();
 		assertEquals(stand.pickAndExecuteAnAction() , true);
+		
+		
 		//assertEquals(stand.pickAndExecuteAnAction() , false);
 	}
 
