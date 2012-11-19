@@ -91,9 +91,6 @@ public class MasterControl {
 		nestAgentTreeMap = new TreeMap<String, NestAgent>();
         partHandlerList = new ArrayList<PartHandler>();
 
-
-
-
 		try{
 			myServerSocket = new ServerSocket(12321);
 		} catch(Exception e){
@@ -141,6 +138,10 @@ public class MasterControl {
 		// Instantiate the Gantry
 		gantry = new GantryAgent(this);
 
+
+		// Instantiate the Stand
+		stand = new StandAgent(this, null);
+		
 		// Instantiate the Vision
 		vision = new VisionAgent(partsRobot,stand,this);
 
@@ -169,15 +170,12 @@ public class MasterControl {
 		// Instantiate the KitRobot
 		kitRobot = new KitRobotAgent(this,conveyor);
 
-		// Instantiate the Stand
-		//stand = new StandAgent(); // bad code
-
-
 		// Instantiate the FCS
 		fcs = new FCSAgent(gantry,partsRobot, this);
 
 
 		// SET A FEW THINGS
+		stand.setKitRobot(kitRobot);
 		conveyor.setKitRobot(kitRobot);
 		kitRobot.setStand(stand);
 		conveyor.setFCS(fcs);
@@ -219,8 +217,8 @@ public class MasterControl {
 		conveyor.setKitRobot(kitRobot);
 		kitRobot.setStand(stand);
 		conveyor.setFCS(fcs);
-		//stand.setVision(vision);
-		//stand.setPartsRobot(partsRobot);
+		stand.setVision(vision);
+		stand.setPartsRobot(partsRobot);
 		conveyorController.setConveyor(conveyor);
 
 		
@@ -230,7 +228,7 @@ public class MasterControl {
 		agentTreeMap.put("ga", gantry );
 		agentTreeMap.put("kra", kitRobot);
 		agentTreeMap.put("pra", partsRobot);
-		//agentTreeMap.put("sa", stand);
+		agentTreeMap.put("sa", stand);
 		agentTreeMap.put("va", vision);
 		agentTreeMap.put("fcsa", fcs);
 
@@ -332,10 +330,8 @@ public class MasterControl {
 	// what method to call on what agent.
 
 	public boolean agentCmd(ArrayList<String> cmd){ 		//GO HERE
-        if(!checkAgentCmd(cmd)){
-            return false;
-        }
-        Agent destination;
+
+		Agent destination;
 		// 0 = Source
 		// 1 = Destination
 		// 2 = CmdType
@@ -521,7 +517,7 @@ public class MasterControl {
 
 
 	public boolean clientCmd(ArrayList<String> cmd){	
-		String s = checkClientCmd(cmd);
+		String s = checkCmd(cmd);
 		System.out.println(s);
 		String a = cmd.get(0); // Source
 		if(s != null){
@@ -675,26 +671,21 @@ public class MasterControl {
 		return partHandlers.get(id);
 	}
 
-    private boolean checkAgentCmd(ArrayList<String> pCmd){
-
-        // These are commands going to Agents
-
-
-        return true;
-
-    }
-
 
 	// checkCmd is called by parseCmd with the command received to check for errors
 	// Therefore, it should be private.
 
-	private String checkClientCmd(ArrayList<String> pCmd) {
+	private String checkCmd(ArrayList<String> pCmd) {
 
 		// Check that the cmd is of a valid length
 
 		if(pCmd.size() < 4){
 			return "there must be a command";
 		}
+
+//		if(pCmd.size() == 4){
+//			return "missing parameters for command";
+//		}
 
 		// Check that the source is a valid DID
 
@@ -779,11 +770,10 @@ public class MasterControl {
 		int debug = Integer.valueOf(args[0]);
 		MasterControl mc = new MasterControl(debug);
 
-/*		//This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
+	//This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
 		long timeToQuit = System.currentTimeMillis() + 5000;
 		while (System.currentTimeMillis() < timeToQuit);
 
-		// TEMPORARY, FOR TESTING PURPOSES:
 		Part p0 = new Part("eye",000,"desc","imgPath",2);
 		Part p1 = new Part("eye",000,"desc","imgPath",3);
 		Part p2 = new Part("shoe",001,"desc","imgPath",3);
@@ -791,15 +781,31 @@ public class MasterControl {
 		Part p4 = new Part("sword",002,"desc","imgPath",4);
 		Part p5 = new Part("tentacle",003,"desc","imgPath",4);
 		Part p6 = new Part("tentacle",003,"desc","imgPath",4);
-		Part p7 = new Part("eye",000,"desc","imgPath",4);
-
+		Part p7 = new Part("tentacle",003,"desc","imgPath",4);
+		
 		List<Part> partList = new ArrayList<Part>();
 		partList.add(p0);
 		partList.add(p1);
 		partList.add(p2);
 		partList.add(p3);
 		partList.add(p4);
-		partList.add(p5);*/
+		partList.add(p5);
+		partList.add(p6);
+		partList.add(p7);
+		
+		KitConfig firstKit = new KitConfig();
+		firstKit.listOfParts = partList;
+		
+		// Send the message that the FCS would send
+		mc.partsRobot.msgMakeKit(firstKit);
+		
+		
+		
+		timeToQuit = System.currentTimeMillis() + 10000;
+		while (System.currentTimeMillis() < timeToQuit);
+		mc.partsRobot.msgHereArePartCoordinatesForNest(mc.partsRobot.nests.get(0).nest, p0, 5);
+		
+		
 		
 		//mc.n0t.msgYouNeedPart(p0);
 
@@ -807,33 +813,6 @@ public class MasterControl {
 		//	public Part(String n,int i,String d,String p,double t) {
 
 		//mc.kitRobot.msgNeedEmptyKitAtSlot("topSlot");
-//		
-//		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
-//		
-//		mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
-//
-//		mc.f0.msgLaneNeedsPart(p4,mc.l0t); //sword to top
-//
-//		mc.f0.msgLaneNeedsPart(p1,mc.l0t); //eye to top
-//
-//		mc.f0.msgLaneNeedsPart(p5,mc.l0b); //tentacle to bottom
-//		
-//		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
-//		
-//		mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
-
-		mc.n0t.msgYouNeedPart(p0);
-		mc.n0b.msgYouNeedPart(p2);
-		
-		mc.n1b.msgYouNeedPart(p2);
-		mc.n1t.msgYouNeedPart(p3);
-
-		mc.n2b.msgYouNeedPart(p4);
-		mc.n2t.msgYouNeedPart(p5);
-
-		mc.n3b.msgYouNeedPart(p6);
-		mc.n3t.msgYouNeedPart(p7);
-
 		
 		/*
 		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
@@ -853,6 +832,11 @@ public class MasterControl {
 		
 		
 		
+//				mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
+//		
+//				mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
+//		
+//				mc.f0.msgLaneNeedsPart(p4,mc.l0t); //sword to top
 //		
 //				mc.f0.msgLaneNeedsPart(p5,mc.l0b); //tentacle to bottom
 //		

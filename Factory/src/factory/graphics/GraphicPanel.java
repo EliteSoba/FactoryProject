@@ -13,6 +13,8 @@ import factory.client.*;
 public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	public int WIDTH, HEIGHT;
+	public static final Image TILE_IMAGE = Toolkit.getDefaultToolkit().getImage("Images/Tiles/floorTileXGrill.png1");
+	public static final int TILE_SIZE = 128;
 	public static final int delay = 10;
 	
 	protected Client am; //The Client that holds this
@@ -42,7 +44,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	// GANTRY
 	protected GraphicGantryRobot gantryRobot;
 	
-	public GraphicPanel(int offset) {
+	public GraphicPanel(/*int offset/**/) {
 		WIDTH = 1100;
 		HEIGHT = 720;
 		am = null;
@@ -61,7 +63,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		
 		flashImage = Toolkit.getDefaultToolkit().getImage("Images/flash3x3.png");
 		
-		belt = new GraphicConveyorBelt(0-offset, 0, this);
+		/*belt = new GraphicConveyorBelt(0-offset, 0, this);
 		station = new GraphicKittingStation(200-offset, 191, this);
 		kitRobot = new GraphicKittingRobot(this, 70-offset, 250);
 		
@@ -79,7 +81,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			lane[i] = new GraphicLaneManager(510-offset, 160*i + 50, i, this);
 		
 		partsRobot = new GraphicPartsRobot(350-offset,360,0,5,5,10,100,100,"Images/robot1.png");
-		gantryRobot = new GraphicGantryRobot(950-offset,360,0,5,5,10,100,100,"Images/robot2.png");
+		gantryRobot = new GraphicGantryRobot(950-offset,360,0,5,5,10,100,100,"Images/robot2.png");*/
 	}
 	
 	/**TODO: Kit Assembly Methods*/
@@ -208,7 +210,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(3);
 			gantryRobot.setDestinationFeeder(feederIndex);
-			gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
+			gantryRobot.setDestination(lane[feederIndex].feederX+115, lane[feederIndex].feederY+15);
 		}
 			//gantryRobotArrivedAtFeederForDropoff();
 		//}
@@ -232,7 +234,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(5);
 			gantryRobot.setDestinationFeeder(feederIndex);
-			gantryRobot.setDestination(lane[feederIndex].feederX+95, lane[feederIndex].feederY+15);
+			gantryRobot.setDestination(lane[feederIndex].feederX+115, lane[feederIndex].feederY+15);
 		}
 		//}
 	}
@@ -682,8 +684,15 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**TODO: Paint function*/
 	public void paint(Graphics g) {
-		g.setColor(new Color(200, 200, 200));
-		g.fillRect(0, 0, getWidth(), getHeight());
+		for(int j = 0; j < WIDTH; j += TILE_SIZE)
+		{
+			for(int k = 0; k < HEIGHT; k += TILE_SIZE)
+			{
+				g.drawImage(TILE_IMAGE, j, k, TILE_SIZE, TILE_SIZE, null);
+			}
+		}
+		//g.setColor(new Color(200, 200, 200));
+		//g.fillRect(0, 0, getWidth(), getHeight());
 		
 		if (isKitAssemblyManager || isFactoryProductionManager) {
 			belt.paint(g);
