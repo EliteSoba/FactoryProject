@@ -142,12 +142,12 @@ public class FeederAgent extends Agent implements Feeder {
 		myNestsHaveBeenChecked = false;
 		if(topLane.lane == lane)
 		{
-			debug("My top lane has stabilized and so it's ready for a picture.");
+			//debug("My top lane has stabilized and so it's ready for a picture.");
 			topLane.picState = PictureState.STABLE;
 		}
 		else if(bottomLane.lane == lane)
 		{
-			debug("My bottom lane has stabilized and so it's ready for a picture.");
+			//debug("My bottom lane has stabilized and so it's ready for a picture.");
 			bottomLane.picState = PictureState.STABLE;
 		}
 		
@@ -622,7 +622,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 		
 		DoStartFeeding(currentPart);
-		currentLane.lane.msgFeedingParts(kNUM_PARTS_FED); // we feed a constant number of parts into the lane each time
+		//currentLane.lane.msgFeedingParts(kNUM_PARTS_FED); // we feed a constant number of parts into the lane each time
 		
 		System.out.println("1.6");
 
