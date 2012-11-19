@@ -63,7 +63,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		isKitAssemblyManager = false;
 		isFactoryProductionManager = false;*/
 		
-		flashImage = Toolkit.getDefaultToolkit().getImage("Images/flash3x3.png");
+		flashImage = Toolkit.getDefaultToolkit().getImage("Images/cameraFlash3x3.png");
 		transferringItem = null;
 		
 		/*belt = new GraphicConveyorBelt(0-offset, 0, this);
@@ -736,11 +736,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if(isLaneManager || isFactoryProductionManager) {
 			if(flashCounter >= 0)
 			{
-				int flashX = nests.get(flashFeederIndex*2).getX();
-				int flashY = nests.get(flashFeederIndex*2).getY();
+				int flashX = nests.get(flashFeederIndex*2).getX()-12;
+				int flashY = nests.get(flashFeederIndex*2).getY()-12;
 				g.drawImage(flashImage, flashX, flashY, null);
-				flashX = nests.get(flashFeederIndex*2+1).getX();
-				flashY = nests.get(flashFeederIndex*2+1).getY();
+				flashX = nests.get(flashFeederIndex*2+1).getX()-12;
+				flashY = nests.get(flashFeederIndex*2+1).getY()-12;
 				g.drawImage(flashImage, flashX, flashY, null);
 				flashCounter --;
 				if(flashCounter == 1)
