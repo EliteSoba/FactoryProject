@@ -303,7 +303,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void partsRobotPopItemToCurrentKit(int itemIndex)
 	{
 		transferringItem = partsRobot.popItemAt(itemIndex);
-		station.addItem(partsRobot.popItemAt(itemIndex),partsRobot.getDestinationKit());
+		station.addItem(transferringItem,partsRobot.getDestinationKit());
 		partsRobotPopItemToCurrentKitDone();
 	}
 	

@@ -108,6 +108,10 @@ public class GraphicFactoryProductionManager extends JFrame {
 		panel.movePartsRobotToStation(0);
 	}
 	
+	public void popItemToKit(int target) {
+		panel.partsRobotPopItemToCurrentKit(target);
+	}
+	
 	public void moveRobotToCenter(){
 		panel.movePartsRobotToCenter();
 	}
