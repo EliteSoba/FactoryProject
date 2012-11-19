@@ -242,9 +242,6 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 				DoMovePartsRobotToCenter();
 				return true;
 			}
-			debug("###################### " + !ArmsEmpty());
-			debug("###################### " + this.position);
-			debug("###################### " + this.standState);
 			if(!ArmsEmpty() && this.position == PartsRobotPositions.CENTER && this.standState == StandState.DOING_NOTHING){
 				DoAskPermisionToDeliverParts();
 				return true;
@@ -469,7 +466,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			// try to place in first kit
 			for(int i = 0; !placed && i < this.topSlot.listOfParts.size(); i++){
 				if(this.topSlot.listOfParts.get(i).name == this.armOne.name){
-					this.stand.topSlot.kit.parts.add(this.armOne);
+					this.stand.getSlotKit("topSlot").parts.add(this.armOne);
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armOne = null;
@@ -483,7 +480,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			// try to place in first kit
 			for(int i = 0; !placed && i < this.topSlot.listOfParts.size(); i++){
 				if(this.topSlot.listOfParts.get(i).name == this.armTwo.name){
-					this.stand.topSlot.kit.parts.add(this.armTwo);
+					Stand.topSlot.kit.parts.add(this.armTwo);
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armTwo = null;
@@ -497,7 +494,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			// try to place in first kit
 			for(int i = 0; !placed && i < this.topSlot.listOfParts.size(); i++){
 				if(this.topSlot.listOfParts.get(i).name == this.armThree.name){
-					this.stand.topSlot.kit.parts.add(this.armThree);
+					Stand.topSlot.kit.parts.add(this.armThree);
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armThree = null;
@@ -511,7 +508,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			// try to place in first kit
 			for(int i = 0; !placed && i < this.topSlot.listOfParts.size(); i++){
 				if(this.topSlot.listOfParts.get(i).name == this.armFour.name){
-					this.stand.topSlot.kit.parts.add(this.armFour);
+					Stand.topSlot.kit.parts.add(this.armFour);
 					this.topSlot.listOfParts.remove(i);
 					placed = true;
 					this.armFour = null;
@@ -528,7 +525,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					// try to place in first kit
 					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
 						if(this.bottomSlot.listOfParts.get(i).name == this.armOne.name){
-							this.stand.topSlot.kit.parts.add(this.armOne);
+							Stand.topSlot.kit.parts.add(this.armOne);
 							this.bottomSlot.listOfParts.remove(i);
 							placed = true;
 							this.armOne = null;
@@ -542,7 +539,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					// try to place in first kit
 					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
 						if(this.bottomSlot.listOfParts.get(i).name == this.armTwo.name){
-							this.stand.topSlot.kit.parts.add(this.armTwo);
+							Stand.topSlot.kit.parts.add(this.armTwo);
 							this.bottomSlot.listOfParts.remove(i);
 							placed = true;
 							this.armTwo = null;
@@ -556,7 +553,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					// try to place in first kit
 					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
 						if(this.bottomSlot.listOfParts.get(i).name == this.armThree.name){
-							this.stand.topSlot.kit.parts.add(this.armThree);
+							Stand.topSlot.kit.parts.add(this.armThree);
 							this.bottomSlot.listOfParts.remove(i);
 							placed = true;
 							this.armThree = null;
@@ -570,7 +567,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					// try to place in first kit
 					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
 						if(this.bottomSlot.listOfParts.get(i).name == this.armFour.name){
-							this.stand.topSlot.kit.parts.add(this.armFour);
+							Stand.topSlot.kit.parts.add(this.armFour);
 							this.bottomSlot.listOfParts.remove(i);
 							placed = true;
 							this.armFour = null;

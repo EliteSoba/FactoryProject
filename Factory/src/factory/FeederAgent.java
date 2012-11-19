@@ -22,28 +22,52 @@ import factory.test.mock.LoggedEvent;
 public class FeederAgent extends Agent implements Feeder {
 
 	/** DATA **/
+	
+	//agents
+	public Vision vision;
+	public Gantry gantry;
+	
+	
 	private static int kOK_TO_PURGE_TIME = 4;
 	private String name;
 	public int feederNumber;
-	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());   
-	public MyLane topLane;
-	public MyLane bottomLane;
-	public Vision vision;
+	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());
+	
 	public boolean myNestsHaveBeenChecked = false;
-	public DiverterState diverter = DiverterState.FEEDING_BOTTOM;
-	public Gantry gantry;
 	public Part currentPart;
 	Bin dispenserBin; // need to use this
-	public FeederState state = FeederState.EMPTY;
+	
+	//list of lanes per feeder
+	public MyLane topLane;
+	public MyLane bottomLane;
+
+	//list of timers to indicate when it's OK to feed, when the feeder is empty, and when the part is resettled
 	public Timer okayToPurgeTimer = new Timer();
 	public Timer feederEmptyTimer = new Timer();
 	public Timer partResettleTimer = new Timer();
 	public boolean feederHasABinUnderneath = false; // no bin underneath the feeder initially
 
+	//enum for the feeder state
 	public enum FeederState { EMPTY, WAITING_FOR_PARTS, CONTAINS_PARTS, OK_TO_PURGE, SHOULD_START_FEEDING, IS_FEEDING }
+	public FeederState state = FeederState.EMPTY;
+	
+	//enum for the diverter state
 	public enum DiverterState { FEEDING_TOP, FEEDING_BOTTOM }
-
+	public DiverterState diverter = DiverterState.FEEDING_BOTTOM;
+	
+	//enum for part request state
 	public enum MyPartRequestState { NEEDED, ASKED_GANTRY, DELIVERED, PROCESSING }
+	
+	//enum for picture state
+	public enum PictureState {UNSTABLE, STABLE, TOLD_VISION_TO_TAKE_PICTURE }
+	
+	//enum for lane state
+	public enum MyLaneState {EMPTY, PURGING, CONTAINS_PARTS, BAD_NEST, 
+		TOLD_NEST_TO_DUMP, NEST_SUCCESSFULLY_DUMPED}
+	
+	//enum for jam state
+	public enum JamState {MIGHT_BE_JAMMED, TOLD_TO_INCREASE_AMPLITUDE, 
+		AMPLITUDE_WAS_INCREASED, NOT_JAMMED }
 
 	public EventLog log = new EventLog();
 
@@ -69,11 +93,7 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 	}
 
-	public enum PictureState {UNSTABLE, STABLE, TOLD_VISION_TO_TAKE_PICTURE }
-	public enum MyLaneState {EMPTY, PURGING, CONTAINS_PARTS, BAD_NEST, 
-		TOLD_NEST_TO_DUMP, NEST_SUCCESSFULLY_DUMPED}
-	public enum JamState {MIGHT_BE_JAMMED, TOLD_TO_INCREASE_AMPLITUDE, 
-		AMPLITUDE_WAS_INCREASED, NOT_JAMMED }
+
 
 	public class MyLane {
 
@@ -104,7 +124,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** MESSAGES **/
 	public void msgPartRobotHasRemovedPartsFromLane(int numberOfParts, Lane lane) {
-		/** TODO: Make this do something */
+		/** TODO: Make this do something */	
 	}
 
 	public void msgNestHasStabilized(Lane lane) {
@@ -254,7 +274,7 @@ public class FeederAgent extends Agent implements Feeder {
 			}
 			if (topLane.part != null)
 			{
-				if (topLane.part.id == currentPart.id)
+				if (topLane.part == currentPart) // topLane.part is set in the processFeederParts() method
 				{
 					System.out.println("0.5a, lanestate = " + topLane.state);
 					if (topLane.state == MyLaneState.EMPTY || topLane.state == MyLaneState.CONTAINS_PARTS)
@@ -275,26 +295,29 @@ public class FeederAgent extends Agent implements Feeder {
 					return true;
 				}
 			} // note: bottomeLane.part should never be null
-			
-			if (bottomLane.part.id == currentPart.id)
-			{
-				System.out.println("0.5b");
-				if (bottomLane.state == MyLaneState.EMPTY || bottomLane.state == MyLaneState.CONTAINS_PARTS)
-				{
-					System.out.println("0.6b");
-					// check to see if the lane diverter needs to switch
-					if (diverter == DiverterState.FEEDING_TOP) {
-						System.out.println("0.7b");
-						diverter = DiverterState.FEEDING_BOTTOM;
-						DoSwitchLane();   // Animation to switch lane
-					}
 
-					System.out.println("0.8b");
-					state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
-					StartFeeding();
+			if (bottomLane.part != null) // bottomLane.part is set in the processFeederParts() method
+			{
+				if (bottomLane.part == currentPart)
+				{
+					System.out.println("0.5b");
+					if (bottomLane.state == MyLaneState.EMPTY || bottomLane.state == MyLaneState.CONTAINS_PARTS)
+					{
+						System.out.println("0.6b");
+						// check to see if the lane diverter needs to switch
+						if (diverter == DiverterState.FEEDING_TOP) {
+							System.out.println("0.7b");
+							diverter = DiverterState.FEEDING_BOTTOM;
+							DoSwitchLane();   // Animation to switch lane
+						}
+
+						System.out.println("0.8b");
+						state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
+						StartFeeding();
+						return true;
+					}
 					return true;
 				}
-				return true;
 			}
 			return true;
 		}
@@ -597,7 +620,7 @@ public class FeederAgent extends Agent implements Feeder {
 		// NOT NEEDED:
 //		feederEmptyTimer.schedule(new TimerTask(){
 //			public void run(){	
-//					/** TODO: FIX THIS CODE, PERHAPS USE MSGING FROM THE ANIMATION. **/
+//					/** */
 //				partResettleTimer.schedule(new TimerTask() {
 //					public void run() {
 //						if (currentLane == topLane)

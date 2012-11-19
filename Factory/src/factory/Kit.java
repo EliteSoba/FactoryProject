@@ -15,6 +15,6 @@ public class Kit {
 
    public Kit(){
 	   this.state = KitState.EMPTY;
-	   this.parts = null;
+	   this.parts = new ArrayList<Part>();
    }
 }
