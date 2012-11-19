@@ -17,6 +17,8 @@ class GraphicPartsRobot extends GraphicRobot
 	public GraphicPartsRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
 		items = new ArrayList<GraphicItem>();
+		for(int i = 0; i < 4; i++)
+			items.add(null);
 		arrived = false;
 		state = 0;		// 0 = idle, 1 = going to nest, 2 = arrived at nest, 3 = going to station, 4 = arrived at station, 5 = going to center, 6 = arrived at center
 		destinationNest = -1;
@@ -58,7 +60,14 @@ class GraphicPartsRobot extends GraphicRobot
 	}
 	public void addItem(GraphicItem newItem)
 	{
-		items.add(newItem);
+		System.out.println("additem");
+		for(int i = 0; i < 4; i++)
+			if(items.get(i) == null)
+			{
+				System.out.println("found");
+				items.set(i, newItem);
+				break;
+			}
 	}
 	public void clearItems()
 	{
@@ -80,7 +89,7 @@ class GraphicPartsRobot extends GraphicRobot
 		return lastItem;								// return last item
 	}
 	/**
-	 * Gets an Item at the provided index and removes the Item
+	 * Gets an Item at the provided index and sets the Item to null
 	 * @param index The index of the Item being taken
 	 * @return The Item at the provided index; returns {@code null} if the index is invalid
 	 */
@@ -88,7 +97,7 @@ class GraphicPartsRobot extends GraphicRobot
 		if (index < 0 || index >= items.size())
 			return null;
 		GraphicItem returnedItem = items.get(index);
-		items.remove(index);
+		items.set(index, null);
 		return returnedItem;
 	}
 	public int getSize()
@@ -105,6 +114,7 @@ class GraphicPartsRobot extends GraphicRobot
 		super.paint(g);
 		// Draw the items the robot is carrying
 		for(int i = 0; i < items.size(); i++)
+			if(items.get(i) != null)
 			items.get(i).paint(g, x+imageWidth-25,y+10+i*20);
 	}
 
