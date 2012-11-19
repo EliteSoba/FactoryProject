@@ -320,12 +320,17 @@ public class MasterControl {
 
 
 		if(clients.contains(parsedCommand.get(1))){
-			for(PartHandler ph : partHandlerList){
-                if(ph.client_id.equals(parsedCommand.get(1))){
-                    clientCmd(parsedCommand);
+            if(parsedCommand.get(1).equals("multi")){
+                clientCmd(parsedCommand);
+            } else {
+                for(PartHandler ph : partHandlerList){
+                    if(ph.client_id.equals(parsedCommand.get(1))){
+                        clientCmd(parsedCommand);
+                    }
                 }
+                return false; // This is called if in Debug mode and the client being sent to is not connected.
             }
-            return false;                                                 // This is called if in Debug mode and the client being sent to is not connected.
+
 		} else if(agents.contains(parsedCommand.get(1))) {
 			return agentCmd(parsedCommand);
 		} else if(parsedCommand.get(1).equals("mcs")) {
@@ -335,9 +340,9 @@ public class MasterControl {
 			System.out.println("HAPPY");
 			endAll();
 			return true;
-		} else {
-			return false;
 		}
+
+        return false;
 
 
 
@@ -710,10 +715,11 @@ public class MasterControl {
 		}
 
 		// Check that the destination is not currently busy
-
-		if(partOccupied.get(pCmd.get(1))){
-			return "destination is busy cannot send message.";
-		}
+        if(partOccupied.containsKey(pCmd.get(1))){
+            if(partOccupied.get(pCmd.get(1))){
+                return "destination is busy cannot send message.";
+            }
+        }
 
 		// Check that the cmdType is a valid cmdType
 
@@ -789,7 +795,7 @@ public class MasterControl {
 
         MasterControl mc = new MasterControl(debug);
 
-        //This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
+/*        //This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
         long timeToQuit = System.currentTimeMillis() + 5000;
         while (System.currentTimeMillis() < timeToQuit);
 
@@ -821,7 +827,7 @@ public class MasterControl {
 
 
         timeToQuit = System.currentTimeMillis() + 2000;
-        while (System.currentTimeMillis() < timeToQuit);
+        while (System.currentTimeMillis() < timeToQuit);*/
 
             
 //      		mc.n0t.msgYouNeedPart(p3);
