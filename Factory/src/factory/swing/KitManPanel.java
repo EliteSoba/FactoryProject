@@ -330,7 +330,7 @@ public class KitManPanel extends JPanel{
 					if(k.listOfParts.size() >=4){
 						addKit(k);
 						kitManager.addToKitConfigList(k);
-						editPanel.mKitComboBox.addItem(k.kitName);
+						//editPanel.mKitComboBox.addItem(k.kitName);
 						basePanel1.setVisible(true);
 						basePanel2.setVisible(false);
 						//"km fpm cmd addkitname #kitname #partname1 #partname2 ... #partname8"
@@ -409,7 +409,7 @@ public class KitManPanel extends JPanel{
 		ImageIcon mItem6;
 		ImageIcon mItem7;
 		ImageIcon mItem8;
-		JComboBox mKitComboBox = new JComboBox();
+		//JComboBox mKitComboBox = new JComboBox();
 
 		JLabel mLabel1 = new JLabel ("Item 1");
 		JLabel mLabel2 = new JLabel ("Item 2");
@@ -459,12 +459,12 @@ public class KitManPanel extends JPanel{
 				mItemComboBox8.addItem(key);
 			}
 
-			for(String key : kitManager.getKitConfigList().keySet()){
+			/*for(String key : kitManager.getKitConfigList().keySet()){
 				mKitComboBox.addItem(key);
 			}
 			mKitComboBox.addActionListener(this);
 
-
+*/
 
 			mItemComboBox1.addActionListener(this);
 			mItemComboBox2.addActionListener(this);
@@ -516,7 +516,7 @@ public class KitManPanel extends JPanel{
 			c.fill = GridBagConstraints.VERTICAL;
 			c.gridx = 0;
 			c.gridy = 0;
-			add(mKitComboBox, c);
+			//add(mKitComboBox, c);
 
 			c.gridy = 1;
 			add(mLabel1, c);
@@ -661,18 +661,18 @@ public class KitManPanel extends JPanel{
 						kitManager.addToKitConfigList(k);
 						editKit(k);
 
-						editPanel.mKitComboBox.removeItem(currentKit.kitName);
-						editPanel.mKitComboBox.addItem(k.kitName);
+						//editPanel.mKitComboBox.removeItem(currentKit.kitName);
+						//editPanel.mKitComboBox.addItem(k.kitName);
 
 						currentKit = k;
 
-						currentKit = kitManager.getKitConfigList().get(mKitComboBox.getSelectedItem());
+						//currentKit = kitManager.getKitConfigList().get(mKitComboBox.getSelectedItem());
 
 						basePanel1.setVisible(true);
 						basePanel2.setVisible(false);
 
 						//"km fpm set kitcontent #oldkitname #kitname #partname1 #partname2 ... #partname8"
-						set = "km fpm set kitcontent " + (String)mKitComboBox.getSelectedItem() + " " + mKitName.getText() + " " +
+						set = "km fpm set kitcontent " + currentKit.kitName + " " + mKitName.getText() + " " +
 								(String)mItemComboBox1.getSelectedItem() + " " + (String)mItemComboBox2.getSelectedItem() + " " +  
 								(String)mItemComboBox3.getSelectedItem() + " " + (String)mItemComboBox4.getSelectedItem() + " " + 
 								(String)mItemComboBox5.getSelectedItem() + " " + (String)mItemComboBox6.getSelectedItem() + " " + 
@@ -681,7 +681,7 @@ public class KitManPanel extends JPanel{
 
 						//"km fcsa set kitcontent #oldkitname #kitname #partname1 #partname2 ... #partname8"
 
-						set = "km fcsa set kitcontent " + (String)mKitComboBox.getSelectedItem() + " " + mKitName.getText() + " " +
+						set = "km fcsa set kitcontent " + currentKit.kitName + " " + mKitName.getText() + " " +
 								(String)mItemComboBox1.getSelectedItem() + " " + (String)mItemComboBox2.getSelectedItem() + " " +  
 								(String)mItemComboBox3.getSelectedItem() + " " + (String)mItemComboBox4.getSelectedItem() + " " + 
 								(String)mItemComboBox5.getSelectedItem() + " " + (String)mItemComboBox6.getSelectedItem() + " " + 
@@ -689,8 +689,8 @@ public class KitManPanel extends JPanel{
 						kitManager.sendCommand(set);
 
 
-						if(kitManager.getKitConfigList().size() > 0)
-							mKitComboBox.setSelectedIndex(0);
+						//if(kitManager.getKitConfigList().size() > 0)
+							//mKitComboBox.setSelectedIndex(0);
 
 					}else{
 						mKitName.setText("must have >= 4 items");
@@ -709,18 +709,18 @@ public class KitManPanel extends JPanel{
 
 				kitManager.removeFromKitConfigList(currentKit);
 
-				editPanel.mKitComboBox.removeItem(currentKit.kitName);
+				/*editPanel.mKitComboBox.removeItem(currentKit.kitName);
 				if(kitManager.getKitConfigList().size() > 0){
 					mKitComboBox.setSelectedIndex(0);
 					currentKit = kitManager.getKitConfigList().get(mKitComboBox.getSelectedItem());
 				}else{
 					currentKit = new KitConfig();
 				}
-
+*/
 			}else if (ae.getSource() == cancel){
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
-				mKitComboBox.setSelectedIndex(0);
+				//mKitComboBox.setSelectedIndex(0);
 			}else{
 				JComboBox cb = (JComboBox)ae.getSource();
 				String selectedItem = (String)cb.getSelectedItem();
@@ -740,7 +740,7 @@ public class KitManPanel extends JPanel{
 					updatePicture(mItem7, mItemFrame7, selectedItem);
 				else if(cb == mItemComboBox8)
 					updatePicture(mItem8, mItemFrame8, selectedItem);
-				else if(cb == mKitComboBox){
+				/*else if(cb == mKitComboBox){
 
 					KitConfig k;
 					if(kitManager.getKitConfigList().size() >0){
@@ -793,7 +793,7 @@ public class KitManPanel extends JPanel{
 						mItemComboBox8.setSelectedItem("None");
 					}
 
-				}
+				}*/
 
 			}
 
@@ -802,9 +802,9 @@ public class KitManPanel extends JPanel{
 
 
 		public void updateEditPanel(JTable tempTable, int tempRow){
-			mKitComboBox.setSelectedItem(tempTable.getValueAt(tempRow, 0));
+			//mKitComboBox.setSelectedItem(tempTable.getValueAt(tempRow, 0));
 			KitConfig k;
-			k = kitManager.getKitConfigList().get(mKitComboBox.getSelectedItem());
+			k = kitManager.getKitConfigList().get(tempTable.getValueAt(tempRow, 0));
 			currentKit = k;
 			mKitName.setText(currentKit.kitName);
 
@@ -858,8 +858,8 @@ public class KitManPanel extends JPanel{
 		public void refreshEditPanel(){
 			KitConfig k;
 			if(kitManager.getKitConfigList().size() >0){
-				k = kitManager.getKitConfigList().get(mKitComboBox.getSelectedItem());
-				currentKit = k;
+				//k = kitManager.getKitConfigList().get(mKitComboBox.getSelectedItem());
+				//currentKit = k;
 
 				mKitName.setText(currentKit.kitName);
 
