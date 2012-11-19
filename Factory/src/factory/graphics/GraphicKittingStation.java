@@ -29,6 +29,7 @@ public class GraphicKittingStation {
 	/**The maximum number of kits a station can hold*/
 	public static final int MAX_KITS = 2;
 	public static final Image TRASH_CHUTE_IMAGE = new ImageIcon("Images/trashChute.png").getImage();
+	public static final Image KITTING_STATION_IMAGE = new ImageIcon("Images/kittingStation.png").getImage();
 	
 	/**
 	 * Creates a Kit Station at the given x and y coordinates
@@ -54,11 +55,10 @@ public class GraphicKittingStation {
 	 */
 	public void paint(Graphics g) {
 		// Draw kitting station
-		g.setColor(new Color(100, 50, 0));
-		g.fillRoundRect(x, y, 50, 300, 20, 20);
+		g.drawImage(KITTING_STATION_IMAGE, x, y, null);
 		
 		// Draw trash chute
-		g.drawImage(TRASH_CHUTE_IMAGE, x-15, y+313, null);
+		g.drawImage(TRASH_CHUTE_IMAGE, x, y+313, null);
 
 		// Draw kits
 		drawKits(g);
@@ -81,7 +81,7 @@ public class GraphicKittingStation {
 	public void revalidateKits() {
 		for (int i = 0; i < MAX_KITS; i++)
 			if (kits[i] != null)
-				kits[i].move(x+5, y+100*i+10);
+				kits[i].move(x+15, y+100*i+15);
 		if (hasCheck())
 			check.move(x+5, y+210);
 	}
