@@ -67,9 +67,9 @@ public class KitManager extends Client implements WindowListener{
 			System.out.println();
 			if(identifier.equals("addpartname"))// check directions
 			{
-				
-				partsList.put(pCmd.get(2), new Part(pCmd.get(2),
-						Integer.parseInt(pCmd.get(3)),pCmd.get(4),pCmd.get(5),Integer.parseInt(pCmd.get(6))));
+				System.out.println("YESSSSSS");
+				Part part = new Part(pCmd);
+				partsList.put(pCmd.get(2),part);
 				((KitManPanel) UI).refreshAll();
 			}
 			else if(identifier.equals("rmpartname"))//check directions
@@ -132,29 +132,16 @@ public class KitManager extends Client implements WindowListener{
 			//finally add the new kitConfig to the kitCongifList and send confirmations to server
 			String oldKitName = pCmd.get(2);
 			String newKitName = pCmd.get(3);
-			if(identifier.equals("kitcontent"))// check directions
-			{	
-				kitConfigList.remove(oldKitName);
-				KitConfig kitConfigToAdd = new KitConfig(newKitName);
-				int i = 4;//Use this in the loop to specify the partnames which need to be added
-				String endOfConfirm = "set kitcontent " + oldKitName + " " + newKitName;
-
-				while(!pCmd.get(i).equals("endset"))
-				{
-					if(!pCmd.get(i).equals("NONE"))
-					{
-						kitConfigToAdd.listOfParts.add(partsList.get(pCmd.get(i)));
-					}
-					if(!pCmd.get(i).equals("endset"))//adds partname to the command which will be sent to server
-					{
-						endOfConfirm = endOfConfirm + " " + pCmd.get(i);
-					}
-					i++;
-				}
-				kitConfigList.put(newKitName, kitConfigToAdd);
-				super.sendCommand("km fpm " + endOfConfirm);
-				super.sendCommand("km fcsa " + endOfConfirm);
-				((KitManPanel) UI).refreshAll();
+			if (identifier.equals("partconfig")) {
+				Part part = partsList.get(pCmd.get(2));
+				part.name = pCmd.get(3);
+				part.id = Integer.parseInt(pCmd.get(4));
+				part.imagePath = pCmd.get(5);
+				part.nestStabilizationTime = Integer.parseInt(pCmd.get(6));
+				part.description = new String();
+				for(int i = 7; i < pCmd.size()-1; i++)
+					part.description.concat(pCmd.get(i) + " ");
+				part.description = pCmd.get(7);
 			}
 		}
 		else if(action.equals("cnf")){
