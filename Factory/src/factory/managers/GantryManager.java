@@ -2,6 +2,7 @@
 package factory.managers;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import factory.KitConfig;
@@ -165,8 +166,14 @@ public class GantryManager extends Client {
 				error.concat(parsedCommand.get(i));
 			System.out.println(error);
 	   }
-	   else if(action.equals("mcs"))
+	   else if(action.equals("mcs")){
+		   try {
+			this.server.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		   System.exit(0);
+	   }
 		else 
    		   System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 	}

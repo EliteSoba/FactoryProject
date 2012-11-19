@@ -4,6 +4,7 @@
 package factory.managers;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import factory.graphics.*;
@@ -64,8 +65,14 @@ public class LaneManager extends Client {
 		else if(action == "cnf"){
 
 		}
-		else if(action.equals("mcs"))
-			   System.exit(0);
+		else if(action.equals("mcs")){
+			   try {
+					this.server.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				   System.exit(0);
+			   }
 		else 
 	   		  System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 	}
