@@ -1,7 +1,7 @@
 package factory;
 
-import java.io.Serializable;
 import java.io.*;
+import java.util.ArrayList;
 
 public class Part implements Serializable,  Cloneable{
 
@@ -18,6 +18,16 @@ public class Part implements Serializable,  Cloneable{
 		description = d;
 		imagePath = p;
 		nestStabilizationTime = t;
+	}
+	
+	public Part(ArrayList<String> command) {
+		description = new String();
+		name = command.get(2);
+		id = Integer.parseInt(command.get(3));
+		for(int i = 6; i < command.size()-1; i++)
+			description.concat(command.get(i) + " ");
+		imagePath = command.get(4);
+		nestStabilizationTime = Integer.parseInt(command.get(5));
 	}
 	// temporary
 	public Part(String s)
