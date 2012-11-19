@@ -9,7 +9,7 @@ window. Operations include submitting a new factory order (specifying kit name a
 and displaying the production schedule. When a kit has been added or removed, this panel
 shall reflect those changes. Also allows the user to initiate the shut down of the factory. 
 
-*/
+ */
 package factory.swing;
 import java.util.*;
 import java.awt.*;
@@ -23,7 +23,7 @@ import factory.managers.*;
 
 public class FactoryProdManPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -1621739724552837187L;
-	
+
 	JComboBox kitNameBox; // contain String names of saved kit configurations
 	JSpinner spinner; // quantity of kits to produce
 	JButton submitButton; // submit order
@@ -32,18 +32,18 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	JTabbedPane tabContainer;
 	JPanel newOrderPanel; // new order panel
 
-	
+
 	JPanel schedulePanel; // production schedule panel
 	DefaultTableModel model; 
 	JTable table; // table to house production schedule
 	JButton stopFactory; // terminate all factory operations - close program
-	
+
 	public FactoryProdManPanel(FactoryProductionManager fpm) { 
 		factoryProductionManager = fpm;
 		newOrderPanel = new JPanel();
 		kitNameBox = new JComboBox();
 		kitNameBox.setPreferredSize(new Dimension(225,25));
-		
+
 		newOrderPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridy = 1;
@@ -52,13 +52,13 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		c.gridheight = 1;
 		c.insets = new Insets(0,0,25,0); 
 		newOrderPanel.add(new JLabel("Factory Production Manager"),c);
-		
-		
+
+
 		c.insets = new Insets(10,0,10,0);
 		c.gridy = 2;
 		c.anchor = GridBagConstraints.LINE_START;
 		newOrderPanel.add(new JLabel("Submit New Batch Order:"),c);
-		
+
 		c.gridy = 3;
 		c.anchor = GridBagConstraints.CENTER;
 		newOrderPanel.add(kitNameBox,c);
@@ -68,25 +68,25 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		c.gridx = 2;
 		c.gridwidth = 1;
 		newOrderPanel.add(new JLabel("Quantity"),c);
-		
+
 		c.gridx = 4;
 		SpinnerNumberModel qntyModel = new SpinnerNumberModel(1,1,500,1);
 		spinner = new JSpinner(qntyModel);
 		newOrderPanel.add(spinner,c);
-		
+
 		c.gridy = 5;
 		c.gridx = 4;
 		submitButton = new JButton("Submit");
 		submitButton.addActionListener(this);
 		newOrderPanel.add(submitButton,c);
-		
+
 		c.gridy = 6;
 		c.gridx = 1;
 		c.gridwidth = 4;
 		messageBox = new JTextArea("System Messages\n",20,20);
 		newOrderPanel.add(new JScrollPane(messageBox),c);
-		
-		
+
+
 		// tab 2 production schedule
 		schedulePanel = new JPanel();
 		model = new DefaultTableModel();
@@ -96,91 +96,91 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		model.addColumn("Qnty");
 
 		table=new JTable(model);
-		
+
 		// formatting the widths of table columns
 		TableColumn column = null; 
 		for (int i = 0; i < 3; i++) {
-		    column = table.getColumnModel().getColumn(i);
-		    if (i == 0) {
-		        column.setPreferredWidth(30); 
-		    } else if (i ==1) {
-		        column.setPreferredWidth(200);
-		    } else {
-		    	column.setPreferredWidth(30);
-		    }
+			column = table.getColumnModel().getColumn(i);
+			if (i == 0) {
+				column.setPreferredWidth(30); 
+			} else if (i ==1) {
+				column.setPreferredWidth(200);
+			} else {
+				column.setPreferredWidth(30);
+			}
 		}
-	
+
 		schedulePanel.setLayout(new BorderLayout());
 		JLabel label = new JLabel("<html><p style=\"margin:30px 0 30px 0;\">Production Schedule</html>");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		schedulePanel.add(label,BorderLayout.NORTH);
-		
+
 		JPanel container = new JPanel();
 		container.setPreferredSize(new Dimension(300,400));
-		
+
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setPreferredSize(new Dimension(260,400));
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		container.add(scrollPane);
 		schedulePanel.add(container,BorderLayout.CENTER);
-		
-		
+
+
 		stopFactory = new JButton("Terminate All Operations");
 		stopFactory.addActionListener(this);
 		schedulePanel.add(stopFactory, BorderLayout.SOUTH);
-		
+
 		tabContainer = new JTabbedPane();
 		tabContainer.addTab("New Order",newOrderPanel);
 		tabContainer.addTab("Schedule",schedulePanel);
 		tabContainer.setPreferredSize(new Dimension(290,710));
 		add(tabContainer);
 	}
-		
+
 	public void actionPerformed(ActionEvent ae) {
-		
+
 		if (ae.getSource() == submitButton) {		// print messages to be displayed in messageBox
 			if (kitNameBox.getSelectedItem() == null)
 				messageBox.append("No kit selected.\n");
 			else {
 				String name = (String)kitNameBox.getSelectedItem();
 				String qnty = spinner.getValue().toString();
-				
+
 				String set = new String("");
 				set = "fpm fcsa cmd makekits " + qnty + " " + name;	
-	try {			factoryProductionManager.sendCommand(set);
-						
+				try {			factoryProductionManager.sendCommand(set);
+
 				Object[] rowData = {model.getRowCount()+1,name,qnty}; // add to production schedule
 				model.insertRow(model.getRowCount(),rowData);
-				
+
 				messageBox.append("Order Submitted.\n     Details: " + qnty + " units of " + name + "\n" );
-	} catch (Exception e) {
-		System.out.println("An error occured trying to send new order");
-e.printStackTrace();
-	}	
+				} catch (Exception e) {
+					System.out.println("An error occured trying to send new order");
+					e.printStackTrace();
+				}	
 			}
 		}
 		else if (ae.getSource() == stopFactory) { // message that initiates factory shutdown
 			messageBox.append("Terminating all operations...\n");
 			String set = new String("");
 			set = "fpm mcs cmd stopfactory";
-try {
-	factoryProductionManager.sendCommand(set);
-		} catch (Exception e) {
-		System.out.println("An error occurred trying to shut down factory");
-		e.printStackTrace();
-	}
+			try {
+				factoryProductionManager.sendCommand(set);
+			} catch (Exception e) {
+				System.out.println("An error occurred trying to shut down factory");
+				e.printStackTrace();
+			}
 		}
 	}
-	
+
 	public void addKit(String kitName) {	//add new kit name (String) to Jcombobox list - received from kit manager
 		kitNameBox.addItem(kitName);	
 		kitNameBox.setSelectedIndex(0); //sending back updated kit list to agents
 	}
-	
+
 	public void removeKit(String kitName) { // remove kit from list - received from kit manager
 		kitNameBox.removeItem(kitName); //sending back updated kit list to agents
 	}
-	
+
 	public void kitProduced() { // update kits remaining - decrement by one
 		String numstr = (String)model.getValueAt(0,2);
 		int num = Integer.parseInt(numstr);
@@ -188,7 +188,7 @@ try {
 			num--;
 			model.setValueAt(Integer.toString(num), 0, 2);
 		}
-		
+
 		if (num == 0) {
 			model.removeRow(0);
 			for (int i = 0; i < model.getRowCount();i++) {
@@ -198,13 +198,13 @@ try {
 		}
 	}
 
-		public void removePart(String partName,ArrayList<String> affectedKits) {
-			messageBox.append("Parts Manager has removed a part : " + partName + ".\n");
-			messageBox.append("Affected kits will be removed : \n");
-			for (String str: affectedKits) {
-				kitNameBox.removeItem(str);
-				messageBox.append("\t"+str+"\n");
-			}
-			
+	public void removePart(String partName,ArrayList<String> affectedKits) {
+		messageBox.append("Parts Manager has removed a part : " + partName + ".\n");
+		messageBox.append("Affected kits will be removed : \n");
+		for (String str: affectedKits) {
+			kitNameBox.removeItem(str);
+			messageBox.append("\t"+str+"\n");
+		}
+
 	}
 }
