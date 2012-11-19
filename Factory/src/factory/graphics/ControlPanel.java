@@ -11,7 +11,7 @@ import javax.swing.JTextField;
 
 public class ControlPanel extends JPanel implements ActionListener{
 	
-	/*ControlPanel.java (200x720) - Tobias Lee
+	/*ControlPanel.java (200x720) - Original Author: Tobias Lee
 	 * This is a demonstrative Control Panel to show what the Graphics part can do.
 	 * Will be removed when integration occurs
 	 */

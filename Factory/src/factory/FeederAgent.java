@@ -303,7 +303,7 @@ public class FeederAgent extends Agent implements Feeder {
 						}
 
 						state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
-						StartFeeding();
+						startFeeding();
 						return true;
 					}
 					return true;
@@ -323,7 +323,7 @@ public class FeederAgent extends Agent implements Feeder {
 						}
 
 						state = FeederState.IS_FEEDING; // we don't want to call this code an infinite number of times
-						StartFeeding();
+						startFeeding();
 						return true;
 					}
 					return true;
@@ -377,6 +377,9 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** ACTIONS **/
+	
+	/** This action checks to see if the 
+	 * Feeder's 2 nests are ready for a picture. */
 	private boolean areMyNestsReadyForAPicture() {
 		myNestsHaveBeenChecked = true;
 		
@@ -540,8 +543,8 @@ public class FeederAgent extends Agent implements Feeder {
 		
 	}
 
-
-
+	/** This action processes the Feeder parts after 
+	 * they have been delivered to the Feeder. */
 	private void processFeederParts(MyPartRequest mpr){
 		debug("processing feeder parts of type "+mpr.pt.name);
 		
@@ -574,10 +577,11 @@ public class FeederAgent extends Agent implements Feeder {
 		stateChanged();
 	}
 
-	private void StartFeeding(){
+	
+	private void startFeeding(){
 		debug("action start feeding.");
 		
-		// Make a reference to the MyLane that must be fed
+		// Make a reference to the correct MyLane that must be fed
 		MyLane currentLane = null;
 		if (topLane.part != null)
 		{
@@ -586,7 +590,6 @@ public class FeederAgent extends Agent implements Feeder {
 				currentLane = topLane;
 			}
 		}
-		
 		if (bottomLane.part != null)
 		{
 			if(currentPart.id == bottomLane.part.id)
@@ -609,50 +612,11 @@ public class FeederAgent extends Agent implements Feeder {
 		},(long) kOK_TO_PURGE_TIME * 1000); // okay to purge after this many seconds
 
 		
-		DoStartFeeding(currentPart);
-		//currentLane.lane.msgFeedingParts(kNUM_PARTS_FED); // we feed a constant number of parts into the lane each time
+		DoStartFeeding(currentPart); // Feed the part that is currently in the Feeder 
+									 // into its appropriate lane
 		
-		System.out.println("1.6");
 
 		stateChanged();
-
-		
-		// NOT NEEDED:
-//		feederEmptyTimer.schedule(new TimerTask(){
-//			public void run(){	
-//					/** */
-//				partResettleTimer.schedule(new TimerTask() {
-//					public void run() {
-//						if (currentLane == topLane)
-//							debug("My top lane is ready for a picture.");
-//						else
-//							debug("My bottom lane is ready for a picture.");
-//
-//						
-//						currentLane.readyForPicture = true;
-//
-//						if (bottomLane.readyForPicture == true && topLane.readyForPicture == true)
-//						{
-//							System.out.println("1.0");
-//							debug("both of my nests are ready for a picture.");
-//							vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this);
-//							topLane.readyForPicture = false;
-//							bottomLane.readyForPicture = false;
-//							System.out.println("1.1");
-//						}
-//						System.out.println("1.2");
-//						stateChanged();
-//						System.out.println("1.3");
-//					}
-//				}, 3000); // 3 seconds to resettle in the nest
-//				System.out.println("1.4");
-//			}
-//		}, (long) kOK_TO_PURGE_TIME * 1000); // time it takes the part to move down the lane and fill a nest 
-//		System.out.println("1.5");
-
-		//	Timer.new(30000, { state = FeederState.OK_TO_PURGE; });
-		//		Timer.new(currentPart.averageDelayTime,{vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this) });
-		// need a timer so that we don't immediately purge the new ones
 	}
 
 	
@@ -677,10 +641,16 @@ public class FeederAgent extends Agent implements Feeder {
 		requestedParts.add(new MyPartRequest(p,l,s));
 	}
 
-	/** ANIMATIONS 
-	 * @throws InterruptedException **/
+	
+	
+	
+	
+	
+	/** ANIMATIONS */
+	
+	/** Animation that makes the Feeder START feeding parts into the lane. */
 	private void DoStartFeeding(Part part) {
-		server.command("fa fpm cmd startfeeding " + feederNumber);
+		server.command("fa lm cmd startfeeding " + feederNumber);
 	
 		debug("Feeder " + feederNumber + " started feeding.");
 		try {
@@ -690,8 +660,10 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 	}
 
+	
+	/** Animation that makes the Feeder STOP feeding parts into the lane. */
 	private void DoStopFeeding() { 
-		server.command("fa fpm cmd stopfeeding " + feederNumber);
+		server.command("fa lm cmd stopfeeding " + feederNumber);
 		debug("stopped feeding.");
 		try {
 			animation.acquire();
@@ -700,11 +672,13 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 	}
 
+	
+	/** Animation that clears all of the parts out of the Feeder. */
 	private void DoPurgeFeeder() {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeFeeder()"));
 
-		server.command("fa fpm cmd purgefeeder " + feederNumber); /** TODO: MULTI **/
+		server.command("fa multi cmd purgefeeder " + feederNumber); /** TODO: MULTI **/
 		debug("purging feeder.");
 		try {
 			animation.acquire();
@@ -713,11 +687,13 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 	}
 
+	
+	/** Animation that switches the lane that the Feeder is feeding to. */
 	private void DoSwitchLane() {
 		log.add(new LoggedEvent(
 				"Animation DoSwitchLane()"));
 
-		server.command("fa fpm cmd switchlane " + feederNumber);
+		server.command("fa lm cmd switchlane " + feederNumber);
 		debug("switching lane");
 		try {
 			animation.acquire();
@@ -726,16 +702,19 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 	}
 
+	/** Animation that makes the Feeder continue feeding after a jam or error condition. (v.2) */
 	private void DoContinueFeeding(Part part) {
 		debug("continued feeding.");
 		// worry about this later (v.2)
 	}
 
+	
+	/** Animation that clears all of the parts out of the Feeder's top lane. */
 	private void DoPurgeTopLane() {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeTopLane()"));
 
-		server.command("fa fpm cmd purgetoplane " + feederNumber); /** TODO: MULTI **/
+		server.command("fa multi cmd purgetoplane " + feederNumber); /** TODO: MULTI **/
 		debug("purging top lane");
 		try {
 			animation.acquire();
@@ -744,11 +723,13 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 	}
 
+	
+	/** Animation that clears all of the parts out of the Feeder's bottom lane. */
 	private void DoPurgeBottomLane() {
 		log.add(new LoggedEvent(
 				"Animation DoPurgeBottomLane()"));
 
-		server.command("fa fpm cmd purgebottomlane " + feederNumber); /** TODO: MULTI **/
+		server.command("fa multi cmd purgebottomlane " + feederNumber); /** TODO: MULTI **/
 		debug("purging bottom lane");
 		try {
 			animation.acquire();
@@ -759,11 +740,15 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** OTHER **/
+	
+	/** Returns true if the Feeder has a bin underneath it. 
+	 *  Will be pretty much all of the time except for start-up. */
 	public boolean getFeederHasABinUnderneath() 
 	{
 		return feederHasABinUnderneath;
 	}
 
+	/** Method that returns the number of this feeder (0-3). */
 	public int getFeederNumber()
 	{
 		return this.feederNumber;
