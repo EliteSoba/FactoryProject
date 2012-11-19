@@ -337,12 +337,7 @@ public class MasterControl {
             if(parsedCommand.get(1).equals("multi")){
                 return clientCmd(parsedCommand);
             } else {
-                for(PartHandler ph : partHandlerList){
-                    if(ph.client_id.equals(parsedCommand.get(1))){
-                        return clientCmd(parsedCommand);
-                    }
-                }
-                return false; // This is called if in Debug mode and the client being sent to is not connected.
+                return clientCmd(parsedCommand);
             }
 
 		} else if(agents.contains(parsedCommand.get(1))) {
@@ -607,9 +602,11 @@ public class MasterControl {
 				return false;
 			} else {
 				for(PartHandler x : destinations){
-					if(!sendCmd(x, fullCmd)){
-						return false;
-					}
+                    if(partHandlerList.contains(x)){
+                        if(!sendCmd(x, fullCmd)){
+                            return false;
+                        }
+                    }
 				}
                 if(fpmPH != null){
                     if(!sendCmd(fpmPH, fullCmd)){
@@ -621,7 +618,10 @@ public class MasterControl {
         }
 
 		if(b.equals("fpm")){
-            return (fpmPH != null && sendCmd(fpmPH, fullCmd));
+            if(fpmPH != null){
+                return sendCmd(fpmPH, fullCmd);
+            }
+            return false;
         } else {
             if(fpmPH != null){
                 if(!sendCmd(fpmPH, fullCmd)){
@@ -629,7 +629,11 @@ public class MasterControl {
                 }
             }
             PartHandler destinationPH = determinePH(b);
-            return sendCmd(destinationPH, fullCmd);
+            if(partHandlerList.contains(destinationPH)){
+                return sendCmd(destinationPH, fullCmd);
+            } else {
+                return false;
+            }
         }
 
 
