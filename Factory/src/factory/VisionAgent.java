@@ -24,8 +24,6 @@ public class VisionAgent extends Agent implements Vision {
 	PartsRobot partsRobot;
 	Stand stand;
 	Random r = new Random();
-	GraphicFactoryProductionManager server;
-
 	Semaphore pictureAllowed = new Semaphore(1);
 	
 	public VisionAgent(PartsRobot partsRobot, Stand stand, MasterControl mc){
@@ -67,10 +65,13 @@ public class VisionAgent extends Agent implements Vision {
 	// *** MESSAGES ***
 	public void inspectKitStand() {
 		kitPicRequests.add(new KitPicRequest(KitPicRequestState.NEED_TO_INSPECT));
+		this.stateChanged();
 	}
 	
 	public void msgMyNestsReadyForPicture(Nest nestOne, Nest nestTwo, Feeder feeder) {
+		debug("msgMyNestsReadyForPicture("+nestOne.getPart().name+","+nestTwo.getPart().name+")");
 		picRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
+		this.stateChanged();
 	}
 		
 	public void msgVisionClearForPictureInNests(Nest nestOne, Nest nestTwo) {
@@ -79,6 +80,7 @@ public class VisionAgent extends Agent implements Vision {
 		      pr.state = PictureRequestState.PARTS_ROBOT_CLEAR;
 		   }
 		}
+		this.stateChanged();
 	}
 	
 	
@@ -141,7 +143,7 @@ public class VisionAgent extends Agent implements Vision {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		server.takePicture();
+//		server.takePicture();
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -160,12 +162,14 @@ public class VisionAgent extends Agent implements Vision {
 	   k.state = KitPicRequestState.INSPECTED;
 	}
 	
-		private void takePicture(PictureRequest pr){
+	
+	private void takePicture(PictureRequest pr){
 			try{
 				pictureAllowed.acquire();
 		   int randomNumberOne = r.nextInt(3);
 		   int randomNumberTwo = r.nextInt(3);
-		   DoTakePicture();
+		   DoAnimationTakePictureOfNest(pr.nestOne);
+		   
 		   partsRobot.msgPictureTaken(pr.nestOne, pr.nestTwo);
 		   if(randomNumberOne == 0) {
 		      pr.coordinateOne = new Coordinate(10, 10); //the parameters for coordinates don't mean anything in this case, or does it?
@@ -200,7 +204,19 @@ public class VisionAgent extends Agent implements Vision {
 			
 			
 		}
+		private void DoAnimationTakePictureOfNest(Nest nest) {
+			
+			debug("Executing DoAnimationTakePicture()");
+			server.command("va fpm cmd takepictureofnest " + nest.getPosition()/2);
+			try {
+				animation.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
 		private void checkLineOfSight(PictureRequest pr){
+			debug("Executing checkLineOfSight()");
 		   partsRobot.msgClearLineOfSight(pr.nestOne, pr.nestTwo);
 		   pr.state = PictureRequestState.ASKED_PARTS_ROBOT;
 		}
@@ -208,5 +224,7 @@ public class VisionAgent extends Agent implements Vision {
 
 	
 	
-	
+		public void setPartsRobot(PartsRobot pr) {
+			this.partsRobot = pr;
+		}
 }
