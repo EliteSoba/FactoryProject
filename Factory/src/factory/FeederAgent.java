@@ -276,16 +276,7 @@ public class FeederAgent extends Agent implements Feeder {
 			//					"Trying to decide which lane to feed parts to."));
 
 			// Which lane should it feed to?
-			System.out.println("0.4");
-			if (topLane.part == null)
-			{
-				debug("-----TOP LANE IS NULL----");
-			}
-			if (currentPart == null)
-			{
-				debug("----CURRENTPART IS NULL---");
-				System.exit(0);
-			}
+			
 			if (topLane.part != null)
 			{
 				if (topLane.part == currentPart) // topLane.part is set in the processFeederParts() method

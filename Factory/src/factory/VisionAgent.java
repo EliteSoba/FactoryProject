@@ -164,13 +164,13 @@ public class VisionAgent extends Agent implements Vision {
 	
 	
 	private void takePicture(PictureRequest pr){
-			try{
-				pictureAllowed.acquire();
-		   int randomNumberOne = r.nextInt(3);
-		   int randomNumberTwo = r.nextInt(3);
-		   DoAnimationTakePictureOfNest(pr.nestOne);
+		try{
+			pictureAllowed.acquire();
+		    int randomNumberOne = r.nextInt(3);
+		    int randomNumberTwo = r.nextInt(3);
+		    DoAnimationTakePictureOfNest(pr.nestOne);
 		   
-		   partsRobot.msgPictureTaken(pr.nestOne, pr.nestTwo);
+		    partsRobot.msgPictureTaken(pr.nestOne, pr.nestTwo);
 		   if(randomNumberOne == 0) {
 		      pr.coordinateOne = new Coordinate(10, 10); //the parameters for coordinates don't mean anything in this case, or does it?
 		      partsRobot.msgHereArePartCoordinatesForNest(pr.nestOne, pr.nestOne.getPart(), randomNumberOne);
