@@ -313,6 +313,7 @@ public class StandAgent extends Agent implements Stand {
 	 */
 	private void DoTellPartsRobotToDeliverParts() {
 	   partsRobot.msgDeliverKitParts();   
+	   this.partsRobotWantsToDeliverParts = false;
 	   state = StandAgentState.PARTS_ROBOT;                      
 	}   
 	/**
