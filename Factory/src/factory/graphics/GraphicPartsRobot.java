@@ -27,6 +27,7 @@ class GraphicPartsRobot extends GraphicRobot
 		y = init_y;
 		fx = init_x;
 		fy = init_y;
+		ftheta = 0;
 		theta = init_theta;
 		dx = init_dx;
 		dy = init_dy;
@@ -35,6 +36,11 @@ class GraphicPartsRobot extends GraphicRobot
 		imageHeight = init_imageHeight;
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
 		itemIndex = 0;
+		movementCheckingOrders = new int[4];
+		movementCheckingOrders[0] = 1;
+		movementCheckingOrders[0] = 0;
+		movementCheckingOrders[0] = 2;
+		movementCheckingOrders[0] = 3;
 	}
 	public int getDestinationKit()
 	{
