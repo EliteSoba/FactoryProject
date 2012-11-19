@@ -420,6 +420,7 @@ public class StandAgent extends Agent implements Stand {
 	@Override
 	public void msgClearStand() {
 		needToClearStand = true;
+		this.stateChanged();
 	}
 
 
