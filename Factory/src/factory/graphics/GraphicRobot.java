@@ -42,7 +42,7 @@ public class GraphicRobot extends GraphicAnimatedObject
 				theta -= dtheta;
 			else if(theta-ftheta > 180)
 				theta += dtheta;
-			System.out.println(theta + " " + ftheta);
+			//System.out.println(theta + " " + ftheta);
 		}
 		for(int i = 0; i < movementCheckingOrders.length; i++)
 		{
