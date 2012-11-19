@@ -374,6 +374,19 @@ public class KitManPanel extends JPanel{
 
 			}
 		}
+		
+		public void refreshAddPanel(){
+			addPanel.cItemComboBox1.setSelectedIndex(0);
+			addPanel.cItemComboBox2.setSelectedIndex(0);
+			addPanel.cItemComboBox3.setSelectedIndex(0);
+			addPanel.cItemComboBox4.setSelectedIndex(0);
+			addPanel.cItemComboBox5.setSelectedIndex(0);
+			addPanel.cItemComboBox6.setSelectedIndex(0);
+			addPanel.cItemComboBox7.setSelectedIndex(0);
+			addPanel.cItemComboBox8.setSelectedIndex(0);
+			addPanel.cKitName.setText("");
+			
+		}
 	}
 
 
@@ -841,9 +854,60 @@ public class KitManPanel extends JPanel{
 			}
 
 		}
+		
+		public void refreshEditPanel(){
+			KitConfig k;
+			if(kitManager.getKitConfigList().size() >0){
+				k = kitManager.getKitConfigList().get(mKitComboBox.getSelectedItem());
+				currentKit = k;
 
+				mKitName.setText(currentKit.kitName);
 
+				mItemComboBox1.setSelectedItem(currentKit.listOfParts.get(0).name);
+				mItemComboBox2.setSelectedItem(currentKit.listOfParts.get(1).name);
+				mItemComboBox3.setSelectedItem(currentKit.listOfParts.get(2).name);
+				mItemComboBox4.setSelectedItem(currentKit.listOfParts.get(3).name);
+				if(currentKit.listOfParts.size() == 5){
+					mItemComboBox5.setSelectedItem(currentKit.listOfParts.get(4).name);
+					mItemComboBox6.setSelectedItem("None");
+					mItemComboBox7.setSelectedItem("None");
+					mItemComboBox8.setSelectedItem("None");
+				}else if (currentKit.listOfParts.size() == 6){
+					mItemComboBox5.setSelectedItem(currentKit.listOfParts.get(4).name);
+					mItemComboBox6.setSelectedItem(currentKit.listOfParts.get(5).name);
+					mItemComboBox7.setSelectedItem("None");
+					mItemComboBox8.setSelectedItem("None");
 
+				}else if (currentKit.listOfParts.size() == 7){
+					mItemComboBox5.setSelectedItem(currentKit.listOfParts.get(4).name);
+					mItemComboBox6.setSelectedItem(currentKit.listOfParts.get(5).name);
+					mItemComboBox7.setSelectedItem(currentKit.listOfParts.get(6).name);
+					mItemComboBox8.setSelectedItem("None");
+				}else if (currentKit.listOfParts.size() == 8){
+					mItemComboBox5.setSelectedItem(currentKit.listOfParts.get(4).name);
+					mItemComboBox6.setSelectedItem(currentKit.listOfParts.get(5).name);
+					mItemComboBox7.setSelectedItem(currentKit.listOfParts.get(6).name);
+					mItemComboBox8.setSelectedItem(currentKit.listOfParts.get(7).name);
+
+				}else{
+					mItemComboBox5.setSelectedItem("None");
+					mItemComboBox6.setSelectedItem("None");
+					mItemComboBox7.setSelectedItem("None");
+					mItemComboBox8.setSelectedItem("None");
+				}
+			}else{
+
+				mItemComboBox1.setSelectedItem("None");
+				mItemComboBox2.setSelectedItem("None");
+				mItemComboBox3.setSelectedItem("None");
+				mItemComboBox4.setSelectedItem("None");
+				mItemComboBox5.setSelectedItem("None");
+				mItemComboBox6.setSelectedItem("None");
+				mItemComboBox7.setSelectedItem("None");
+				mItemComboBox8.setSelectedItem("None");
+			}
+
+		}
 
 
 	}
@@ -946,6 +1010,14 @@ public class KitManPanel extends JPanel{
 			}
 		}
 		table.revalidate();
+	}
+	
+	public void refreshAll(){    // This refreshes the screen if any changes are made to parts/kits
+		basePanel1.setVisible(true);
+		basePanel2.setVisible(false);
+		addPanel.refreshAddPanel();
+		editPanel.refreshEditPanel();
+		
 	}
 
 }

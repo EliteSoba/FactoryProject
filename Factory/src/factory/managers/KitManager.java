@@ -59,6 +59,7 @@ public class KitManager extends Client implements WindowListener{
 			{
 				partsList.put(pCmd.get(2), new Part(pCmd.get(2),
 						Integer.parseInt(pCmd.get(3)),pCmd.get(4),pCmd.get(5),Integer.parseInt(pCmd.get(6))));
+				((KitManPanel) UI).refreshAll();
 			}
 			else if(identifier.equals("rmpartname"))//check directions
 			{
@@ -88,6 +89,8 @@ public class KitManager extends Client implements WindowListener{
 						super.sendCommand("km fpm cmd rmkitname "+ kitName);
 						super.sendCommand("km fcsa cmd rmkitname "+ kitName);
 						hasPart = false;
+						System.out.println("Removing a kit config");
+						((KitManPanel) UI).refreshAll();
 					}
 				}
 
@@ -139,6 +142,7 @@ public class KitManager extends Client implements WindowListener{
 				kitConfigList.put(newKitName, kitConfigToAdd);
 				super.sendCommand("km fpm " + endOfConfirm);
 				super.sendCommand("km fcsa " + endOfConfirm);
+				((KitManPanel) UI).refreshAll();
 			}
 		}
 		else if(action.equals("cnf")){
