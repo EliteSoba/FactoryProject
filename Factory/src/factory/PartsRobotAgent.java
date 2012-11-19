@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import factory.Kit.KitState;
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
 import agent.Agent;
@@ -480,6 +481,9 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					placed = true;
 					this.armOne = null;
 					DoAnimationPutPartInKit(0);
+					if(this.topSlot.listOfParts.size() == 0){
+						this.stand.getSlotKit("topSlot").state = KitState.COMPLETE;
+					}
 				}
 			}
 		}
@@ -494,6 +498,9 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					placed = true;
 					this.armTwo = null;
 					DoAnimationPutPartInKit(1);
+					if(this.topSlot.listOfParts.size() == 0){
+						this.stand.getSlotKit("topSlot").state = KitState.COMPLETE;
+					}
 				}
 			}
 		}
@@ -508,6 +515,9 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					placed = true;
 					this.armThree = null;
 					DoAnimationPutPartInKit(2);
+					if(this.topSlot.listOfParts.size() == 0){
+						this.stand.getSlotKit("topSlot").state = KitState.COMPLETE;
+					}
 				}
 			}
 		}
@@ -522,69 +532,84 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 					placed = true;
 					this.armFour = null;
 					DoAnimationPutPartInKit(3);
+					if(this.topSlot.listOfParts.size() == 0){
+						this.stand.getSlotKit("topSlot").state = KitState.COMPLETE;
+					}
 				}
 			}
 		}
 		
 		// Animation to Stand to Kit 2
-				DoAnimationMovePartsRobotToStand(1);
-				
-				if(this.armOne != null){
-					boolean placed = false;
-					// try to place in first kit
-					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
-						if(this.bottomSlot.listOfParts.get(i).name == this.armOne.name){
-							this.stand.getSlotKit("bottomSlot").parts.add(this.armOne);
-							this.bottomSlot.listOfParts.remove(i);
-							placed = true;
-							this.armOne = null;
-							DoAnimationPutPartInKit(0);
-						}
+		DoAnimationMovePartsRobotToStand(1);
+		debug("###############");
+		if(this.armOne != null){
+			boolean placed = false;
+			// try to place in first kit
+			for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
+				if(this.bottomSlot.listOfParts.get(i).name == this.armOne.name){
+					this.stand.getSlotKit("bottomSlot").parts.add(this.armOne);
+					this.bottomSlot.listOfParts.remove(i);
+					placed = true;
+					this.armOne = null;
+					DoAnimationPutPartInKit(0);
+					if(this.bottomSlot.listOfParts.size() == 0){
+						this.stand.getSlotKit("bottomSlot").state = KitState.COMPLETE;
 					}
 				}
-				
-				if(this.armTwo != null){
-					boolean placed = false;
-					// try to place in first kit
-					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
-						if(this.bottomSlot.listOfParts.get(i).name == this.armTwo.name){
-							this.stand.getSlotKit("bottomSlot").parts.add(this.armTwo);
-							this.bottomSlot.listOfParts.remove(i);
-							placed = true;
-							this.armTwo = null;
-							DoAnimationPutPartInKit(1);
-						}
-					}
-				}
-				
-				if(this.armThree != null){
-					boolean placed = false;
-					// try to place in first kit
-					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
-						if(this.bottomSlot.listOfParts.get(i).name == this.armThree.name){
-							this.stand.getSlotKit("bottomSlot").parts.add(this.armThree);
-							this.bottomSlot.listOfParts.remove(i);
-							placed = true;
-							this.armThree = null;
-							DoAnimationPutPartInKit(2);
-						}
-					}
-				}
-				
-				if(this.armFour != null){
-					boolean placed = false;
-					// try to place in first kit
-					for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
-						if(this.bottomSlot.listOfParts.get(i).name == this.armFour.name){
-							this.stand.getSlotKit("bottomSlot").parts.add(this.armFour);
-							this.bottomSlot.listOfParts.remove(i);
-							placed = true;
-							this.armFour = null;
-							DoAnimationPutPartInKit(3);
-						}
-					}
-				}
+			}
+		}
 		
+		if(this.armTwo != null){
+			boolean placed = false;
+			// try to place in first kit
+			for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
+				if(this.bottomSlot.listOfParts.get(i).name == this.armTwo.name){
+					this.stand.getSlotKit("bottomSlot").parts.add(this.armTwo);
+					this.bottomSlot.listOfParts.remove(i);
+					placed = true;
+					this.armTwo = null;
+					DoAnimationPutPartInKit(1);
+					if(this.bottomSlot.listOfParts.size() == 0){
+						this.stand.getSlotKit("bottomSlot").state = KitState.COMPLETE;
+					}
+				}
+			}
+		}
+		
+		if(this.armThree != null){
+			boolean placed = false;
+			// try to place in first kit
+			for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
+				if(this.bottomSlot.listOfParts.get(i).name == this.armThree.name){
+					this.stand.getSlotKit("bottomSlot").parts.add(this.armThree);
+					this.bottomSlot.listOfParts.remove(i);
+					placed = true;
+					this.armThree = null;
+					DoAnimationPutPartInKit(2);
+					if(this.bottomSlot.listOfParts.size() == 0){
+						this.stand.getSlotKit("bottomSlot").state = KitState.COMPLETE;
+					}
+				}
+			}
+		}
+		
+		if(this.armFour != null){
+			boolean placed = false;
+			// try to place in first kit
+			for(int i = 0; !placed && i < this.bottomSlot.listOfParts.size(); i++){
+				if(this.bottomSlot.listOfParts.get(i).name == this.armFour.name){
+					this.stand.getSlotKit("bottomSlot").parts.add(this.armFour);
+					this.bottomSlot.listOfParts.remove(i);
+					placed = true;
+					this.armFour = null;
+					DoAnimationPutPartInKit(3);
+					if(this.bottomSlot.listOfParts.size() == 0){
+						this.stand.getSlotKit("bottomSlot").state = KitState.COMPLETE;
+					}
+				}
+			}
+		}
+
 		
 		// Animation to Return
 		DoAnimationMovePartsRobotToCenter();
