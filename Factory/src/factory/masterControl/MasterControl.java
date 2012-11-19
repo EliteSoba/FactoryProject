@@ -141,6 +141,9 @@ public class MasterControl {
 		// Instantiate the Gantry
 		gantry = new GantryAgent(this);
 
+		// Instantiate the Stand
+		stand = new StandAgent(this, null); 
+		
 		// Instantiate the Vision
 		vision = new VisionAgent(partsRobot,stand,this);
 
@@ -169,8 +172,6 @@ public class MasterControl {
 		// Instantiate the KitRobot
 		kitRobot = new KitRobotAgent(this,conveyor);
 
-		// Instantiate the Stand
-		//stand = new StandAgent(); // bad code
 
 
 		// Instantiate the FCS
@@ -222,6 +223,7 @@ public class MasterControl {
 		stand.setVision(vision);
 		stand.setPartsRobot(partsRobot);
 		conveyorController.setConveyor(conveyor);
+		stand.setKitRobot(kitRobot);
 
 		
 		
@@ -698,7 +700,7 @@ public class MasterControl {
 
 	private void connectAllSockets(int debugnum){
 		int numConnected = 0;
-		int numToConnect = (debugnum > 0 ? debugnum : clients.size());
+		int numToConnect = (debugnum > 0 ? debugnum : (clients.size()-1));
 		while(numConnected != numToConnect){
 			try{
 				Socket s = myServerSocket.accept();
@@ -733,8 +735,8 @@ public class MasterControl {
 
 	public static void main(String args[]){
 
-        System.out.print("DEBUG MODE : Enter number of clients to connect.");
-        System.out.print("PRODUCTION MODE : Enter 0.");
+        System.out.println("DEBUG MODE : Enter number of clients to connect.");
+        System.out.println("PRODUCTION MODE : Enter 0.");
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
