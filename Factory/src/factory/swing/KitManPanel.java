@@ -87,7 +87,7 @@ public class KitManPanel extends JPanel{
 
 
 	}
-	public class AddPanel extends JPanel implements ActionListener{
+	public class AddPanel extends JPanel implements ActionListener{  // For add panel
 
 		JLabel cKitNameLabel = new JLabel ("Kit Name : ");
 		JTextField cKitName = new JTextField(8);
@@ -95,7 +95,7 @@ public class KitManPanel extends JPanel{
 		JButton cSave = new JButton("Save Kit Configuration");
 
 
-
+		//initializing components
 		JLabel cLabel1 = new JLabel ("Item 1");
 		JLabel cLabel2 = new JLabel ("Item 2");
 		JLabel cLabel3 = new JLabel ("Item 3");
@@ -172,7 +172,9 @@ public class KitManPanel extends JPanel{
 			cItem6 = new ImageIcon("Images/none.png");
 			cItem7 = new ImageIcon("Images/none.png");
 			cItem8 = new ImageIcon("Images/none.png");
-
+			
+			//laying out components 
+			
 			cItemFrame1 = new JLabel();
 			cItemFrame1.setIcon(cItem1);
 			cItemFrame2 = new JLabel();
@@ -287,8 +289,8 @@ public class KitManPanel extends JPanel{
 		public void actionPerformed(ActionEvent ae) {
 			String set = new String();
 			String cmd = new String();
-			if (ae.getSource() == cSave) {
-				String testName;
+			if (ae.getSource() == cSave) {  // save button
+				String testName;  // error checking
 				cKitName.setText(cKitName.getText().replaceAll("\\s","")) ;
 				testName = cKitName.getText().toUpperCase();
 				boolean nameTaken = false;
@@ -353,7 +355,7 @@ public class KitManPanel extends JPanel{
 					}
 				}
 			}else{
-				JComboBox cb = (JComboBox)ae.getSource();
+				JComboBox cb = (JComboBox)ae.getSource();  // updates picture
 				String selectedItem = (String)cb.getSelectedItem();
 				if(cb == this.cItemComboBox1)
 					updatePicture(cItem1, cItemFrame1, selectedItem);
@@ -425,7 +427,7 @@ public class KitManPanel extends JPanel{
 
 
 	public class EditPanel extends JPanel implements ActionListener{
-		JLabel mItemFrame1;
+		JLabel mItemFrame1;  // image previews
 		JLabel mItemFrame2;
 		JLabel mItemFrame3;
 		JLabel mItemFrame4;
@@ -542,7 +544,7 @@ public class KitManPanel extends JPanel{
 			GridBagConstraints c = new GridBagConstraints();
 
 
-
+			// lays out components
 			setLayout(new GridBagLayout());
 
 			c.fill = GridBagConstraints.VERTICAL;
@@ -728,7 +730,7 @@ public class KitManPanel extends JPanel{
 						mKitName.setText("must have >= 4 items");
 					}
 				}
-			}else if (ae.getSource() == mRemove){
+			}else if (ae.getSource() == mRemove){  // remove button
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
 				removeKit(currentKit);
@@ -749,7 +751,7 @@ public class KitManPanel extends JPanel{
 					currentKit = new KitConfig();
 				}
 				 */
-			}else if (ae.getSource() == cancel){
+			}else if (ae.getSource() == cancel){  // cancel button
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
 				//mKitComboBox.setSelectedIndex(0);
@@ -833,7 +835,7 @@ public class KitManPanel extends JPanel{
 		}
 
 
-		public void updateEditPanel(JTable tempTable, int tempRow){
+		public void updateEditPanel(JTable tempTable, int tempRow){  // updates edit panel
 			//mKitComboBox.setSelectedItem(tempTable.getValueAt(tempRow, 0));
 			KitConfig k;
 			k = kitManager.getKitConfigList().get(tempTable.getValueAt(tempRow, 0));
@@ -887,7 +889,7 @@ public class KitManPanel extends JPanel{
 
 		}
 
-		public void refreshEditPanel(){
+		public void refreshEditPanel(){  // refreshes screen
 			mItemComboBox1.removeAllItems();
 			mItemComboBox2.removeAllItems();
 			mItemComboBox3.removeAllItems();
@@ -1010,7 +1012,7 @@ public class KitManPanel extends JPanel{
 
 	}
 
-	public void editKit(KitConfig k){
+	public void editKit(KitConfig k){  // edits a kit on the table
 		Object[] rowData = {k.kitName};
 		for(int i = 0; i < model.getRowCount(); i++){
 			if(currentKit.kitName.equals(model.getValueAt(i, 0))){
@@ -1023,7 +1025,7 @@ public class KitManPanel extends JPanel{
 		table.revalidate();
 	}
 
-	public void removeKit(KitConfig k){
+	public void removeKit(KitConfig k){  // removes a kit from the table
 		Object[] rowData = {k.kitName};
 		for(int i = 0; i < model.getRowCount(); i++){
 			if(k.kitName.equals(model.getValueAt(i, 0))){
@@ -1034,7 +1036,7 @@ public class KitManPanel extends JPanel{
 		table.revalidate();
 	}
 
-	public void refreshTable(){
+	public void refreshTable(){  // refreshes the table
 		for (int i = model.getRowCount() - 1; i >= 0; i--) {
 			model.removeRow(i);
 		}
