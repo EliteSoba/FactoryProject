@@ -33,25 +33,29 @@ public class MasterControl {
 	ConveyorAgent conveyor;
 	ConveyorControllerAgent conveyorController;
 	LaneAgent l0t, l0b, l1t, l1b, l2t, l2b, l3t, l3b;
-	TreeMap<String, LaneAgent> laneAgentTreeMap;
 	NestAgent n0t, n0b, n1t, n1b, n2t, n2b, n3t, n3b;
-	TreeMap<String, NestAgent> nestAgentTreeMap;
 	GantryAgent gantry;
 	PartsRobotAgent partsRobot;
 	StandAgent stand;
 	VisionAgent vision;
 	FCSAgent fcs;
+	FeederAgent f0, f1, f2, f3;
 
-	public FeederAgent f0, f1, f2, f3;
+    // Dynamic Lists
+
 	List<FeederAgent> feederAgents;
+    ArrayList<PartHandler> partHandlerList;
 
+    // Dynamic Maps
 
-	TreeMap<String, Agent> agentTreeMap;
-
-	// Data Members
-
+    TreeMap<String, LaneAgent> laneAgentTreeMap;
+    TreeMap<String, NestAgent> nestAgentTreeMap;
+    TreeMap<String, Agent> agentTreeMap;
 	TreeMap<String, PartHandler> partHandlers; 
 	TreeMap<String, Boolean> partOccupied;
+
+    // Lists of Known Clients, Agents, CommandTypes, and supported Commands
+
 	private static final List<String> clients = Arrays.asList("fpm", "gm", "kam", "km", "lm", "pm", "multi");
 	private static final List<String> agents = Arrays.asList("ca", "cca", "fcsa", "fa", "ga", "kra", "la", "na", "pra", "sa", "va");
 	private static final List<String> cmdTypes = Arrays.asList("cmd", "req", "get", "set", "cnf");
@@ -68,19 +72,15 @@ public class MasterControl {
 
     );
 
-    private ArrayList<PartHandler> partHandlerList;
 
-	// The following are lists of commands that are to be received by multiple clients.
+	// Lists of Commands with Multi Destinations and Lists of Destinations associated with those Commands
 
 	private static final List<String> multiCmd_1 = Arrays.asList("addpartname", "rmpartname", "partconfig");
     private static final List<String> multiCmdDst_1 = Arrays.asList("km", "fpm");
 
-    // No longer necessary.
-	//private static final List<String> kitCmds = Arrays.asList("addkitname", "rmkitname", "kitcontent");
-
+    // MasterControl Server Socket
 
 	ServerSocket myServerSocket;
-	// Socket myFactorySocket;
 
 	// Constructor
 
@@ -304,6 +304,9 @@ public class MasterControl {
 		for (Map.Entry<String, NestAgent> nestAgentMap : nestAgentTreeMap.entrySet()) {
 			nestAgentMap.getValue().stopThread();
 		}
+
+        System.exit(0);
+
 	}
 
 	// parseDst is called by Clients and Agents and determines whether to

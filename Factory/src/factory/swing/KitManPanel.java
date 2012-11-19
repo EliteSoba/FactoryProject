@@ -374,8 +374,29 @@ public class KitManPanel extends JPanel{
 
 			}
 		}
-		
+
 		public void refreshAddPanel(){
+
+			cItemComboBox1 = new JComboBox();
+			cItemComboBox2 = new JComboBox();
+			cItemComboBox3 = new JComboBox();
+			cItemComboBox4 = new JComboBox();
+			cItemComboBox5 = new JComboBox();
+			cItemComboBox6 = new JComboBox();
+			cItemComboBox7 = new JComboBox();
+			cItemComboBox8 = new JComboBox();
+
+			for(String name : kitManager.getPartsList().keySet()){
+				cItemComboBox1.addItem(name);
+				cItemComboBox2.addItem(name);
+				cItemComboBox3.addItem(name);
+				cItemComboBox4.addItem(name);
+				cItemComboBox5.addItem(name);
+				cItemComboBox6.addItem(name);
+				cItemComboBox7.addItem(name);
+				cItemComboBox8.addItem(name);
+			}
+
 			addPanel.cItemComboBox1.setSelectedIndex(0);
 			addPanel.cItemComboBox2.setSelectedIndex(0);
 			addPanel.cItemComboBox3.setSelectedIndex(0);
@@ -385,8 +406,10 @@ public class KitManPanel extends JPanel{
 			addPanel.cItemComboBox7.setSelectedIndex(0);
 			addPanel.cItemComboBox8.setSelectedIndex(0);
 			addPanel.cKitName.setText("");
-			
+
 		}
+
+
 	}
 
 
@@ -464,7 +487,7 @@ public class KitManPanel extends JPanel{
 			}
 			mKitComboBox.addActionListener(this);
 
-*/
+			 */
 
 			mItemComboBox1.addActionListener(this);
 			mItemComboBox2.addActionListener(this);
@@ -690,7 +713,7 @@ public class KitManPanel extends JPanel{
 
 
 						//if(kitManager.getKitConfigList().size() > 0)
-							//mKitComboBox.setSelectedIndex(0);
+						//mKitComboBox.setSelectedIndex(0);
 
 					}else{
 						mKitName.setText("must have >= 4 items");
@@ -716,7 +739,7 @@ public class KitManPanel extends JPanel{
 				}else{
 					currentKit = new KitConfig();
 				}
-*/
+				 */
 			}else if (ae.getSource() == cancel){
 				basePanel1.setVisible(true);
 				basePanel2.setVisible(false);
@@ -854,58 +877,38 @@ public class KitManPanel extends JPanel{
 			}
 
 		}
-		
+
 		public void refreshEditPanel(){
-			KitConfig k;
-			if(kitManager.getKitConfigList().size() >0){
-				//k = kitManager.getKitConfigList().get(mKitComboBox.getSelectedItem());
-				//currentKit = k;
+			mItemComboBox1 = new JComboBox();
+			mItemComboBox2 = new JComboBox();
+			mItemComboBox3 = new JComboBox();
+			mItemComboBox4 = new JComboBox();
+			mItemComboBox5 = new JComboBox();
+			mItemComboBox6 = new JComboBox();
+			mItemComboBox7 = new JComboBox();
+			mItemComboBox8 = new JComboBox();
 
-				mKitName.setText(currentKit.kitName);
-
-				mItemComboBox1.setSelectedItem(currentKit.listOfParts.get(0).name);
-				mItemComboBox2.setSelectedItem(currentKit.listOfParts.get(1).name);
-				mItemComboBox3.setSelectedItem(currentKit.listOfParts.get(2).name);
-				mItemComboBox4.setSelectedItem(currentKit.listOfParts.get(3).name);
-				if(currentKit.listOfParts.size() == 5){
-					mItemComboBox5.setSelectedItem(currentKit.listOfParts.get(4).name);
-					mItemComboBox6.setSelectedItem("None");
-					mItemComboBox7.setSelectedItem("None");
-					mItemComboBox8.setSelectedItem("None");
-				}else if (currentKit.listOfParts.size() == 6){
-					mItemComboBox5.setSelectedItem(currentKit.listOfParts.get(4).name);
-					mItemComboBox6.setSelectedItem(currentKit.listOfParts.get(5).name);
-					mItemComboBox7.setSelectedItem("None");
-					mItemComboBox8.setSelectedItem("None");
-
-				}else if (currentKit.listOfParts.size() == 7){
-					mItemComboBox5.setSelectedItem(currentKit.listOfParts.get(4).name);
-					mItemComboBox6.setSelectedItem(currentKit.listOfParts.get(5).name);
-					mItemComboBox7.setSelectedItem(currentKit.listOfParts.get(6).name);
-					mItemComboBox8.setSelectedItem("None");
-				}else if (currentKit.listOfParts.size() == 8){
-					mItemComboBox5.setSelectedItem(currentKit.listOfParts.get(4).name);
-					mItemComboBox6.setSelectedItem(currentKit.listOfParts.get(5).name);
-					mItemComboBox7.setSelectedItem(currentKit.listOfParts.get(6).name);
-					mItemComboBox8.setSelectedItem(currentKit.listOfParts.get(7).name);
-
-				}else{
-					mItemComboBox5.setSelectedItem("None");
-					mItemComboBox6.setSelectedItem("None");
-					mItemComboBox7.setSelectedItem("None");
-					mItemComboBox8.setSelectedItem("None");
-				}
-			}else{
-
-				mItemComboBox1.setSelectedItem("None");
-				mItemComboBox2.setSelectedItem("None");
-				mItemComboBox3.setSelectedItem("None");
-				mItemComboBox4.setSelectedItem("None");
-				mItemComboBox5.setSelectedItem("None");
-				mItemComboBox6.setSelectedItem("None");
-				mItemComboBox7.setSelectedItem("None");
-				mItemComboBox8.setSelectedItem("None");
+			for(String name : kitManager.getPartsList().keySet()){
+				mItemComboBox1.addItem(name);
+				mItemComboBox2.addItem(name);
+				mItemComboBox3.addItem(name);
+				mItemComboBox4.addItem(name);
+				mItemComboBox5.addItem(name);
+				mItemComboBox6.addItem(name);
+				mItemComboBox7.addItem(name);
+				mItemComboBox8.addItem(name);
 			}
+
+			mItemComboBox1.setSelectedIndex(0);
+			mItemComboBox2.setSelectedIndex(0);
+			mItemComboBox3.setSelectedIndex(0);
+			mItemComboBox4.setSelectedIndex(0);
+			mItemComboBox5.setSelectedIndex(0);
+			mItemComboBox6.setSelectedIndex(0);
+			mItemComboBox7.setSelectedIndex(0);
+			mItemComboBox8.setSelectedIndex(0);
+			mKitName.setText("");
+
 
 		}
 
@@ -1011,13 +1014,24 @@ public class KitManPanel extends JPanel{
 		}
 		table.revalidate();
 	}
-	
+
+	public void refreshTable(){
+		for (int i = model.getRowCount() - 1; i >= 0; i--) {
+			model.removeRow(i);
+		}
+		for(KitConfig temp : kitManager.getKitConfigList().values()){
+			Object[] row = {temp.kitName};
+			model.insertRow(model.getRowCount(), row);
+		}
+	}
+
 	public void refreshAll(){    // This refreshes the screen if any changes are made to parts/kits
 		basePanel1.setVisible(true);
 		basePanel2.setVisible(false);
+		refreshTable();
 		addPanel.refreshAddPanel();
 		editPanel.refreshEditPanel();
-		
+
 	}
 
 }

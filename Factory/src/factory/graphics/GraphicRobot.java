@@ -4,11 +4,10 @@ import java.awt.Graphics;
 
 public class GraphicRobot extends GraphicAnimatedObject
 {
-	int fx, fy, ftheta;		// final position (destination) and final angle
-	int destinationNest, destinationKit;
-	boolean arrived;
-	int state;
-	int[] movementCheckingOrders;
+	int fx, fy, ftheta;							// final position (destination) and final angle
+	int destinationNest, destinationKit;		// destination nest and destination kit as provided by back-end (zero-based indexing)
+	int state;									// "custom" variable for each robot to know when to move and rotate
+	int[] movementCheckingOrders;				// priority list for checking which direction to move in (up, down, left, or right)
 	
 	/**
 	 * Sets the x,y, destination coordinates for the robot to move to as well as the final direction it should be facing.
@@ -126,8 +125,8 @@ public class GraphicRobot extends GraphicAnimatedObject
 	}
 	
 	/**
-	 * 
-	 * @param g
+	 * Paints the robot
+	 * @param g Graphics variable used to paint.
 	 */
 	public void paint(Graphics g)
 	{

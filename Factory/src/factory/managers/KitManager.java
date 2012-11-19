@@ -48,10 +48,10 @@ public class KitManager extends Client implements WindowListener{
 	@Override
 	public void doCommand(ArrayList<String> pCmd) {
 
-//		System.out.println("GOT HERE: ");
-//		for (int i = 0; i < pCmd.size(); i++){
-//			System.out.println(pCmd.get(i));
-//		}
+		//		System.out.println("GOT HERE: ");
+		//		for (int i = 0; i < pCmd.size(); i++){
+		//			System.out.println(pCmd.get(i));
+		//		}
 
 		int size = pCmd.size();
 		//parameters lay between i = 2 and i = size - 2
@@ -74,12 +74,15 @@ public class KitManager extends Client implements WindowListener{
 
 				// iterate through the kitConfigList and find kitConfigurations with the removed part and remove them
 				Iterator itr = kitConfigList.entrySet().iterator();
+				Map.Entry pairs = (Map.Entry)itr.next();
+				String kitName = (String)pairs.getKey();
 				while(itr.hasNext())
 				{
-					Map.Entry pairs = (Map.Entry)itr.next();
-					String kitName = (String)pairs.getKey();
+					System.out.println("Iterator " + itr.toString());
+					//Map.Entry pairs = (Map.Entry)itr.next();
+					//String kitName = (String)pairs.getKey();
 					KitConfig configToCheck = kitConfigList.get(kitName);
-					for(int i = 0; i < configToCheck.listOfParts.size(); i++)
+					for(int i = 0; i < configToCheck.listOfParts.size(); i++)//iterating through each part in a kit
 					{
 						Part partToCheck = configToCheck.listOfParts.get(i);
 						String name = partToCheck.name;
@@ -88,16 +91,18 @@ public class KitManager extends Client implements WindowListener{
 							hasPart = true;
 							break; // once the part is found no more checks needed to be done and can move to next kitConfig
 						}
+						if(hasPart)
+						{	//remove kitConfig send confirmations and put hasPart to false 
+							kitConfigList.remove(kitName);
+							//super.sendCommand("km fpm cmd rmkitname "+ kitName);
+							//super.sendCommand("km fcsa cmd rmkitname "+ kitName);
+							hasPart = false;
+							System.out.println("Removing a kit config" + kitName);
+							System.out.println(kitConfigList.size());
+							((KitManPanel) UI).refreshAll();
+						}
 					}
-					if(hasPart)
-					{	//remove kitConfig send confirmations and put hasPart to false 
-						kitConfigList.remove(kitName);
-						super.sendCommand("km fpm cmd rmkitname "+ kitName);
-						super.sendCommand("km fcsa cmd rmkitname "+ kitName);
-						hasPart = false;
-						System.out.println("Removing a kit config" + kitName);
-						((KitManPanel) UI).refreshAll();
-					}
+
 				}
 
 			}

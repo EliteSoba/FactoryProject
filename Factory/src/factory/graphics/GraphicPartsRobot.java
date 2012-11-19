@@ -9,11 +9,25 @@ class GraphicPartsRobot extends GraphicRobot
 	protected ArrayList<GraphicItem> items;			// inventory of items
 	int itemIndex;									// item requested by the back-end
 	
+	/**
+	 * @deprecated Use GraphicPartsRobot(...) constructor
+	 */
 	public GraphicPartsRobot()
 	{
-		
 	}
 	
+	/**
+	 * Initializes all variables of parts robot upon instantiation.
+	 * @param init_x
+	 * @param init_y
+	 * @param init_theta
+	 * @param init_dx
+	 * @param init_dy
+	 * @param init_dtheta
+	 * @param init_imageWidth
+	 * @param init_imageHeight
+	 * @param init_imagePath
+	 */
 	public GraphicPartsRobot(int init_x, int init_y, int init_theta, int init_dx, int init_dy, int init_dtheta, int init_imageWidth, int init_imageHeight, String init_imagePath)
 	{
 		// Initialize inventory to have 4 null slots
@@ -21,7 +35,6 @@ class GraphicPartsRobot extends GraphicRobot
 		for(int i = 0; i < 4; i++)
 			items.add(null);
 		// Initialize properties of the robot to passed-in and default values
-		arrived = false;
 		state = 0;		// 0 = idle, 1 = going to nest, 2 = arrived at nest, 3 = going to station, 4 = arrived at station, 5 = going to center, 6 = arrived at center
 		destinationNest = -1;
 		destinationKit = -1;
