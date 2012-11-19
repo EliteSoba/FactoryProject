@@ -61,8 +61,13 @@ public class KitManager extends Client implements WindowListener{
 		{	
 			System.out.println("GOT HEREs");
 			boolean hasPart = false;
+			for(int i = 0; i < pCmd.size(); i++){
+				System.out.println(pCmd.get(i));
+			}
+			System.out.println();
 			if(identifier.equals("addpartname"))// check directions
 			{
+				
 				partsList.put(pCmd.get(2), new Part(pCmd.get(2),
 						Integer.parseInt(pCmd.get(3)),pCmd.get(4),pCmd.get(5),Integer.parseInt(pCmd.get(6))));
 				((KitManPanel) UI).refreshAll();
