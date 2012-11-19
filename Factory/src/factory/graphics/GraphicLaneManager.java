@@ -17,6 +17,7 @@ public class GraphicLaneManager{
 	ImageIcon lane1Icon, lane2Icon;
 	ImageIcon divergeLaneIcon;
 	ImageIcon feederIcon;
+	ImageIcon divergerLightOffImage, divergerLightOnImage;
 	GraphicBin bin;
 
 	//Bin coordinates
@@ -39,6 +40,8 @@ public class GraphicLaneManager{
 	private int vibrationAmplitude;
 	int laneManagerID;					//lane Manager Number
 	int laneAnimationCounter, laneAnimationSpeed;
+	int divergerLightAnimationCounter;
+	boolean divergerLightAnimationCountUp;
 	boolean feederOn;			//Feeder on/off
 	boolean binExists;			
 	boolean lane1PurgeOn;
@@ -95,8 +98,9 @@ public class GraphicLaneManager{
 		lane2Icon = new ImageIcon("Images/lane.png");
 		divergeLaneIcon = new ImageIcon("Images/divergeLane.png");
 		feederIcon = new ImageIcon("Images/feeder.png");
-
-
+		divergerLightAnimationCountUp = true;
+		divergerLightOffImage = new ImageIcon("Images/divergerLights/dLight-1.png");
+		divergerLightOnImage = new ImageIcon("Images/divergerLights/dLight0.png");
 	}	
 
 	public void setBin(GraphicBin bin){
@@ -157,13 +161,35 @@ public class GraphicLaneManager{
 	} // END Paint function
 
 	public void paintFeeder(Graphics g) {
+		// Draw background
 		g.setColor(Color.WHITE);
 		g.fillRect(feederX, feederY, 110, 110);
+		// Draw item icon
 		if(binExists && feederPurgeTimer < 7)
 				bin.getBinType().paint(g);
+		// Draw bin
 		if (binExists)
 			g.drawImage(bin.getBinImage().getImage(), feederX+85, feederY+15, null);
+		// Draw feeder
 		g.drawImage(feederIcon.getImage(), feederX, feederY, null);
+		// Draw and animate diverger lights
+		int dLightOnY = feederY + 17;
+		int dLightOffY = feederY + 17;
+		if(divergeUp)
+			dLightOffY += 80;
+		else
+			dLightOnY += 80;
+		divergerLightOnImage = new ImageIcon("Images/divergerLights/dLight"+divergerLightAnimationCounter+".png");
+		g.drawImage(divergerLightOnImage.getImage(), feederX, dLightOnY, null);
+		g.drawImage(divergerLightOffImage.getImage(), feederX, dLightOffY, null);
+		if(divergerLightAnimationCounter == 20)
+			divergerLightAnimationCountUp = false;
+		else if(divergerLightAnimationCounter == 0)
+			divergerLightAnimationCountUp = true;
+		if(divergerLightAnimationCountUp)
+			divergerLightAnimationCounter += 1;
+		else
+			divergerLightAnimationCounter -= 1;
 	}
 
 	public void moveLane() {

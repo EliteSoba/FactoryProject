@@ -73,7 +73,7 @@ public class VisionAgent extends Agent implements Vision {
 		picRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
 	}
 		
-	public void msgNestVisionClear(Nest nestOne, Nest nestTwo) {
+	public void msgVisionClearForPictureInNests(Nest nestOne, Nest nestTwo) {
 		for( PictureRequest pr: picRequests) {
 		   if(pr.nestOne == nestOne && pr.nestTwo == nestTwo){
 		      pr.state = PictureRequestState.PARTS_ROBOT_CLEAR;
@@ -169,7 +169,7 @@ public class VisionAgent extends Agent implements Vision {
 		   partsRobot.msgPictureTaken(pr.nestOne, pr.nestTwo);
 		   if(randomNumberOne == 0) {
 		      pr.coordinateOne = new Coordinate(10, 10); //the parameters for coordinates don't mean anything in this case, or does it?
-		      partsRobot.msgHereArePartCoordiantes(pr.nestOne.part, pr.coordinateOne);
+		      partsRobot.msgHereArePartCoordinatesForNest(pr.nestOne, pr.nestOne.getPart(), randomNumberOne);
 		   }
 		   else if(randomNumberOne == 1) {
 		      pr.feeder.msgBadNest(pr.nestOne);
@@ -179,8 +179,8 @@ public class VisionAgent extends Agent implements Vision {
 		   }
 
 		   if(randomNumberTwo == 0) {
-		      pr.coordinateTwo = new Coordinate(10, 10); 
-		      partsRobot.msgHereArePartCoordiantes(pr.nestTwo.part, pr.coordinateTwo);
+		      
+		      partsRobot.msgHereArePartCoordinatesForNest(pr.nestTwo, pr.nestTwo.getPart(), randomNumberTwo);
 		   }
 		   else if(randomNumberTwo == 1) {
 		      pr.feeder.msgBadNest(pr.nestTwo);
@@ -204,6 +204,7 @@ public class VisionAgent extends Agent implements Vision {
 		   partsRobot.msgClearLineOfSight(pr.nestOne, pr.nestTwo);
 		   pr.state = PictureRequestState.ASKED_PARTS_ROBOT;
 		}
+
 
 	
 	

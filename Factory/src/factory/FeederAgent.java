@@ -523,7 +523,6 @@ public class FeederAgent extends Agent implements Feeder {
 		if (myLane == topLane)
 		{
 			DoPurgeTopLane();
-
 		}
 		else if (myLane == bottomLane)
 		{
