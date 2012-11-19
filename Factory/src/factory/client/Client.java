@@ -140,14 +140,16 @@ public abstract class Client extends JFrame implements ActionListener {
 		@Override
 		public void windowClosing(WindowEvent e) {
 			try {
-				
+				if(client.type == Type.fpm)
+					client.sendCommand("fpm mcs cmd stopfactory");
 				client.dispose();
 				System.out.println("resources released");
 				if(client.input != null)
+				{	
 					System.out.println("input stream closing...");
 					client.input.close();
 					System.out.println("input closed");
-				
+				}
 				if(client.output != null)
 					System.out.println("output stream closing...");
 					client.output.close();
@@ -156,6 +158,7 @@ public abstract class Client extends JFrame implements ActionListener {
 					//never executes but wont compile w/o
 				}
 			System.out.println("window closed");
+			this.client.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		}
 
 		@Override
