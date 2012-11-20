@@ -108,7 +108,7 @@ public class MasterControl {
 		}
 		connectAllSockets(debug); // This waits for every client to start up before moving on.
 
-		multiCmdDsts.put(multiCmd_1, multiCmdDst_1);
+//		multiCmdDsts.put(multiCmd_1, multiCmdDst_1);
 
 		// At this point, all of the sockets are connected, PartHandlers have been created
 		// The TreeMaps are updated with all of the relevant data, and the Factory can go.
