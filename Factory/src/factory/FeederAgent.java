@@ -134,12 +134,12 @@ public class FeederAgent extends Agent implements Feeder {
 		// figure out which lane sent the message
 		if(topLane.lane == lane)
 		{
-			debug("My TOP lane has stabilized and so it's ready for a picture.");
+//			debug("My TOP lane has stabilized and so it's ready for a picture.");
 			topLane.picState = PictureState.STABLE;
 		}
 		else if(bottomLane.lane == lane)
 		{
-			debug("My BOTTOM lane has stabilized and so it's ready for a picture.");
+//			debug("My BOTTOM lane has stabilized and so it's ready for a picture.");
 			bottomLane.picState = PictureState.STABLE;
 		}
 
@@ -159,12 +159,12 @@ public class FeederAgent extends Agent implements Feeder {
 		// figure out which lane sent the message
 		if(topLane.lane == lane)
 		{
-			debug("Uhoh, my TOP lane has destabilized!");
+//			debug("Uhoh, my TOP lane has destabilized!");
 			topLane.picState = PictureState.UNSTABLE;
 		}
 		else if(bottomLane.lane == lane)
 		{
-			debug("Uhoh, my BOTTOM lane has destabilized!");
+//			debug("Uhoh, my BOTTOM lane has destabilized!");
 			bottomLane.picState = PictureState.UNSTABLE;
 		}
 
@@ -218,8 +218,20 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  It is the end of a chain of messages originally sent by the PartsRobot.
 	 */
 	public void msgLaneNeedsPart(Part part, Lane lane) {
+		MyLane targetLane = null;
+		
+		if (topLane.lane == lane)
+			targetLane = topLane;
+		else
+			targetLane = bottomLane;
+		
 		if (lane != null && part != null)
 		{
+			if (lane.getNest().getPart() != null)
+			{
+			if (lane.getNest().getPart().id != part.id)
+				purgeLane(targetLane);
+			}
 			requestedParts.add(new MyPartRequest(part, lane)); // add this part request to the list of part requests
 		}
 		stateChanged();
@@ -525,6 +537,7 @@ public class FeederAgent extends Agent implements Feeder {
 		 */
 		if (FeederIsEmpty && TargetLaneIsEmpty)
 		{
+			debug("SCENARIO #1");
 			state = FeederState.WAITING_FOR_PARTS;
 			partRequested.state = MyPartRequestState.ASKED_GANTRY;
 			gantry.msgFeederNeedsPart(partRequested.pt, this);
@@ -537,6 +550,7 @@ public class FeederAgent extends Agent implements Feeder {
 		 */
 		else if (FeederHasDesiredPart && TargetLaneIsEmpty)
 		{
+			debug("SCENARIO #2");
 			state = FeederState.IS_FEEDING;
 			partRequested.state = MyPartRequestState.DELIVERED;
 		}
@@ -549,6 +563,7 @@ public class FeederAgent extends Agent implements Feeder {
 		 */
 		else if (FeederHasDesiredPart && !TargetLaneHasDesiredPart && !TargetLaneIsEmpty)
 		{
+			debug("SCENARIO #3");
 			purgeLane(targetLane);
 			state = FeederState.IS_FEEDING;
 			partRequested.state = MyPartRequestState.DELIVERED;
@@ -561,6 +576,7 @@ public class FeederAgent extends Agent implements Feeder {
 		 */
 		else if (FeederHasDesiredPart && TargetLaneHasDesiredPart)
 		{
+			debug("SCENARIO #4");
 			state = FeederState.IS_FEEDING;
 			partRequested.state = MyPartRequestState.DELIVERED;
 		}
@@ -573,6 +589,7 @@ public class FeederAgent extends Agent implements Feeder {
 		 */
 		else if (!FeederHasDesiredPart && !TargetLaneHasDesiredPart && !TargetLaneIsEmpty)
 		{
+			debug("SCENARIO #5");
 			purgeLane(targetLane);
 			purgeFeeder();  
 			state = FeederState.WAITING_FOR_PARTS;
@@ -588,6 +605,7 @@ public class FeederAgent extends Agent implements Feeder {
 		 */
 		else if (!FeederHasDesiredPart && (TargetLaneHasDesiredPart || TargetLaneIsEmpty))
 		{
+			debug("SCENARIO #6");
 			purgeFeeder();  
 			state = FeederState.WAITING_FOR_PARTS;
 			partRequested.state = MyPartRequestState.ASKED_GANTRY;
