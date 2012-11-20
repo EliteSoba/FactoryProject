@@ -670,6 +670,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		DoAnimationMovePartsRobotToCenter();
 		
 		// Tell stand
+		debug("Telling Stand msgPartsRobotNoLongerUsingStand()");
 		this.stand.msgPartsRobotNoLongerUsingStand();
 		
 		// Update stand state
