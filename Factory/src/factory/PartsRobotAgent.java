@@ -585,7 +585,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			}
 		}
 		
-		if(this.topSlotState != SlotState.EMPTY && !ArmsEmpty()){
+		if(this.bottomSlotState != SlotState.EMPTY && !ArmsEmpty()){
 			// Animation to Stand to Kit 2
 			DoAnimationMovePartsRobotToStand(1);
 			if(this.armOne != null &&  this.bottomSlot != null){
@@ -1095,6 +1095,9 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public boolean IsPartFromNestNeed(int nest){
 		
+		if(this.currentKitConfiguration == null){
+			return false;
+		}
 		int countNeeded = 0;
 		
 		if(this.topSlot != null){
