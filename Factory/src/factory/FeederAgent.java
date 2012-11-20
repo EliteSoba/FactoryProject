@@ -421,7 +421,7 @@ public class FeederAgent extends Agent implements Feeder {
 			bottomLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE; // we have told the vision to take a picture, only send this once
 			debug("Feeder sends msgMyNestsReadyForPicture() to vision.");
 			debug("Hey vision: topLane.part = " + topLane.part.name + " and bottomLane.part = " + bottomLane.part.name);
-			vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), topLane.lane.getNest().getPart().clone(), bottomLane.lane.getNest(), bottomLane.lane.getNest().getPart().clone(), this); // send the message to the vision
+			vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), ((Part)topLane.lane.getNest().getPart().clone()), bottomLane.lane.getNest(), ((Part)bottomLane.lane.getNest().getPart().clone()), this); // send the message to the vision
 			myNestsHaveBeenChecked = true;
 			stateChanged();
 			return true;
