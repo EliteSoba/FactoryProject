@@ -75,11 +75,13 @@ public class FCSAgent extends Agent implements FCS{
 	 */
 	public void msgProduceKit(int quantity, String kitName) {
 		debug("Got message to produce Kit");
-		KitConfig recipe = new KitConfig();
-		recipe = kitRecipes.get(kitName);
-		recipe.quantity = quantity;
-		recipe.kitName = kitName;
-		orders.add(recipe);
+		synchronized(this.orders){
+			KitConfig recipe = new KitConfig();
+			recipe = kitRecipes.get(kitName);
+			recipe.quantity = quantity;
+			recipe.kitName = kitName;
+			orders.add(recipe);
+		}
 		stateChanged();
 	}
 
@@ -97,26 +99,27 @@ public class FCSAgent extends Agent implements FCS{
 	// *** SCHEDULER ***
 	public boolean pickAndExecuteAnAction() {
 
-		//if the order is finished, start producing next kit
-		if (this.state == KitProductionState.FINISHED){
-			startProducingNextKit();
-			return true;
-		}
+		synchronized(this.state){
+			//if the order is finished, start producing next kit
+			if (this.state == KitProductionState.FINISHED){
+				startProducingNextKit();
+				return true;
+			}
 
 
-		//if the number of kits exported is greater than or equal to the quantity of the order, state should be finished
-		if(!orders.isEmpty()){
-			if(kitsExportedCount >= orders.peek().quantity /*&& this.state == KitProductionState.PRODUCING*/){
-				finishKits();
+			//if the number of kits exported is greater than or equal to the quantity of the order, state should be finished
+			if(!orders.isEmpty()){
+				if(kitsExportedCount >= orders.peek().quantity /*&& this.state == KitProductionState.PRODUCING*/){
+					finishKits();
+					return true;
+				}
+			}
+			//if there is a kit pending and the order list isn't empty, then send an order to parts robot
+			if (this.state == KitProductionState.PENDING && !orders.isEmpty()){
+				sendKitConfigToPartRobot();
 				return true;
 			}
 		}
-		//if there is a kit pending and the order list isn't empty, then send an order to parts robot
-		if (this.state == KitProductionState.PENDING && !orders.isEmpty()){
-			sendKitConfigToPartRobot();
-			return true;
-		}
-
 
 		return false;
 	}
