@@ -549,9 +549,9 @@ public class FeederAgent extends Agent implements Feeder {
 		 */
 		else if (FeederHasDesiredPart && !TargetLaneHasDesiredPart && !TargetLaneIsEmpty)
 		{
+			purgeLane(targetLane);
 			state = FeederState.IS_FEEDING;
 			partRequested.state = MyPartRequestState.DELIVERED;
-			purgeLane(targetLane);
 		}
 
 
@@ -598,7 +598,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 
-		stateChanged();
+//		stateChanged();
 	}
 
 
@@ -818,6 +818,8 @@ public class FeederAgent extends Agent implements Feeder {
 	private void purgeLane(MyLane myLane){
 		myLane.state = MyLaneState.PURGING; // The lane is now purging		
 
+		DoStopFeeding(); // before you can purge the lane you must stop feeding to it.
+
 		// Call the purge lane animation for the appropriate lane
 		if (myLane == topLane)
 		{
@@ -928,8 +930,7 @@ public class FeederAgent extends Agent implements Feeder {
 	private void DoStartFeeding(Part part) {
 		if (debugMode == false)
 		{
-			server.command("fa lm cmd startfeeding " + feederNumber);
-
+			server.command("fa fpm cmd startfeeding " + feederNumber);
 			debug("Feeder " + feederNumber + " started feeding.");
 			try {
 				animation.acquire();
@@ -944,8 +945,8 @@ public class FeederAgent extends Agent implements Feeder {
 	private void DoStopFeeding() { 
 		if (debugMode == false) 
 		{
-			server.command("fa lm cmd stopfeeding " + feederNumber);
 			debug("stopped feeding.");
+			server.command("fa fpm cmd stopfeeding " + feederNumber);
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
@@ -962,8 +963,8 @@ public class FeederAgent extends Agent implements Feeder {
 
 		if (debugMode == false)
 		{
-			server.command("fa lm cmd purgefeeder " + feederNumber); /** TODO: MULTI **/
 			debug("purging feeder.");
+			server.command("fa fpm cmd purgefeeder " + feederNumber); /** TODO: MULTI **/
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
@@ -980,8 +981,8 @@ public class FeederAgent extends Agent implements Feeder {
 
 		if (debugMode == false)
 		{
-			server.command("fa lm cmd switchlane " + feederNumber);
 			debug("switching lane");
+			server.command("fa fpm cmd switchlane " + feederNumber);
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
@@ -1007,8 +1008,8 @@ public class FeederAgent extends Agent implements Feeder {
 
 		if (debugMode == false)
 		{
-			server.command("fa lm cmd purgetoplane " + feederNumber); /** TODO: MULTI **/
-			debug("purging top lane");
+			debug("purging lane top");
+			server.command("fa fpm cmd purgetoplane " + feederNumber); /** TODO: MULTI **/
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
@@ -1025,8 +1026,8 @@ public class FeederAgent extends Agent implements Feeder {
 
 		if (debugMode == false)
 		{
-			server.command("fa lm cmd purgebottomlane " + feederNumber); /** TODO: MULTI **/
-			debug("purging bottom lane");
+			debug("purging lane bottom");
+			server.command("fa fpm cmd purgebottomlane " + feederNumber); /** TODO: MULTI **/
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
