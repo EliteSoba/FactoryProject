@@ -283,19 +283,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoProcessNewKitConfiguration() {
 		debug("Executing DoProcessNewKitConfiguration()");
-		
-		// Reset the slots to empty
-		this.topSlot = null;
-		if(this.topSlotState == SlotState.BUILDING){
-			this.topSlotState = SlotState.EMPTY;
-		}
-		this.bottomSlot = null;
-		if(this.bottomSlotState == SlotState.BUILDING){
-			this.bottomSlotState = SlotState.EMPTY;
-		}
-		
-		// Tell the stand to clear stand
-		stand.msgClearStand();
+	
 		
 		// set parts to corresponding nests - this algorithm won't replace lanes that are needed in the new one but already present in the old
 		List<Integer> newNeeded = new ArrayList<Integer>();
@@ -353,6 +341,27 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		for(int i = 0; i < this.nests.size(); i ++)
 			nestsToVision.add(this.nests.get(i).nest);
 		this.vision.msgNewNestConfig(nestsToVision);
+		
+		// Reset the slots to empty
+		
+		if(this.topSlotState == SlotState.BUILDING && this.stand.getSlotKit("topSlot") != null && this.stand.getSlotKit("topSlot").parts.size() != 0){
+			this.topSlot = null;
+			this.topSlotState = SlotState.EMPTY;
+		}
+		else if(this.topSlotState == SlotState.BUILDING && this.stand.getSlotKit("topSlot") != null && this.stand.getSlotKit("topSlot").parts.size() == 0){
+			this.topSlot = currentKitConfiguration;
+		}
+		
+		if(this.bottomSlotState == SlotState.BUILDING && this.stand.getSlotKit("bottomSlot") != null && this.stand.getSlotKit("bottomSlot").parts.size() != 0){
+			this.bottomSlot = null;
+			this.bottomSlotState = SlotState.EMPTY;
+		}
+		else if(this.bottomSlotState == SlotState.BUILDING && this.stand.getSlotKit("bottomSlot") != null && this.stand.getSlotKit("bottomSlot").parts.size() == 0){
+			this.bottomSlot = currentKitConfiguration;
+		}
+		
+		// Tell the stand to clear stand
+		stand.msgClearStand();
 	}
 	
 	/**
