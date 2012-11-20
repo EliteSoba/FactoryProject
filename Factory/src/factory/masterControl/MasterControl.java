@@ -168,10 +168,10 @@ public class MasterControl {
 		l3b.setNest(n3b);   
 		
 		// Instantiate the Feeders
-		f0 = new FeederAgent("f0",0,l0t,l0b,gantry,vision,this);
-		f1 = new FeederAgent("f1",1,l1t,l1b,gantry,vision,this);
-		f2 = new FeederAgent("f2",2,l2t,l2b,gantry,vision,this);
-		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,vision,this);
+		f0 = new FeederAgent("f0",0,l0t,l0b,gantry,vision,this,false);
+		f1 = new FeederAgent("f1",1,l1t,l1b,gantry,vision,this,false);
+		f2 = new FeederAgent("f2",2,l2t,l2b,gantry,vision,this,false);
+		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,vision,this,false);
 		feederAgents = Arrays.asList(f0, f1, f2, f3);
 
 		// Set the Lane's Feeders
