@@ -190,6 +190,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		debug("####################");
 		debug("NO MORE ORDERS");
 		debug("####################");
+		this.stand.msgClearStand();
 		this.currentKitConfiguration = null;
 		this.currentKitConfigurationState = KitConfigState.EMPTY;
 		this.stateChanged();
