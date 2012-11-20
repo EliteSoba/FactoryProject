@@ -127,6 +127,8 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 * Message that is received from the Stand and tells us which kit to build
 	 */
 	public void msgBuildKitAtSlot(String slot) {
+		debug("Received msgBuildKitAtSlot("+slot+")");
+
 		if (slot.equals("topSlot")){
 			this.topSlotState = SlotState.BUILD_REQUESTED;
 		}
@@ -292,6 +294,11 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	public void DoProcessNewKitConfiguration() {
 		debug("Executing DoProcessNewKitConfiguration()");
 	
+
+		if(currentKitConfiguration == null){
+			debug("AAAAAAAAAAAAAAAAA");
+			System.exit(0);
+		}
 		
 		// set parts to corresponding nests - this algorithm won't replace lanes that are needed in the new one but already present in the old
 		List<Integer> newNeeded = new ArrayList<Integer>();
@@ -327,7 +334,6 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 				currentNotNeeded.add(i);
 			}
 		} 
-		
 		for(int i = 0; i < currentNotNeeded.size(); i++){
 			nests.get(currentNotNeeded.get(i)).part = currentKitConfiguration.listOfParts.get(newNeeded.get(i));
 			nests.get(currentNotNeeded.get(i)).partCoordinate = -1;

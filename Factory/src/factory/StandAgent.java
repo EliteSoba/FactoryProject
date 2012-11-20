@@ -366,7 +366,7 @@ public class StandAgent extends Agent implements Stand {
 	}
 	
 	public void DoTellKitRobotToClearStand(){
-		debug("Executing DoTellKitRobotToClearStand()");
+		debug("Executing DoTellKitRobotToClearStand() -- " + this.state + " kr: " + KitRobotState.WANTS_ACCESS);
 		kitRobot.msgClearTheStandOff();
 		this.needToClearStand = false;
 	}
