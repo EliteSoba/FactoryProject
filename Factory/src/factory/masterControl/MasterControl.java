@@ -839,19 +839,10 @@ public class MasterControl {
 
        
 
-//		// TEMPORARY, FOR TESTING PURPOSES:
-//		Part p0 = new Part("eye",000,"desc","imgPath",2);
-//		Part p1 = new Part("eye",000,"desc","imgPath",3);
-//		Part p2 = new Part("shoe",001,"desc","imgPath",3);
-//		Part p3 = new Part("shoe",001,"desc","imgPath",3);
-//		Part p4 = new Part("sword",002,"desc","imgPath",4);
-//		Part p5 = new Part("tentacle",003,"desc","imgPath",4);
-//		
-//
-//        mc.n0b.msgYouNeedPart(p2); // shoe
-//        mc.n0t.msgYouNeedPart(p0); // eye
 
-        
+//        mc.n0b.msgYouNeedPart(p2);
+//        mc.n0t.msgYouNeedPart(p0);
+
 //        mc.n1t.msgYouNeedPart(p1);
 //        mc.n1b.msgYouNeedPart(p3);
 //        

@@ -570,8 +570,8 @@ public class FeederAgent extends Agent implements Feeder {
 		 */
 		else if (!FeederHasDesiredPart && !TargetLaneHasDesiredPart && !TargetLaneIsEmpty)
 		{
-			purgeFeeder();  
 			purgeLane(targetLane);
+			purgeFeeder();  
 			state = FeederState.WAITING_FOR_PARTS;
 			partRequested.state = MyPartRequestState.ASKED_GANTRY;
 			gantry.msgFeederNeedsPart(partRequested.pt, this);
