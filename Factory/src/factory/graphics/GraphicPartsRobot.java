@@ -60,9 +60,9 @@ class GraphicPartsRobot extends GraphicRobot
 		// The parts robot will prioritize: right, up, down, left
 		movementCheckingOrders = new int[4];
 		movementCheckingOrders[0] = 1;
-		movementCheckingOrders[1] = 0;
-		movementCheckingOrders[2] = 2;
-		movementCheckingOrders[3] = 3;
+		movementCheckingOrders[1] = 3;
+		movementCheckingOrders[2] = 0;
+		movementCheckingOrders[3] = 2;
 	}
 	
 	/**
