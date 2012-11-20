@@ -379,23 +379,25 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		
 		debug("Executing moveToInspectionSpot for the" + pos);
 		
-		if (!isUnitTesting) {
-			DoMoveKitToInspection(pos);
+		if (stand.getSlotKit(pos) != null) {
+		
+			if (!isUnitTesting) {
+				DoMoveKitToInspection(pos);
+			}
+			
+			debug("Animation moveKitFromSlotToInspection() was completed");
+			
+			stand.setSlotKit("inspectionSlot", stand.getSlotKit(pos));
+			stand.setSlotKit(pos, null);
+			stand.setSlotState("inspectionSlot", MySlotState.KIT_JUST_PLACED_AT_INSPECTION);
+			stand.setSlotState(pos, MySlotState.EMPTY);	
 		}
-		
-		debug("Animation moveKitFromSlotToInspection() was completed");
-		
-		stand.setSlotKit("inspectionSlot", stand.getSlotKit(pos));
-		stand.setSlotKit(pos, null);
-		stand.setSlotState("inspectionSlot", MySlotState.KIT_JUST_PLACED_AT_INSPECTION);
-		stand.setSlotState(pos, MySlotState.EMPTY);
-		
-		
 		if (pos.equals("bottomSlot")) {
 			actions.remove(StandInfo.NEED_INSPECTION_BOTTOM);
 		} else if (pos.equals("topSlot")) {
 			actions.remove(StandInfo.NEED_INSPECTION_TOP);
 		}
+		
 		stand.msgKitRobotNoLongerUsingStand();
 		
 		stateChanged();
