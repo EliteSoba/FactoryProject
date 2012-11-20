@@ -22,7 +22,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public int WIDTH, HEIGHT;
 	public static final Image TILE_IMAGE = Toolkit.getDefaultToolkit().getImage("Images/Tiles/floorTileXGrill.png");
 	public static final int TILE_SIZE = 128;
+<<<<<<< HEAD
 	public static final int DELAY = 4;
+=======
+	public static final int DELAY = 50;
+>>>>>>> Delay back to normal
 	
 	protected Client am; //The Client that holds this
 	
