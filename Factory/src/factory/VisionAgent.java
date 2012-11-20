@@ -1,6 +1,7 @@
 package factory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import agent.Agent;
 import java.util.*;
@@ -23,7 +24,7 @@ public class VisionAgent extends Agent implements Vision {
 	Stand stand;
 	Random r = new Random();
 	Semaphore pictureAllowed = new Semaphore(1);
-	
+	ArrayList<Nest> nests;
 	public VisionAgent(PartsRobot partsRobot, Stand stand, MasterControl mc){
 		super(mc);
 		this.partsRobot = partsRobot;
@@ -43,13 +44,17 @@ public class VisionAgent extends Agent implements Vision {
 	class PictureRequest {
 	      
 	      Nest nestOne;
+	      Part nestOnePart;
+	      Part nestTwoPart;
 	      Nest nestTwo;
 	      PictureRequestState state;
 	      Feeder feeder;
 
-	      public PictureRequest(Nest nestOne, Nest nestTwo, Feeder feeder){
+	      public PictureRequest(Nest nestOne, Part nestOnePart, Nest nestTwo, Part nestTwoPart, Feeder feeder){
 	            this.state = PictureRequestState.NESTS_READY;
 	            this.nestOne = nestOne;
+	            this.nestOnePart = nestOnePart;
+	            this.nestOnePart = nestOnePart;
 	            this.nestTwo = nestTwo;
 	            this.feeder = feeder;
 	      }
@@ -64,9 +69,13 @@ public class VisionAgent extends Agent implements Vision {
 		this.stateChanged();
 	}
 	
-	public void msgMyNestsReadyForPicture(Nest nestOne, Nest nestTwo, Feeder feeder) {
+	public void msgNewNestConfig( ArrayList<Nest> nests){
+		this.nests = nests;
+	}
+	
+	public void msgMyNestsReadyForPicture(Nest nestOne, Part nestOnePart, Nest nestTwo, Part nestTwoPart, Feeder feeder) {
 		debug("msgMyNestsReadyForPicture("+nestOne.getPart().name+","+nestTwo.getPart().name+")");
-		picRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
+		picRequests.add(new PictureRequest(nestOne, nestOnePart, nestTwo,  nestOnePart, feeder));
 		this.stateChanged();
 	}
 		
@@ -101,7 +110,21 @@ public class VisionAgent extends Agent implements Vision {
 		
 		for(PictureRequest pr: picRequests){
 			if(pr.state == PictureRequestState.PARTS_ROBOT_CLEAR){
-				takePicture(pr);
+				Nest one = this.nests.get(this.nests.indexOf(pr.nestOne));
+				Nest two = this.nests.get(this.nests.indexOf(pr.nestTwo));
+				
+				if(one.getPart().name == pr.nestOne.getPart().name && two.getPart().name == pr.nestTwo.getPart().name){
+					takePicture(pr);
+				}
+				else {
+					debug("#################");
+					debug("#################");
+					debug("#################");
+					debug("WRONG PICTURE!!!");
+					debug("#################");
+					debug("#################");
+					debug("#################");
+				}
 				return true;
 			}
 		}

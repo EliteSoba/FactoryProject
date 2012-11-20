@@ -47,10 +47,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	}
 	
 	public void msgClearTheStandOff() {
-		/**
-		 * Telling the KitRobot to dump any Kits that are not yet completed.
-		 * the kits that are are already in need of inspection or in the inspectionSlot will not be disturbed
-		 */
+		debug("Receieved msgClearTheStandOff(), now knows to clear off the stand");
 		if (!actions.contains(StandInfo.CLEAR_OFF_UNFINISHED_KITS)) {
 			actions.add(StandInfo.CLEAR_OFF_UNFINISHED_KITS);
 		}
@@ -316,7 +313,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		}
 		
 		if (stand.getSlotKit("topSlot") != null) {
-			if (stand.getSlotKit("topSlot").state.equals(KitState.INCOMPLETE)) {
+			if (stand.getSlotKit("topSlot").parts.size() != 0) {
 				//do animation of dumping topSlot
 				if (!isUnitTesting) {
 					DoDumpKitAtSlot("topSlot");
@@ -326,13 +323,21 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			}
 		}
 		if (stand.getSlotKit("bottomSlot") != null) {
-			if (stand.getSlotKit("bottomSlot").state.equals(KitState.INCOMPLETE)) {
+			if (stand.getSlotKit("bottomSlot").parts.size() != 0) {
 				//do animation of dumping bottomSlot
 				if (!isUnitTesting) {
 					DoDumpKitAtSlot("bottomSlot");
 				}
 				stand.setSlotKit("bottomSlot", null);
 				stand.setSlotState("bottomSlot", MySlotState.EMPTY);
+			}
+		}
+		
+		if (stand.getSlotKit("inspectionSlot") != null) {
+			if (!isUnitTesting) {
+				DoDumpKitAtSlot("inspectionSlot");
+				stand.setSlotKit("inspectionSlot", null);
+				stand.setSlotState("inspectionSlot", MySlotState.EMPTY);
 			}
 		}
 		
