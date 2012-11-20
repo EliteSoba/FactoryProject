@@ -349,6 +349,10 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		if(this.armOne != null || this.armTwo != null || this.armThree != null || this.armFour != null){
 			DoClearArms();
 		}
+		ArrayList<Nest> nestsToVision = new ArrayList<Nest>();
+		for(int i = 0; i < this.nests.size(); i ++)
+			nestsToVision.add(this.nests.get(i).nest);
+		this.vision.msgNewNestConfig(nestsToVision);
 	}
 	
 	/**
