@@ -60,7 +60,8 @@ public class MockPartsRobot extends MockAgent implements PartsRobot {
 
 	@Override
 	public void msgNoMoreOrders() {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent(
+				"Received message msgNoMoreOrders from the FCS"));
 		
 	}
 

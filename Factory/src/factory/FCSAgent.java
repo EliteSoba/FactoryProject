@@ -106,7 +106,7 @@ public class FCSAgent extends Agent implements FCS{
 
 		//if the number of kits exported is greater than or equal to the quantity of the order, state should be finished
 		if(!orders.isEmpty()){
-			if(kitsExportedCount >= orders.peek().quantity){
+			if(kitsExportedCount >= orders.peek().quantity /*&& this.state == KitProductionState.PRODUCING*/){
 				finishKits();
 				return true;
 			}
