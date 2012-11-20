@@ -3,6 +3,7 @@ package factory.test;
 import factory.FeederAgent;
 import factory.FeederAgent.DiverterState;
 import factory.FeederAgent.FeederState;
+import factory.FeederAgent.MyLane;
 import factory.FeederAgent.MyLaneState;
 import factory.FeederAgent.MyPartRequest;
 import factory.FeederAgent.MyPartRequestState;
@@ -22,7 +23,7 @@ public class FeederTests extends TestCase{
 	FeederAgent feeder;
 	MockLane top, bottom;
 	MockGantry gantry;
-	Part p1,p2,p3;
+	Part p1,p2,p3,p4,p5,p6;
 	
 	/**
 	 * Sets up the standard configuration for easy testing.
@@ -37,9 +38,12 @@ public class FeederTests extends TestCase{
 		feeder.diverter = DiverterState.FEEDING_BOTTOM; // initial setting to test the switching of the lane diverter
 		
 		
-		p1 = new Part("eye",000,"desc","imgPath",2);
-		p2 = new Part("shoe",001,"desc","imgPath",3);
-		p3 = new Part("sword",002,"desc","imgPath",3);
+		p1 = new Part("eye",001,"desc","imgPath",2);
+		p2 = new Part("shoe",002,"desc","imgPath",3);
+		p3 = new Part("sword",003,"desc","imgPath",3);
+		p4 = new Part("arm",004,"desc","imgPath",3);
+		p5 = new Part("hat",005,"desc","imgPath",3);
+		p6 = new Part("tentacle",006,"desc","imgPath",3);
 
 	}
 	
@@ -50,12 +54,122 @@ public class FeederTests extends TestCase{
 	public void testPreconditions() {
 		// Makes sure there aren't any parts in the feeder initially.
 		assertEquals(feeder.requestedParts.size(),0);
+		assertEquals(feeder.currentPart,null);
+		assertEquals(feeder.topLane.part,null);
+		assertEquals(feeder.bottomLane.part,null);
 		assertEquals(feeder.feederNumber,0);
-		System.out.println("feeder name = " + feeder.getName());
-
-		assertEquals(feeder.getName(),"f0");
 		
 	}
+	
+	/* SCENARIO #1: The very first part fed into the Feeder.
+	 * The Feeder is empty.
+	 * The target lane is empty.
+	 */
+	public void testScenario1() {
+		
+		// Test Preconditions:
+		assertTrue(feeder.currentPart == null); // the feeder is empty
+		assertTrue(feeder.topLane.part == null); // the target lane is empty
+		
+		// Run the scenario test:
+		feeder.msgLaneNeedsPart(p1, top);
+		feeder.pickAndExecuteAnAction(); // for checking the nests
+		feeder.pickAndExecuteAnAction();
+
+		// Test Postconditions:
+		assertTrue(feeder.state == FeederState.WAITING_FOR_PARTS);
+		for(MyPartRequest mpr : feeder.requestedParts)
+		{
+			if (mpr.pt == p1)
+			{
+				assertTrue(mpr.state == MyPartRequestState.ASKED_GANTRY);
+			}
+		}
+    	assertTrue("Gantry should receive msgFeederNeedsPart(...). Event log: "+ gantry.log.toString(),gantry.log.containsString("msgFeederNeedsPart(...)"));
+	}
+	
+	
+	
+//	else if (!FeederHasDesiredPart && (TargetLaneHasDesiredPart || TargetLaneIsEmpty))
+//	{
+//		purgeFeeder();  
+//		state = FeederState.WAITING_FOR_PARTS;
+//		partRequested.state = MyPartRequestState.ASKED_GANTRY;
+//		gantry.msgFeederNeedsPart(partRequested.pt, this);
+//	}
+	
+	
+	/* SCENARIO #7: The Feeder has the right part and the target lane has the wrong part.
+	 * The Feeder has the right part.
+	 * The target lane has the wrong part.
+	 * This is the only known bug right now in the FeederAgent.
+	 */
+	public void testScenario6() {
+		// Set up test scenario
+		feeder.msgLaneNeedsPart(p1, top);
+		feeder.pickAndExecuteAnAction(); // for checking the nests
+		feeder.pickAndExecuteAnAction();
+
+		feeder.msgHereAreParts(p1);
+		
+		feeder.msgLaneNeedsPart(p2, bottom);
+		feeder.pickAndExecuteAnAction(); // for checking the nests
+		feeder.pickAndExecuteAnAction();
+
+		feeder.msgHereAreParts(p2);
+		
+		feeder.msgLaneNeedsPart(p3, top); // the new part that is requested
+		feeder.pickAndExecuteAnAction(); // for checking the nests
+		feeder.pickAndExecuteAnAction();
+		
+		feeder.msgHereAreParts(p3);
+		
+		feeder.msgLaneNeedsPart(p3, bottom); 
+
+		MyPartRequest requestedPart = null;
+		for(MyPartRequest mpr : feeder.requestedParts)
+		{
+			if (mpr.pt == p3 && mpr.lane == bottom)
+			{
+				requestedPart = mpr;
+			}
+		}
+		
+		assertTrue(requestedPart != null);
+		assertTrue(requestedPart.pt == p3);
+		assertTrue(feeder.currentPart == p3);
+		
+		MyLane targetLane = null;
+		if (feeder.topLane.lane == requestedPart.lane)
+			targetLane = feeder.topLane;
+		else if (feeder.bottomLane.lane == requestedPart.lane)
+			targetLane = feeder.bottomLane;
+		
+		
+		
+		
+		// Test Preconditions:
+		assertTrue(feeder.currentPart.id == requestedPart.pt.id); // feeder has the right part
+		assertTrue(targetLane.part.id != requestedPart.pt.id);    // lane has the wrong part
+		
+		assertTrue(feeder.currentPart.id == p3.id);  // more specific
+		assertTrue(targetLane.part.id == p2.id); // more specific
+
+		
+		
+		// Run the scenario test:
+		feeder.pickAndExecuteAnAction(); // for checking the nests
+		feeder.pickAndExecuteAnAction();
+		
+		
+		// Test Postconditions:
+		assertTrue(feeder.currentPart.id == p3.id);
+		assertTrue(targetLane.part.id == p3.id);
+		
+		assertTrue(feeder.topLane.part.id == p3.id); // and just make sure this hasn't changed for any reason
+		
+	}
+	
 	
 	/** 
 	 * This test makes sure that the Feeder's lanes are getting set up properly.
