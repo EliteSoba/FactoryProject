@@ -91,7 +91,9 @@ public class FCSAgent extends Agent implements FCS{
 	 * @param kit This is the kit that was just exported
 	 */
 	public void msgKitIsExported(Kit kit){
-		kitsExportedCount++;
+		if(this.state == KitProductionState.PRODUCING){
+			kitsExportedCount++;
+		}
 		stateChanged();
 	}
 
@@ -105,7 +107,8 @@ public class FCSAgent extends Agent implements FCS{
 				startProducingNextKit();
 				return true;
 			}
-
+		}
+		synchronized(orders){
 
 			//if the number of kits exported is greater than or equal to the quantity of the order, state should be finished
 			if(!orders.isEmpty()){
@@ -131,7 +134,6 @@ public class FCSAgent extends Agent implements FCS{
 	 */
 	private void finishKits() {
 		this.state = KitProductionState.FINISHED;
-		stateChanged();
 	}
 	/**
 	 * Passes down the new Kit Configuration to the PartsRobot Agent
@@ -143,7 +145,6 @@ public class FCSAgent extends Agent implements FCS{
 		this.partsRobot.msgMakeKit(orders.peek()); //TODO uncomment this for v1 implementation
 		debug("Sent msgMakeKit to partsRobot.  Number of orders in queue: " + orders.size() + " (KIT: " + orders.peek().kitName+")");
 		this.state = KitProductionState.PRODUCING;
-		stateChanged();
 	}
 
 	/**
@@ -157,7 +158,6 @@ public class FCSAgent extends Agent implements FCS{
 			debug("Sent msgNoMoreOrders to partsRobot");
 		}
 		this.state = KitProductionState.PENDING;
-		stateChanged();
 	}
 
 	// *** OTHER METHODS ***

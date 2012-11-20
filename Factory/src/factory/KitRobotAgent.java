@@ -122,13 +122,13 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				return true;
 			}
 			
-			if (actions.contains(StandInfo.KIT_GOOD) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
-				exportKit();
+			if (actions.contains(StandInfo.CLEAR_OFF_UNFINISHED_KITS)) {
+				clearOffStand();
 				return true;
 			}
 			
-			if (actions.contains(StandInfo.CLEAR_OFF_UNFINISHED_KITS)) {
-				clearOffStand();
+			if (actions.contains(StandInfo.KIT_GOOD) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
+				exportKit();
 				return true;
 			}
 			
@@ -301,6 +301,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		 * KitRobot will dump any Kits that are not yet completed.
 		 * the kits that are are already in need of inspection or in the inspectionSlot will not be disturbed
 		 */
+		
 		stand.msgKitRobotWantsStandAccess();
 		
 		if (!isUnitTesting) {

@@ -49,7 +49,7 @@ public abstract class Agent {
 	}
 
 	protected void debug(String msg) {
-		if(false) {
+		if(true) {
 			print(msg, null);
 		}
 	}

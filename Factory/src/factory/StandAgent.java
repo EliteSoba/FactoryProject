@@ -192,7 +192,7 @@ public class StandAgent extends Agent implements Stand {
 			/**
 			 * If there is a Kit in the Inspection Slot that has been analyzed, then ask KitRobot to process it 
 			 */
-			if (state == StandAgentState.FREE && inspectionSlot.state == MySlotState.KIT_ANALYZED) {
+			if (state == StandAgentState.FREE && inspectionSlot.state == MySlotState.KIT_ANALYZED && this.kr_state != KitRobotState.WANTS_ACCESS) {
 				DoProcessAnalyzedKit();
 				return true;
 			}
@@ -213,12 +213,12 @@ public class StandAgent extends Agent implements Stand {
 			 * If there is a completed kit and the stand is not being used
 			 */
 			if (state == StandAgentState.FREE && topSlot.kit != null && topSlot.kit.state == KitState.COMPLETE 
-					&& topSlot.state == MySlotState.BUILDING_KIT && inspectionSlot.state == MySlotState.EMPTY) {
+					&& topSlot.state == MySlotState.BUILDING_KIT && inspectionSlot.state == MySlotState.EMPTY && needToClearStand!=true) {
 			   DoTellKitRobotToMoveKitToInspectionSlot(topSlot);
 			   return true;
 			}
 			if (state == StandAgentState.FREE && bottomSlot.kit != null && bottomSlot.kit.state == KitState.COMPLETE 
-					&& bottomSlot.state == MySlotState.BUILDING_KIT && inspectionSlot.state == MySlotState.EMPTY) {
+					&& bottomSlot.state == MySlotState.BUILDING_KIT && inspectionSlot.state == MySlotState.EMPTY && needToClearStand!=true) {
 			   DoTellKitRobotToMoveKitToInspectionSlot(bottomSlot);
 			   return true;
 			}
@@ -360,7 +360,7 @@ public class StandAgent extends Agent implements Stand {
 	 * Method that tells the KitRobot to process the Kit
 	 */
 	private void DoProcessAnalyzedKit() {
-		debug("Executing DoProcessAnalyzedKit()");
+		debug("Executing DoProcessAnalyzedKit() -- " + this.state + " kr: " + KitRobotState.WANTS_ACCESS);
 		kitRobot.msgComeProcessAnalyzedKitAtInspectionSlot();
 		inspectionSlot.state = MySlotState.PROCESSING_ANALYZED_KIT;                    
 	}
