@@ -54,6 +54,7 @@ public class FeederTests extends TestCase{
 	public void testPreconditions() {
 		// Makes sure there aren't any parts in the feeder initially.
 		assertEquals(feeder.requestedParts.size(),0);
+		assertTrue(feeder.requestedParts != null);
 		assertEquals(feeder.currentPart,null);
 		assertEquals(feeder.topLane.part,null);
 		assertEquals(feeder.bottomLane.part,null);
@@ -65,28 +66,28 @@ public class FeederTests extends TestCase{
 	 * The Feeder is empty.
 	 * The target lane is empty.
 	 */
-	public void testScenario1() {
-		
-		// Test Preconditions:
-		assertTrue(feeder.currentPart == null); // the feeder is empty
-		assertTrue(feeder.topLane.part == null); // the target lane is empty
-		
-		// Run the scenario test:
-		feeder.msgLaneNeedsPart(p1, top);
-		feeder.pickAndExecuteAnAction(); // for checking the nests
-		feeder.pickAndExecuteAnAction();
-
-		// Test Postconditions:
-		assertTrue(feeder.state == FeederState.WAITING_FOR_PARTS);
-		for(MyPartRequest mpr : feeder.requestedParts)
-		{
-			if (mpr.pt == p1)
-			{
-				assertTrue(mpr.state == MyPartRequestState.ASKED_GANTRY);
-			}
-		}
-    	assertTrue("Gantry should receive msgFeederNeedsPart(...). Event log: "+ gantry.log.toString(),gantry.log.containsString("msgFeederNeedsPart(...)"));
-	}
+//	public void testScenario1() {
+//		
+//		// Test Preconditions:
+//		assertTrue(feeder.currentPart == null); // the feeder is empty
+//		assertTrue(feeder.topLane.part == null); // the target lane is empty
+//		
+//		// Run the scenario test:
+//		feeder.msgLaneNeedsPart(p1, top);
+//		feeder.pickAndExecuteAnAction(); // for checking the nests
+//		feeder.pickAndExecuteAnAction();
+//
+//		// Test Postconditions:
+//		assertTrue(feeder.state == FeederState.WAITING_FOR_PARTS);
+//		for(MyPartRequest mpr : feeder.requestedParts)
+//		{
+//			if (mpr.pt == p1)
+//			{
+//				assertTrue(mpr.state == MyPartRequestState.ASKED_GANTRY);
+//			}
+//		}
+//    	assertTrue("Gantry should receive msgFeederNeedsPart(...). Event log: "+ gantry.log.toString(),gantry.log.containsString("msgFeederNeedsPart(...)"));
+//	}
 	
 	
 	
@@ -111,20 +112,40 @@ public class FeederTests extends TestCase{
 		feeder.pickAndExecuteAnAction();
 
 		feeder.msgHereAreParts(p1);
+		feeder.pickAndExecuteAnAction();
+		feeder.pickAndExecuteAnAction();
 		
+		assertTrue(feeder.requestedParts.size() == 0);
+
 		feeder.msgLaneNeedsPart(p2, bottom);
 		feeder.pickAndExecuteAnAction(); // for checking the nests
 		feeder.pickAndExecuteAnAction();
+		feeder.pickAndExecuteAnAction();
 
+		
 		feeder.msgHereAreParts(p2);
+		feeder.pickAndExecuteAnAction();
+		feeder.pickAndExecuteAnAction();
+		feeder.pickAndExecuteAnAction();
+
+		
+		assertTrue(feeder.requestedParts.size() == 0);
+		assertTrue(feeder.topLane.part.id == p1.id);
+		assertTrue(feeder.bottomLane.part.id == p2.id);
+		assertTrue(feeder.currentPart.id == p2.id);
 		
 		feeder.msgLaneNeedsPart(p3, top); // the new part that is requested
 		feeder.pickAndExecuteAnAction(); // for checking the nests
 		feeder.pickAndExecuteAnAction();
 		
 		feeder.msgHereAreParts(p3);
+		feeder.pickAndExecuteAnAction();
+		feeder.pickAndExecuteAnAction();
+		
 		
 		feeder.msgLaneNeedsPart(p3, bottom); 
+		feeder.pickAndExecuteAnAction(); // for checking the nests
+		feeder.pickAndExecuteAnAction();
 
 		MyPartRequest requestedPart = null;
 		for(MyPartRequest mpr : feeder.requestedParts)
@@ -160,7 +181,10 @@ public class FeederTests extends TestCase{
 		// Run the scenario test:
 		feeder.pickAndExecuteAnAction(); // for checking the nests
 		feeder.pickAndExecuteAnAction();
-		
+	
+		feeder.msgHereAreParts(p3);
+		feeder.pickAndExecuteAnAction();
+		feeder.pickAndExecuteAnAction();
 		
 		// Test Postconditions:
 		assertTrue(feeder.currentPart.id == p3.id);
