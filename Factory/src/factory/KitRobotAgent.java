@@ -248,6 +248,8 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stand.setSlotState("inspectionSlot", MySlotState.EMPTY);
 		conveyor_state = ConveyorStatus.COMPLETED_KIT;
 		actions.remove(StandInfo.KIT_GOOD);
+		
+		debug("Kit exported, telling the Stand it is done");
 		stand.msgKitRobotNoLongerUsingStand();
 		
 		stateChanged();
