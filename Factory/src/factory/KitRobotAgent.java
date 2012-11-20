@@ -331,6 +331,9 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				}
 				stand.setSlotKit("bottomSlot", null);
 				stand.setSlotState("bottomSlot", MySlotState.EMPTY);
+				if (actions.contains(StandInfo.NEED_INSPECTION_BOTTOM)) {
+					actions.remove(StandInfo.NEED_INSPECTION_BOTTOM);
+				}
 			}
 		}
 		
@@ -339,6 +342,9 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				DoDumpKitAtSlot("inspectionSlot");
 				stand.setSlotKit("inspectionSlot", null);
 				stand.setSlotState("inspectionSlot", MySlotState.EMPTY);
+				if (actions.contains(StandInfo.NEED_INSPECTION_TOP)) {
+					actions.remove(StandInfo.NEED_INSPECTION_TOP);
+				}
 			}
 		}
 		
