@@ -218,20 +218,21 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  It is the end of a chain of messages originally sent by the PartsRobot.
 	 */
 	public void msgLaneNeedsPart(Part part, Lane lane) {
-		MyLane targetLane = null;
-		
-		if (topLane.lane == lane)
-			targetLane = topLane;
-		else
-			targetLane = bottomLane;
+//		MyLane targetLane = null;
+//		
+//		if (topLane.lane == lane)
+//			targetLane = topLane;
+//		else
+//			targetLane = bottomLane;
 		
 		if (lane != null && part != null)
 		{
-			if (lane.getNest().getPart() != null)
-			{
-			if (lane.getNest().getPart().id != part.id)
-				purgeLane(targetLane);
-			}
+//			if (lane.getNest().getPart() != null)
+//			{
+//			if (lane.getNest().getPart().id != part.id)
+//				purgeLane(targetLane);
+//			}
+			
 			requestedParts.add(new MyPartRequest(part, lane)); // add this part request to the list of part requests
 		}
 		stateChanged();
