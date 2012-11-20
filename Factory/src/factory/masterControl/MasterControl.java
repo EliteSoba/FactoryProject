@@ -168,10 +168,10 @@ public class MasterControl {
 		l3b.setNest(n3b);   
 		
 		// Instantiate the Feeders
-		f0 = new FeederAgent("f0",0,l0t,l0b,gantry,vision,this,false);
-		f1 = new FeederAgent("f1",1,l1t,l1b,gantry,vision,this,false);
-		f2 = new FeederAgent("f2",2,l2t,l2b,gantry,vision,this,false);
-		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,vision,this,false);
+		f0 = new FeederAgent("f0",0,l0t,l0b,gantry,vision,this,false,true);
+		f1 = new FeederAgent("f1",1,l1t,l1b,gantry,vision,this,false,false);
+		f2 = new FeederAgent("f2",2,l2t,l2b,gantry,vision,this,false,false);
+		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,vision,this,false,false);
 		feederAgents = Arrays.asList(f0, f1, f2, f3);
 
 		// Set the Lane's Feeders
@@ -386,13 +386,13 @@ public class MasterControl {
 		// 3 = Cmd OR if cnf, this would be optional identifier
 		// 4+ = Parameters
 
-		System.out.print("agentCmd() = ");
-		for (String c : cmd)
-		{
-			System.out.print(c + " ");
-		}
-
-        System.out.println();
+//		System.out.print("agentCmd() = ");
+//		for (String c : cmd)
+//		{
+//			System.out.print(c + " ");
+//		}
+//
+//        System.out.println();
 
 		if(cmd.get(2).equals("cnf")){
 
@@ -593,8 +593,8 @@ public class MasterControl {
 
 		String fullCmd = envelopeCmd(c, d);
 
-		System.out.println("Server received ... "+cmd+" from "+a);
-		System.out.println("Server is about to send ... "+fullCmd);
+//		System.out.println("Server received ... "+cmd+" from "+a);
+//		System.out.println("Server is about to send ... "+fullCmd);
 
 		if(b.equals("multi")){
 			ArrayList<PartHandler> destinations = getDestinations(cmd.get(3));

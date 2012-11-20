@@ -34,6 +34,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	public boolean myNestsHaveBeenChecked = false;
 	public boolean debugMode;
+	public boolean printDebugStatements;
 	public Part currentPart;
 	Bin dispenserBin; // need to use this
 
@@ -111,7 +112,8 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 
-	public FeederAgent(String nameStr,int slot, Lane top, Lane bottom, Gantry g, Vision v, MasterControl mc, boolean debug) {
+	public FeederAgent(String nameStr,int slot, Lane top, Lane bottom, Gantry g, 
+			Vision v, MasterControl mc, boolean debug, boolean printStatements) {
 		super(mc);
 		this.topLane = new MyLane(top);
 		this.bottomLane = new MyLane(bottom);
@@ -119,6 +121,7 @@ public class FeederAgent extends Agent implements Feeder {
 		this.vision = v;
 		this.feederNumber = slot;
 		this.debugMode = debug;
+		this.printDebugStatements = printStatements;
 	}
 
 
@@ -892,7 +895,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	private void startFeeding(){
-		debug("action start feeding.");
+		//debug("action start feeding.");
 
 		state = FeederState.IS_FEEDING; // we want to feed until the feeder's state changes to OK_TO_PURGE
 		
@@ -913,7 +916,7 @@ public class FeederAgent extends Agent implements Feeder {
 		// into its appropriate lane
 
 
-		stateChanged();
+		//stateChanged();
 	}
 
 
@@ -977,8 +980,9 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** Animation that clears all of the parts out of the Feeder. */
 	private void DoPurgeFeeder() {
-		log.add(new LoggedEvent(
-				"Animation DoPurgeFeeder()"));
+//		// we need to wait a second so we don't receive a double message from 
+//        long timeToQuit = System.currentTimeMillis() + 1000;
+//        while (System.currentTimeMillis() < timeToQuit);		 
 
 		if (debugMode == false)
 		{
@@ -1022,9 +1026,6 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** Animation that clears all of the parts out of the Feeder's top lane. */
 	private void DoPurgeTopLane() {
-		log.add(new LoggedEvent(
-				"Animation DoPurgeTopLane()"));
-
 		if (debugMode == false)
 		{
 			debug("purging lane top");
@@ -1040,9 +1041,6 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** Animation that clears all of the parts out of the Feeder's bottom lane. */
 	private void DoPurgeBottomLane() {
-		log.add(new LoggedEvent(
-				"Animation DoPurgeBottomLane()"));
-
 		if (debugMode == false)
 		{
 			debug("purging lane bottom");
@@ -1087,7 +1085,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** Overriding this for debugging purposes - only print the Feeder debug statements. */
 	protected void debug(String msg) {
-		if(true) {
+		if(this.printDebugStatements) {
 			print(msg, null);
 		}
 	}
