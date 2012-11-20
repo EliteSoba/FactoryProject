@@ -117,6 +117,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 * Message that is received from the FCS when a new kit configuration comes in.
 	 */
 	public void msgMakeKit(KitConfig kitConfig) {
+		debug("Received msgMakeKit("+kitConfig.kitName+")");
 		this.currentKitConfiguration = kitConfig;
 		this.currentKitConfigurationState = KitConfigState.REQUESTED;
 		this.stateChanged();
