@@ -120,11 +120,11 @@ public class NestAgent extends Agent implements Nest {
 			tellMyLaneIHaveBecomeStable();
 			return true;
 		}
-		else if (nestState == NestState.NEEDS_TO_DUMP)
-		{
-			//dump();
-			return true;
-		}
+//		else if (nestState == NestState.NEEDS_TO_DUMP)
+//		{
+//			//dump();
+//			return true;
+//		}
 		else if (nestState == NestState.PART_REMOVED)
 		{
 			tellMyLaneIHaveBecomeUnstable(); // same thing as becoming unstable as far as the lane is concerned
@@ -219,6 +219,5 @@ public class NestAgent extends Agent implements Nest {
 	
 
 }
-
 
 
