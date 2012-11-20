@@ -138,7 +138,7 @@ public class FCSAgent extends Agent implements FCS{
 		/**THIS IS TEMPORARY, //TODO for now send message to gantry instead of parts robot to test swing->agent->animation**/
 		//		this.gantry.msgFeederNeedsPart(partsList.get("Shoe"), this.masterControl.f0); //comment this out for unit testing
 		this.partsRobot.msgMakeKit(orders.peek()); //TODO uncomment this for v1 implementation
-		debug("Sent msgMakeKit to partsRobot.  Number of orders in queue: " + orders.size());
+		debug("Sent msgMakeKit to partsRobot.  Number of orders in queue: " + orders.size() + " (KIT: " + orders.peek().kitName+")");
 		this.state = KitProductionState.PRODUCING;
 		stateChanged();
 	}
