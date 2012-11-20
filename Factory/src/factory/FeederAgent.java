@@ -277,7 +277,8 @@ public class FeederAgent extends Agent implements Feeder {
 				{
 					if (p.state == MyPartRequestState.NEEDED)
 					{
-						askGantryForPart(p);
+						//askGantryForPart(p);
+						handlePartRequest(p);
 						return true;
 					}
 				}
@@ -301,7 +302,8 @@ public class FeederAgent extends Agent implements Feeder {
 			{
 				if (p.state == MyPartRequestState.DELIVERED)
 				{
-					processFeederParts(p);
+					//processFeederParts(p);
+					handleDeliveredPart(p);
 					return true;
 				}
 			}
@@ -462,6 +464,170 @@ public class FeederAgent extends Agent implements Feeder {
 
 	}
 
+
+	/**
+	 * This is a helper method that will switch the Feeder's diverter based on
+	 * the desired target lane and the diverter's current status/position.
+	 */
+	private void switchDiverterIfNecessary(MyLane targetLane)
+	{
+		if (targetLane == topLane)
+		{
+			if (diverter == DiverterState.FEEDING_BOTTOM) {
+				diverter = DiverterState.FEEDING_TOP;
+				DoSwitchLane();  
+			}
+		}
+		else if (targetLane == bottomLane)
+		{
+			if (diverter == DiverterState.FEEDING_TOP) {
+				diverter = DiverterState.FEEDING_BOTTOM;
+				DoSwitchLane();  
+			}
+		}
+	}
+
+	private void handlePartRequest(MyPartRequest partRequested) {
+
+		MyLane targetLane = targetLaneOfPartRequest(partRequested);
+
+		// The combination of these boolean values will represent the different scenarios to be handled:
+		boolean FeederIsEmpty = (currentPart == null);
+		boolean TargetLaneIsEmpty = (targetLane.part == null);
+		//		boolean OkToPurgeNow = (this.state == FeederState.OK_TO_PURGE);
+		boolean FeederHasDesiredPart;
+		boolean TargetLaneHasDesiredPart;
+
+		// Make sure these variable assignments don't cause null pointer exceptions
+		if (currentPart != null)
+			FeederHasDesiredPart = (currentPart.id == partRequested.pt.id);
+		else
+			FeederHasDesiredPart = false; // its null, so can't be the desired part
+
+		if (targetLane.part != null)
+			TargetLaneHasDesiredPart = (targetLane.part.id == partRequested.pt.id);
+		else
+			TargetLaneHasDesiredPart = false; // its null, so can't be the desired part
+
+
+		// First, switch the diverter if you need to.
+		switchDiverterIfNecessary(targetLane);
+
+
+		/** TODO: Complete these scenarios. */
+
+		/* SCENARIO #1: The very first part fed into the Feeder.
+		 * The Feeder is empty.
+		 * The target lane is empty.
+		 */
+		if (FeederIsEmpty && TargetLaneIsEmpty)
+		{
+			state = FeederState.WAITING_FOR_PARTS;
+			partRequested.state = MyPartRequestState.ASKED_GANTRY;
+			gantry.msgFeederNeedsPart(partRequested.pt, this);
+		}
+
+
+		/* SCENARIO #2: We want to feed two lanes from the same Feeder without purging the feeder or the empty lane.
+		 * The Feeder has the correct part.
+		 * The target lane is empty.
+		 */
+		else if (FeederHasDesiredPart && TargetLaneIsEmpty)
+		{
+			state = FeederState.IS_FEEDING;
+			partRequested.state = MyPartRequestState.DELIVERED;
+		}
+
+
+		/* SCENARIO #3: We want to feed two lanes from the same Feeder without purging the feeder, but we do want to purge the lane with the wrong parts.
+		 * The Feeder has the correct part.
+		 * The target lane has the wrong part.
+		 * The target lane is NOT empty, it is filled with the wrong part.
+		 */
+		else if (FeederHasDesiredPart && !TargetLaneHasDesiredPart && !TargetLaneIsEmpty)
+		{
+			state = FeederState.IS_FEEDING;
+			partRequested.state = MyPartRequestState.DELIVERED;
+			purgeLane(targetLane);
+		}
+
+
+		/* SCENARIO #4: The PartsRobot has simply asked for more of the same type of parts to go to a nest, and the Feeder contains those parts currently.
+		 * The Feeder has the correct part.
+		 * The target lane has the right part.
+		 */
+		else if (FeederHasDesiredPart && TargetLaneHasDesiredPart)
+		{
+			state = FeederState.IS_FEEDING;
+			partRequested.state = MyPartRequestState.DELIVERED;
+		}
+
+
+		/* SCENARIO #5: This case will most likely happen on a new kit configuration.
+		 * The Feeder has the wrong part.
+		 * The target lane has the wrong part.
+		 * The target lane is not empty.
+		 */
+		else if (!FeederHasDesiredPart && !TargetLaneHasDesiredPart && !TargetLaneIsEmpty)
+		{
+			purgeFeeder();  
+			purgeLane(targetLane);
+			state = FeederState.WAITING_FOR_PARTS;
+			partRequested.state = MyPartRequestState.ASKED_GANTRY;
+			gantry.msgFeederNeedsPart(partRequested.pt, this);
+		}
+		
+		
+		/* SCENARIO #6: The Feeder has the wrong part but the target lane has the right part.
+		 * The Feeder has the wrong part.
+		 * The target lane can be empty or have the right part.
+		 * part even, but this will be handled when the Gantry delivers the parts.
+		 */
+		else if (!FeederHasDesiredPart && (TargetLaneHasDesiredPart || TargetLaneIsEmpty))
+		{
+			purgeFeeder();  
+			state = FeederState.WAITING_FOR_PARTS;
+			partRequested.state = MyPartRequestState.ASKED_GANTRY;
+			gantry.msgFeederNeedsPart(partRequested.pt, this);
+		}
+		
+		
+
+
+
+		stateChanged();
+	}
+
+
+	private void handleDeliveredPart(MyPartRequest deliveredPart) {
+
+		MyLane targetLane = targetLaneOfPartRequest(deliveredPart);
+
+		// Remove the part request, it is no longer needed
+		synchronized(requestedParts)
+		{
+			requestedParts.remove(deliveredPart);
+		}
+		currentPart = deliveredPart.pt;  // the Feeder's current part is now the delivered part
+
+		// Set the target lane's part to be the part that is being fed to it
+		if (targetLane == topLane)
+		{
+			topLane.part = deliveredPart.pt; // IMPORTANT: We must set this in order for the lane to know if it needs to purge in the future
+		}
+		else if (targetLane == bottomLane)
+		{
+			bottomLane.part = deliveredPart.pt; // IMPORTANT: We must set this in order for the lane to know if it needs to purge in the future
+		}
+
+
+		startFeeding();
+
+		
+		//stateChanged(); // there is a stateChanged() inside startFeeding()
+	}
+
+
 	private void askGantryForPart(MyPartRequest partRequested) { 
 		debug("asking gantry for part " + partRequested.pt.name + ".");
 
@@ -484,7 +650,7 @@ public class FeederAgent extends Agent implements Feeder {
 				e.printStackTrace();
 			}
 		}
-		
+
 		boolean flag = false; // we only want to choose one of the following cases:
 
 
@@ -493,12 +659,27 @@ public class FeederAgent extends Agent implements Feeder {
 		 */
 		if (targetLane.part == null)
 		{
-			debug("first part into a lane - No purging needed at all.");
-			state = FeederState.IS_FEEDING;
-			partRequested.state = MyPartRequestState.DELIVERED;
-			flag = true;
+			if (currentPart == null)
+			{
+				state = FeederState.WAITING_FOR_PARTS;
+				partRequested.state = MyPartRequestState.ASKED_GANTRY;
+				gantry.msgFeederNeedsPart(partRequested.pt, this);
+			}
+			else if (currentPart != partRequested.pt)
+			{
+				state = FeederState.WAITING_FOR_PARTS;
+				partRequested.state = MyPartRequestState.ASKED_GANTRY;
+				gantry.msgFeederNeedsPart(partRequested.pt, this);
+			}
+			else
+			{
+				debug("first part into a lane - No purging needed at all.");
+				state = FeederState.IS_FEEDING;
+				partRequested.state = MyPartRequestState.DELIVERED;
+				flag = true;
+			}
 		}
-		
+
 		else if (this.currentPart != null && targetLane.part != null)
 		{
 			/* ### No purging at all ###
@@ -557,7 +738,7 @@ public class FeederAgent extends Agent implements Feeder {
 				gantry.msgFeederNeedsPart(partRequested.pt, this);
 			}
 		}
-		debug("---statechanged?---");
+
 		stateChanged();
 	}
 
@@ -689,24 +870,8 @@ public class FeederAgent extends Agent implements Feeder {
 	private void startFeeding(){
 		debug("action start feeding.");
 
-		//		// Make a reference to the correct MyLane that must be fed
-		//		MyLane currentLane = null;
-		//		if (topLane.part != null)
-		//		{
-		//			if(currentPart.id == topLane.part.id)
-		//			{
-		//				currentLane = topLane;
-		//			}
-		//		}
-		//		if (bottomLane.part != null)
-		//		{
-		//			if(currentPart.id == bottomLane.part.id)
-		//			{
-		//				currentLane = bottomLane;
-		//			}
-		//		}
-
-
+		state = FeederState.IS_FEEDING; // we want to feed until the feeder's state changes to OK_TO_PURGE
+		
 		// This timer will run so that we don't automatically purge a
 		// lane when a second request comes to the feeder (note: the 
 		// feeder almost always has multiple requests coming in at once)
@@ -884,6 +1049,25 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 
+	/** Figures out what the target lane of the part request is and returns it. */	
+	public MyLane targetLaneOfPartRequest(MyPartRequest partRequested)
+	{
+		MyLane targetLane = null;
+		if (partRequested.lane == topLane.lane)
+			targetLane = topLane;
+		else if (partRequested.lane == bottomLane.lane)
+			targetLane = bottomLane;
+
+		return targetLane;
+	}
+
+
+	/** Overriding this for debugging purposes - only print the Feeder debug statements. */
+	protected void debug(String msg) {
+		if(true) {
+			print(msg, null);
+		}
+	}
 
 
 
