@@ -15,7 +15,8 @@ public class MockStand extends MockAgent implements Stand {
 	
 	@Override
 	public void msgResultsOfKitAtInspection(KitState results) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent(
+				"Received message msgResultsOfKitAtInspection from the Vision"));
 		
 	}
 

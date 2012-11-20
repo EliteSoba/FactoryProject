@@ -44,12 +44,12 @@ public class VisionAgent extends Agent implements Vision {
 
 	public class PictureRequest {
 
-		Nest nestOne;
-		Part nestOnePart;
-		Part nestTwoPart;
-		Nest nestTwo;
-		PictureRequestState state;
-		Feeder feeder;
+		public Nest nestOne;
+		public Part nestOnePart;
+		public Part nestTwoPart;
+		public Nest nestTwo;
+		public PictureRequestState state;
+		public Feeder feeder;
 
 		public PictureRequest(Nest nestOne, Part nestOnePart, Nest nestTwo, Part nestTwoPart, Feeder feeder){
 			this.state = PictureRequestState.NESTS_READY;
@@ -65,16 +65,13 @@ public class VisionAgent extends Agent implements Vision {
 
 
 	// *** MESSAGES ***
-	public void inspectKitStand() {
-		kitPicRequests.add(new KitPicRequest(KitPicRequestState.NEED_TO_INSPECT));
-		this.stateChanged();
-	}
 
 	public void msgNewNestConfig( ArrayList<Nest> nests){
 		this.nests = nests;
 	}
 
 	public void msgMyNestsReadyForPicture(Nest nestOne, Part nestOnePart, Nest nestTwo, Part nestTwoPart, Feeder feeder) {
+		if(!isUnitTesting)
 		debug("msgMyNestsReadyForPicture("+nestOne.getPart().name+","+nestTwo.getPart().name+")");
 		picRequests.add(new PictureRequest(nestOne, nestOnePart, nestTwo,  nestOnePart, feeder));
 		this.stateChanged();

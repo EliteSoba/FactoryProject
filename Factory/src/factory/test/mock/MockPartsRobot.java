@@ -36,7 +36,8 @@ public class MockPartsRobot extends MockAgent implements PartsRobot {
 
 	@Override
 	public void msgClearLineOfSight(Nest nestOne, Nest nestTwo) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent(
+				"Received message msgClearLineOfSight from the FCS"));
 		
 	}
 
