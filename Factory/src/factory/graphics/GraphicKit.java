@@ -89,8 +89,8 @@ public class GraphicKit {
 					items.get(i).setY(y+(i/2)*21+1);
 					break;
 			case 2:	
-			case 8:	items.get(i).setX(x+(i/4)*21+1);
-					items.get(i).setY(y+(i%4)*21+1);
+			case 8:	items.get(i).setX(x+(i/2)*21+1);
+					items.get(i).setY(y+(i%2)*21+1);
 			}
 		}
 	}
