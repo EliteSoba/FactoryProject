@@ -19,14 +19,10 @@ Members:<p>
     Marc Mendiola,
     Devon Meyer,
     Mher Poghosyan,
-<<<<<<< HEAD
-    Stephanie Reagle
-
-checkout v.1 branch
-=======
     Stephanie Reagle <-- Manager
 
 Start Instructions<p>
+======
 Compilation:<br>
 WHEN IN src/:<br>
 javac -sourcepath . factory/masterControl/*.java<br>
@@ -61,5 +57,3 @@ Running:<p>
    
    
    
-   
->>>>>>> v.2
