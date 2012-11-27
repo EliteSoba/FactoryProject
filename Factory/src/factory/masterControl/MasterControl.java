@@ -53,7 +53,7 @@ public class MasterControl {
     TreeMap<String, Agent> agentTreeMap;
 	TreeMap<String, PartHandler> partHandlers; 
 	TreeMap<String, Boolean> partOccupied;
-    TreeMap<List<String>, List<String>> multiCmdDsts;
+    HashMap<List<String>, List<String>> multiCmdDsts;
 
     // Lists of Known Clients, Agents, CommandTypes, and supported Commands
 
@@ -94,7 +94,7 @@ public class MasterControl {
 		laneAgentTreeMap = new TreeMap<String, LaneAgent>();
 		nestAgentTreeMap = new TreeMap<String, NestAgent>();
         partHandlerList = new ArrayList<PartHandler>();
-        multiCmdDsts = new TreeMap<List<String>, List<String>>();
+        multiCmdDsts = new HashMap<List<String>, List<String>>();
 
 
 
