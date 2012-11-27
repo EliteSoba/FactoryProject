@@ -100,10 +100,16 @@ public class LaneManager extends Client {
 
 		}
 		else if(action.equals("set")){
-			int feederSlot = Integer.valueOf(pCmd.get(2));
-			GraphicBin bin = new GraphicBin(new Part(pCmd.get(3)));
-			((LanePanel) graphics).setFeederBin(feederSlot, bin);
-			System.out.println("TESTINGLOLWHYNOWORK?");
+			if (identifier.equals("loadpartatfeeder")) {
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				GraphicBin bin = new GraphicBin(new Part(pCmd.get(3)));
+				((LanePanel) graphics).setFeederBin(feederSlot, bin);
+			}
+			else if (identifier.equals("nestitemtaken")) {
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				int itemIndex = Integer.valueOf(pCmd.get(3));
+				((LanePanel) graphics).popNestItem(nestIndex, itemIndex);
+			}
 
 		}
 		else if(action.equals("cnf")){

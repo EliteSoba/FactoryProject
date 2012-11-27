@@ -553,8 +553,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Sets the Bin for the specified feeder
-	 * @param feederNum
-	 * @param bin
+	 * @param feederNum The index of the Feeder
+	 * @param bin The Bin to be added
 	 */
 	public void setFeederBin(int feederNum, GraphicBin bin) {
 		lane[feederNum].setBin(bin);
@@ -562,11 +562,20 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Adds an Part to the specified Kit
-	 * @param kitNum
-	 * @param item
+	 * @param kitNum The index of the Kit
+	 * @param item The Item to be added
 	 */
 	public void setKitItem(int kitNum, GraphicItem item) {
 		station.addItem(item, kitNum);
+	}
+	
+	/**
+	 * Removes the Item at the given index from the given Nest
+	 * @param nestNum The index of the Nest
+	 * @param itemIndex The index of the Item
+	 */
+	public void popNestItem(int nestNum, int itemIndex) {
+		nests.get(nestNum).popItemAt(itemIndex);
 	}
 	
 	/**
@@ -653,6 +662,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void partsRobotArrivedAtNest() {
+		sendMessage("lm set nestitemtaken " + partsRobot.getDestinationNest() + " " + partsRobot.getItemIndex());
 		sendMessage("pra cnf");
 	}
 
