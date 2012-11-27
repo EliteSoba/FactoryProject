@@ -261,16 +261,6 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("kitsproduced")) { // updates number of kits produced for schedule
 				((FactoryProdManPanel) UI).kitProduced();
 			}
-			else if (identifier.equals("bintype")) { //Sets the bin for the LM
-				int feederNum = Integer.valueOf(pCmd.get(2));
-				GraphicBin bin = new GraphicBin(new Part(pCmd.get(3)));
-				((GraphicPanel) graphics).setFeederBin(feederNum, bin);
-			}
-			else if (identifier.equals("itemtype")) {
-				int kitNum = Integer.valueOf(pCmd.get(2));
-				GraphicItem item = new GraphicItem(-40, 0, pCmd.get(3));
-				((GraphicPanel) graphics).setKitItem(kitNum, item);
-			}
 			else if (identifier.equals("partconfig")) {
 				Part part = partsList.get(pCmd.get(2));
 				part.name = pCmd.get(2);
