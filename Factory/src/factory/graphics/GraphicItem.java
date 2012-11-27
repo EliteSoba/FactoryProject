@@ -31,6 +31,8 @@ public class GraphicItem {
 	/**Whether or not this Item goes to the top or bottom Lane of a Lane pair*/
 	private boolean divergeUp;
 	private boolean isBad;
+
+	private boolean inQueue;
 	
 	/**
 	 * Creates an Item with the given image at the given x and y coordinates
@@ -217,6 +219,14 @@ public class GraphicItem {
 	public boolean getDivergeUp() {
 		return divergeUp;
 	}
+
+	public void setInQueue(boolean queue) {
+		inQueue = queue;
+	}
+	
+	public boolean getInQueue() {
+		return inQueue;
+	}
 	
 	/**
 	 * Gets the image of the Item
@@ -237,4 +247,3 @@ public class GraphicItem {
 	public void setIsBad() {
 		isBad = true;
 	}
-}
