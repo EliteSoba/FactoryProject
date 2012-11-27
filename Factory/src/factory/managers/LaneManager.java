@@ -22,7 +22,6 @@ public class LaneManager extends Client {
 	
 	public LaneManager() {
 		super(Client.Type.lm, null, null); 
-		//LaneManPanel buttons = new LaneManPanel(); //to be implemented in V.2
 		
 		buttons = new LaneManPanel(this);
 		animation = new LanePanel(this);
@@ -41,9 +40,9 @@ public class LaneManager extends Client {
 
 		add(graphics, BorderLayout.CENTER);
 		
-		pack();
+		add(UI, BorderLayout.LINE_END);  
 		
-		//add(UI, BorderLayout.LINE_END);  //to be implemented in V.2
+		pack();
 		setVisible(true);
 	}
 
