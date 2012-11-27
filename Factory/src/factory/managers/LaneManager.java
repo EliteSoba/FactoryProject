@@ -6,6 +6,7 @@ package factory.managers;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import factory.graphics.*;
 import factory.*;
@@ -49,9 +50,10 @@ public class LaneManager extends Client {
 	public void doCommand(ArrayList<String> pCmd) {
 		int size = pCmd.size();
 		//parameters lay between i = 2 and i = size - 2
+		System.out.println(Arrays.toString(pCmd.toArray()));
 		String action = pCmd.get(0);
 		String identifier = pCmd.get(1);
-		if(action == "cmd"){
+		if(action.equals("cmd")){
 			
 			// Commands from FeederAgent
 			if (identifier.equals("startfeeding"))
@@ -84,21 +86,28 @@ public class LaneManager extends Client {
 				int feederSlot = Integer.valueOf(pCmd.get(2));
 				((LanePanel) graphics).purgeBottomLane(feederSlot);
 			}
+			
+			//Commands from VisionAgent
+			else if (identifier.equals("takepictureofnest")) {
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				((LanePanel) graphics).cameraFlash(nestIndex);
+			}
 
 		}
-		else if(action == "req"){
+		else if(action.equals("req")){
 
 		}
-		else if(action == "get"){
+		else if(action.equals("get")){
 
 		}
-		else if(action == "set"){
+		else if(action.equals("set")){
 			int feederSlot = Integer.valueOf(pCmd.get(2));
 			GraphicBin bin = new GraphicBin(new Part(pCmd.get(3)));
 			((LanePanel) graphics).setFeederBin(feederSlot, bin);
+			System.out.println("TESTINGLOLWHYNOWORK?");
 
 		}
-		else if(action == "cnf"){
+		else if(action.equals("cnf")){
 
 		}
 		else if(action.equals("mcs")){
