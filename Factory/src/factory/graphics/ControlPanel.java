@@ -130,7 +130,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		else if(source == popItemToKit)
 			am.popItemToKit(Integer.parseInt(itemIndex.getText()));
 		else if(source == feedLane1)
-			am.feedLane(2);	//FEEDS THE LANE! Lane 1-8, NOT 0-7
+			am.feedLane(0);	//FEEDS THE LANE! Lane 1-8, NOT 0-7
 		else if(source == feedLane2)
 			am.feedLane(1);
 		else if(source == purgeLane1)

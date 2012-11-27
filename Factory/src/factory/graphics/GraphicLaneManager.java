@@ -1,4 +1,4 @@
-//Minh La
+
 
 package factory.graphics;
 import java.awt.Color;
@@ -10,49 +10,88 @@ import javax.swing.ImageIcon;
 
 import factory.Part;
 
+/**
+ * @author Minh la <p>
+ * <b>{@code GraphicLaneManager.java}</b> (50x720) <br>
+ * This creates and processes the Lane Manager,
+ * As well as the lanes, nests, feeders, items, and bins
+ */
 
 public class GraphicLaneManager{
 
 	//Image Icons
+	/**The image icons of all the paintable objects in Lane Manager**/
 	ImageIcon lane1Icon, lane2Icon;
 	ImageIcon divergeLaneIcon;
 	ImageIcon feederIcon;
+	ImageIcon divergerLightOffImage, divergerLightOnImage;
 	GraphicBin bin;
 
 	//Bin coordinates
+	/**The relative coordinates of the feeder**/
 	int feederX,feederY;
 
 	//Items
+	/**The Arraylist of items for each lane**/
 	ArrayList <GraphicItem> lane1Items;
 	ArrayList <GraphicItem> lane2Items;
+	/**Arraylist of booleans for the queues**/
 	ArrayList <Boolean> lane1QueueTaken;			//The queue
 	ArrayList <Boolean> lane2QueueTaken;			//The queue
 
 	//variables
-	int vX, vY;		//velocities
-	int lane_xPos, lane_yPos;	//lane relative position
-	boolean laneStart;			//default = false
-	boolean divergeUp;			//true - up, false - down
-	int timerCount;				//counter to periodic add item to lane
-	int binItemCount;			//current item in bin to dump
-	int vibrationCount;			//every 2 paint, it'll vibrate
+	/**The velocities of the Lane**/
+	int vX, vY;
+	/**The relative x and y position of the beginning of the LaneManager**/
+	int lane_xPos, lane_yPos;
+	/**boolean for when lane Start, default is false**/
+	boolean laneStart;
+	/**boolean for when feeder feeds to Top or bottom lane, true - up, false - down**/
+	boolean divergeUp;
+	/**Counter to periodic add item to lane**/
+	int timerCount;
+	/**Counter for vibration of items in lane**/
+	int vibrationCount;
+	/**The height of the vibration of items**/
 	private int vibrationAmplitude;
-	int laneManagerID;					//lane Manager Number
+	/**lane Manager Number**/
+	int laneManagerID;	
+	/**Counters to keep track of lane animation. 7 sprites**/
 	int laneAnimationCounter, laneAnimationSpeed;
-	boolean feederOn;			//Feeder on/off
-	boolean binExists;			
-	boolean lane1PurgeOn;
-	boolean lane2PurgeOn;
+	/**Counter for diverger light animation**/
+	int divergerLightAnimationCounter;
+	/**boolean for the light animation. true is top. false is bottom.**/
+	boolean divergerLightAnimationCountUp;
+	/**boolean for feeder is on. true - on. false - off**/
+	boolean feederOn;
+	/**Feeder has a bin**/
+	boolean binExists;		
+	/**boolean for Lane is being purged**/
+	boolean lane1PurgeOn,lane2PurgeOn;
+	/**boolean for feeder is being purged**/
 	boolean feederPurged;
+	/**counter for feeder to purge**/
 	int feederPurgeTimer;
+	/**Counter for stabilization**/
 	int stabilizationCount[];
+	/**boolean for when nest is stable. true - stable. false - not stable**/
 	boolean isStable[];
+	/**Lane speed for each lane. To be inputted from panel. Not for v1!**/
 	int laneSpeed;
+	/**The max distance the item must reach before changing direction**/
 	int itemYMax, itemXMax;
+	/**the coordinates of the expected location of items in lanes**/
 	int itemXLane, itemYLaneUp, itemYLaneDown;
-
+	/**Instance of the graphic panel**/
 	GraphicPanel graphicPanel;
 
+	/**
+	 * Create a Lane manager at the given x and y coordinates and ID
+	 * @param laneX The x coordinate of the lane manager
+	 * @param laneY the y coordinate of the lane manager
+	 * @param ID the ID number of the Lane Manager. 0-3
+	 * @param gp GraphicPanel for intercomponent communication
+	 */
 	public GraphicLaneManager(int laneX,int laneY, int ID, GraphicPanel gp){
 		lane_xPos = laneX; lane_yPos = laneY;					//MODIFY to change Lane position
 		laneManagerID = ID;
@@ -65,7 +104,7 @@ public class GraphicLaneManager{
 		lane2Items = new ArrayList<GraphicItem>();
 		lane1QueueTaken = new ArrayList<Boolean>();
 		lane2QueueTaken = new ArrayList<Boolean>();
-		laneSpeed = 1;				//Change speed of the lane later
+		laneSpeed = 2;				//Change speed of the lane later
 		vX = -laneSpeed; vY = laneSpeed;
 		itemXMax = lane_xPos + 75;
 		itemYMax = lane_yPos + 70 + 40;
@@ -79,7 +118,7 @@ public class GraphicLaneManager{
 		lane1PurgeOn = false;		//Nest purge is off unless turned on
 		lane2PurgeOn = false;		//Nest purge is off unless turned on
 		feederPurged = false;
-		timerCount = 1; binItemCount = 0; vibrationCount = 0; vibrationAmplitude = 2;
+		timerCount = 1; vibrationCount = 0; vibrationAmplitude = 2;
 		stabilizationCount = new int[2];
 		isStable = new boolean[2];
 		for (int i = 0; i < 2; i++) {
@@ -95,27 +134,46 @@ public class GraphicLaneManager{
 		lane2Icon = new ImageIcon("Images/lane.png");
 		divergeLaneIcon = new ImageIcon("Images/divergeLane.png");
 		feederIcon = new ImageIcon("Images/feeder.png");
-
-
+		divergerLightAnimationCountUp = true;
+		divergerLightOffImage = new ImageIcon("Images/divergerLights/dLight-1.png");
+		divergerLightOnImage = new ImageIcon("Images/divergerLights/dLight0.png");
 	}	
 
+	/**
+	 * Sets the Bin for the Lane manager's feeder
+	 * @param bin The Feeder's GraphicBin
+	 */
 	public void setBin(GraphicBin bin){
 		this.bin = bin;
-		bin.getBinType().setX(feederX+35);
-		bin.getBinType().setY(feederY+55);
-		if (bin != null)
+		if (bin != null) {
 			binExists = true;
+			bin.getBinType().setX(feederX+54);
+			bin.getBinType().setY(feederY+54);
+			feederPurgeTimer = 0;
+			feederPurged = false;
+		}
 	}
-
+	/**
+	 * Gets the Bin from the Lane Manager's feeder
+	 * @return the lane manager's feeder's bin
+	 */
 	public GraphicBin getBin(){
 		return bin;
 	}
 	
+	/**
+	 * returns the boolean for hasBin
+	 * @return return binExists
+	 */
 	public boolean hasBin()
 	{
 		return binExists;
 	}
 	
+	/**
+	 * Erase and return the current bin in the lane manager's feeder
+	 * @return the copy of the bin
+	 */
 	public GraphicBin popBin()
 	{
 		GraphicBin binCopy = bin;
@@ -124,6 +182,9 @@ public class GraphicLaneManager{
 		return binCopy;
 	}
 	
+	/**
+	 * Turns the purging of feeder on
+	 */
 	public void purgeFeeder() {
 		bin.getBinItems().clear();
 		feederOn = false;
@@ -131,6 +192,10 @@ public class GraphicLaneManager{
 		feederPurgeTimer = 0;
 	}
 	
+	/**
+	 * Paints the Lanes and the items within the lanes
+	 * @param g the specified graphics window
+	 */
 	public void paintLane(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
 
@@ -152,31 +217,60 @@ public class GraphicLaneManager{
 			lane2Items.get(i).paint(g2);
 		vibrationCount++;
 	} // END Paint function
-
+	
+	/**
+	 * paints the feeder, also alternates the lights of the diverger
+	 * @param g
+	 */
 	public void paintFeeder(Graphics g) {
+		// Draw background
+		g.setColor(Color.WHITE);
+		g.fillRect(feederX, feederY, 110, 110);
+		// Draw item icon
+		if(binExists && feederPurgeTimer < 7)
+				bin.getBinType().paint(g);
+		// Draw bin
 		if (binExists)
-			g.drawImage(bin.getBinImage().getImage(), feederX + 50, feederY+15, null);
+			g.drawImage(bin.getBinImage().getImage(), feederX+85, feederY+15, null);
+		// Draw feeder
 		g.drawImage(feederIcon.getImage(), feederX, feederY, null);
-		//g.drawImage(feederIcon.getImage(), itemXMax, itemYLaneUp, null);
-		g.setColor(new Color(60, 33, 0));
-		g.fillRect(feederX+34, feederY+54, 22, 22);
-		if (binExists && feederPurgeTimer < 7)
-			bin.getBinType().paint(g);
+		// Draw and animate diverger lights
+		int dLightOnY = feederY + 17;
+		int dLightOffY = feederY + 17;
+		if(divergeUp)
+			dLightOffY += 80;
+		else
+			dLightOnY += 80;
+		divergerLightOnImage = new ImageIcon("Images/divergerLights/dLight"+divergerLightAnimationCounter+".png");
+		g.drawImage(divergerLightOnImage.getImage(), feederX, dLightOnY, null);
+		g.drawImage(divergerLightOffImage.getImage(), feederX, dLightOffY, null);
+		if(divergerLightAnimationCounter == 20)
+			divergerLightAnimationCountUp = false;
+		else if(divergerLightAnimationCounter == 0)
+			divergerLightAnimationCountUp = true;
+		if(divergerLightAnimationCountUp)
+			divergerLightAnimationCounter += 1;
+		else
+			divergerLightAnimationCounter -= 1;
 	}
 
+	/**
+	 * processes the lane manager.
+	 * Does everything for the Lane Manager
+	 */
 	public void moveLane() {
 		for (int i = 0; i < 2; i++) {
 			stabilizationCount[i]++;
 			if (binExists && stabilizationCount[i] >= bin.getStabilizationTime()) {
 				isStable[i] = true;
 				if (stabilizationCount[i] == bin.getStabilizationTime())
-					graphicPanel.sendMessage("fa cmd neststabilized n" + laneManagerID + (i==0?"t":"b")); 
+					graphicPanel.sendMessage("na cmd neststabilized n" + laneManagerID + (i==0?"t":"b")); 
 			} 
 			else
 				isStable[i] = false;
 		}
 		
-		if (feederPurged) {
+		if (feederPurged && bin != null) {
 			feederPurgeTimer++;
 			if (feederPurgeTimer < 7)
 				bin.getBinType().moveX(5);
@@ -185,7 +279,7 @@ public class GraphicLaneManager{
 				graphicPanel.purgeFeederDone(laneManagerID);
 			}
 		}
-		if(binExists){
+		if(binExists){	//If Bin exists, gets items from bin
 			if(laneStart){
 				if(feederOn){
 					if(timerCount % 10 == 0){		//Put an item on lane on a timed interval
@@ -208,7 +302,7 @@ public class GraphicLaneManager{
 							bin.getBinItems().remove(0);
 							if(bin.getBinItems().size() == 0){
 								feederOn = false;
-								graphicPanel.feedLaneDone(laneManagerID * 2 + ((divergeUp)?0:1));
+								graphicPanel.feedLaneDone(laneManagerID);
 							}
 						}
 					}
@@ -219,10 +313,16 @@ public class GraphicLaneManager{
 			}
 			timerCount++;
 		}
-		else{
+		else{	//if bin does not exists, processes the items in the lanes
 			processLane();
 		}
 	}
+
+	/**
+	 * Moves the items in the lane.
+	 * Processes both top and bottom lane
+	 * DOES EVERYTHING
+	 */
 
 	public void processLane(){
 
