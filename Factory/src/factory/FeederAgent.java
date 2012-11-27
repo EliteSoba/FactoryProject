@@ -952,7 +952,7 @@ public class FeederAgent extends Agent implements Feeder {
 	private void DoStartFeeding(Part part) {
 		if (debugMode == false)
 		{
-			server.command("fa fpm cmd startfeeding " + feederNumber);
+			server.command("fa lm cmd startfeeding " + feederNumber);
 			debug("Feeder " + feederNumber + " started feeding.");
 			try {
 				animation.acquire();
@@ -968,7 +968,7 @@ public class FeederAgent extends Agent implements Feeder {
 		if (debugMode == false) 
 		{
 			debug("stopped feeding.");
-			server.command("fa fpm cmd stopfeeding " + feederNumber);
+			server.command("fa lm cmd stopfeeding " + feederNumber);
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
@@ -987,7 +987,7 @@ public class FeederAgent extends Agent implements Feeder {
 		if (debugMode == false)
 		{
 			debug("purging feeder.");
-			server.command("fa fpm cmd purgefeeder " + feederNumber); /** TODO: MULTI **/
+			server.command("fa multi cmd purgefeeder " + feederNumber); /** TODO: MULTI **/
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
@@ -1005,7 +1005,7 @@ public class FeederAgent extends Agent implements Feeder {
 		if (debugMode == false)
 		{
 			debug("switching lane");
-			server.command("fa fpm cmd switchlane " + feederNumber);
+			server.command("fa lm cmd switchlane " + feederNumber);
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
@@ -1029,7 +1029,7 @@ public class FeederAgent extends Agent implements Feeder {
 		if (debugMode == false)
 		{
 			debug("purging lane top");
-			server.command("fa fpm cmd purgetoplane " + feederNumber); /** TODO: MULTI **/
+			server.command("fa multi cmd purgetoplane " + feederNumber); /** TODO: MULTI **/
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
@@ -1044,7 +1044,7 @@ public class FeederAgent extends Agent implements Feeder {
 		if (debugMode == false)
 		{
 			debug("purging lane bottom");
-			server.command("fa fpm cmd purgebottomlane " + feederNumber); /** TODO: MULTI **/
+			server.command("fa multi cmd purgebottomlane " + feederNumber); /** TODO: MULTI **/
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {

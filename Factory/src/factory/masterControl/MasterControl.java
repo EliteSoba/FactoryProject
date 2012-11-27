@@ -647,7 +647,8 @@ public class MasterControl {
         for(List<String> l : multiCmds){
             if(l.contains(myCmd)){
                 ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
-                for(String dst : multiCmdDsts.get(l)){
+                List<String> destinations = multiCmdDsts.get(l);
+                for(String dst : destinations){
                     if(partHandlers.containsKey(dst)){
                         returnAL.add(partHandlers.get(dst));
                     }
