@@ -615,9 +615,7 @@ public class MasterControl {
                 }
 				return true;
 			}
-        }
-
-		if(b.equals("fpm")){
+        } else if(b.equals("fpm")){
             if(fpmPH != null){
                 return sendCmd(fpmPH, fullCmd);
             }
