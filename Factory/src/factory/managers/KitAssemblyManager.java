@@ -55,9 +55,9 @@ public class KitAssemblyManager extends Client {
 			setLayout(new BorderLayout());
 
 			add(graphics, BorderLayout.CENTER);
+			add(UI, BorderLayout.LINE_END); 
 			pack();
 			
-			//add(UI, BorderLayout.LINE_END); //to be implemented in V.2
 			setVisible(true);
 
 		}
@@ -164,7 +164,8 @@ public void doCommand(ArrayList<String> pCmd) {
 						((KitAssemblyPanel) graphics).moveEmptyKitToSlot(1);
 					}
 				}
-				else if (identifier.equals("movekittoinspectionslot")) {
+				else if (identifier.equals("movekittoinspectionslot")) {//certain there is a complete kit
+					
 					if (pCmd.get(2).equals("topSlot")) {
 						((KitAssemblyPanel) graphics).moveKitToInspection(0);
 					} else if (pCmd.get(2).equals("bottomSlot")) {
