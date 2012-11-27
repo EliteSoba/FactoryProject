@@ -1,12 +1,12 @@
 package factory.graphics;
 
 import java.awt.*;
-import javax.swing.*;
+import java.util.ArrayList;
 
 /**
  * @author Tobias Lee <p>
  * <b>{@code GraphicConveyorBelt.java}</b> (50x720) <br>
- * This displays and animates the conveyer belts,
+ * This displays and animates the conveyor belts,
  * as well as any kits entering/exiting the factory (1 of each)
  */
 
@@ -32,6 +32,8 @@ public class GraphicConveyorBelt {
 	public static int width = 50;
 	/**The height of the Conveyor Belt*/
 	public static int height = 720;
+	public ArrayList<Image> conveyorBeltImages;
+	public int conveyorBeltAnimationCounter;
 	
 	/**
 	 * Creates a Conveyor Belt at the given x and y coordinates
@@ -48,6 +50,9 @@ public class GraphicConveyorBelt {
 		kitOut = null;
 		export = false;
 		this.GP = GP;
+		
+		conveyorBeltImages = GraphicAnimation.loadAnimationFromFolder("Images/conveyorBelt/", 0, ".png");
+		conveyorBeltAnimationCounter = 0;
 	}
 	
 	/**
@@ -64,6 +69,11 @@ public class GraphicConveyorBelt {
 		for (int i = t; i < height; i += 50) {
 			g.drawLine(x, i, x+width, i);
 		}
+		
+//		g.drawImage(conveyorBeltImages.get(conveyorBeltAnimationCounter/5), 0, 0, null);
+//		conveyorBeltAnimationCounter++;
+//		if(conveyorBeltAnimationCounter >= conveyorBeltImages.size()*5)
+//			conveyorBeltAnimationCounter = 0;
 		
 		//Draws the kit moving into the factory
 		drawKitIn(g);
