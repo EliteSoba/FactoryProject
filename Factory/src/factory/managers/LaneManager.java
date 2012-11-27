@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import factory.graphics.*;
+import factory.*;
 import factory.swing.LaneManPanel;
 import factory.client.Client;
 
@@ -92,6 +93,9 @@ public class LaneManager extends Client {
 
 		}
 		else if(action == "set"){
+			int feederSlot = Integer.valueOf(pCmd.get(2));
+			GraphicBin bin = new GraphicBin(new Part(pCmd.get(3)));
+			((LanePanel) graphics).setFeederBin(feederSlot, bin);
 
 		}
 		else if(action == "cnf"){
