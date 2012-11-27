@@ -23,12 +23,14 @@ public class GraphicItem {
 	private String imagePath;
 	/**The Item's image*/
 	private ImageIcon image;
+	private static final Image BAD_ITEM_IMAGE = new ImageIcon("Images/badItemX.png").getImage();
 	/**The number of horizontal steps down the Lane*/
 	private int stepX;
 	/**The number of vertical steps down the Lane*/
 	private int stepY;
 	/**Whether or not this Item goes to the top or bottom Lane of a Lane pair*/
 	private boolean divergeUp;
+	private boolean isBad;
 	
 	/**
 	 * Creates an Item with the given image at the given x and y coordinates
@@ -48,6 +50,8 @@ public class GraphicItem {
 		stepX = 20;
 		stepY = 5;
 		divergeUp = false;
+		
+		isBad = false;
 	}
 	
 	/**
@@ -150,6 +154,8 @@ public class GraphicItem {
 	 */
 	public void paint(Graphics g) {
 		g.drawImage(image.getImage(), x, y, null);
+		if(isBad)
+			g.drawImage(BAD_ITEM_IMAGE, x, y, null);
 	}
 	
 	/**
@@ -160,6 +166,8 @@ public class GraphicItem {
 	 */
 	public void paint(Graphics g, int x, int y) {
 		g.drawImage(image.getImage(), x, y, null);
+		if(isBad)
+			g.drawImage(BAD_ITEM_IMAGE, x, y, null);
 	}
 	
 	/**
@@ -226,4 +234,7 @@ public class GraphicItem {
 		return imagePath;
 	}
 	
+	public void setIsBad() {
+		isBad = true;
+	}
 }

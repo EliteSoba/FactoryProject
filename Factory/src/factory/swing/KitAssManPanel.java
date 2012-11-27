@@ -22,35 +22,71 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 	JButton kitRobotFreeze;
 	KitAssemblyManager kitAssemblyManager;
 	
-	
+	JLabel currentKit; //will display current kit in production
+	JRadioButton item1; //will get the string of item name
+	JRadioButton item2; //will get the string of item name
+	JRadioButton item3; //will get the string of item name
+	JRadioButton item4; //will get the string of item name
+	JRadioButton item5; //will get the string of item name
+	JRadioButton item6; //will get the string of item name
+	JRadioButton item7; //will get the string of item name
+	JRadioButton item8; //will get the string of item name
+	JButton go; //command to robot to ruin next kit
+
 	public KitAssManPanel(KitAssemblyManager k){
 		kitAssemblyManager = k;
 		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-		
+		/*
 		title = new JLabel("Kit Assembly Manager");
 		title.setFont(new Font("Serif", Font.BOLD, 16));
 		subtitle = new JLabel("Non-Normative : ");
 		incorrectKits = new JButton("Incorrect Kits");
-		kitRobotFreeze = new JButton("Kit Robot Freeze");
+		kitRobotFreeze = new JButton("Kit Robot Freeze");*/
+		
+		currentKit = new JLabel("No kits to ruin");
+		item1 = new JRadioButton("Part 1");
+		item2 = new JRadioButton("Part 2");
+		item3 = new JRadioButton("Part 3");
+		item4 = new JRadioButton("Part 4");
+		item5 = new JRadioButton("Part 5");
+		item6 = new JRadioButton("Part 6");
+		item7 = new JRadioButton("Part 7");
+		item8 = new JRadioButton("Part 8");
+		go = new JButton("GO!");
 		
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 2;
-		c.fill = GridBagConstraints.VERTICAL;
-		c.insets = new Insets(0,0,20,0);
-		this.add(title, c);
 		c.gridwidth = 1;
+		c.fill = GridBagConstraints.VERTICAL;
+		c.insets = new Insets(5,10,5,10);
+		
+		this.add(currentKit, c);
 		c.gridx = 0;
 		c.gridy = 1;
-		this.add(subtitle, c);
+		this.add(item1, c);
 		c.gridx = 0;
 		c.gridy = 2;
-		this.add(incorrectKits, c);
-		c.gridx = 1;
-		c.gridy = 2;
-		this.add(kitRobotFreeze, c);
+		this.add(item2, c);
+		c.gridx = 0;
+		c.gridy = 3;
+		this.add(item3, c);
+		c.gridx = 0;
+		c.gridy = 4;
+		this.add(item4, c);
+		c.gridx = 0;
+		c.gridy = 5;
+		this.add(item5, c);
+		c.gridx = 0;
+		c.gridy = 6;
+		this.add(item6, c);
+		c.gridx = 0;
+		c.gridy = 7;
+		this.add(item7, c);
+		c.gridx = 0;
+		c.gridy = 8;
+		this.add(item8, c);
 	}
 
 	public void actionPerformed(ActionEvent ae) {
