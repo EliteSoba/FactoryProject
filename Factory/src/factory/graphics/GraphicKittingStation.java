@@ -81,9 +81,9 @@ public class GraphicKittingStation {
 	public void revalidateKits() {
 		for (int i = 0; i < MAX_KITS; i++)
 			if (kits[i] != null)
-				kits[i].move(x+15, y+100*i+15);
+				kits[i].move(x+15, y+95*i+15);
 		if (hasCheck())
-			check.move(x+15, y+215);
+			check.move(x+15, y+205);
 	}
 	/**
 	 * Paints the Kits in the Kit Station

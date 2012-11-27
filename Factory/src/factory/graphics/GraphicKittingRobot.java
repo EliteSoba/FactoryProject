@@ -225,7 +225,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveToStation1(int v) {
-		return moveTo(stationX-70, stationY-5, v);
+		return moveTo(stationX-70, stationY, v);
 	}
 	
 	/**
@@ -243,7 +243,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveToCheck(int v) {
-		return moveTo(stationX-70, stationY+195, v);
+		return moveTo(stationX-70, stationY+190, v);
 	}
 	
 	/**
@@ -252,7 +252,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveToTrash(int v) {
-		return moveTo(stationX-70, stationY+305, v);
+		return moveTo(stationX-70, stationY+295, v);
 	}
 	
 	/**
@@ -344,8 +344,8 @@ public class GraphicKittingRobot {
 		}
 		
 		//Returns to original horizontal position
-		else
-			moveToStartX(v);
+//		else
+//			moveToStartX(v);
 	}
 	
 	//The following are all getters and setters
