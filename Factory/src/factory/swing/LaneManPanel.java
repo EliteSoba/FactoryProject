@@ -22,13 +22,19 @@ public class LaneManPanel extends JPanel implements ActionListener {
 	JButton powerButton = new JButton("Power");
 	
 	LaneManager laneManager;
-
+	JTabbedPane tabbedPane; 
+	JPanel preferencesPanel;
+	JPanel nonnormativePanel;
+	
 	public LaneManPanel(LaneManager l){
 		laneManager = l;
 		powerButton.addActionListener(this); 
 		redButton.addActionListener(this); 
 		yellowButton.addActionListener(this); 
 		greenButton.addActionListener(this); 
+		preferencesPanel = new JPanel();
+		nonnormativePanel = new JPanel();
+		tabbedPane = new JTabbedPane();
 		
 	    GridBagConstraints c = new GridBagConstraints();
 		setLayout(new GridBagLayout());
@@ -36,20 +42,25 @@ public class LaneManPanel extends JPanel implements ActionListener {
 		c.fill = GridBagConstraints.VERTICAL;
 		c.gridx = 0;
 		c.gridy = 0;
-		add(lane, c);
+		preferencesPanel.add(lane, c);
 		
 		c.gridx = 2;
-		add(redButton, c);
+		preferencesPanel.add(redButton, c);
 		
 		c.gridy = 1;
-		add(yellowButton, c);
+		preferencesPanel.add(yellowButton, c);
 		
 		c.gridy = 2; 
-		add(greenButton, c);
+		preferencesPanel.add(greenButton, c);
 		
 		c.gridx = 5;
 		c.gridy = 0;
-		add(powerButton);
+		preferencesPanel.add(powerButton);
+		
+		tabbedPane.addTab("Preferences", preferencesPanel);
+		tabbedPane.addTab("Non-Normative", nonnormativePanel);
+		
+		this.add(tabbedPane);
 
 	
 	}
