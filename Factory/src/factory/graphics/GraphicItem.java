@@ -247,3 +247,5 @@ public class GraphicItem {
 	public void setIsBad() {
 		isBad = true;
 	}
+	
+}
