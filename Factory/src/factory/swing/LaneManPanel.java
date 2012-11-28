@@ -1,6 +1,6 @@
 //Stephanie Reagle
 //CS 200
-// last edited: 11:45pm 11/27/12 by Joey Huang
+// last edited: 12:18pm 11/28/12 by Joey Huang
 package factory.swing;
 
 import java.awt.*;
@@ -108,7 +108,7 @@ public class LaneNonNormPanel extends JPanel implements ActionListener {
 		diverterButton = new JButton("Diverter Too Slow");
 		badPartsButton = new JButton("Bad Parts in Nest");
 		blockingRobotButton = new JButton("Robot Blocking Camera");
-		messageBox = new JTextArea("Actions...");
+		messageBox = new JTextArea("Actions...\n");
 		
 		laneJamButton.addActionListener(this);
 		diverterButton.addActionListener(this);
@@ -159,18 +159,51 @@ public class LaneNonNormPanel extends JPanel implements ActionListener {
 		boxContainer.add(Box.createRigidArea(new Dimension(0,10)));
 		JScrollPane scrollPane = new JScrollPane(messageBox);
 		scrollPane.setPreferredSize(new Dimension(200,100));
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		boxContainer.add(scrollPane);
 		add(boxContainer);
 	}
 	
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getSource() == laneJamButton) {
-			
+			messageBox.append("Lane jam initated in " + laneBoxList.getSelectedItem() + ".\n");
+			String set = "";
+			try {
+				laneManager.sendCommand(set);
+			} catch (Exception e) {
+				System.out.println("An error occurred trying to initiate non-normative case: lane jam.");
+				e.printStackTrace();
+			} 
 		} else if (ae.getSource() == diverterButton) {
-			
-		} 
-		
-		
+			messageBox.append("Diverter was too slow switching to " + laneBoxList.getSelectedItem() + ".\n");
+			String set = "";
+			try {
+				laneManager.sendCommand(set);
+			} catch (Exception e) {
+				System.out.println("An error occurred trying initiate non-normative case: slow diverter change.");
+				e.printStackTrace();
+			} 
+		} else if (ae.getSource() == badPartsButton) {
+			messageBox.append("Bad parts found in " + laneBoxList.getSelectedItem() + "'s nest.\n");
+			String set = "";
+			try {
+				laneManager.sendCommand(set);
+			} catch (Exception e) {
+				System.out.println("An error occurred trying initiate non-normative case: bad parts in nest.");
+				e.printStackTrace();
+			} 
+		} else if (ae.getSource() == blockingRobotButton) {
+			messageBox.append("A robot is blocking the camera at " + laneBoxList.getSelectedItem() + "'s nest.\n");
+			String set = "";
+			try {
+				laneManager.sendCommand(set);
+			} catch (Exception e) {
+				System.out.println("An error occurred tryin  g initiate non-normative case: robot blocking camera.");
+				e.printStackTrace();
+			} 
+		}
+				
 	}
 	
 	
