@@ -127,6 +127,8 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** MESSAGES **/
 
+	
+	
 	/**
 	 *  The Lane sends this message to the Feeder notifying 
 	 *  him that his nest has become stable.
@@ -261,16 +263,22 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 	/**
+	 *  [v2]
 	 *  The vision sends this message notifying 
 	 *  the Feeder that it had a bad nest. 
-	 *  v.2
 	 * */
 	public void msgBadNest(Nest n) {
-		debug("received msgBadNest()");
 		if (topLane.lane.getNest() == n) 
+		{
 			topLane.state = MyLaneState.BAD_NEST;
+			debug("received msgBadNest(topNest)");
+		}
 		else if (bottomLane.lane.getNest() == n)
+		{
 			bottomLane.state = MyLaneState.BAD_NEST;
+			debug("received msgBadNest(bottomNest)");
+		}
+		
 		stateChanged();
 	}
 
@@ -474,13 +482,25 @@ public class FeederAgent extends Agent implements Feeder {
 		if (bottomLane == la)
 			laneStr = "Bottom Lane";
 
-		debug("Go dump nest of lane "+ laneStr + ".");
+		debug("Action: dump nest of "+ laneStr + ".");
 
 		DoStopFeeding(); // stop feeding the parts into the lane
-		la.state = MyLaneState.TOLD_NEST_TO_DUMP; // the lane has been told to dump its nest
-		la.lane.msgDumpNest(); // tell the lane to dump its nest
-		stateChanged();
-
+		
+		if (la == topLane)
+		{
+			DoPurgeTopLane(); // purge the appropriate lane
+			topLane.state = MyLaneState.EMPTY; // the lane has been purged
+		}
+		else if (la == bottomLane)
+		{
+			DoPurgeBottomLane(); // purge the appropriate lane
+			bottomLane.state = MyLaneState.EMPTY; // the lane has been purged
+		}
+		
+		
+		this.msgLaneNeedsPart(la.part, la.lane); // and feed more of the same type of part that used 
+												 // to be in the lane before the bad nest msg
+		
 	}
 
 
