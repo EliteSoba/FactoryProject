@@ -42,7 +42,7 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 	JLabel i7;
 	JLabel i8;
 	
-	JLabel updateField; //will display updates
+	JTextArea updateField; //will display updates
 	JButton go; //command to robot to ruin next kit
 
 	public KitAssManPanel(KitAssemblyManager k){
@@ -50,12 +50,6 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-		/*
-		title = new JLabel("Kit Assembly Manager");
-		title.setFont(new Font("Serif", Font.BOLD, 16));
-		subtitle = new JLabel("Non-Normative : ");
-		incorrectKits = new JButton("Incorrect Kits");
-		kitRobotFreeze = new JButton("Kit Robot Freeze");*/
 		
 		label = new JLabel("Bad Kit - Non normative");
 		labelKit1 = new JLabel("Current Kit: ");
@@ -79,7 +73,7 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 		i7 = new JLabel("Part 7");
 		i8 = new JLabel("Part 8");
 		
-		updateField = new JLabel("No Update");
+		updateField = new JTextArea("System Messages\n",10,10);
 		go = new JButton("GO!");
 		
 		c.gridx = 0;
@@ -127,7 +121,7 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 		
 		c.gridx = 0;
 		c.gridy = 10;
-		this.add(updateField, c);
+		add(new JScrollPane(updateField),c);
 		
 		c.gridx = 1;
 		c.gridy = 1;
@@ -178,7 +172,7 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 			kitAssemblyManager.sendCommand(cmd);
 			}
 			else{
-				label.setText("No Kits Yet in production, nothing will happen");
+				label.setText("No Kits in production, nothing will happen");
 			}
 			
 		}
