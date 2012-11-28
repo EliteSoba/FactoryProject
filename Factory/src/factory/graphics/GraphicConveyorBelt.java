@@ -53,7 +53,7 @@ public class GraphicConveyorBelt {
 		this.GP = GP;
 		
 		conveyorBeltAnimationImages = GraphicAnimation.loadAnimationFromFolder("Images/conveyorBelt/", 0, ".png");
-		System.out.println(conveyorBeltAnimationImages.size());
+		//System.out.println(conveyorBeltAnimationImages.size());
 		conveyorBeltAnimationCounter = 0;
 		conveyorBeltAnimationSpeed = 5;
 	}
