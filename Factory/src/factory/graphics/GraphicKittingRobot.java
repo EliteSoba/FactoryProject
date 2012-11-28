@@ -42,7 +42,7 @@ public class GraphicKittingRobot {
 	GraphicKittingStation station;
 
 	/**Booleans to determine what pathing the Kit Robot is taking*/
-	private boolean fromBelt, toStation, toBelt, toCheck, checkKit, fromCheck, purgeInspectionKit, toDump, purgeKit;
+	private boolean fromBelt, toStation, toBelt, toCheck, checkKit, fromCheck, purgeInspectionKit, toDump, purgeKit, reCheck, reSlot;
 	/**The slot in the Kit Station the Kit Robot is going to*/
 	private int stationTarget;
 	
@@ -80,6 +80,8 @@ public class GraphicKittingRobot {
 		purgeInspectionKit = false;
 		purgeKit = false;
 		toDump = false;
+		reCheck = false;
+		reSlot = false;
 		stationTarget = 0;
 	}
 	
@@ -343,6 +345,22 @@ public class GraphicKittingRobot {
 			}
 		}
 		
+		//From Inspection Station back to Kit Station
+		else if (reCheck) {
+			if (moveToCheck(v)) {
+				reCheck = false;
+				setKit(station.popCheck());
+				reSlot = true;
+			}
+		}
+		else if (reSlot) {
+			if (moveToStation(v, stationTarget)) {
+				reSlot = false;
+				station.addKit(unkit(), stationTarget);
+				GP.moveKitFromInspectionBackToStationDone();
+			}
+		}
+		
 		//Returns to original horizontal position
 //		else
 //			moveToStartX(v);
@@ -530,9 +548,17 @@ public class GraphicKittingRobot {
 	public void setCheckKit(boolean checkKit) {
 		this.checkKit = checkKit;
 	}
+	/**
+	 * Sets if the Kit Robot is going to the Dump
+	 * @param purgeKit If the Kit Robot is going to the Dump
+	 */
 	public void setPurgeKit(boolean purgeKit) {
 		this.purgeKit = purgeKit;
 	}
+	/**
+	 * Checks if the Kit Robot is going to the Dump
+	 * @return {@code true} if the Kit Robot is going to the Dump; {@code false} otherwise
+	 */
 	public boolean getPurgeKit() {
 		return purgeKit;
 	}
@@ -549,6 +575,20 @@ public class GraphicKittingRobot {
 	 */
 	public void setPurgeInspectionKit(boolean purgeInspectionKit) {
 		this.purgeInspectionKit = purgeInspectionKit;
+	}
+	/**
+	 * Checks if the Kit Robot is going to reload the station with the Kit in the Inspection Station
+	 * @return {@code true} if the Kit Robot is going to reload the station with the Kit in the Inspection Station; {@code false} otherwise
+	 */
+	public boolean getReCheck() {
+		return reCheck;
+	}
+	/**
+	 * Sets if the Kit Robot is going to reload with the Kit in the Inspection Station
+	 * @param reCheck If the Kit Robot is going to reload with the Kit in the Inspection Station
+	 */
+	public void setReCheck(boolean reCheck) {
+		this.reCheck = reCheck;
 	}
 	/**
 	 * Gets the slot in the Kit Station the Kit Robot is going to

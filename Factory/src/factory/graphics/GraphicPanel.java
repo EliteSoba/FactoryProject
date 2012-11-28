@@ -174,6 +174,18 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	/**
+	 * Moves the Kit in the Inspection Station back to the designated slot in the Kit Station
+	 * @param target The designated slot in the Kit Station
+	 * @see moveKitFromInspectionBackToStationDone()
+	 */
+	public void moveKitFromInspectionBackToStation(int target) {
+		if (isKitAssemblyManager || isFactoryProductionManager) {
+			kitRobot.setReCheck(true);
+			kitRobot.setStationTarget(target);
+		}
+	}
+	
+	/**
 	 * Sends a Kit out of the Factory via Conveyor Belt
 	 * @see exportKitDone()
 	 */
@@ -579,6 +591,14 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	/**
+	 * Removes all the Items in the given Nest
+	 * @param nestNum The index of the Nest
+	 */
+	public void purgeNest(int nestNum) {
+		nests.get(nestNum).clearItems();
+	}
+	
+	/**
 	 * Moves Parts down the Lanes
 	 */
 	public void moveLanes() {
@@ -636,6 +656,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 
 	public void moveKitFromInspectionToConveyorDone() {
+		sendMessage("kra cnf");
+	}
+	
+	public void moveKitFromInspectionBackToStationDone() {
 		sendMessage("kra cnf");
 	}
 

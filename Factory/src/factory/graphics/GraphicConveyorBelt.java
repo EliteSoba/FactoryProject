@@ -32,8 +32,9 @@ public class GraphicConveyorBelt {
 	public static int width = 50;
 	/**The height of the Conveyor Belt*/
 	public static int height = 720;
-	public ArrayList<Image> conveyorBeltImages;
+	public ArrayList<Image> conveyorBeltAnimationImages;
 	public int conveyorBeltAnimationCounter;
+	public int conveyorBeltAnimationSpeed;
 	
 	/**
 	 * Creates a Conveyor Belt at the given x and y coordinates
@@ -51,8 +52,10 @@ public class GraphicConveyorBelt {
 		export = false;
 		this.GP = GP;
 		
-		conveyorBeltImages = GraphicAnimation.loadAnimationFromFolder("Images/conveyorBelt/", 0, ".png");
+		conveyorBeltAnimationImages = GraphicAnimation.loadAnimationFromFolder("Images/conveyorBelt/", 0, ".png");
+		//System.out.println(conveyorBeltAnimationImages.size());
 		conveyorBeltAnimationCounter = 0;
+		conveyorBeltAnimationSpeed = 5;
 	}
 	
 	/**
@@ -60,20 +63,23 @@ public class GraphicConveyorBelt {
 	 * @param g The specified graphics window
 	 */
 	public void paint(Graphics g) {
-		//Main belt
-		g.setColor(new Color(47, 41, 32));
-		g.fillRect(x, y, width, height);
+//		//Main belt
+//		g.setColor(new Color(47, 41, 32));
+//		g.fillRect(x, y, width, height);
+//		
+//		//Main belt animation
+//		g.setColor(new Color(224, 224, 205));
+//		for (int i = t; i < height; i += 50) {
+//			g.drawLine(x, i, x+width, i);
+//		}
 		
-		//Main belt animation
-		g.setColor(new Color(224, 224, 205));
-		for (int i = t; i < height; i += 50) {
-			g.drawLine(x, i, x+width, i);
+		g.drawImage(conveyorBeltAnimationImages.get(conveyorBeltAnimationCounter/conveyorBeltAnimationSpeed), 0, 0, null);
+		if(kitin() && !pickUp || kitout() && export)
+		{
+			conveyorBeltAnimationCounter++;
+			if(conveyorBeltAnimationCounter >= conveyorBeltAnimationImages.size()*conveyorBeltAnimationSpeed)
+				conveyorBeltAnimationCounter = 0;
 		}
-		
-//		g.drawImage(conveyorBeltImages.get(conveyorBeltAnimationCounter/5), 0, 0, null);
-//		conveyorBeltAnimationCounter++;
-//		if(conveyorBeltAnimationCounter >= conveyorBeltImages.size()*5)
-//			conveyorBeltAnimationCounter = 0;
 		
 		//Draws the kit moving into the factory
 		drawKitIn(g);
