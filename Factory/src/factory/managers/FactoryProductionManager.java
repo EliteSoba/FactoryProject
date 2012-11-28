@@ -182,6 +182,13 @@ public class FactoryProductionManager extends Client {
 					((FactoryProductionPanel) graphics).dumpKitAtInspection();
 				}
 			}
+			else if (identifier.equals("movekitback")) {
+				if (pCmd.get(2).equals("topSlot")) {
+					((FactoryProductionPanel) graphics).moveKitFromInspectionBackToStation(0);
+				} else if (pCmd.get(2).equals("bottomSlot")) {
+					((FactoryProductionPanel) graphics).moveKitFromInspectionBackToStation(1);
+				}
+			}
 
 			// Commands from ConveyorAgent
 			else if (identifier.equals("exportkitfromcell")) {
