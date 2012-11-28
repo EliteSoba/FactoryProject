@@ -1,7 +1,8 @@
-//Stephanie Reagle
+//Stephanie Reagle, Joey Huang, Marc Mendiola
 //CS 200
-// last edited: 12:18pm 11/28/12 by Joey Huang
+// last edited: 2:26 AM 11/28/12
 package factory.swing;
+
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,6 +23,8 @@ public class LaneManPanel extends JPanel implements ActionListener {
 	JButton greenButton = new JButton("Green");
 	JButton powerButton = new JButton("Power");
 	
+	
+	
 	LaneManager laneManager;
 	JTabbedPane tabbedPane; 
 	JPanel preferencesPanel;
@@ -33,14 +36,14 @@ public class LaneManPanel extends JPanel implements ActionListener {
 		redButton.addActionListener(this); 
 		yellowButton.addActionListener(this); 
 		greenButton.addActionListener(this); 
-		preferencesPanel = new JPanel();
+		preferencesPanel = new LanePreferencesPanel();
 		nonnormativePanel = new LaneNonNormPanel();
 		tabbedPane = new JTabbedPane();
 		
 	    GridBagConstraints c = new GridBagConstraints();
 		setLayout(new GridBagLayout());
 		
-		c.fill = GridBagConstraints.VERTICAL;
+		/*c.fill = GridBagConstraints.VERTICAL;
 		c.gridx = 0;
 		c.gridy = 0;
 		preferencesPanel.add(lane, c);
@@ -57,7 +60,7 @@ public class LaneManPanel extends JPanel implements ActionListener {
 		c.gridx = 5;
 		c.gridy = 0;
 		preferencesPanel.add(powerButton);
-		
+		*/
 		tabbedPane.addTab("Preferences", preferencesPanel);
 		tabbedPane.addTab("Non-Normative", nonnormativePanel);
 		
@@ -92,6 +95,147 @@ public class LaneManPanel extends JPanel implements ActionListener {
 	}
 
 
+
+public class LanePreferencesPanel extends JPanel implements ActionListener{
+
+	JLabel title;
+	JLabel laneLabel;
+	JLabel laneSpeedLabel;
+	JLabel laneAmplitudeLabel;
+	JLabel lanePowerLabel;
+	JLabel feederPowerLabel;
+	JButton laneOn;
+	JButton laneOff;
+	JButton feederOn;
+	JButton feederOff;
+	JSlider laneSpeed;
+	JSlider laneAmplitude;
+	JComboBox laneSelect;
+
+	JPanel feederSection;
+	JPanel laneSection;
+
+	int speedMin;
+	int speedMax;
+	int amplitudeMin;
+	int amplitudeMax;
+
+	public LanePreferencesPanel(){
+		
+		speedMin = 1;
+		speedMax = 8;
+		amplitudeMin = 1;
+		amplitudeMax = 8;
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		title = new JLabel("Lane Manager");
+		title.setAlignmentX(Component.CENTER_ALIGNMENT);
+		title.setFont(new Font("Serif", Font.BOLD, 16));
+		laneLabel = new JLabel("Lane : ");
+		lanePowerLabel = new JLabel("Power : ");
+		laneSpeedLabel = new JLabel("Speed : "); 
+		laneAmplitudeLabel = new JLabel("Amplitude : ");
+		laneSpeed = new JSlider(speedMin, speedMax);
+		laneSpeed.setMinorTickSpacing(1);
+		laneSpeed.setMajorTickSpacing(7);
+		laneSpeed.setPaintTicks(true);
+		laneSpeed.setSnapToTicks(true);
+		laneSpeed.setPaintLabels(true);
+		laneSpeed.setValue(1);
+		laneAmplitude = new JSlider(amplitudeMin, amplitudeMax);
+		laneAmplitude.setMinorTickSpacing(1);
+		laneAmplitude.setMajorTickSpacing(7);
+		laneAmplitude.setPaintTicks(true);
+		laneAmplitude.setSnapToTicks(true);
+		laneAmplitude.setPaintLabels(true);
+		laneAmplitude.setValue(1);
+		laneOn = new JButton("ON");
+		laneOff = new JButton("OFF");
+		laneOn.addActionListener(this);
+		laneOff.addActionListener(this);
+		laneSelect = new JComboBox();
+		for(int i = 1; i <= 8; i++){
+			laneSelect.addItem(i);
+		}
+		
+		feederPowerLabel = new JLabel("Power : ");
+		feederOn = new JButton("ON");
+		feederOff = new JButton ("OFF");
+		feederOn.addActionListener(this);
+		feederOff.addActionListener(this);
+		
+		TitledBorder feederBorder = BorderFactory.createTitledBorder("Feeder Control");
+
+		feederSection = new JPanel();
+		feederSection.setLayout(new GridBagLayout());
+		feederSection.setBorder(feederBorder);
+		GridBagConstraints c = new GridBagConstraints();
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		feederSection.add(feederPowerLabel, c);
+		c.gridx = 1;
+		c.gridy = 0;
+		feederSection.add(feederOn, c);
+		c.gridx = 2;
+		c.gridy = 0;
+		feederSection.add(feederOff, c);
+
+
+
+		TitledBorder laneBorder = BorderFactory.createTitledBorder("Lane Control");
+		laneSection = new JPanel();
+		laneSection.setBorder(laneBorder);
+		laneSection.setLayout(new GridBagLayout());
+		
+		c.gridx = 0;
+		c.gridy = 0;
+		laneSection.add(laneLabel, c);
+		c.gridx = 1;
+		c.gridy = 0;
+		laneSection.add(laneSelect, c);
+		c.gridx = 0;
+		c.gridy = 1;
+		laneSection.add(lanePowerLabel, c);
+		c.gridx = 1;
+		c.gridy = 1;
+		laneSection.add(laneOn, c);
+		c.gridx = 2;
+		c.gridy = 1;
+		laneSection.add(laneOff, c);
+		c.gridx = 0;
+		c.gridy = 2;
+		laneSection.add(laneSpeedLabel, c);
+		c.gridwidth = 3;
+		c.gridx = 1;
+		c.gridy = 2;
+		laneSection.add(laneSpeed, c);
+		c.gridwidth = 1;
+		c.gridx = 0;
+		c.gridy = 3;
+		laneSection.add(laneAmplitudeLabel, c);
+		c.gridwidth = 3;
+		c.gridx = 1;
+		c.gridy = 3;
+		laneSection.add(laneAmplitude, c);
+		
+		
+		
+		
+		this.add(title);
+		this.add(feederSection);
+		this.add(laneSection);
+	}
+
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+}
+	
 public class LaneNonNormPanel extends JPanel implements ActionListener {
 	JComboBox laneBoxList;
 	JPanel partsMissingContainer;
