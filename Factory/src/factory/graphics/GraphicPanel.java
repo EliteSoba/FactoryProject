@@ -591,6 +591,14 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	/**
+	 * Removes all the Items in the given Nest
+	 * @param nestNum The index of the Nest
+	 */
+	public void purgeNest(int nestNum) {
+		nests.get(nestNum).clearItems();
+	}
+	
+	/**
 	 * Moves Parts down the Lanes
 	 */
 	public void moveLanes() {
