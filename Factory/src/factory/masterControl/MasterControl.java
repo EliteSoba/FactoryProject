@@ -77,7 +77,7 @@ public class MasterControl {
 
 	// Lists of Commands with Multi Destinations and Lists of Destinations associated with those Commands
 
-	private static final List<String> multiCmd_1 = Arrays.asList("purgefeeder", "purgetoplane", "purgebottomlane");
+	private static final List<String> multiCmd_1 = Arrays.asList("purgefeeder"/*, "purgetoplane", "purgebottomlane"*/);
     private static final List<String> multiCmdDst_1 = Arrays.asList("gm", "lm");
     private static final List<List<String>> multiCmds = Arrays.asList(multiCmd_1);
 

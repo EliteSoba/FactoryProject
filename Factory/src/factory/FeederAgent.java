@@ -1049,7 +1049,7 @@ public class FeederAgent extends Agent implements Feeder {
 		if (debugMode == false)
 		{
 			debug("purging lane top");
-			server.command("fa multi cmd purgetoplane " + feederNumber); /** TODO: MULTI **/
+			server.command("fa lm cmd purgetoplane " + feederNumber); /** TODO: MULTI **/
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
@@ -1064,7 +1064,7 @@ public class FeederAgent extends Agent implements Feeder {
 		if (debugMode == false)
 		{
 			debug("purging lane bottom");
-			server.command("fa multi cmd purgebottomlane " + feederNumber); /** TODO: MULTI **/
+			server.command("fa lm cmd purgebottomlane " + feederNumber); /** TODO: MULTI **/
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
