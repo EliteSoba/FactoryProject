@@ -30,9 +30,6 @@ public class KitAssemblyManager extends Client {
 
 	public Boolean kitsProduced = false;
 
-	//KitAssManPanel buttons;
-	//KitAssemblyPanel animation;
-
 	public KitAssemblyManager() {
 		super(Client.Type.kam, null, null);
 

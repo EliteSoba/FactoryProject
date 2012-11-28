@@ -63,7 +63,7 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 		item6 = new JRadioButton("N/A");
 		item7 = new JRadioButton("N/A");
 		item8 = new JRadioButton("N/A");
-
+		
 		i1 = new JLabel("Part 1");
 		i2 = new JLabel("Part 2");
 		i3 = new JLabel("Part 3");
@@ -75,6 +75,8 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 
 		updateField = new JTextArea("System Messages\n",10,10);
 		go = new JButton("GO!");
+		//adding action listeners so people can click buttons
+		go.addActionListener(this);
 
 		c.gridx = 0;
 		c.gridy = 0;
@@ -173,6 +175,7 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 						//if item selected pass none else pass normal part
 						"#kitname #numpart1 #numpart2 ... #numpart";
 				kitAssemblyManager.sendCommand(cmd);
+				System.out.println("kam: kit droppparts");
 			}
 			else{
 				label.setText("No Kits in production, nothing will happen");
