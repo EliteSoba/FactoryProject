@@ -28,14 +28,16 @@ public class KitAssemblyManager extends Client {
 	HashMap<String,Part> partsList; // contains list of parts in system
 	HashMap<String,KitConfig> kitConfigList; // contains list of kit configurations in system
 	
-	KitAssManPanel buttons;
-	KitAssemblyPanel animation;
+	public Boolean kitsProduced = false;
+	
+	//KitAssManPanel buttons;
+	//KitAssemblyPanel animation;
 
 		public KitAssemblyManager() {
 			super(Client.Type.kam, null, null);
 			
-			buttons = new KitAssManPanel(this);
-			animation = new KitAssemblyPanel(this);
+			UI = new KitAssManPanel(this);
+			graphics = new KitAssemblyPanel(this);
 			
 			this.setInterface();
 
@@ -49,8 +51,8 @@ public class KitAssemblyManager extends Client {
 		}
 
 		public void setInterface() {
-			graphics = animation;
-			UI = buttons;
+			//graphics = animation;
+			//UI = buttons;
 			
 			setLayout(new BorderLayout());
 
@@ -165,7 +167,7 @@ public void doCommand(ArrayList<String> pCmd) {
 					}
 				}
 				else if (identifier.equals("movekittoinspectionslot")) {//certain there is a complete kit
-					
+					kitsProduced = true; //will enable ui to run non normatives
 					if (pCmd.get(2).equals("topSlot")) {
 						((KitAssemblyPanel) graphics).moveKitToInspection(0);
 					} else if (pCmd.get(2).equals("bottomSlot")) {
