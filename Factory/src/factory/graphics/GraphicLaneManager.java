@@ -639,7 +639,7 @@ public class GraphicLaneManager{
 					if(lane2Items.size() == 0){
 						lane2PurgeOn = false; //This is where the purge ends
 						lane2QueueTaken.clear();
-						graphicPanel.purgeTopLaneDone(laneManagerID);
+						graphicPanel.purgeBottomLaneDone(laneManagerID);
 					}
 				}
 			}

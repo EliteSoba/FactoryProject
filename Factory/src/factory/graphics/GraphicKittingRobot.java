@@ -362,8 +362,8 @@ public class GraphicKittingRobot {
 		}
 		
 		//Returns to original horizontal position
-//		else
-//			moveToStartX(v);
+		else
+			moveToStartX(v);
 	}
 	
 	//The following are all getters and setters

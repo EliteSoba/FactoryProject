@@ -620,7 +620,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isLaneManager)
 			message = "lm ";
 		else if (isGantryRobotManager)
-			message = "grm ";
+			message = "gm ";
 		else if (isKitAssemblyManager)
 			message = "kam ";
 		else if (isFactoryProductionManager)
