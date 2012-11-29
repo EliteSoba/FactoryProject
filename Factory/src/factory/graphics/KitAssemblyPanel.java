@@ -56,8 +56,11 @@ public class KitAssemblyPanel extends GraphicPanel implements ActionListener{
 			case 'n': kam.newEmptyKit(); break;
 			case '1': kam.moveEmptyKitToSlot(0); break;
 			case '2': kam.moveEmptyKitToSlot(1); break;
+			case '!': kam.station.addItem(new GraphicItem(0,0,"Images/sword.png"), 0); break;
+			case '@': kam.station.addItem(new GraphicItem(0,0,"Images/sword.png"), 1); break;
 			case '3': kam.moveKitToInspection(0); break;
 			case '4': kam.moveKitToInspection(1); break;
+			case '#': kam.dropParts(command.substring(1)); break;
 			case '5': kam.moveKitFromInspectionBackToStation(0); break;
 			case '6': kam.moveKitFromInspectionBackToStation(1); break;
 			case 'f': kam.takePictureOfInspectionSlot(); break;

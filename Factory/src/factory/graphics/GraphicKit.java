@@ -74,7 +74,8 @@ public class GraphicKit {
 	public void paintItems(Graphics g) {
 		validateItems();
 		for (int i = 0; i < items.size(); i++) {
-			items.get(i).paint(g);
+			if (items.get(i) != null)
+				items.get(i).paint(g);
 		}
 	}
 	
@@ -83,14 +84,16 @@ public class GraphicKit {
 	 */
 	public void validateItems() {
 		for (int i = 0; i < items.size(); i++) {
-			switch (direction) {
-			case 4:	
-			case 6:	items.get(i).setX(x+(i%2)*21+1);
-					items.get(i).setY(y+(i/2)*21+1);
-					break;
-			case 2:	
-			case 8:	items.get(i).setX(x+(i/2)*21+1);
-					items.get(i).setY(y+(i%2)*21+1);
+			if (items.get(i) != null) {
+				switch (direction) {
+				case 4:	
+				case 6:	items.get(i).setX(x+(i%2)*21+1);
+						items.get(i).setY(y+(i/2)*21+1);
+						break;
+				case 2:	
+				case 8:	items.get(i).setX(x+(i/2)*21+1);
+						items.get(i).setY(y+(i%2)*21+1);
+				}
 			}
 		}
 	}
@@ -174,6 +177,12 @@ public class GraphicKit {
 	 * @param item The Item to be added to the Kit
 	 */
 	public void addItem(GraphicItem item) {
+		for (int i = 0; i < items.size(); i++) {
+			if (items.get(i) == null) {
+				items.set(i, item);
+				return;
+			}
+		}
 		items.add(item);
 	}
 	
@@ -189,6 +198,15 @@ public class GraphicKit {
 		if (index < 0)
 			return items.get(0);
 		return items.get(index);
+	}
+	
+	/**
+	 * Sets the Item at the given index
+	 * @param index The given index
+	 * @param item The given Item
+	 */
+	public void setItem(int index, GraphicItem item) {
+		items.set(index, item);
 	}
 	
 }

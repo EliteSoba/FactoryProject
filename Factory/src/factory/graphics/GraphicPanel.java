@@ -194,6 +194,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			belt.exportKit();
 	}
 	
+	public void dropParts(String dropped) {
+		if (isKitAssemblyManager || isFactoryProductionManager)
+			kitRobot.breakNextKit(dropped);
+	}
+	
 	/**TODO: Gantry Robot methods*/
 	/**
 	 * Moves Gantry Robot to pick up a Bin with the provided image

@@ -32,6 +32,8 @@ public class GraphicKittingRobot {
 	private int stationY;
 	/**The Kit the Kit Robot is Holding*/
 	private GraphicKit kit;
+	/**For v2, The parts you want to be lost*/
+	private String KITISBROKED_8C;
 	/**The different directional images to display for the Kit Robot*/
 	ImageIcon robot[];
 	/**The GraphicPanel for intercomponent communication*/
@@ -83,6 +85,8 @@ public class GraphicKittingRobot {
 		reCheck = false;
 		reSlot = false;
 		stationTarget = 0;
+		
+		KITISBROKED_8C = null;
 	}
 	
 	/**
@@ -299,6 +303,13 @@ public class GraphicKittingRobot {
 		else if (toCheck) {
 			if (moveToCheck(v)) {
 				toCheck = false;
+				if (KITISBROKED_8C != null) {
+					for (int i = 0; i < KITISBROKED_8C.length(); i++) {
+						if (KITISBROKED_8C.charAt(i) == '1')
+							kit.setItem(i, null);
+					}
+					KITISBROKED_8C = null;
+				}
 				station.addCheck(unkit());
 				GP.moveKitToInspectionDone();
 			}
@@ -603,6 +614,14 @@ public class GraphicKittingRobot {
 	 */
 	public void setStationTarget(int stationTarget) {
 		this.stationTarget = stationTarget;
+	}
+	
+	/**
+	 * Chooses which parts to drop in a binary string
+	 * @param breakString The binary string of the parts to drop
+	 */
+	public void breakNextKit(String breakString) {
+		KITISBROKED_8C = breakString;
 	}
 	
 }
