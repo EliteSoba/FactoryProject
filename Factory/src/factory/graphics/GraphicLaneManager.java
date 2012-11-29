@@ -53,7 +53,7 @@ public class GraphicLaneManager{
 	/**Counter for vibration of items in lane**/
 	int vibrationCount;
 	/**The height of the vibration of items**/
-	private int vibrationAmplitude;
+	public int vibrationAmplitude;
 	/**lane Manager Number**/
 	int laneManagerID;	
 	/**Counters to keep track of lane animation. 7 sprites**/
@@ -99,12 +99,12 @@ public class GraphicLaneManager{
 		//bin = null;
 		//declaration of variables
 		laneAnimationCounter = 0;
-		laneAnimationSpeed = 1;			// default value
+		laneAnimationSpeed = 2;			// default value
 		lane1Items = new ArrayList<GraphicItem>();
 		lane2Items = new ArrayList<GraphicItem>();
 		lane1QueueTaken = new ArrayList<Boolean>();
 		lane2QueueTaken = new ArrayList<Boolean>();
-		laneSpeed = 2;				//Change speed of the lane later
+		laneSpeed = 1;				//Change speed of the lane later
 		vX = -laneSpeed; vY = laneSpeed;
 		itemXMax = lane_xPos + 75;
 		itemYMax = lane_yPos + 70 + 40;
@@ -315,6 +315,88 @@ public class GraphicLaneManager{
 		}
 		else{	//if bin does not exists, processes the items in the lanes
 			processLane();
+		}
+		if(!laneStart){	//In lane vibrating even if lane is jammed
+			if(lane1Items.size() > 0){
+				lane1Items.get(0).setVX(0);
+				for(int i = 1; i < lane1Items.size();i++){
+					if(lane1Items.get(i).getY() > itemYLaneUp){
+						lane1Items.get(i).setVY(-laneSpeed);
+					}
+					else if(lane1Items.get(i).getX() > itemXMax){
+						lane1Items.get(i).setVX(vX);
+					}
+					
+					lane1Items.get(i).setX(lane1Items.get(i).getX() + lane1Items.get(i).getVX());
+					lane1Items.get(i).setY(lane1Items.get(i).getY() + lane1Items.get(i).getVY());
+					
+					if(lane1Items.get(i).getX() <= lane1Items.get(0).getX() + i*9){
+						lane1Items.get(i).setX(lane1Items.get(0).getX() + i*9);
+					}
+				}
+			}
+			
+			for(int i = 0;i<lane1Items.size();i++){
+				if(lane1Items.get(i).getVY() == 0){	//In the queue
+					if(vibrationCount % 4 == 1){	//Vibration up and down every 2 paint calls
+						if(i%2 == 0){
+							lane1Items.get(i).setY(itemYLaneUp);
+						}
+						else if(i%2 == 1){
+							lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitude);
+						}
+					}
+					else if(vibrationCount % 4 == 3){
+						if(i%2 == 0){
+							lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitude);
+						}
+						else if(i%2 == 1){
+							lane1Items.get(i).setY(itemYLaneUp);
+						}
+					}
+				}
+				else if(lane1Items.get(i).getVX() == vX){
+					if(vibrationCount % 4 == 1){	//Vibration up and down every 2 paint calls
+						if(i%2 == 0){
+							lane1Items.get(i).setY(itemYLaneUp);
+						}
+						else if(i%2 == 1){
+							lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitude);
+						}
+					}
+					else if(vibrationCount % 4 == 3){
+						if(i%2 == 0){
+							lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitude);
+						}
+						else if(i%2 == 1){
+							lane1Items.get(i).setY(itemYLaneUp);
+						}
+					}
+					if(lane1Items.get(i).getX() < itemXMax){
+						lane1Items.remove(i);
+						i--;
+					}
+				}
+				else if(lane1Items.get(i).getVY() == vY || lane1Items.get(i).getVY() == -(vY) ){	//Horizontal vibrating
+					if(vibrationCount % 4 == 1){	//Vibration left and right every 2 paint calls
+						if(i%2 == 0)
+								lane1Items.get(i).setX(itemXLane);
+						else if(i%2 == 1)
+								lane1Items.get(i).setX(itemXLane + vibrationAmplitude);
+					}
+					else if(vibrationCount % 4 == 3){
+						if(i%2 == 0)
+								lane1Items.get(i).setX(itemXLane + vibrationAmplitude);
+						else if(i%2 == 1)
+								lane1Items.get(i).setX(itemXLane);
+					}
+					if(lane1Items.get(i).getY() <= itemYLaneUp){
+						lane1Items.get(i).setY(itemYLaneUp);
+						lane1Items.get(i).setVY(0);
+						lane1Items.get(i).setVX(vX);
+					}
+				}
+			}
 		}
 	}
 
@@ -803,6 +885,11 @@ public class GraphicLaneManager{
 				}
 			}
 		}
+	}
+	
+	public void changeLaneSpeed(int laneS){
+		laneSpeed = laneS;
+		vX = -laneSpeed; vY = laneSpeed;
 	}
 }
 

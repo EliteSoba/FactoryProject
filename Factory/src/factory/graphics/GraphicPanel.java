@@ -504,6 +504,20 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 	}
 	
+	public void jamLane(int laneNum){
+		lane[(laneNum) / 2].laneStart = false;
+	}
+	
+	public void unjamLane(int laneNum){
+		lane[(laneNum) / 2].laneStart = true;
+		lane[(laneNum) / 2].changeLaneSpeed(lane[(laneNum) / 2].laneSpeed + 1);
+		if(lane[(laneNum) / 2].laneSpeed > 8)	//laneSpeed max is 8
+			lane[(laneNum) / 2].changeLaneSpeed(8);
+		lane[(laneNum) / 2].vibrationAmplitude += 2;
+		if(lane[(laneNum) / 2].vibrationAmplitude > 8)		//vibration amplitude max is 8
+			lane[(laneNum) / 2].vibrationAmplitude = 8;
+	}
+	
 	/**Movement methods*/
 	/**
 	 * Moves the Parts Robot
