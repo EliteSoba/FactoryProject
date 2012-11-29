@@ -41,7 +41,7 @@ public abstract class Client extends JFrame implements ActionListener {
 	public ArrayList<String> parsedCommand; //current command parsed into strings
 	// Timer updater; //repaints graphics
 	boolean connected;
-	String fun = "INCEPTION!!!";
+	String fun = "PEOPLECEPTION!!!";
 	
 	
 	Runnable independentInput = new Runnable(){
