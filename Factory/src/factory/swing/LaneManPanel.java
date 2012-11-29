@@ -4,6 +4,8 @@
 package factory.swing;
 
 
+import LanePreferencesPanel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +13,10 @@ import factory.managers.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import LanePreferencesPanel.SliderDetection;
 public class LaneManPanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = -4485912622490446254L;
@@ -96,145 +102,169 @@ public class LaneManPanel extends JPanel implements ActionListener {
 
 
 
-public class LanePreferencesPanel extends JPanel implements ActionListener{
+	public class LanePreferencesPanel extends JPanel implements ActionListener{
 
-	JLabel title;
-	JLabel laneLabel;
-	JLabel laneSpeedLabel;
-	JLabel laneAmplitudeLabel;
-	JLabel lanePowerLabel;
-	JLabel feederPowerLabel;
-	JButton laneOn;
-	JButton laneOff;
-	JButton feederOn;
-	JButton feederOff;
-	JSlider laneSpeed;
-	JSlider laneAmplitude;
-	JComboBox laneSelect;
+		JLabel title;
+		JLabel laneLabel;
+		JLabel laneSpeedLabel;
+		JLabel laneAmplitudeLabel;
+		JLabel lanePowerLabel;
+		JLabel feederPowerLabel;
+		JButton laneOn;
+		JButton laneOff;
+		JButton feederOn;
+		JButton feederOff;
+		JSlider laneSpeed;
+		JSlider laneAmplitude;
+		JComboBox laneSelect;
 
-	JPanel feederSection;
-	JPanel laneSection;
+		JPanel feederSection;
+		JPanel laneSection;
 
-	int speedMin;
-	int speedMax;
-	int amplitudeMin;
-	int amplitudeMax;
+		int speedMin;
+		int speedMax;
+		int amplitudeMin;
+		int amplitudeMax;
 
-	public LanePreferencesPanel(){
-		
-		speedMin = 1;
-		speedMax = 8;
-		amplitudeMin = 1;
-		amplitudeMax = 8;
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		title = new JLabel("Lane Manager");
-		title.setAlignmentX(Component.CENTER_ALIGNMENT);
-		title.setFont(new Font("Serif", Font.BOLD, 16));
-		laneLabel = new JLabel("Lane : ");
-		lanePowerLabel = new JLabel("Power : ");
-		laneSpeedLabel = new JLabel("Speed : "); 
-		laneAmplitudeLabel = new JLabel("Amplitude : ");
-		laneSpeed = new JSlider(speedMin, speedMax);
-		laneSpeed.setMinorTickSpacing(1);
-		laneSpeed.setMajorTickSpacing(7);
-		laneSpeed.setPaintTicks(true);
-		laneSpeed.setSnapToTicks(true);
-		laneSpeed.setPaintLabels(true);
-		laneSpeed.setValue(1);
-		laneAmplitude = new JSlider(amplitudeMin, amplitudeMax);
-		laneAmplitude.setMinorTickSpacing(1);
-		laneAmplitude.setMajorTickSpacing(7);
-		laneAmplitude.setPaintTicks(true);
-		laneAmplitude.setSnapToTicks(true);
-		laneAmplitude.setPaintLabels(true);
-		laneAmplitude.setValue(1);
-		laneOn = new JButton("ON");
-		laneOff = new JButton("OFF");
-		laneOn.addActionListener(this);
-		laneOff.addActionListener(this);
-		laneSelect = new JComboBox();
-		for(int i = 1; i <= 8; i++){
-			laneSelect.addItem(i);
+		public LanePreferencesPanel(){
+
+			speedMin = 1;
+			speedMax = 8;
+			amplitudeMin = 1;
+			amplitudeMax = 8;
+			this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
+			title = new JLabel("Lane Manager");
+			title.setAlignmentX(Component.CENTER_ALIGNMENT);
+			title.setFont(new Font("Serif", Font.BOLD, 16));
+			laneLabel = new JLabel("Lane : ");
+			lanePowerLabel = new JLabel("Power : ");
+			laneSpeedLabel = new JLabel("Speed : "); 
+			laneAmplitudeLabel = new JLabel("Amplitude : ");
+			laneSpeed = new JSlider(speedMin, speedMax);
+			laneSpeed.setMinorTickSpacing(1);
+			laneSpeed.setMajorTickSpacing(7);
+			laneSpeed.setPaintTicks(true);
+			laneSpeed.setSnapToTicks(true);
+			laneSpeed.setPaintLabels(true);
+			laneSpeed.setValue(1);
+			laneSpeed.addChangeListener(new SliderDetection());
+			laneAmplitude = new JSlider(amplitudeMin, amplitudeMax);
+			laneAmplitude.setMinorTickSpacing(1);
+			laneAmplitude.setMajorTickSpacing(7);
+			laneAmplitude.setPaintTicks(true);
+			laneAmplitude.setSnapToTicks(true);
+			laneAmplitude.setPaintLabels(true);
+			laneAmplitude.setValue(1);
+			laneAmplitude.addChangeListener(new SliderDetection());
+			laneOn = new JButton("ON");
+			laneOff = new JButton("OFF");
+			laneOn.addActionListener(this);
+			laneOff.addActionListener(this);
+			laneSelect = new JComboBox();
+			for(int i = 1; i <= 8; i++){
+				laneSelect.addItem(i);
+			}
+
+			feederPowerLabel = new JLabel("Power : ");
+			feederOn = new JButton("ON");
+			feederOff = new JButton ("OFF");
+			feederOn.addActionListener(this);
+			feederOff.addActionListener(this);
+
+			TitledBorder feederBorder = BorderFactory.createTitledBorder("Feeder Control");
+
+			feederSection = new JPanel();
+			feederSection.setLayout(new GridBagLayout());
+			feederSection.setBorder(feederBorder);
+			GridBagConstraints c = new GridBagConstraints();
+
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridx = 0;
+			c.gridy = 0;
+			feederSection.add(feederPowerLabel, c);
+			c.gridx = 1;
+			c.gridy = 0;
+			feederSection.add(feederOn, c);
+			c.gridx = 2;
+			c.gridy = 0;
+			feederSection.add(feederOff, c);
+
+
+
+			TitledBorder laneBorder = BorderFactory.createTitledBorder("Lane Control");
+			laneSection = new JPanel();
+			laneSection.setBorder(laneBorder);
+			laneSection.setLayout(new GridBagLayout());
+
+			c.gridx = 0;
+			c.gridy = 0;
+			laneSection.add(laneLabel, c);
+			c.gridx = 1;
+			c.gridy = 0;
+			laneSection.add(laneSelect, c);
+			c.gridx = 0;
+			c.gridy = 1;
+			laneSection.add(lanePowerLabel, c);
+			c.gridx = 1;
+			c.gridy = 1;
+			laneSection.add(laneOn, c);
+			c.gridx = 2;
+			c.gridy = 1;
+			laneSection.add(laneOff, c);
+			c.gridx = 0;
+			c.gridy = 2;
+			laneSection.add(laneSpeedLabel, c);
+			c.gridwidth = 3;
+			c.gridx = 1;
+			c.gridy = 2;
+			laneSection.add(laneSpeed, c);
+			c.gridwidth = 1;
+			c.gridx = 0;
+			c.gridy = 3;
+			laneSection.add(laneAmplitudeLabel, c);
+			c.gridwidth = 3;
+			c.gridx = 1;
+			c.gridy = 3;
+			laneSection.add(laneAmplitude, c);
+
+
+
+
+			this.add(title);
+			this.add(feederSection);
+			this.add(laneSection);
 		}
-		
-		feederPowerLabel = new JLabel("Power : ");
-		feederOn = new JButton("ON");
-		feederOff = new JButton ("OFF");
-		feederOn.addActionListener(this);
-		feederOff.addActionListener(this);
-		
-		TitledBorder feederBorder = BorderFactory.createTitledBorder("Feeder Control");
 
-		feederSection = new JPanel();
-		feederSection.setLayout(new GridBagLayout());
-		feederSection.setBorder(feederBorder);
-		GridBagConstraints c = new GridBagConstraints();
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 0;
-		feederSection.add(feederPowerLabel, c);
-		c.gridx = 1;
-		c.gridy = 0;
-		feederSection.add(feederOn, c);
-		c.gridx = 2;
-		c.gridy = 0;
-		feederSection.add(feederOff, c);
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
 
+		}
 
+		public class SliderDetection implements ChangeListener{
 
-		TitledBorder laneBorder = BorderFactory.createTitledBorder("Lane Control");
-		laneSection = new JPanel();
-		laneSection.setBorder(laneBorder);
-		laneSection.setLayout(new GridBagLayout());
-		
-		c.gridx = 0;
-		c.gridy = 0;
-		laneSection.add(laneLabel, c);
-		c.gridx = 1;
-		c.gridy = 0;
-		laneSection.add(laneSelect, c);
-		c.gridx = 0;
-		c.gridy = 1;
-		laneSection.add(lanePowerLabel, c);
-		c.gridx = 1;
-		c.gridy = 1;
-		laneSection.add(laneOn, c);
-		c.gridx = 2;
-		c.gridy = 1;
-		laneSection.add(laneOff, c);
-		c.gridx = 0;
-		c.gridy = 2;
-		laneSection.add(laneSpeedLabel, c);
-		c.gridwidth = 3;
-		c.gridx = 1;
-		c.gridy = 2;
-		laneSection.add(laneSpeed, c);
-		c.gridwidth = 1;
-		c.gridx = 0;
-		c.gridy = 3;
-		laneSection.add(laneAmplitudeLabel, c);
-		c.gridwidth = 3;
-		c.gridx = 1;
-		c.gridy = 3;
-		laneSection.add(laneAmplitude, c);
-		
-		
-		
-		
-		this.add(title);
-		this.add(feederSection);
-		this.add(laneSection);
-	}
+			@Override
+			public void stateChanged(ChangeEvent ce) {
+				// TODO Auto-generated method stub
+				JSlider source = (JSlider) ce.getSource();
+				if(source == laneSpeed){
+					if (!source.getValueIsAdjusting()) {
+						int speed = (int)source.getValue();
+						// send speed to server
+						System.out.println("lane speed : " + speed);
+					}
+				}else if(source == laneAmplitude){
+					if (!source.getValueIsAdjusting()) {
+						int amplitude = (int)source.getValue();
+						// send amplitude to server
+						System.out.println("lane amplitude : " + amplitude);
+					}
+				}
+			}
 
-	
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+		}
 
 	}
-
-}
 	
 public class LaneNonNormPanel extends JPanel implements ActionListener {
 	JComboBox laneBoxList;
