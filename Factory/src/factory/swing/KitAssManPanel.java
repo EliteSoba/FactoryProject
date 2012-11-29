@@ -170,10 +170,10 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 		String cmd = new String (" ");
 		if(ae.getSource() == go){
 			if (!kitsProduced){
-				cmd = "kam fcsa cmd kitdropparts " + 
+				cmd = "kam fcsa cmd kitdropparts " + concat();
 						//get current kit in production
 						//if item selected pass none else pass normal part
-						"#kitname" + concat();
+						
 				kitAssemblyManager.sendCommand(cmd);
 				System.out.println("kam: kit droppparts");
 			}
