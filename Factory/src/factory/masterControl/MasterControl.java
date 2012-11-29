@@ -53,7 +53,7 @@ public class MasterControl {
     TreeMap<String, Agent> agentTreeMap;
 	TreeMap<String, PartHandler> partHandlers; 
 	TreeMap<String, Boolean> partOccupied;
-    TreeMap<List<String>, List<String>> multiCmdDsts;
+    HashMap<List<String>, List<String>> multiCmdDsts;
 
     // Lists of Known Clients, Agents, CommandTypes, and supported Commands
 
@@ -70,14 +70,14 @@ public class MasterControl {
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
             "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection",
-            "kitdropparts"
+            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback"
 
     );
 
 
 	// Lists of Commands with Multi Destinations and Lists of Destinations associated with those Commands
 
-	private static final List<String> multiCmd_1 = Arrays.asList("purgefeeder", "purgetoplane", "purgebottomlane");
+	private static final List<String> multiCmd_1 = Arrays.asList("purgefeeder"/*, "purgetoplane", "purgebottomlane"*/);
     private static final List<String> multiCmdDst_1 = Arrays.asList("gm", "lm");
     private static final List<List<String>> multiCmds = Arrays.asList(multiCmd_1);
 
@@ -95,7 +95,7 @@ public class MasterControl {
 		laneAgentTreeMap = new TreeMap<String, LaneAgent>();
 		nestAgentTreeMap = new TreeMap<String, NestAgent>();
         partHandlerList = new ArrayList<PartHandler>();
-        multiCmdDsts = new TreeMap<List<String>, List<String>>();
+        multiCmdDsts = new HashMap<List<String>, List<String>>();
 
 
 
@@ -646,7 +646,8 @@ public class MasterControl {
         for(List<String> l : multiCmds){
             if(l.contains(myCmd)){
                 ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
-                for(String dst : multiCmdDsts.get(l)){
+                List<String> destinations = multiCmdDsts.get(l);
+                for(String dst : destinations){
                     if(partHandlers.containsKey(dst)){
                         returnAL.add(partHandlers.get(dst));
                     }

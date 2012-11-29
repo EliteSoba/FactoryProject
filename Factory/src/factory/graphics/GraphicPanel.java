@@ -174,12 +174,29 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	/**
+	 * Moves the Kit in the Inspection Station back to the designated slot in the Kit Station
+	 * @param target The designated slot in the Kit Station
+	 * @see moveKitFromInspectionBackToStationDone()
+	 */
+	public void moveKitFromInspectionBackToStation(int target) {
+		if (isKitAssemblyManager || isFactoryProductionManager) {
+			kitRobot.setReCheck(true);
+			kitRobot.setStationTarget(target);
+		}
+	}
+	
+	/**
 	 * Sends a Kit out of the Factory via Conveyor Belt
 	 * @see exportKitDone()
 	 */
 	public void exportKit() {
 		if (isKitAssemblyManager || isFactoryProductionManager)
 			belt.exportKit();
+	}
+	
+	public void dropParts(String dropped) {
+		if (isKitAssemblyManager || isFactoryProductionManager)
+			kitRobot.breakNextKit(dropped);
 	}
 	
 	/**TODO: Gantry Robot methods*/
@@ -487,6 +504,20 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 	}
 	
+	public void jamLane(int laneNum){
+		lane[(laneNum) / 2].laneStart = false;
+	}
+	
+	public void unjamLane(int laneNum){
+		lane[(laneNum) / 2].laneStart = true;
+		lane[(laneNum) / 2].changeLaneSpeed(lane[(laneNum) / 2].laneSpeed + 1);
+		if(lane[(laneNum) / 2].laneSpeed > 8)	//laneSpeed max is 8
+			lane[(laneNum) / 2].changeLaneSpeed(8);
+		lane[(laneNum) / 2].vibrationAmplitude += 2;
+		if(lane[(laneNum) / 2].vibrationAmplitude > 8)		//vibration amplitude max is 8
+			lane[(laneNum) / 2].vibrationAmplitude = 8;
+	}
+	
 	/**Movement methods*/
 	/**
 	 * Moves the Parts Robot
@@ -553,8 +584,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Sets the Bin for the specified feeder
-	 * @param feederNum
-	 * @param bin
+	 * @param feederNum The index of the Feeder
+	 * @param bin The Bin to be added
 	 */
 	public void setFeederBin(int feederNum, GraphicBin bin) {
 		lane[feederNum].setBin(bin);
@@ -562,11 +593,28 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Adds an Part to the specified Kit
-	 * @param kitNum
-	 * @param item
+	 * @param kitNum The index of the Kit
+	 * @param item The Item to be added
 	 */
 	public void setKitItem(int kitNum, GraphicItem item) {
 		station.addItem(item, kitNum);
+	}
+	
+	/**
+	 * Removes the Item at the given index from the given Nest
+	 * @param nestNum The index of the Nest
+	 * @param itemIndex The index of the Item
+	 */
+	public void popNestItem(int nestNum, int itemIndex) {
+		nests.get(nestNum).popItemAt(itemIndex);
+	}
+	
+	/**
+	 * Removes all the Items in the given Nest
+	 * @param nestNum The index of the Nest
+	 */
+	public void purgeNest(int nestNum) {
+		nests.get(nestNum).clearItems();
 	}
 	
 	/**
@@ -591,7 +639,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isLaneManager)
 			message = "lm ";
 		else if (isGantryRobotManager)
-			message = "grm ";
+			message = "gm ";
 		else if (isKitAssemblyManager)
 			message = "kam ";
 		else if (isFactoryProductionManager)
@@ -629,6 +677,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void moveKitFromInspectionToConveyorDone() {
 		sendMessage("kra cnf");
 	}
+	
+	public void moveKitFromInspectionBackToStationDone() {
+		sendMessage("kra cnf");
+	}
 
 	public void exportKitDone() {
 		sendMessage("ca cnf");
@@ -643,7 +695,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 
 	public void gantryRobotArrivedAtFeederForDropoff() {
-		sendMessage("lm set " + gantryRobot.getDestinationFeeder() + " "+ lane[gantryRobot.getDestinationFeeder()].getBin().getPartName());
+		sendMessage("lm set loadpartatfeeder " + gantryRobot.getDestinationFeeder() + " "+ lane[gantryRobot.getDestinationFeeder()].getBin().getPartName());
 		sendMessage("ga cnf");
 	}
 
@@ -653,6 +705,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void partsRobotArrivedAtNest() {
+		sendMessage("lm set nestitemtaken " + partsRobot.getDestinationNest() + " " + partsRobot.getItemIndex());
 		sendMessage("pra cnf");
 	}
 
@@ -815,6 +868,14 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 			
+	}
+	// sets speed for specified lane
+	public void setLaneSpeed(int laneIndex,int lanenum,int speed) {
+		//lane[laneIndex].setLaneSpeed(lanenum,speed);
+	}
+	// sets amplitude for specified lane
+	public void setLaneAmplitude(int laneIndex,int lanenum,int amplitude) {
+		//lane[laneIndex].setLaneAmplitude(lanenum, amplitude);
 	}
 
 }

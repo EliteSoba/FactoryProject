@@ -59,32 +59,32 @@ public class GantryManager extends Client {
 			if (identifier.equals("startfeeding"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((GantryRobotPanel) graphics).feedFeeder(feederSlot);
+				((FactoryProductionPanel) graphics).feedFeeder(feederSlot);
 			}
 			else if (identifier.equals("stopfeeding"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((GantryRobotPanel) graphics).turnFeederOff(feederSlot);
+				((FactoryProductionPanel) graphics).turnFeederOff(feederSlot);
 			} 
 			else if (identifier.equals("purgefeeder"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((GantryRobotPanel) graphics).purgeFeeder(feederSlot);
+				((FactoryProductionPanel) graphics).purgeFeeder(feederSlot);
 			}
 			else if (identifier.equals("switchlane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((GantryRobotPanel) graphics).switchFeederLane(feederSlot);
+				((FactoryProductionPanel) graphics).switchFeederLane(feederSlot);
 			}
 			else if (identifier.equals("purgetoplane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((GantryRobotPanel) graphics).purgeTopLane(feederSlot);
+				((FactoryProductionPanel) graphics).purgeTopLane(feederSlot);
 			}
 			else if (identifier.equals("purgebottomlane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((GantryRobotPanel) graphics).purgeBottomLane(feederSlot);
+				((FactoryProductionPanel) graphics).purgeBottomLane(feederSlot);
 			}
 			
 			// Commands from GantryAgent:

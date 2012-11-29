@@ -88,7 +88,6 @@ public class GraphicRobot extends GraphicAnimatedObject
 					else
 						x += dx;
 					i = movementCheckingOrders.length;
-					break;
 				}
 				break;
 			case 1 : 				// move up
@@ -101,7 +100,6 @@ public class GraphicRobot extends GraphicAnimatedObject
 					else
 						y -= dy;
 					i = movementCheckingOrders.length;
-					break;
 				}
 				break;
 			case 2 : 				// move left
@@ -114,7 +112,6 @@ public class GraphicRobot extends GraphicAnimatedObject
 					else
 						x -= dx;
 					i = movementCheckingOrders.length;
-					break;
 				}
 				break;
 			case 3 : 				// move down
@@ -127,7 +124,6 @@ public class GraphicRobot extends GraphicAnimatedObject
 					else
 						y += dy;
 					i = movementCheckingOrders.length;
-					break;
 				}
 			}
 		}

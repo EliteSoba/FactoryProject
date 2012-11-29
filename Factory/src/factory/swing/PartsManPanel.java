@@ -64,6 +64,18 @@ public class PartsManPanel extends JPanel{
 		fileNames.add("sword");
 		fileNames.add("tentacle");
 		fileNames.add("wing");
+		fileNames.add("Ben");
+//		fileNames.add("Alfonso");
+//		fileNames.add("Austin");
+//		fileNames.add("David");
+//		fileNames.add("Devon");
+//		fileNames.add("George");
+//		fileNames.add("Devon");
+//		fileNames.add("Joey");
+//		fileNames.add("Mher");
+//		fileNames.add("Minh");
+//		fileNames.add("Ryan");
+//		fileNames.add("Stephanie");
 
 		model = new PartsTableModel();
 		model.addColumn("ID");

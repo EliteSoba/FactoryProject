@@ -35,6 +35,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton gantryRobotFeeder1Dropoff, gantryRobotFeeder1Pickup;
 	JButton cameraFlash;
 	JButton feedLane1, feedLane2, purgeLane1, purgeLane2, purgeFeeder;
+	JButton jamLane, unjamLane;
 	JTextField partName;
 	JTextField itemIndex;
 	JButton popItemToKit;
@@ -63,6 +64,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 		purgeLane1 = new JButton("purge Lane 1");
 		purgeLane2 = new JButton("Purge Lane 2");
 		purgeFeeder = new JButton("purge Feeder");
+		jamLane = new JButton("Jam lane 1");
+		unjamLane = new JButton("Unjam lane 1");
 		cameraFlash = new JButton("Camera Flash Nest 1");
 		partName = new JTextField(10);
 		itemIndex = new JTextField(10);
@@ -88,6 +91,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.addButton(purgeLane1);
 		this.addButton(purgeLane2);
 		this.addButton(purgeFeeder);
+		this.addButton(jamLane);
+		this.addButton(unjamLane);
 		this.addButton(gantryRobotGoToStart);
 		this.add(partName);
 		this.addButton(gantryRobotGetBin);
@@ -147,6 +152,10 @@ public class ControlPanel extends JPanel implements ActionListener{
 			am.moveGantryToFeeder1Pickup();
 		else if(source == cameraFlash)
 			am.takePictureFeeder1();
+		else if(source == jamLane)
+			am.jamLane(0); 
+		else if(source == unjamLane)
+			am.unjamLane(0); 
 	}
 
 }
