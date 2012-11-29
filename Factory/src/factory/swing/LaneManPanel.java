@@ -4,7 +4,6 @@
 package factory.swing;
 
 
-import LanePreferencesPanel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +15,7 @@ import javax.swing.border.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import LanePreferencesPanel.SliderDetection;
+
 public class LaneManPanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = -4485912622490446254L;
@@ -132,7 +131,7 @@ public class LaneManPanel extends JPanel implements ActionListener {
 			speedMax = 8;
 			amplitudeMin = 1;
 			amplitudeMax = 8;
-			this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
+			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			title = new JLabel("Lane Manager");
 			title.setAlignmentX(Component.CENTER_ALIGNMENT);
 			title.setFont(new Font("Serif", Font.BOLD, 16));
