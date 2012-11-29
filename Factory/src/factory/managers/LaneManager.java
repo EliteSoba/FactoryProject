@@ -143,4 +143,12 @@ public class LaneManager extends Client {
 	public void setLaneAmplitude(int laneNumber, int amplitude){
 		laneAmplitudes.set(laneNumber, amplitude);
 	}
+	
+	public int getLaneSpeed(int laneNumber){
+		return laneSpeeds.get(laneNumber-1);
+	}
+	
+	public int getLaneAmplitude(int laneNumber){
+		return laneAmplitudes.get(laneNumber-1);
+	}
 }

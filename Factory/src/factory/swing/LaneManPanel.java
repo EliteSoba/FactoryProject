@@ -217,6 +217,10 @@ public class LaneManPanel extends JPanel{
 				
 			}else if (ae.getSource() == feederOff){
 				
+			}else{  // updates speed and amplitude when JComboBox changes
+				JComboBox cb = (JComboBox)ae.getSource();
+				laneSpeed.setValue(laneManager.getLaneSpeed((Integer)cb.getSelectedItem()));
+				laneAmplitude.setValue(laneManager.getLaneAmplitude((Integer)cb.getSelectedItem()));
 			}
 
 		}
