@@ -52,7 +52,7 @@ public class PartsManPanel extends JPanel{
 		// loads filenames
 		fileNames = new ArrayList<String>();
 		fileNames.add("eye");
-		//fileNames.add("body");
+		fileNames.add("body");
 		fileNames.add("hat");
 		fileNames.add("arm");
 		fileNames.add("shoe");
@@ -65,17 +65,17 @@ public class PartsManPanel extends JPanel{
 		fileNames.add("tentacle");
 		fileNames.add("wing");
 		fileNames.add("Ben");
-		fileNames.add("Alfonso");
-		fileNames.add("Austin");
-		fileNames.add("David");
-		fileNames.add("Devon");
-		fileNames.add("George");
-		fileNames.add("Devon");
-		fileNames.add("Joey");
-		fileNames.add("Mher");
-		fileNames.add("Minh");
-		fileNames.add("Ryan");
-		fileNames.add("Stephanie");
+//		fileNames.add("Alfonso");
+//		fileNames.add("Austin");
+//		fileNames.add("David");
+//		fileNames.add("Devon");
+//		fileNames.add("George");
+//		fileNames.add("Devon");
+//		fileNames.add("Joey");
+//		fileNames.add("Mher");
+//		fileNames.add("Minh");
+//		fileNames.add("Ryan");
+//		fileNames.add("Stephanie");
 
 		model = new PartsTableModel();
 		model.addColumn("ID");
