@@ -127,7 +127,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		else if(source == partsRobotNest1)
 			am.moveRobotToNest(0, Integer.parseInt(itemIndex.getText()));
 		else if(source == partsRobotNest7)
-			am.moveRobotToNest(6, Integer.parseInt(itemIndex.getText()));
+			am.moveRobotToNest(1, Integer.parseInt(itemIndex.getText()));
 		else if(source == partsRobotGoToCenter)
 			am.moveRobotToCenter();
 		else if(source == partsRobotStation)

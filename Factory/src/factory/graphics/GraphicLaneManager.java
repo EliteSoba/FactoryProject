@@ -317,6 +317,35 @@ public class GraphicLaneManager{
 			processLane();
 		}
 		if(!laneStart){	//In lane vibrating even if lane is jammed
+			
+			//Continue feeding if feeder is on + has items
+			if(feederOn){
+				if(timerCount % 10 == 0){		//Put an item on lane on a timed interval
+					if(bin.getBinItems().size() > 0){
+						bin.getBinItems().get(0).setX(lane_xPos + 220);
+						bin.getBinItems().get(0).setY(lane_yPos + 70);
+						if(divergeUp){
+							bin.getBinItems().get(0).setVY(-laneSpeed);
+							bin.getBinItems().get(0).setDivergeUp(true);
+						}
+						else{
+							bin.getBinItems().get(0).setVY(laneSpeed);
+							bin.getBinItems().get(0).setDivergeUp(false);
+						}
+						bin.getBinItems().get(0).setVX(0);
+						if(divergeUp)
+							lane1Items.add(bin.getBinItems().get(0));
+						else
+							lane2Items.add(bin.getBinItems().get(0));
+						bin.getBinItems().remove(0);
+						if(bin.getBinItems().size() == 0){
+							feederOn = false;
+							graphicPanel.feedLaneDone(laneManagerID);
+						}
+					}
+				}
+			}
+			
 			if(lane1Items.size() > 0){
 				lane1Items.get(0).setVX(0);
 				for(int i = 1; i < lane1Items.size();i++){
@@ -533,10 +562,6 @@ public class GraphicLaneManager{
 						if(lane1QueueTaken.size() > 0)
 							lane1QueueTaken.remove(0);
 						lane1Items.remove(i);
-						for(int k = 0; k <lane1Items.size();k++){
-							System.out.println(k + "  X = " + lane1Items.get(k).getX() + "    vX " + lane1Items.get(k).getVX() + "    XMAX " + itemXMax + "   Y " + lane1Items.get(k).getY());
-						}
-						//System.out.println("size = " + lane1QueueTaken.size());
 						i--;
 						continue;
 					}
@@ -549,7 +574,7 @@ public class GraphicLaneManager{
 						}
 					}
 					
-					if(lane1Items.get(i).getX() <= (itemXMax + 5 + (lane1QueueTaken.size() + 1) * 10) && lane1Items.get(i).getX() >= itemXMax){
+					if(lane1Items.get(i).getX() <= (itemXMax + 5 + 5 +(lane1QueueTaken.size())* 10)  && lane1Items.get(i).getX() >= itemXMax){
 						//Queue is full, delete crashing Items
 						if(!lane1Items.get(i).getInQueue()){
 							lane1Items.get(i).setX(itemXMax  + 5 + (lane1QueueTaken.size()) * 10);
@@ -592,14 +617,14 @@ public class GraphicLaneManager{
 					}
 
 					if(graphicPanel.getNest().get(laneManagerID * 2).getSize() >= 9){
-						if(lane1Items.get(i).getX() <= (itemXMax + 5 + (lane1QueueTaken.size() + 1) * 10) && lane1Items.get(i).getX() >= itemXMax + 5 ){
+						if(lane1Items.get(i).getX() <= (itemXMax + 5 + 5 + (lane1QueueTaken.size()) * 10) && lane1Items.get(i).getX() >= itemXMax + 5 ){
 							//Queue is full, delete crashing Items
 							if(!lane1Items.get(i).getInQueue()){
 								lane1Items.get(i).setX(itemXMax  + 5 + (lane1QueueTaken.size()) * 10);
 								lane1Items.get(i).setInQueue(true);
 							}
-							if(lane1Items.get(i).getX() == (itemXMax + 5 + (lane1QueueTaken.size()) * 10)){
-								if(lane1QueueTaken.size() > 13){ // To be changed according to size of lane
+							if(lane1Items.get(i).getX() <= (itemXMax + 5 + (lane1QueueTaken.size()) * 10)){
+								if(lane1QueueTaken.size() > 14){ // To be changed according to size of lane
 		
 									lane1Items.remove(i);
 									i--;
@@ -789,7 +814,7 @@ public class GraphicLaneManager{
 							lane2Items.get(j).setVX(0);
 						}
 					}
-					if(lane2Items.get(i).getX() == (itemXMax + 5 + (lane2QueueTaken.size()) * 10)){
+					if(lane2Items.get(i).getX() == (itemXMax + 5 + 5 +(lane2QueueTaken.size()) * 10)){
 						if(lane2QueueTaken.size() > 13){ // To be changed according to size of lane
 
 							lane2Items.remove(i);
@@ -825,13 +850,13 @@ public class GraphicLaneManager{
 					}
 					
 					if(graphicPanel.getNest().get(laneManagerID * 2 + 1).getSize() >= 9){
-						if(lane2Items.get(i).getX() <= (itemXMax + 5 + (lane2QueueTaken.size() + 1) * 10) && lane2Items.get(i).getX() >= itemXMax + 5 ){
+						if(lane2Items.get(i).getX() <= (itemXMax + 5 + 5 + (lane2QueueTaken.size()) * 10) && lane2Items.get(i).getX() >= itemXMax + 5 ){
 							//Queue is full, delete crashing Items
 							if(!lane2Items.get(i).getInQueue()){
 								lane2Items.get(i).setX(itemXMax  + 5 + (lane2QueueTaken.size()) * 10);
 								lane2Items.get(i).setInQueue(true);
 							}
-							if(lane2Items.get(i).getX() == (itemXMax + 5 + (lane2QueueTaken.size()) * 10)){
+							if(lane2Items.get(i).getX() <= (itemXMax + 5 + (lane2QueueTaken.size()) * 10)){
 								if(lane2QueueTaken.size() > 13){ // To be changed according to size of lane
 		
 									lane2Items.remove(i);
