@@ -70,7 +70,7 @@ public class MasterControl {
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
             "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection",
-            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback"
+            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts"
 
     );
 
