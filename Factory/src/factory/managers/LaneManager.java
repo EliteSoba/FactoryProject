@@ -19,12 +19,21 @@ public class LaneManager extends Client {
 	
 	LaneManPanel buttons;
 	LanePanel animation;
+	ArrayList<Integer> laneSpeed; // stores speeds of each lane
+	ArrayList<Integer> laneAmplitude; // stores amplitudes of each lane
 	
 	public LaneManager() {
 		super(Client.Type.lm, null, null); 
 		
 		buttons = new LaneManPanel(this);
 		animation = new LanePanel(this);
+		
+		laneSpeed = new ArrayList<Integer>();
+		laneAmplitude = new ArrayList<Integer>(); 
+		for (int i = 0; i < 8; i++){    // presets lane speeds and amplitudes
+			laneSpeed.set(i, 1);  
+			laneAmplitude.set(i,1);
+		}
 		
 		setInterface();
 	}
