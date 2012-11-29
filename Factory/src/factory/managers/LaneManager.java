@@ -31,8 +31,8 @@ public class LaneManager extends Client {
 		laneSpeeds = new ArrayList<Integer>();
 		laneAmplitudes = new ArrayList<Integer>(); 
 		for (int i = 0; i < 8; i++){    // presets lane speeds and amplitudes
-			laneSpeeds.set(i, 1);  
-			laneAmplitudes.set(i,1);
+			laneSpeeds.set(i, 2);  
+			laneAmplitudes.set(i,2);
 		}
 		
 		setInterface();
