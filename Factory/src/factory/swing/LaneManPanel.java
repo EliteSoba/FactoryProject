@@ -16,7 +16,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 
-public class LaneManPanel extends JPanel implements ActionListener {
+public class LaneManPanel extends JPanel{
 
 	private static final long serialVersionUID = -4485912622490446254L;
 	
@@ -37,35 +37,14 @@ public class LaneManPanel extends JPanel implements ActionListener {
 	
 	public LaneManPanel(LaneManager l){
 		laneManager = l;
-		powerButton.addActionListener(this); 
-		redButton.addActionListener(this); 
-		yellowButton.addActionListener(this); 
-		greenButton.addActionListener(this); 
+
 		preferencesPanel = new LanePreferencesPanel();
 		nonnormativePanel = new LaneNonNormPanel();
 		tabbedPane = new JTabbedPane();
 		
 	    GridBagConstraints c = new GridBagConstraints();
 		setLayout(new GridBagLayout());
-		
-		/*c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 0;
-		preferencesPanel.add(lane, c);
-		
-		c.gridx = 2;
-		preferencesPanel.add(redButton, c);
-		
-		c.gridy = 1;
-		preferencesPanel.add(yellowButton, c);
-		
-		c.gridy = 2; 
-		preferencesPanel.add(greenButton, c);
-		
-		c.gridx = 5;
-		c.gridy = 0;
-		preferencesPanel.add(powerButton);
-		*/
+	
 		tabbedPane.addTab("Preferences", preferencesPanel);
 		tabbedPane.addTab("Non-Normative", nonnormativePanel);
 		
@@ -78,26 +57,7 @@ public class LaneManPanel extends JPanel implements ActionListener {
 		return (Integer) lane.getSelectedItem();
 		
 	}
-	
-	public void actionPerformed(ActionEvent ae) {
-		String set = new String (" ");
-		if (ae.getSource() == powerButton){
-			set = "lm la lanepowertoggle " + getSelectedLane() + " " + "power";
-			laneManager.sendCommand(set);
-		}
-		else if (ae.getSource() == redButton){
-			set = "lm lma set lanevibration "+ getSelectedLane() + " 1";
-			laneManager.sendCommand(set);
-		}
-		else if (ae.getSource() == yellowButton){
-			set = "lm lma set lanevibration "+ getSelectedLane() + " 2";
-			laneManager.sendCommand(set);
-		}
-		else if (ae.getSource() == greenButton){
-			set = "lm lma set lanevibration "+ getSelectedLane() + " 3";
-			laneManager.sendCommand(set);
-		}
-	}
+
 
 
 
@@ -108,6 +68,7 @@ public class LaneManPanel extends JPanel implements ActionListener {
 		JLabel laneSpeedLabel;
 		JLabel laneAmplitudeLabel;
 		JLabel lanePowerLabel;
+		JLabel feederLabel;
 		JLabel feederPowerLabel;
 		JButton laneOn;
 		JButton laneOff;
@@ -116,6 +77,7 @@ public class LaneManPanel extends JPanel implements ActionListener {
 		JSlider laneSpeed;
 		JSlider laneAmplitude;
 		JComboBox laneSelect;
+		JComboBox feederSelect;
 
 		JPanel feederSection;
 		JPanel laneSection;
@@ -163,7 +125,12 @@ public class LaneManPanel extends JPanel implements ActionListener {
 			for(int i = 1; i <= 8; i++){
 				laneSelect.addItem(i);
 			}
-
+			
+			feederLabel = new JLabel("Feeder : ");
+			feederSelect = new JComboBox();
+			for(int i = 1; i <= 4; i++){
+				feederSelect.addItem(i);
+			}
 			feederPowerLabel = new JLabel("Power : ");
 			feederOn = new JButton("ON");
 			feederOff = new JButton ("OFF");
@@ -180,14 +147,19 @@ public class LaneManPanel extends JPanel implements ActionListener {
 			c.fill = GridBagConstraints.HORIZONTAL;
 			c.gridx = 0;
 			c.gridy = 0;
-			feederSection.add(feederPowerLabel, c);
+			feederSection.add(feederLabel, c);
 			c.gridx = 1;
 			c.gridy = 0;
+			feederSection.add(feederSelect, c);
+			c.gridx = 0;
+			c.gridy = 1;
+			feederSection.add(feederPowerLabel, c);
+			c.gridx = 1;
+			c.gridy = 1;
 			feederSection.add(feederOn, c);
 			c.gridx = 2;
-			c.gridy = 0;
+			c.gridy = 1;
 			feederSection.add(feederOff, c);
-
 
 
 			TitledBorder laneBorder = BorderFactory.createTitledBorder("Lane Control");
@@ -235,8 +207,17 @@ public class LaneManPanel extends JPanel implements ActionListener {
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
+		public void actionPerformed(ActionEvent ae) {
 			// TODO Auto-generated method stub
+			if(ae.getSource() == laneOn){
+				// must get specific lane from comboBox 
+			}else if (ae.getSource() == laneOff){
+				
+			}else if (ae.getSource() == feederOn){
+				
+			}else if (ae.getSource() == feederOff){
+				
+			}
 
 		}
 
