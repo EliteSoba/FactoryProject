@@ -169,11 +169,11 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent ae) {
 		String cmd = new String (" ");
 		if(ae.getSource() == go){
-			if (kitsProduced){
+			if (!kitsProduced){
 				cmd = "kam fcsa cmd kitdropparts " + 
 						//get current kit in production
 						//if item selected pass none else pass normal part
-						"#kitname #numpart1 #numpart2 ... #numpart";
+						"#kitname" + concat();
 				kitAssemblyManager.sendCommand(cmd);
 				System.out.println("kam: kit droppparts");
 			}
@@ -184,5 +184,19 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 		}
 
 	}
-
+	public String concat(){
+		int p1,p2,p3,p4,p5,p6,p7,p8;
+		String parts = new String();
+		p1 = item1.isSelected()? 1: 0;
+		p2 = item2.isSelected()? 1 : 0;
+		p3 = item3.isSelected()? 1 : 0;
+		p4 = item4.isSelected()? 1 : 0;
+		p5 = item5.isSelected()? 1 : 0;
+		p6 = item6.isSelected()? 1 : 0;
+		p7 = item7.isSelected()? 1 : 0;
+		p8 = item8.isSelected()? 1 : 0;
+		parts += "" + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8;
+		System.out.println(parts);
+		return parts;
+	}
 }
