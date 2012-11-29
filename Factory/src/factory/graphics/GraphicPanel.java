@@ -871,11 +871,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	// sets speed for specified lane
 	public void setLaneSpeed(int laneIndex,int lanenum,int speed) {
-		lane[laneIndex].setLaneSpeed(lanenum,speed);
+		//lane[laneIndex].setLaneSpeed(lanenum,speed);
 	}
 	// sets amplitude for specified lane
 	public void setLaneAmplitude(int laneIndex,int lanenum,int amplitude) {
-		lane[laneIndex].setLaneAmplitude(lanenum, amplitude);
+		//lane[laneIndex].setLaneAmplitude(lanenum, amplitude);
 	}
 
 }
