@@ -1,6 +1,6 @@
 //Stephanie Reagle, Joey Huang, Marc Mendiola
 //CS 200
-// last edited: 2:26 AM 11/28/12
+// last edited: 10:24 pm 11/28/12
 package factory.swing;
 
 
@@ -317,7 +317,6 @@ public class LaneNonNormPanel extends JPanel implements ActionListener {
 				laneManager.sendCommand(set);
 			} catch (Exception e) {
 				System.out.println("An error occurred trying to initiate non-normative case: lane jam.");
-				e.printStackTrace();
 			} 
 		} else if (ae.getSource() == diverterButton) {
 			messageBox.append("Diverter was too slow switching to " + laneBoxList.getSelectedItem() + ".\n");
@@ -326,7 +325,6 @@ public class LaneNonNormPanel extends JPanel implements ActionListener {
 				laneManager.sendCommand(set);
 			} catch (Exception e) {
 				System.out.println("An error occurred trying initiate non-normative case: slow diverter change.");
-				e.printStackTrace();
 			} 
 		} else if (ae.getSource() == badPartsButton) {
 			messageBox.append("Bad parts found in " + laneBoxList.getSelectedItem() + "'s nest.\n");
@@ -335,7 +333,6 @@ public class LaneNonNormPanel extends JPanel implements ActionListener {
 				laneManager.sendCommand(set);
 			} catch (Exception e) {
 				System.out.println("An error occurred trying initiate non-normative case: bad parts in nest.");
-				e.printStackTrace();
 			} 
 		} else if (ae.getSource() == blockingRobotButton) {
 			messageBox.append("A robot is blocking the camera at " + laneBoxList.getSelectedItem() + "'s nest.\n");
@@ -343,8 +340,7 @@ public class LaneNonNormPanel extends JPanel implements ActionListener {
 			try {
 				laneManager.sendCommand(set);
 			} catch (Exception e) {
-				System.out.println("An error occurred tryin  g initiate non-normative case: robot blocking camera.");
-				e.printStackTrace();
+				System.out.println("An error occurred trying to initiate non-normative case: robot blocking camera.");
 			} 
 		}
 				
