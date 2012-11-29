@@ -41,6 +41,7 @@ public abstract class Client extends JFrame implements ActionListener {
 	public ArrayList<String> parsedCommand; //current command parsed into strings
 	// Timer updater; //repaints graphics
 	boolean connected;
+	String fun = "INCEPTION!!!";
 	
 	
 	Runnable independentInput = new Runnable(){
@@ -91,12 +92,14 @@ public abstract class Client extends JFrame implements ActionListener {
 			if(reply.equals("connected")){
 				connected = true;
 			}
+			
 			System.out.println("connected to server!");
 			System.out.println("waiting for agents to start...");
 			input.readLine();
 			System.out.println("Factory Started....yo!");
 		} catch (Exception e) {
 			System.out.println("Host unavailable");
+			VERY_DISAMBIGUOUS_FUNCTION();
 		} 	
 	}
 	
@@ -191,10 +194,18 @@ public abstract class Client extends JFrame implements ActionListener {
 			//never executes but wont compile w/o
 		}}
 	System.out.println("window closed");
+	
 		if(type == Type.fpm || connected == false)
 			System.exit(0);
 	}
-    
+    public void VERY_DISAMBIGUOUS_FUNCTION()
+    {
+    	functionWithinAFunction();
+    }
+   
+    public void functionWithinAFunction(){
+    	System.out.println(fun);
+    }
     
 }
 
