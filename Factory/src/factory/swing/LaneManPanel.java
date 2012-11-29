@@ -19,7 +19,7 @@ import javax.swing.event.ChangeListener;
 public class LaneManPanel extends JPanel{
 
 	private static final long serialVersionUID = -4485912622490446254L;
-	
+
 	String [] stringLanes = { "1", "2", "3", "4", "5", "6", "7", "8"};
 	JComboBox lane = new JComboBox(stringLanes);
 	//ImageIcon red = new ImageIcon("red.png");
@@ -27,35 +27,35 @@ public class LaneManPanel extends JPanel{
 	JButton yellowButton = new JButton("Yellow");
 	JButton greenButton = new JButton("Green");
 	JButton powerButton = new JButton("Power");
-	
-	
-	
+
+
+
 	LaneManager laneManager;
 	JTabbedPane tabbedPane; 
 	JPanel preferencesPanel;
 	LaneNonNormPanel nonnormativePanel;
-	
+
 	public LaneManPanel(LaneManager l){
 		laneManager = l;
 
 		preferencesPanel = new LanePreferencesPanel();
 		nonnormativePanel = new LaneNonNormPanel();
 		tabbedPane = new JTabbedPane();
-		
-	    GridBagConstraints c = new GridBagConstraints();
+
+		GridBagConstraints c = new GridBagConstraints();
 		setLayout(new GridBagLayout());
-	
+
 		tabbedPane.addTab("Preferences", preferencesPanel);
 		tabbedPane.addTab("Non-Normative", nonnormativePanel);
-		
+
 		this.add(tabbedPane);
 
-	
+
 	}
-	
+
 	public int getSelectedLane(){
 		return (Integer) lane.getSelectedItem();
-		
+
 	}
 
 
@@ -125,12 +125,14 @@ public class LaneManPanel extends JPanel{
 			for(int i = 1; i <= 8; i++){
 				laneSelect.addItem(i);
 			}
-			
+			laneSelect.addActionListener(this);
+
 			feederLabel = new JLabel("Feeder : ");
 			feederSelect = new JComboBox();
 			for(int i = 1; i <= 4; i++){
 				feederSelect.addItem(i);
 			}
+			feederSelect.addActionListener(this);
 			feederPowerLabel = new JLabel("Power : ");
 			feederOn = new JButton("ON");
 			feederOff = new JButton ("OFF");
@@ -212,15 +214,19 @@ public class LaneManPanel extends JPanel{
 			if(ae.getSource() == laneOn){
 				// must get specific lane from comboBox 
 			}else if (ae.getSource() == laneOff){
-				
+
 			}else if (ae.getSource() == feederOn){
-				
+
 			}else if (ae.getSource() == feederOff){
-				
+
 			}else{  // updates speed and amplitude when JComboBox changes
 				JComboBox cb = (JComboBox)ae.getSource();
-				laneSpeed.setValue(laneManager.getLaneSpeed((Integer)cb.getSelectedItem()));
-				laneAmplitude.setValue(laneManager.getLaneAmplitude((Integer)cb.getSelectedItem()));
+				System.out.println("Get");
+				if(cb == laneSelect){
+					System.out.println(laneManager.getLaneSpeed((Integer)cb.getSelectedItem()));
+					laneSpeed.setValue(laneManager.getLaneSpeed((Integer)cb.getSelectedItem()));
+					laneAmplitude.setValue(laneManager.getLaneAmplitude((Integer)cb.getSelectedItem()));
+				}
 			}
 
 		}
@@ -249,117 +255,117 @@ public class LaneManPanel extends JPanel{
 		}
 
 	}
-	
-public class LaneNonNormPanel extends JPanel implements ActionListener {
-	JComboBox laneBoxList;
-	JPanel partsMissingContainer;
-	JPanel partsBadContainer;
-	JButton laneJamButton;
-	JButton diverterButton;
-	JButton badPartsButton;
-	JButton blockingRobotButton;
-	JTextArea messageBox;
-	
-	public LaneNonNormPanel() {
-		
-		laneJamButton = new JButton("Lane Jam");
-		diverterButton = new JButton("Diverter Too Slow");
-		badPartsButton = new JButton("Bad Parts in Nest");
-		blockingRobotButton = new JButton("Robot Blocking Camera");
-		messageBox = new JTextArea("Actions...\n");
-		
-		laneJamButton.addActionListener(this);
-		diverterButton.addActionListener(this);
-		badPartsButton.addActionListener(this);
-		blockingRobotButton.addActionListener(this);
-		
-		laneJamButton.setPreferredSize(new Dimension(200,25));
-		diverterButton.setPreferredSize(new Dimension(200,25));
-		badPartsButton.setPreferredSize(new Dimension(200,25));
-		blockingRobotButton.setPreferredSize(new Dimension(200,25));
-		
-		setLayout(new FlowLayout());
-		Box boxContainer = Box.createVerticalBox();
-		laneBoxList = new JComboBox();
-		for (int i = 1; i < 9;i++) {
-			laneBoxList.addItem("Lane "+i);
-		}
-		laneBoxList.setSelectedIndex(0);
-		
-		partsMissingContainer = new JPanel();
-		partsBadContainer = new JPanel();
 
-	
-		partsMissingContainer.setPreferredSize(new Dimension(250,180));
-		partsBadContainer.setPreferredSize(new Dimension(250,180));
-		
-		TitledBorder title = BorderFactory.createTitledBorder("Missing Parts in Nest");
-		partsMissingContainer.setBorder(title);	
-		
-		title = BorderFactory.createTitledBorder("No Good Parts in Nest");
-		partsBadContainer.setBorder(title);
-		
-		partsMissingContainer.add(laneJamButton);
-		partsMissingContainer.add(diverterButton);
-		
-		partsBadContainer.add(badPartsButton);
-		partsBadContainer.add(blockingRobotButton);
-		boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
-		JLabel label = new JLabel("Non-Normative Cases");
-		label.setAlignmentX(Component.CENTER_ALIGNMENT);
-		boxContainer.add(label);
-		boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
-		boxContainer.add(laneBoxList);
-		boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
-		boxContainer.add(partsMissingContainer);
-		boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
-		boxContainer.add(partsBadContainer);
-		boxContainer.add(Box.createRigidArea(new Dimension(0,10)));
-		JScrollPane scrollPane = new JScrollPane(messageBox);
-		scrollPane.setPreferredSize(new Dimension(200,100));
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		boxContainer.add(scrollPane);
-		add(boxContainer);
-	}
-	
-	public void actionPerformed(ActionEvent ae) {
-		if (ae.getSource() == laneJamButton) {
-			messageBox.append("Lane jam initated in " + laneBoxList.getSelectedItem() + ".\n");
-			String set = "";
-			try {
-				laneManager.sendCommand(set);
-			} catch (Exception e) {
-				System.out.println("An error occurred trying to initiate non-normative case: lane jam.");
-			} 
-		} else if (ae.getSource() == diverterButton) {
-			messageBox.append("Diverter was too slow switching to " + laneBoxList.getSelectedItem() + ".\n");
-			String set = "";
-			try {
-				laneManager.sendCommand(set);
-			} catch (Exception e) {
-				System.out.println("An error occurred trying initiate non-normative case: slow diverter change.");
-			} 
-		} else if (ae.getSource() == badPartsButton) {
-			messageBox.append("Bad parts found in " + laneBoxList.getSelectedItem() + "'s nest.\n");
-			String set = "";
-			try {
-				laneManager.sendCommand(set);
-			} catch (Exception e) {
-				System.out.println("An error occurred trying initiate non-normative case: bad parts in nest.");
-			} 
-		} else if (ae.getSource() == blockingRobotButton) {
-			messageBox.append("A robot is blocking the camera at " + laneBoxList.getSelectedItem() + "'s nest.\n");
-			String set = "";
-			try {
-				laneManager.sendCommand(set);
-			} catch (Exception e) {
-				System.out.println("An error occurred trying to initiate non-normative case: robot blocking camera.");
-			} 
+	public class LaneNonNormPanel extends JPanel implements ActionListener {
+		JComboBox laneBoxList;
+		JPanel partsMissingContainer;
+		JPanel partsBadContainer;
+		JButton laneJamButton;
+		JButton diverterButton;
+		JButton badPartsButton;
+		JButton blockingRobotButton;
+		JTextArea messageBox;
+
+		public LaneNonNormPanel() {
+
+			laneJamButton = new JButton("Lane Jam");
+			diverterButton = new JButton("Diverter Too Slow");
+			badPartsButton = new JButton("Bad Parts in Nest");
+			blockingRobotButton = new JButton("Robot Blocking Camera");
+			messageBox = new JTextArea("Actions...\n");
+
+			laneJamButton.addActionListener(this);
+			diverterButton.addActionListener(this);
+			badPartsButton.addActionListener(this);
+			blockingRobotButton.addActionListener(this);
+
+			laneJamButton.setPreferredSize(new Dimension(200,25));
+			diverterButton.setPreferredSize(new Dimension(200,25));
+			badPartsButton.setPreferredSize(new Dimension(200,25));
+			blockingRobotButton.setPreferredSize(new Dimension(200,25));
+
+			setLayout(new FlowLayout());
+			Box boxContainer = Box.createVerticalBox();
+			laneBoxList = new JComboBox();
+			for (int i = 1; i < 9;i++) {
+				laneBoxList.addItem("Lane "+i);
+			}
+			laneBoxList.setSelectedIndex(0);
+
+			partsMissingContainer = new JPanel();
+			partsBadContainer = new JPanel();
+
+
+			partsMissingContainer.setPreferredSize(new Dimension(250,180));
+			partsBadContainer.setPreferredSize(new Dimension(250,180));
+
+			TitledBorder title = BorderFactory.createTitledBorder("Missing Parts in Nest");
+			partsMissingContainer.setBorder(title);	
+
+			title = BorderFactory.createTitledBorder("No Good Parts in Nest");
+			partsBadContainer.setBorder(title);
+
+			partsMissingContainer.add(laneJamButton);
+			partsMissingContainer.add(diverterButton);
+
+			partsBadContainer.add(badPartsButton);
+			partsBadContainer.add(blockingRobotButton);
+			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
+			JLabel label = new JLabel("Non-Normative Cases");
+			label.setAlignmentX(Component.CENTER_ALIGNMENT);
+			boxContainer.add(label);
+			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
+			boxContainer.add(laneBoxList);
+			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
+			boxContainer.add(partsMissingContainer);
+			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
+			boxContainer.add(partsBadContainer);
+			boxContainer.add(Box.createRigidArea(new Dimension(0,10)));
+			JScrollPane scrollPane = new JScrollPane(messageBox);
+			scrollPane.setPreferredSize(new Dimension(200,100));
+			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+			boxContainer.add(scrollPane);
+			add(boxContainer);
 		}
-				
-	}
-	
-	
+
+		public void actionPerformed(ActionEvent ae) {
+			if (ae.getSource() == laneJamButton) {
+				messageBox.append("Lane jam initated in " + laneBoxList.getSelectedItem() + ".\n");
+				String set = "";
+				try {
+					laneManager.sendCommand(set);
+				} catch (Exception e) {
+					System.out.println("An error occurred trying to initiate non-normative case: lane jam.");
+				} 
+			} else if (ae.getSource() == diverterButton) {
+				messageBox.append("Diverter was too slow switching to " + laneBoxList.getSelectedItem() + ".\n");
+				String set = "";
+				try {
+					laneManager.sendCommand(set);
+				} catch (Exception e) {
+					System.out.println("An error occurred trying initiate non-normative case: slow diverter change.");
+				} 
+			} else if (ae.getSource() == badPartsButton) {
+				messageBox.append("Bad parts found in " + laneBoxList.getSelectedItem() + "'s nest.\n");
+				String set = "";
+				try {
+					laneManager.sendCommand(set);
+				} catch (Exception e) {
+					System.out.println("An error occurred trying initiate non-normative case: bad parts in nest.");
+				} 
+			} else if (ae.getSource() == blockingRobotButton) {
+				messageBox.append("A robot is blocking the camera at " + laneBoxList.getSelectedItem() + "'s nest.\n");
+				String set = "";
+				try {
+					laneManager.sendCommand(set);
+				} catch (Exception e) {
+					System.out.println("An error occurred trying to initiate non-normative case: robot blocking camera.");
+				} 
+			}
+
+		}
+
+
 	}	
 }
