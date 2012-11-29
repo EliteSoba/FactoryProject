@@ -14,7 +14,7 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 
 	KitAssemblyManager kitAssemblyManager;
 
-	public Boolean kitsProduced = false;
+	//public Boolean kitsProduced = false;   UNUSED
 
 
 	JLabel label; //"Bad Kit - Non normative"
@@ -169,21 +169,15 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent ae) {
 		String cmd = new String (" ");
 		if(ae.getSource() == go){
-			if (!kitsProduced){
-				cmd = "kam fcsa cmd kitdropparts " + concat();
+			cmd = "kam fcsa cmd kitdropparts " + concat();
 						//get current kit in production
-						//if item selected pass none else pass normal part
-						
-				kitAssemblyManager.sendCommand(cmd);
-				System.out.println("kam: kit droppparts");
-			}
-			else{
-				label.setText("No Kits in production, nothing will happen");
-			}
-
+						//if item selected pass none else pass normal part		
+			kitAssemblyManager.sendCommand(cmd);
+			System.out.println("kam: kit droppparts");	
 		}
-
 	}
+
+	
 	public String concat(){
 		int p1,p2,p3,p4,p5,p6,p7,p8;
 		String parts = new String();
