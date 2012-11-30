@@ -212,13 +212,37 @@ public class LaneManPanel extends JPanel{
 		public void actionPerformed(ActionEvent ae) {
 			// TODO Auto-generated method stub
 			if(ae.getSource() == laneOn){
-				// must get specific lane from comboBox 
+				int lanenum = (int)laneSelect.getSelectedItem();
+				String set = "lm fcsa set lanepower " + lanenum;
+				try {
+					laneManager.sendCommand(set);
+				} catch (Exception e) {
+					System.out.println("An error occurred trying to send message to power on lane " + lanenum + ".");
+				} 
 			}else if (ae.getSource() == laneOff){
-
+				int lanenum = (int)laneSelect.getSelectedItem();
+				String set = "lm fcsa set lanepower " + lanenum;
+				try {
+					laneManager.sendCommand(set);
+				} catch (Exception e) {
+					System.out.println("An error occurred trying to send message to power off lane " + lanenum + ".");
+				} 
 			}else if (ae.getSource() == feederOn){
-
+				int feedernum = (int)feederSelect.getSelectedItem();
+				String set = "lm fcsa set feederpower " + feedernum;
+				try {
+					laneManager.sendCommand(set);
+				} catch (Exception e) {
+					System.out.println("An error occurred trying to send message to power on feeder " + feedernum + ".");
+				} 
 			}else if (ae.getSource() == feederOff){
-
+				int feedernum = (int)feederSelect.getSelectedItem();
+				String set = "lm fcsa set feederpower " + feedernum;
+				try {
+					laneManager.sendCommand(set);
+				} catch (Exception e) {
+					System.out.println("An error occurred trying to send message to power off feeder " + feedernum + ".");
+				} 
 			}else{  // updates speed and amplitude when JComboBox changes
 				JComboBox cb = (JComboBox)ae.getSource();
 				System.out.println("Get");
@@ -241,12 +265,26 @@ public class LaneManPanel extends JPanel{
 					if (!source.getValueIsAdjusting()) {
 						int speed = (int)source.getValue();
 						// send speed to server
+						int lanenum = (int)laneSelect.getSelectedItem();
+						String set = "lm fcsa set lanespeed " + lanenum + " " + speed;
+						try {
+							laneManager.sendCommand(set);
+						} catch (Exception e) {
+							System.out.println("An error occurred trying to send message to change lanespeed.");
+						} 
 						System.out.println("lane speed : " + speed);
 					}
 				}else if(source == laneAmplitude){
 					if (!source.getValueIsAdjusting()) {
 						int amplitude = (int)source.getValue();
 						// send amplitude to server
+						int lanenum = (int)laneSelect.getSelectedItem();
+						String set = "lm fcsa set laneamplitude " + lanenum + " " + amplitude;
+						try {
+							laneManager.sendCommand(set);
+						} catch (Exception e) {
+							System.out.println("An error occurred trying to send message to change lane amplitude.");
+						} 
 						System.out.println("lane amplitude : " + amplitude);
 					}
 				}
@@ -332,7 +370,9 @@ public class LaneManPanel extends JPanel{
 		public void actionPerformed(ActionEvent ae) {
 			if (ae.getSource() == laneJamButton) {
 				messageBox.append("Lane jam initated in " + laneBoxList.getSelectedItem() + ".\n");
-				String set = "";
+				int lanenum = laneBoxList.getSelectedIndex();
+				lanenum = lanenum+1;
+				String set = "lm fcsa lanejam " + lanenum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -340,7 +380,9 @@ public class LaneManPanel extends JPanel{
 				} 
 			} else if (ae.getSource() == diverterButton) {
 				messageBox.append("Diverter was too slow switching to " + laneBoxList.getSelectedItem() + ".\n");
-				String set = "";
+				int feedernum = feederBoxList.getSelectedIndex();
+				feedernum = feedernum+1;
+				String set = "lm fcsa slowdiverter " + feedernum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -348,7 +390,9 @@ public class LaneManPanel extends JPanel{
 				} 
 			} else if (ae.getSource() == badPartsButton) {
 				messageBox.append("Bad parts found in " + laneBoxList.getSelectedItem() + "'s nest.\n");
-				String set = "";
+				int lanenum = laneBoxList.getSelectedIndex();
+				lanenum = lanenum+1;
+				String set = "lm fcsa badparts " + lanenum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -356,7 +400,9 @@ public class LaneManPanel extends JPanel{
 				} 
 			} else if (ae.getSource() == blockingRobotButton) {
 				messageBox.append("A robot is blocking the camera at " + laneBoxList.getSelectedItem() + "'s nest.\n");
-				String set = "";
+				int lanenum = laneBoxList.getSelectedIndex();
+				lanenum = lanenum+1;
+				String set = "lm fcsa blockingrobot " + lanenum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
