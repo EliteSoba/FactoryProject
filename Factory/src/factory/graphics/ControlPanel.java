@@ -155,7 +155,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		else if(source == jamLane)
 			am.jamTopLane(0); 
 		else if(source == unjamLane)
-			am.unjamTopLane(0); 
+			am.unTopjamLane(0); 
 	}
 
 }
