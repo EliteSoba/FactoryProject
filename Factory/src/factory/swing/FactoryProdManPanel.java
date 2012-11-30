@@ -93,7 +93,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 
 		model.addColumn("No.");
 		model.addColumn("Kit");
-		model.addColumn("Qnty");
+		model.addColumn("Quantity");
 
 		table=new JTable(model);
 
@@ -104,9 +104,9 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			if (i == 0) {
 				column.setPreferredWidth(30); 
 			} else if (i ==1) {
-				column.setPreferredWidth(200);
+				column.setPreferredWidth(160);
 			} else {
-				column.setPreferredWidth(30);
+				column.setPreferredWidth(70);
 			}
 		}
 
@@ -206,5 +206,9 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			messageBox.append("\t"+str+"\n");
 		}
 
+	}
+
+	public void addMessage(String msg) {
+		messageBox.append(msg + "\n");
 	}
 }

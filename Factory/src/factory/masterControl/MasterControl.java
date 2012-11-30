@@ -70,14 +70,14 @@ public class MasterControl {
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
             "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection",
-            "loadpartatfeeder", "nestitemtaken", "itemtype"
+            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts"
 
     );
 
 
 	// Lists of Commands with Multi Destinations and Lists of Destinations associated with those Commands
 
-	private static final List<String> multiCmd_1 = Arrays.asList("purgefeeder", "purgetoplane", "purgebottomlane");
+	private static final List<String> multiCmd_1 = Arrays.asList("purgefeeder"/*, "purgetoplane", "purgebottomlane"*/);
     private static final List<String> multiCmdDst_1 = Arrays.asList("gm", "lm");
     private static final List<List<String>> multiCmds = Arrays.asList(multiCmd_1);
 

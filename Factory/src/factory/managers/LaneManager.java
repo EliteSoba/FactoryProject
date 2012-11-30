@@ -19,12 +19,21 @@ public class LaneManager extends Client {
 	
 	LaneManPanel buttons;
 	LanePanel animation;
+	ArrayList<Integer> laneSpeeds; // stores speeds of each lane
+	ArrayList<Integer> laneAmplitudes; // stores amplitudes of each lane
 	
 	public LaneManager() {
 		super(Client.Type.lm, null, null); 
 		
 		buttons = new LaneManPanel(this);
 		animation = new LanePanel(this);
+		
+		laneSpeeds = new ArrayList<Integer>();
+		laneAmplitudes = new ArrayList<Integer>(); 
+		for (int i = 0; i < 8; i++){    // presets lane speeds and amplitudes
+			laneSpeeds.add(i+1);  
+			laneAmplitudes.add(i+1);
+		}
 		
 		setInterface();
 	}
@@ -125,5 +134,21 @@ public class LaneManager extends Client {
 			   }
 		else 
 	   		  System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
+	}
+	
+	public void setLaneSpeed(int laneNumber, int speed){
+		laneSpeeds.set(laneNumber, speed);
+	}
+	
+	public void setLaneAmplitude(int laneNumber, int amplitude){
+		laneAmplitudes.set(laneNumber, amplitude);
+	}
+	
+	public int getLaneSpeed(int laneNumber){
+		return laneSpeeds.get(laneNumber-1);
+	}
+	
+	public int getLaneAmplitude(int laneNumber){
+		return laneAmplitudes.get(laneNumber-1);
 	}
 }

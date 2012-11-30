@@ -22,7 +22,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public int WIDTH, HEIGHT;
 	public static final Image TILE_IMAGE = Toolkit.getDefaultToolkit().getImage("Images/Tiles/floorTileXGrill.png");
 	public static final int TILE_SIZE = 128;
-	public static final int DELAY = 0;
+	public static final int DELAY = 20;
 	
 	protected Client am; //The Client that holds this
 	
@@ -192,6 +192,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void exportKit() {
 		if (isKitAssemblyManager || isFactoryProductionManager)
 			belt.exportKit();
+	}
+	
+	public void dropParts(String dropped) {
+		if (isKitAssemblyManager || isFactoryProductionManager)
+			kitRobot.breakNextKit(dropped);
 	}
 	
 	/**TODO: Gantry Robot methods*/
@@ -499,6 +504,20 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 	}
 	
+	public void jamLane(int laneNum){
+		lane[(laneNum) / 2].laneStart = false;
+	}
+	
+	public void unjamLane(int laneNum){
+		lane[(laneNum) / 2].laneStart = true;
+		lane[(laneNum) / 2].changeLaneSpeed(lane[(laneNum) / 2].laneSpeed + 1);
+		if(lane[(laneNum) / 2].laneSpeed > 8)	//laneSpeed max is 8
+			lane[(laneNum) / 2].changeLaneSpeed(8);
+		lane[(laneNum) / 2].vibrationAmplitude += 2;
+		if(lane[(laneNum) / 2].vibrationAmplitude > 8)		//vibration amplitude max is 8
+			lane[(laneNum) / 2].vibrationAmplitude = 8;
+	}
+	
 	/**Movement methods*/
 	/**
 	 * Moves the Parts Robot
@@ -620,7 +639,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isLaneManager)
 			message = "lm ";
 		else if (isGantryRobotManager)
-			message = "grm ";
+			message = "gm ";
 		else if (isKitAssemblyManager)
 			message = "kam ";
 		else if (isFactoryProductionManager)
@@ -849,6 +868,14 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 			
+	}
+	// sets speed for specified lane
+	public void setLaneSpeed(int laneIndex,int lanenum,int speed) {
+		//lane[laneIndex].setLaneSpeed(lanenum,speed);
+	}
+	// sets amplitude for specified lane
+	public void setLaneAmplitude(int laneIndex,int lanenum,int amplitude) {
+		//lane[laneIndex].setLaneAmplitude(lanenum, amplitude);
 	}
 
 }

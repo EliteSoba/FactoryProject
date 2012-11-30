@@ -23,9 +23,10 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	int inspectionAreaClear = 1; //0 = not clear, 1 = clear, -1 = need to find out	starting at empty
 	public ConveyorStatus conveyor_state = ConveyorStatus.EMPTY;
 	public List<StandInfo> actions = Collections.synchronizedList(new ArrayList<StandInfo>());
+	public KitAtInspection atInspection = KitAtInspection.EMPTY;
 	
 	boolean isUnitTesting = false; 
-	
+	public enum KitAtInspection { TOP, BOTTOM, EMPTY };
 	public enum ConveyorStatus {EMPTY, GETTING_KIT, EMPTY_KIT, COMPLETED_KIT};
 	public enum StandInfo { NEED_EMPTY_TOP, NEED_EMPTY_BOTTOM, NEED_INSPECTION_TOP, NEED_INSPECTION_BOTTOM, INSPECTION_SLOT_DONE, KIT_GOOD, KIT_BAD, CLEAR_OFF_UNFINISHED_KITS };
 	
@@ -118,7 +119,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 
 		synchronized(actions){
 			if (actions.contains(StandInfo.KIT_BAD)) {
-				dumpKit();
+				putKitBackToFix();
 				return true;
 			}
 			
@@ -157,8 +158,6 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				processKitAtInspection(); 
 				return true;
 			}
-			
-			
 			
 			
 			if ((actions.contains(StandInfo.NEED_EMPTY_TOP) || actions.contains(StandInfo.NEED_EMPTY_BOTTOM)) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
@@ -203,9 +202,8 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				actions.remove(StandInfo.INSPECTION_SLOT_DONE);
 			}
 		}
-		stateChanged();
 	}
-	
+	/*
 	public void dumpKit() {
 		//action for dumping a bad kit
 		debug("KitRobot dumping bad kit");
@@ -220,8 +218,31 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stand.setSlotState("inspectionSlot", MySlotState.EMPTY);
 		actions.remove(StandInfo.KIT_BAD);
 		stand.msgKitRobotNoLongerUsingStand();
+	}
+	*/
+	
+	public void putKitBackToFix() {
+		//action for moving a kit back to the slot it came from to add in missing parts
+		debug("KitRobot is putting back the kit that failed inspection.");
 		
-		stateChanged();
+		if (atInspection.equals(KitAtInspection.TOP) || atInspection.equals(KitAtInspection.BOTTOM)) {
+			String pos;
+			if (atInspection.equals(KitAtInspection.TOP)) { pos = "topSlot"; } else { pos = "bottomSlot"; }
+			if (!isUnitTesting) {
+				DoPutKitBack(pos);
+			}
+			stand.setSlotKit(pos, stand.getSlotKit("inspectionSlot"));
+			stand.setSlotState(pos, MySlotState.NEEDS_FIXING);
+			stand.setSlotKit("inspectionSlot", null);
+			stand.setSlotState("inspectionSlot", MySlotState.EMPTY);
+			actions.remove(StandInfo.KIT_BAD);
+			atInspection = KitAtInspection.EMPTY;
+			stand.msgKitRobotNoLongerUsingStand();
+		} else {
+			//shouldn't have been called
+			debug("putKitBackToFix() was called when atInspection = EMPTY");
+			stand.msgKitRobotNoLongerUsingStand();
+		}
 	}
 	
 	public void exportKit() {
@@ -249,10 +270,10 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		conveyor_state = ConveyorStatus.COMPLETED_KIT;
 		actions.remove(StandInfo.KIT_GOOD);
 		
+		atInspection = KitAtInspection.EMPTY;
+		
 		debug("Kit exported, telling the Stand it is done");
 		stand.msgKitRobotNoLongerUsingStand();
-		
-		stateChanged();
 	}
 	
 	public void putEmptyKitOnStand(String pos) {
@@ -396,8 +417,10 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		}
 		if (pos.equals("bottomSlot")) {
 			actions.remove(StandInfo.NEED_INSPECTION_BOTTOM);
+			atInspection = KitAtInspection.BOTTOM;
 		} else if (pos.equals("topSlot")) {
 			actions.remove(StandInfo.NEED_INSPECTION_TOP);
+			atInspection = KitAtInspection.TOP;
 		}
 		
 		stand.msgKitRobotNoLongerUsingStand();
@@ -439,6 +462,12 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		waitForAnimation();
 	}
 	
+	private void DoPutKitBack(String pos) {
+		debug("doing DoPutKitBack Animation. putting the kit back at "+pos);
+		server.command("kra kam cmd movekitback "+pos);
+		waitForAnimation();
+		
+	}
 	////Hacks / MISC
 	public void setStand(Stand s) {
 		this.stand = s;
