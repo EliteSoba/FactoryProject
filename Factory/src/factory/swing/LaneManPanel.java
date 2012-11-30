@@ -312,6 +312,7 @@ public class LaneManPanel extends JPanel{
 			badPartsButton = new JButton("Bad Parts in Nest");
 			blockingRobotButton = new JButton("Robot Blocking Camera");
 			messageBox = new JTextArea("Actions...\n");
+			messageBox.setLineWrap(true);
 
 			laneJamButton.addActionListener(this);
 			diverterButton.addActionListener(this);
