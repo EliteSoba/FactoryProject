@@ -70,7 +70,7 @@ public class MasterControl {
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
             "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection",
-            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported", "ruininspectionkit"
+            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported", "ruininspectionkit","badparts"
 
     );
 
@@ -566,6 +566,20 @@ public class MasterControl {
                     ((NestAgent) destination).msgNestHasDestabilized();
                 }
             }//End NestAgent Commands
+
+	else if (cmd.get(1).equals("va")) {
+            	destination = agentTreeMap.get(cmd.get(1));
+	            if(cmd.get(3).equals("badparts")){
+	            	int nestnum = Integer.parseInt(cmd.get(4));
+	            	nestnum = nestnum-1;
+					((VisionAgent) destination).msgNoGoodPartsFound(nestnum);
+	            }
+            } // End VisionAgent commands
+
+
+
+
+
 		}
 
 
