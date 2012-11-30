@@ -194,6 +194,11 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("exportkitfromcell")) {
 				((FactoryProductionPanel) graphics).exportKit();
 			}
+			
+			//Commands from FCSAgent
+			else if (identifier.equals("kitexported")){
+				((FactoryProdManPanel) UI).kitProduced();
+			}
 
 			// Commands from ConveyorControllerAgent
 			else if (identifier.equals("emptykitenterscell")) {
