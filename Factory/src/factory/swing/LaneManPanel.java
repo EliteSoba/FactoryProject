@@ -312,6 +312,7 @@ public class LaneManPanel extends JPanel{
 			badPartsButton = new JButton("Bad Parts in Nest");
 			blockingRobotButton = new JButton("Robot Blocking Camera");
 			messageBox = new JTextArea("Actions...\n");
+			messageBox.setLineWrap(true);
 
 			laneJamButton.addActionListener(this);
 			diverterButton.addActionListener(this);
@@ -378,7 +379,7 @@ public class LaneManPanel extends JPanel{
 				messageBox.append("Lane jam initated in " + laneBoxList.getSelectedItem() + ".\n");
 				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 				int lanenum = laneBoxList.getSelectedIndex();
-				String set = "lm fcsa cmd lanejam " + lanenum;
+				String set = "lm va cmd lanejam " + lanenum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -388,7 +389,7 @@ public class LaneManPanel extends JPanel{
 				messageBox.append("Diverter was too slow switching to " + laneBoxList.getSelectedItem() + ".\n");
 				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 				int feedernum = feederBoxList.getSelectedIndex();
-				String set = "lm fcsa cmd slowdiverter " + feedernum;
+				String set = "lm va cmd slowdiverter " + feedernum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -408,7 +409,7 @@ public class LaneManPanel extends JPanel{
 				messageBox.append("A robot is blocking the camera at " + laneBoxList.getSelectedItem() + "'s nest.\n");
 				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 				int lanenum = laneBoxList.getSelectedIndex();
-				String set = "lm fcsa cmd blockingrobot " + lanenum;
+				String set = "lm va cmd blockingrobot " + lanenum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
