@@ -548,7 +548,7 @@ public class MasterControl {
 				if (cmd.get(3).equals("kitdropparts")){
 					String failString = cmd.get(4);
 					((StandAgent) destination).msgForceKitInspectionToFail();
-					command("sa kam ruininspectionkit " + failString);
+					command("sa kam cmd ruininspectionkit " + failString);
 				}
 			}//End StandAgent Commands
 
