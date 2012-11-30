@@ -378,7 +378,7 @@ public class LaneManPanel extends JPanel{
 				messageBox.append("Lane jam initated in " + laneBoxList.getSelectedItem() + ".\n");
 				int lanenum = laneBoxList.getSelectedIndex();
 				lanenum = lanenum+1;
-				String set = "lm fcsa lanejam " + lanenum;
+				String set = "lm fcsa cmd lanejam " + lanenum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -388,7 +388,7 @@ public class LaneManPanel extends JPanel{
 				messageBox.append("Diverter was too slow switching to " + laneBoxList.getSelectedItem() + ".\n");
 				int feedernum = feederBoxList.getSelectedIndex();
 				feedernum = feedernum+1;
-				String set = "lm fcsa slowdiverter " + feedernum;
+				String set = "lm fcsa cmd slowdiverter " + feedernum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -398,7 +398,7 @@ public class LaneManPanel extends JPanel{
 				messageBox.append("Bad parts found in " + laneBoxList.getSelectedItem() + "'s nest.\n");
 				int lanenum = laneBoxList.getSelectedIndex();
 				lanenum = lanenum+1;
-				String set = "lm va badparts " + lanenum;
+				String set = "lm va cmd badparts " + lanenum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -408,7 +408,7 @@ public class LaneManPanel extends JPanel{
 				messageBox.append("A robot is blocking the camera at " + laneBoxList.getSelectedItem() + "'s nest.\n");
 				int lanenum = laneBoxList.getSelectedIndex();
 				lanenum = lanenum+1;
-				String set = "lm fcsa blockingrobot " + lanenum;
+				String set = "lm fcsa cmd blockingrobot " + lanenum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
