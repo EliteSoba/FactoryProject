@@ -141,6 +141,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		if (ae.getSource() == submitButton) {		// print messages to be displayed in messageBox
 			if (kitNameBox.getSelectedItem() == null)
 				messageBox.append("No kit selected.\n");
+				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 			else {
 				String name = (String)kitNameBox.getSelectedItem();
 				String qnty = spinner.getValue().toString();
@@ -153,6 +154,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 				model.insertRow(model.getRowCount(),rowData);
 
 				messageBox.append("Order Submitted.\n     Details: " + qnty + " units of " + name + "\n" );
+				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 				} catch (Exception e) {
 					System.out.println("An error occured trying to send new order");
 					e.printStackTrace();
@@ -161,6 +163,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		}
 		else if (ae.getSource() == stopFactory) { // message that initiates factory shutdown
 			messageBox.append("Terminating all operations...\n");
+			messageBox.setCaretPosition(messageBox.getDocument().getLength());
 			String set = new String("");
 			set = "fpm mcs cmd stopfactory";
 			try {
@@ -205,10 +208,12 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			kitNameBox.removeItem(str);
 			messageBox.append("\t"+str+"\n");
 		}
+		messageBox.setCaretPosition(messageBox.getDocument().getLength());
 
 	}
 
 	public void addMessage(String msg) {
 		messageBox.append(msg + "\n");
+		messageBox.setCaretPosition(messageBox.getDocument().getLength());
 	}
 }
