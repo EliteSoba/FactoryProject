@@ -31,7 +31,7 @@ public class VisionAgent extends Agent implements Vision {
 	public Feeder feeder2;
 	public Feeder feeder3;
 	
-	public VisionAgent(PartsRobot partsRobot, Stand stand, MasterControl mc, Feeder f0, Feeder f1, Feeder f2, Feeder f3){
+	public VisionAgent(PartsRobot partsRobot, Stand stand, MasterControl mc){
 		super(mc);
 		this.partsRobot = partsRobot;
 		this.stand = stand;
