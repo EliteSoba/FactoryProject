@@ -174,6 +174,11 @@ public class MasterControl {
 		f2 = new FeederAgent("f2",2,l2t,l2b,gantry,vision,this,false,false);
 		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,vision,this,false,false);
 		feederAgents = Arrays.asList(f0, f1, f2, f3);
+		
+		vision.setFeeder(f0, 0);
+		vision.setFeeder(f1, 1);
+		vision.setFeeder(f2, 2);
+		vision.setFeeder(f3, 3);
 
 		// Set the Lane's Feeders
 		l0t.setFeeder(f0);
