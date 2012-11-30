@@ -93,7 +93,7 @@ public class FCSAgent extends Agent implements FCS{
 	public void msgKitIsExported(Kit kit){
 		if(this.state == KitProductionState.PRODUCING){
 			kitsExportedCount++;
-			server.command("fpm fcsa cmd kitexported");
+			server.command("fcsa fpm cmd kitexported");
 		}
 		stateChanged();
 	}
