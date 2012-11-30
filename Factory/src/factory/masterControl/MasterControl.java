@@ -724,11 +724,14 @@ public class MasterControl {
             return false;
 
         }
+        
+        /*
         if(pCmd.get(0).equals(pCmd.get(1))){
             System.out.println("source and Destination cannot be the same");
             return false;
 
         }
+        */
         if(!cmdTypes.contains(pCmd.get(2))){
             System.out.println("commandtype is not valid commandtype");
             return false;
