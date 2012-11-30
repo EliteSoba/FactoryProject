@@ -266,7 +266,7 @@ public class LaneManPanel extends JPanel{
 						int speed = (int)source.getValue();
 						// send speed to server
 						int lanenum = (Integer)laneSelect.getSelectedItem();
-						String set = "lm fcsa set lanespeed " + lanenum + " " + speed;
+						String set = "lm lm set lanespeed " + lanenum + " " + speed;
 						try {
 							laneManager.sendCommand(set);
 						} catch (Exception e) {
@@ -279,7 +279,7 @@ public class LaneManPanel extends JPanel{
 						int amplitude = (int)source.getValue();
 						// send amplitude to server
 						int lanenum = (Integer)laneSelect.getSelectedItem();
-						String set = "lm fcsa set laneamplitude " + lanenum + " " + amplitude;
+						String set = "lm lm set laneamplitude " + lanenum + " " + amplitude;
 						try {
 							laneManager.sendCommand(set);
 						} catch (Exception e) {
@@ -398,7 +398,7 @@ public class LaneManPanel extends JPanel{
 				messageBox.append("Bad parts found in " + laneBoxList.getSelectedItem() + "'s nest.\n");
 				int lanenum = laneBoxList.getSelectedIndex();
 				lanenum = lanenum+1;
-				String set = "lm fcsa badparts " + lanenum;
+				String set = "lm va badparts " + lanenum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
