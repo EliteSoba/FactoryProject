@@ -279,6 +279,19 @@ public class FactoryProductionManager extends Client {
 			
 				System.out.println(partsList.get(pCmd.get(2)));
 			}
+			else if (identifier.equals("nonnormative")) {
+				String caseName = pCmd.get(2);
+				if (caseName.equals("lanejam")) {
+					int lanenum = Integer.parseInt(pCmd.get(3));
+					lanenum = lanenum+1;
+					 ((FactoryProdManPanel)UI).addMessage("A lane jam has occurred in lane " + lanenum + ".");
+				}
+				else if (caseName.equals("slowdiverter")) {
+					int feedernum = Integer.parseInt(pCmd.get(3));
+					feedernum = feedernum+1;
+					((FactoryProdManPanel)UI).addMessage("The diverter at feeder " + feedernum + "switched over late.");
+				}
+			}
 		}
 
 
