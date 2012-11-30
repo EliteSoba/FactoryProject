@@ -267,23 +267,27 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  The vision sends this message notifying 
 	 *  the Feeder that it had a bad nest. 
 	 * */
-	public void msgBadNest(Nest n) {
+	public void msgBadNest(int nestNumber) {
 		
 		
-		// need to add check here to make sure that 
-		// the lane in question is stable. if not stable, just wait
-		if (topLane.lane.getNest() == n) 
+		if (nestNumber == 0) // top nest 
 		{
-			topLane.state = MyLaneState.BAD_NEST;
 			debug("received msgBadNest(topNest)");
+			if (topLane.picState != PictureState.UNSTABLE) // otherwise, just wait for the nest to become stable
+			{
+				topLane.state = MyLaneState.BAD_NEST;
+			}
 		}
-		else if (bottomLane.lane.getNest() == n)
+		else if (nestNumber == 1) // bottom nest
 		{
-			bottomLane.state = MyLaneState.BAD_NEST;
 			debug("received msgBadNest(bottomNest)");
+			if (bottomLane.picState != PictureState.UNSTABLE) // otherwise, just wait for the nest to become stable
+			{
+				bottomLane.state = MyLaneState.BAD_NEST;
+			}
 		}
 		
-
+		
 		
 		stateChanged();
 	}
@@ -488,7 +492,7 @@ public class FeederAgent extends Agent implements Feeder {
 		if (bottomLane == la)
 			laneStr = "Bottom Lane";
 
-		debug("Action: dump nest of "+ laneStr + ".");
+		debug("Action: dump the "+ laneStr + "'s nest.");
 
 		DoStopFeeding(); // stop feeding the parts into the lane
 		

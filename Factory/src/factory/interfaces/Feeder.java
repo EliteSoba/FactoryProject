@@ -12,7 +12,7 @@ public interface Feeder {
 
 	public void msgLaneNeedsPart(Part part, Lane lane);
 
-	public void msgBadNest(Nest n);
+	public void msgBadNest(int nestNumber);
 	
 	public void setGantry(Gantry g);
 
