@@ -70,7 +70,7 @@ public class MasterControl {
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
             "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection",
-            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported", "ruininspectionkit"
+            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported", "ruininspectionkit","badparts"
 
     );
 
@@ -174,6 +174,11 @@ public class MasterControl {
 		f2 = new FeederAgent("f2",2,l2t,l2b,gantry,vision,this,false,false);
 		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,vision,this,false,false);
 		feederAgents = Arrays.asList(f0, f1, f2, f3);
+		
+		vision.setFeeder(f0, 0);
+		vision.setFeeder(f1, 1);
+		vision.setFeeder(f2, 2);
+		vision.setFeeder(f3, 3);
 
 		// Set the Lane's Feeders
 		l0t.setFeeder(f0);
@@ -566,6 +571,20 @@ public class MasterControl {
                     ((NestAgent) destination).msgNestHasDestabilized();
                 }
             }//End NestAgent Commands
+
+	else if (cmd.get(1).equals("va")) {
+            	destination = agentTreeMap.get(cmd.get(1));
+	            if(cmd.get(3).equals("badparts")){
+	            	int nestnum = Integer.parseInt(cmd.get(4));
+	            	nestnum = nestnum-1;
+			((VisionAgent) destination).msgNoGoodPartsFound(nestnum);
+	            }
+            } // End VisionAgent Commands
+
+
+
+
+
 		}
 
 
@@ -724,11 +743,14 @@ public class MasterControl {
             return false;
 
         }
+        
+        /*
         if(pCmd.get(0).equals(pCmd.get(1))){
             System.out.println("source and Destination cannot be the same");
             return false;
 
         }
+        */
         if(!cmdTypes.contains(pCmd.get(2))){
             System.out.println("commandtype is not valid commandtype");
             return false;
