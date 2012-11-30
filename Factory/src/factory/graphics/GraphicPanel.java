@@ -35,10 +35,9 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected GraphicLaneManager [] lane;
 	
 	// CAMERA
-	protected ArrayList<Image> scanFlashAnimation;
-	protected int scanFlashCounter;
+	protected int flashCounter;
 	protected int flashFeederIndex;
-	protected int scanFlashSpeed;
+	protected static Image flashImage;
 	
 	// KIT MANAGER
 	protected GraphicConveyorBelt belt; //The conveyer belt
@@ -53,7 +52,6 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected GraphicGantryRobot gantryRobot;
 	
 	protected GraphicItem transferringItem;
-	
 	
 	public GraphicPanel(/*int offset/**/) {
 		WIDTH = 1100;
@@ -72,9 +70,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		isKitAssemblyManager = false;
 		isFactoryProductionManager = false;*/
 		
-		scanFlashAnimation = GraphicAnimation.loadAnimationFromFolder("Images/cameraScan/", 0, ".png");
-		scanFlashCounter = 0;
-		scanFlashSpeed = 3;
+		flashImage = Toolkit.getDefaultToolkit().getImage("Images/cameraFlash3x3.png");
 		transferringItem = null;
 		
 		/*belt = new GraphicConveyorBelt(0-offset, 0, this);
@@ -278,7 +274,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void cameraFlash(int nestIndex) {
 		if (isLaneManager || isFactoryProductionManager) {
-			scanFlashCounter = scanFlashAnimation.size();
+			flashCounter = 10;
 			flashFeederIndex = nestIndex;
 		}
 	}
@@ -508,18 +504,18 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 	}
 	
-	public void jamLane(int laneNum){
-		lane[(laneNum) / 2].laneStart = false;
+	public void jamTopLane(int feederNum){
+		lane[feederNum].laneStart = false;
 	}
 	
-	public void unjamLane(int laneNum){
-		lane[(laneNum) / 2].laneStart = true;
-		lane[(laneNum) / 2].changeLaneSpeed(lane[(laneNum) / 2].laneSpeed + 1);
-		if(lane[(laneNum) / 2].laneSpeed > 8)	//laneSpeed max is 8
-			lane[(laneNum) / 2].changeLaneSpeed(8);
-		lane[(laneNum) / 2].vibrationAmplitude += 2;
-		if(lane[(laneNum) / 2].vibrationAmplitude > 8)		//vibration amplitude max is 8
-			lane[(laneNum) / 2].vibrationAmplitude = 8;
+	public void unjamTopLane(int feederNum){
+		lane[feederNum].laneStart = true;
+		lane[feederNum].changeTopLaneSpeed(lane[feederNum].laneSpeed + 1);
+		if(lane[feederNum].laneSpeed > 8)	//laneSpeed max is 8
+			lane[feederNum].changeTopLaneSpeed(8);
+		lane[feederNum].vibrationAmplitude += 2;
+		if(lane[feederNum].vibrationAmplitude > 8)		//vibration amplitude max is 8
+			lane[feederNum].vibrationAmplitude = 8;
 	}
 	
 	/**Movement methods*/
@@ -817,18 +813,17 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 		
 		if(isLaneManager || isFactoryProductionManager) {
-			if(scanFlashCounter > 0)
+			if(flashCounter >= 0)
 			{
-				int flashX = nests.get(flashFeederIndex*2).getX()-12;
-				int flashY = nests.get(flashFeederIndex*2).getY()-6;
-				g.drawImage(scanFlashAnimation.get(scanFlashCounter/scanFlashSpeed), flashX, flashY, null);
-				scanFlashCounter ++;
-				System.out.println(scanFlashCounter);
-				if(scanFlashCounter/scanFlashSpeed == scanFlashAnimation.size())
-				{
-					scanFlashCounter = 0;
+				int flashX = nests.get(flashFeederIndex*2).getX()-20;
+				int flashY = nests.get(flashFeederIndex*2).getY()-12;
+				g.drawImage(flashImage, flashX, flashY, null);
+				flashX = nests.get(flashFeederIndex*2+1).getX()-20;
+				flashY = nests.get(flashFeederIndex*2+1).getY()-12;
+				g.drawImage(flashImage, flashX, flashY, null);
+				flashCounter --;
+				if(flashCounter == 1)
 					cameraFlashDone();
-				}
 			}
 		}
 		

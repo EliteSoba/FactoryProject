@@ -346,7 +346,7 @@ public class GraphicLaneManager{
 				}
 			}
 			
-			if(lane1Items.size() > 0){
+			if(lane1Items.size() > 0){	//Moves Items into the jam
 				lane1Items.get(0).setVX(0);
 				for(int i = 1; i < lane1Items.size();i++){
 					if(lane1Items.get(i).getY() > itemYLaneUp){
@@ -365,7 +365,7 @@ public class GraphicLaneManager{
 				}
 			}
 			
-			for(int i = 0;i<lane1Items.size();i++){
+			for(int i = 0;i<lane1Items.size();i++){	//Vibration
 				if(lane1Items.get(i).getVY() == 0){	//In the queue
 					if(vibrationCount % 4 == 1){	//Vibration up and down every 2 paint calls
 						if(i%2 == 0){
@@ -912,10 +912,16 @@ public class GraphicLaneManager{
 		}
 	}
 	
-	public void changeLaneSpeed(int laneS){
+	public void changeTopLaneSpeed(int laneS){
 		laneSpeed = laneS;
 		vX = -laneSpeed; vY = laneSpeed;
 	}
+	
+	public void changeBottomLaneSpeed(int laneS){	//Changes vX to bottomVX
+		laneSpeed = laneS;
+		vX = -laneSpeed; vY = laneSpeed;
+	}
+	
 }
 
 

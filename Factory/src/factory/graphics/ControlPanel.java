@@ -153,9 +153,9 @@ public class ControlPanel extends JPanel implements ActionListener{
 		else if(source == cameraFlash)
 			am.takePictureFeeder1();
 		else if(source == jamLane)
-			am.jamLane(0); 
+			am.jamTopLane(0); 
 		else if(source == unjamLane)
-			am.unjamLane(0); 
+			am.unjamTopLane(0); 
 	}
 
 }
