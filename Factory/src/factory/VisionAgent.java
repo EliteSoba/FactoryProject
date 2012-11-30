@@ -35,10 +35,6 @@ public class VisionAgent extends Agent implements Vision {
 		super(mc);
 		this.partsRobot = partsRobot;
 		this.stand = stand;
-		this.feeder0 = f0;
-		this.feeder1 = f1;
-		this.feeder2 = f2;
-		this.feeder3 = f3;
 	}
 
 	public class KitPicRequest {
