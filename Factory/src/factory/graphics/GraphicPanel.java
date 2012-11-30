@@ -366,6 +366,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		//if(!lane[feederNum].lane1PurgeOn){	//If purging is on, cannot feed!
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].bin.getBinItems().clear();
+			lane[feederNum].vibrationAmplitude = 2;		//resets amplitude to 2
+			lane[feederNum].laneSpeed = 1;		//resets laneSpeed to 1. Change to panel's slide bar
 			for(int i = 0; i < lane[feederNum].bin.binSize;i++){		//unlimited items
 				lane[feederNum].bin.binItems.add(new GraphicItem(-40, 0, "Images/"+lane[feederNum].bin.partName+".png"));
 			}
@@ -386,6 +388,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		//if(!lane[(laneNum) / 2].lane1PurgeOn){	//If purging is on, cannot feed!
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[laneNum / 2].bin.getBinItems().clear();
+			lane[laneNum / 2].vibrationAmplitude = 2;		//resets amplitude to 2
+			lane[laneNum / 2].laneSpeed = 1;		//resets laneSpeed to 1. Change to panel's slide bar
 			for(int i = 0; i < lane[laneNum / 2].bin.binSize;i++){		//unlimited items
 				lane[laneNum / 2].bin.binItems.add(new GraphicItem(-40, 0, "Images/"+lane[laneNum / 2].bin.partName+".png"));
 			}
@@ -504,13 +508,19 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 	}
 	
+	/**
+	 * Jams the top lane. All items stops behind the first item.
+	 * @param feederNum The designated feeder, 1-4
+	 */
 	public void jamTopLane(int feederNum){
-		//lane[feederNum].laneStart = false;
 		lane[feederNum].lane1Jam = true;
 	}
 	
+	/**
+	 * Unjams the top lane. Return back to normal.
+	 * @param feederNum The designated feeder, 1-4
+	 */
 	public void unjamTopLane(int feederNum){
-		//lane[feederNum].laneStart = true;
 		lane[feederNum].changeTopLaneSpeed(lane[feederNum].laneSpeed + 1);
 		if(lane[feederNum].laneSpeed > 8)	//laneSpeed max is 8
 			lane[feederNum].changeTopLaneSpeed(8);
@@ -520,13 +530,19 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		lane[feederNum].lane1Jam = false;
 	}
 	
+	/**
+	 * Jams the bottom lane. All items stops behind the first item.
+	 * @param feederNum The designated feeder, 1-4
+	 */
 	public void jamBottomLane(int feederNum){
-		//lane[feederNum].laneStart = false;
 		lane[feederNum].lane2Jam = true;
 	}
 	
+	/**
+	 * Unjams the bottom lane. Return back to normal.
+	 * @param feederNum The designated feeder, 1-4
+	 */
 	public void unjamBottomLane(int feederNum){
-		//lane[feederNum].laneStart = true;
 		lane[feederNum].changeBottomLaneSpeed(lane[feederNum].laneSpeed + 1);
 		if(lane[feederNum].laneSpeed > 8)	//laneSpeed max is 8
 			lane[feederNum].changeBottomLaneSpeed(8);
@@ -535,6 +551,47 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			lane[feederNum].vibrationAmplitude = 8;
 		lane[feederNum].lane2Jam = false;
 	}
+	
+	/**
+	 * increase the Top lane vibration speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void increaseTopLaneAmplitude(int feederNum){
+		lane[feederNum].vibrationAmplitude++;
+		if(lane[feederNum].vibrationAmplitude > 8)
+			lane[feederNum].vibrationAmplitude = 8;
+	}
+	
+	/**
+	 * decrease the Top lane vibration speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void decreaseTopLaneAmplitude(int feederNum){
+		lane[feederNum].vibrationAmplitude--;
+		if(lane[feederNum].vibrationAmplitude < 1)
+			lane[feederNum].vibrationAmplitude = 1;
+	}
+	
+	/**
+	 * increase the Bottom lane vibration speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void increaseBottomLaneAmplitude(int feederNum){
+		lane[feederNum].vibrationAmplitude++;		//change to bottom vibrationAmplitude
+		if(lane[feederNum].vibrationAmplitude > 8)
+			lane[feederNum].vibrationAmplitude = 8;
+	}
+	
+	/**
+	 * decrease the Bottom lane vibration speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void decreaseBottomLaneAmplitude(int feederNum){
+		lane[feederNum].vibrationAmplitude--;		//change to bottom vibrationAmplitude
+		if(lane[feederNum].vibrationAmplitude < 1)
+			lane[feederNum].vibrationAmplitude = 1;
+	}
+	
 	
 	/**Movement methods*/
 	/**
@@ -629,10 +686,15 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Removes all the Items in the given Nest
+	 * Also jams the lane items
 	 * @param nestNum The index of the Nest
 	 */
 	public void purgeNest(int nestNum) {
 		nests.get(nestNum).clearItems();
+		if(nestNum % 2 == 0)
+			lane[nestNum / 2].lane1Jam = true;
+		else
+			lane[nestNum / 2].lane2Jam = true;
 	}
 	
 	/**

@@ -1020,6 +1020,7 @@ public class GraphicLaneManager{
 			}
 		}
 	}
+	
 	public void changeTopLaneSpeed(int laneS){
 		laneSpeed = laneS;
 		vX = -laneSpeed; vY = laneSpeed;
@@ -1030,6 +1031,37 @@ public class GraphicLaneManager{
 		vX = -laneSpeed; vY = laneSpeed;
 	}
 	
+	public void changeTopLaneAmplitude(int amp){
+		vibrationAmplitude = amp;
+	}
+	
+	public void changeBottomLaneAmplitude(int amp){
+		vibrationAmplitude = amp;	//change to bottom vibrationAmp
+	}
+	
+	public void increaseTopLaneAmplitude(){
+		vibrationAmplitude++;
+		if(vibrationAmplitude > 8)
+			vibrationAmplitude = 8;
+	}
+	
+	public void decreaseTopLaneAmplitude(){
+		vibrationAmplitude--;
+		if(vibrationAmplitude < 1)
+			vibrationAmplitude = 1;
+	}
+	
+	public void increaseBottomLaneAmplitude(){
+		vibrationAmplitude++;		//change to bottom vibrationAmplitude
+		if(vibrationAmplitude > 8)
+			vibrationAmplitude = 8;
+	}
+	
+	public void decreaseBottomLaneAmplitude(){
+		vibrationAmplitude--;		//change to bottom vibrationAmplitude
+		if(vibrationAmplitude < 1)
+			vibrationAmplitude = 1;
+	}
 	
 }
 
