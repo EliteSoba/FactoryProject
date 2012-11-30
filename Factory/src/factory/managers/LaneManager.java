@@ -100,6 +100,20 @@ public class LaneManager extends Client {
 				int nestIndex = Integer.valueOf(pCmd.get(2));
 				((LanePanel) graphics).cameraFlash(nestIndex);
 			}
+			
+			// command from self
+			else if (identifier.equals("lanespeed")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int speed = Integer.valueOf(pCmd.get(3));
+				
+				// call graphics function to change speed
+				
+			}else if (identifier.equals("laneamplitude")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int amplitude = Integer.valueOf(pCmd.get(3));
+				
+				// call graphics function to change amplitude
+			}
 
 		}
 		else if(action.equals("req")){
