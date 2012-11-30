@@ -70,7 +70,7 @@ public class MasterControl {
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
             "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection",
-            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts"
+            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported", "ruininspectionkit"
 
     );
 
@@ -535,6 +535,17 @@ public class MasterControl {
 					
 				}
 			}//End FCSAgent Commands
+
+			//StandAgent Commands:
+            else if (cmd.get(1).equals("sa"))
+            {
+            	destination = agentTreeMap.get(cmd.get(1));
+				if (cmd.get(3).equals("kitdropparts")){
+					String failString = cmd.get(4);
+					((StandAgent) destination).msgForceKitInspectionToFail();
+					command("sa kam ruininspectionkit " + failString);
+				}
+			}//End StandAgent Commands
 
 			// FeederAgent Commands:
 			else if (cmd.get(1).equals("fa"))

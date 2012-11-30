@@ -13,6 +13,8 @@ public class StandAgent extends Agent implements Stand {
 	public enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
 	public enum MySlotState { EMPTY, EMPTY_KIT_REQUESTED, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION, KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT, NEEDS_FIXING };
 	
+	//added this to force failure inspection
+	public boolean forceFail = false;
 	
 	public enum KitRobotState { WANTS_ACCESS, NO_ACCESS };
 
@@ -39,6 +41,7 @@ public class StandAgent extends Agent implements Stand {
 		public String name;
 		public Kit kit;
 		public MySlotState state;
+	
 	
 		public MySlot(String name){
 			this.state = MySlotState.EMPTY;
@@ -95,6 +98,10 @@ public class StandAgent extends Agent implements Stand {
 	}
 	
 	/** MESSAGES **/
+	
+	public void msgForceKitInspectionToFail(){
+		forceFail = true;
+	}
 	
 	/**
 	 * Message that is Received from the conveyor when it brought an empty kit
@@ -352,6 +359,10 @@ public class StandAgent extends Agent implements Stand {
 	 */
 	private void DoAskVisionToInspectKit() {
 		debug("Executing DoAskVisionToInspectKit()");
+		if(forceFail){
+			inspectionSlot.kit.forceFail = true;
+			forceFail = false;
+		}
 		vision.msgAnalyzeKitAtInspection(inspectionSlot.kit);
 	   	inspectionSlot.state = MySlotState.ANALYZING_KIT; 
 	   	stateChanged();

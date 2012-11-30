@@ -211,8 +211,8 @@ public class LaneManPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			// TODO Auto-generated method stub
-			if(ae.getSource() == laneOn){
-				int lanenum = (int)laneSelect.getSelectedItem();
+			/*if(ae.getSource() == laneOn){
+				int lanenum = (Integer)laneSelect.getSelectedItem();
 				String set = "lm fcsa set lanepower " + lanenum;
 				try {
 					laneManager.sendCommand(set);
@@ -220,7 +220,7 @@ public class LaneManPanel extends JPanel{
 					System.out.println("An error occurred trying to send message to power on lane " + lanenum + ".");
 				} 
 			}else if (ae.getSource() == laneOff){
-				int lanenum = (int)laneSelect.getSelectedItem();
+				int lanenum = (Integer)laneSelect.getSelectedItem();
 				String set = "lm fcsa set lanepower " + lanenum;
 				try {
 					laneManager.sendCommand(set);
@@ -228,7 +228,7 @@ public class LaneManPanel extends JPanel{
 					System.out.println("An error occurred trying to send message to power off lane " + lanenum + ".");
 				} 
 			}else if (ae.getSource() == feederOn){
-				int feedernum = (int)feederSelect.getSelectedItem();
+				int feedernum = (Integer)feederSelect.getSelectedItem();
 				String set = "lm fcsa set feederpower " + feedernum;
 				try {
 					laneManager.sendCommand(set);
@@ -236,14 +236,14 @@ public class LaneManPanel extends JPanel{
 					System.out.println("An error occurred trying to send message to power on feeder " + feedernum + ".");
 				} 
 			}else if (ae.getSource() == feederOff){
-				int feedernum = (int)feederSelect.getSelectedItem();
+				int feedernum = (Integer)feederSelect.getSelectedItem();
 				String set = "lm fcsa set feederpower " + feedernum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
 					System.out.println("An error occurred trying to send message to power off feeder " + feedernum + ".");
 				} 
-			}else{  // updates speed and amplitude when JComboBox changes
+			}else{*/  // updates speed and amplitude when JComboBox changes
 				JComboBox cb = (JComboBox)ae.getSource();
 				System.out.println("Get");
 				if(cb == laneSelect){
@@ -251,7 +251,7 @@ public class LaneManPanel extends JPanel{
 					laneSpeed.setValue(laneManager.getLaneSpeed((Integer)cb.getSelectedItem()));
 					laneAmplitude.setValue(laneManager.getLaneAmplitude((Integer)cb.getSelectedItem()));
 				}
-			}
+			//}
 
 		}
 
@@ -265,7 +265,7 @@ public class LaneManPanel extends JPanel{
 					if (!source.getValueIsAdjusting()) {
 						int speed = (int)source.getValue();
 						// send speed to server
-						int lanenum = (int)laneSelect.getSelectedItem();
+						int lanenum = (Integer)laneSelect.getSelectedItem();
 						String set = "lm fcsa set lanespeed " + lanenum + " " + speed;
 						try {
 							laneManager.sendCommand(set);
@@ -278,7 +278,7 @@ public class LaneManPanel extends JPanel{
 					if (!source.getValueIsAdjusting()) {
 						int amplitude = (int)source.getValue();
 						// send amplitude to server
-						int lanenum = (int)laneSelect.getSelectedItem();
+						int lanenum = (Integer)laneSelect.getSelectedItem();
 						String set = "lm fcsa set laneamplitude " + lanenum + " " + amplitude;
 						try {
 							laneManager.sendCommand(set);
@@ -296,6 +296,7 @@ public class LaneManPanel extends JPanel{
 
 	public class LaneNonNormPanel extends JPanel implements ActionListener {
 		JComboBox laneBoxList;
+		JComboBox feederBoxList;
 		JPanel partsMissingContainer;
 		JPanel partsBadContainer;
 		JButton laneJamButton;
@@ -329,7 +330,10 @@ public class LaneManPanel extends JPanel{
 				laneBoxList.addItem("Lane "+i);
 			}
 			laneBoxList.setSelectedIndex(0);
-
+			feederBoxList = new JComboBox();
+			for (int i = 1; i < 5; i++) {
+				feederBoxList.addItem("Feeder "+i);
+			}
 			partsMissingContainer = new JPanel();
 			partsBadContainer = new JPanel();
 
@@ -354,6 +358,8 @@ public class LaneManPanel extends JPanel{
 			boxContainer.add(label);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
 			boxContainer.add(laneBoxList);
+			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
+			boxContainer.add(feederBoxList);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
 			boxContainer.add(partsMissingContainer);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));

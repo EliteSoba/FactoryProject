@@ -12,6 +12,9 @@ public class Kit {
    public enum KitState { EMPTY, INCOMPLETE, COMPLETE, PASSED_INSPECTION, FAILED_INSPECTION }
    public KitState state;
    public List<Part> parts = Collections.synchronizedList(new ArrayList<Part>());
+   
+	//added this to force picture inspection to fail.
+	public boolean forceFail = false;
 
    public Kit(){
 	   this.state = KitState.EMPTY;

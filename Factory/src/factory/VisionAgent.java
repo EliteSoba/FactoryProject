@@ -15,7 +15,6 @@ import factory.masterControl.MasterControl;
 public class VisionAgent extends Agent implements Vision {
 
 	public enum KitPicRequestState { NEED_TO_INSPECT, INSPECTED }
-	public enum InspectionResults { PASSED, FAILED }
 	public enum PictureRequestState { NESTS_READY, ASKED_PARTS_ROBOT, PARTS_ROBOT_CLEAR, PICTURE_TAKEN }
 
 	public ArrayList<PictureRequest> picRequests = new ArrayList<PictureRequest>(); 
@@ -35,10 +34,11 @@ public class VisionAgent extends Agent implements Vision {
 	public class KitPicRequest {
 
 		public KitPicRequestState state;
-		public InspectionResults inspectionResults;
+		public boolean forceFail = false;
 
-		public KitPicRequest(KitPicRequestState kprs) { 
+		public KitPicRequest(KitPicRequestState kprs, boolean forceFail) { 
 			state = kprs;
+			this.forceFail = forceFail;
 		}
 	}
 
@@ -98,7 +98,7 @@ public class VisionAgent extends Agent implements Vision {
 
 	public void msgAnalyzeKitAtInspection(Kit kit) {
 		debug("Received msgAnalyzeKitAtInspection() from the kit robot.");
-		kitPicRequests.add(new KitPicRequest(KitPicRequestState.NEED_TO_INSPECT));
+		kitPicRequests.add(new KitPicRequest(KitPicRequestState.NEED_TO_INSPECT, kit.forceFail));
 		stateChanged();
 	}
 
@@ -157,12 +157,17 @@ public class VisionAgent extends Agent implements Vision {
 		if (!isUnitTesting){
 			DoTakePicture();
 		}
-
+		if (k.forceFail == true)
+			stand.msgResultsOfKitAtInspection(KitState.FAILED_INSPECTION);
+		else
+			stand.msgResultsOfKitAtInspection(KitState.PASSED_INSPECTION);
+		/*
 		int randomNum = r.nextInt(11);
 		if(randomNum < 4)
 			stand.msgResultsOfKitAtInspection(KitState.PASSED_INSPECTION);
 		else
 			stand.msgResultsOfKitAtInspection(KitState.PASSED_INSPECTION);
+			*/
 
 		pictureAllowed.release();
 
