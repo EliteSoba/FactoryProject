@@ -25,10 +25,20 @@ public class VisionAgent extends Agent implements Vision {
 	public Semaphore pictureAllowed = new Semaphore(1);
 	public ArrayList<Nest> nests;
 	public boolean isUnitTesting = false;
-	public VisionAgent(PartsRobot partsRobot, Stand stand, MasterControl mc){
+	
+	public Feeder feeder1;
+	public Feeder feeder2;
+	public Feeder feeder3;
+	public Feeder feeder4;
+	
+	public VisionAgent(PartsRobot partsRobot, Stand stand, MasterControl mc, Feeder f1, Feeder f2, Feeder f3, Feeder f4){
 		super(mc);
 		this.partsRobot = partsRobot;
 		this.stand = stand;
+		this.feeder1 = f1;
+		this.feeder2 = f2;
+		this.feeder3 = f3;
+		this.feeder4 = f4;
 	}
 
 	public class KitPicRequest {
@@ -84,6 +94,25 @@ public class VisionAgent extends Agent implements Vision {
 			}
 		}
 		this.stateChanged();
+	}
+	
+	/**
+	 * This is a message from the swing panel to force the nest to have no good parts
+	 * @param nestNum The number of the nest that has no good parts
+	 */
+	public void msgNoGoodPartsFound(int nestNum){
+		if (nestNum == 0 || nestNum == 1){
+			feeder1.msgBadNest(nestNum % 2);
+		}
+		if (nestNum == 2 || nestNum == 3){
+			feeder2.msgBadNest(nestNum % 2);
+		}
+		if (nestNum == 4 || nestNum == 5){
+			feeder3.msgBadNest(nestNum % 2);
+		}
+		if (nestNum == 6 || nestNum == 7){
+			feeder4.msgBadNest(nestNum % 2);
+		}
 	}
 
 
