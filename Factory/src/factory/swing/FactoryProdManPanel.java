@@ -207,4 +207,8 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		}
 
 	}
+
+	public void addMessage(String msg) {
+		messageBox.append(msg + "\n");
+	}
 }
