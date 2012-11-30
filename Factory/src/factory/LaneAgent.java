@@ -1,8 +1,11 @@
 package factory;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import agent.Agent;
+import factory.FeederAgent.FeederState;
 import factory.interfaces.Feeder;
 import factory.interfaces.Lane;
 import factory.interfaces.Nest;
@@ -20,6 +23,7 @@ public class LaneAgent extends Agent implements Lane {
 	//	public enum LaneState { NORMAL, NEEDS_TO_PURGE, PURGING };  // not sure about this, need to update wiki still
 	//	public LaneState state = LaneState.NORMAL; 
 	public Nest myNest;
+	public Timer jamTimer = new Timer();
 	public int amplitude = 5;
 	public static int kMAX_AMPLITUDE = 20;
 	public enum NestState { NORMAL, HAS_STABILIZED, HAS_DESTABILIZED,
@@ -112,7 +116,7 @@ public class LaneAgent extends Agent implements Lane {
 		}
 		if (nestState == NestState.NEEDS_TO_INCREASE_AMPLITUDE)
 		{
-			increaseAmplitude();
+			//increaseAmplitude();
 			return true;
 		}
 
@@ -143,15 +147,19 @@ public class LaneAgent extends Agent implements Lane {
 		stateChanged();
 	}
 
-	public void increaseAmplitude() {
-		if (amplitude+5 <= kMAX_AMPLITUDE)
-		{
-			amplitude += 5;
-			DoIncreaseAmplitude(amplitude);
-			nestState = NestState.NORMAL;
-		}
-		stateChanged();
-	}
+//	public void increaseAmplitude() {
+//		jamTimer.schedule(new TimerTask(){
+//			public void run() {
+//				nestState = NestState.AMPLITUDE_WAS_INCREASED;
+//				debug("Lane amplitude timer expired.");
+//				stateChanged();
+//			}
+//		},(long) kOK_TO_PURGE_TIME * 1000); // okay to purge after this many seconds
+//
+//		nestState = NestState.NORMAL;
+//
+//		stateChanged();
+//	}
 
 	public void askFeederToSendParts(MyPart part) { 
 		debug("asking feeder to send parts of type " + part.pt.name + ".");

@@ -355,6 +355,12 @@ public class FeederAgent extends Agent implements Feeder {
 			return true;
 		}
 
+		if (topLane.jamState == JamState.MIGHT_BE_JAMMED)
+		{
+			laneMightBeJammed(topLane);
+			return true;
+		}
+		
 		if (topLane.state == MyLaneState.NEST_SUCCESSFULLY_DUMPED)
 		{
 			nestWasDumped(topLane);
@@ -376,6 +382,15 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** ACTIONS **/
+	private void laneMightBeJammed(MyLane la)
+	{
+		debug("Lane might be jammed!");
+		
+		la.jamState = JamState.TOLD_TO_INCREASE_AMPLITUDE;
+		
+		la.lane.msgIncreaseAmplitude();
+	}
+	
 	private void feedParts(MyPartRequest mpr) {
 		debug("feedParts("+mpr.pt.name+")");
 
