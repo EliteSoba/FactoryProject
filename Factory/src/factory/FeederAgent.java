@@ -268,6 +268,10 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  the Feeder that it had a bad nest. 
 	 * */
 	public void msgBadNest(Nest n) {
+		
+		
+		// need to add check here to make sure that 
+		// the lane in question is stable. if not stable, just wait
 		if (topLane.lane.getNest() == n) 
 		{
 			topLane.state = MyLaneState.BAD_NEST;
@@ -278,6 +282,8 @@ public class FeederAgent extends Agent implements Feeder {
 			bottomLane.state = MyLaneState.BAD_NEST;
 			debug("received msgBadNest(bottomNest)");
 		}
+		
+
 		
 		stateChanged();
 	}
@@ -1105,7 +1111,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** Overriding this for debugging purposes - only print the Feeder debug statements. */
 	protected void debug(String msg) {
-		if(this.printDebugStatements) {
+		if(true) {
 			print(msg, null);
 		}
 	}
