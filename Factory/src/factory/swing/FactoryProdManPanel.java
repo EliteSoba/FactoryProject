@@ -1,7 +1,7 @@
 /*
 
 author: Joey Huang
-Last edited: 11/18/12 2:23pm
+Last edited: 11/29/12 11:55pm
 
 
 This program contains the user interface panel in the factory production manager client
@@ -139,9 +139,10 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent ae) {
 
 		if (ae.getSource() == submitButton) {		// print messages to be displayed in messageBox
-			if (kitNameBox.getSelectedItem() == null)
+			if (kitNameBox.getSelectedItem() == null) {
 				messageBox.append("No kit selected.\n");
 				messageBox.setCaretPosition(messageBox.getDocument().getLength());
+			}
 			else {
 				String name = (String)kitNameBox.getSelectedItem();
 				String qnty = spinner.getValue().toString();

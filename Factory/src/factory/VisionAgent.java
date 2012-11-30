@@ -110,6 +110,25 @@ public class VisionAgent extends Agent implements Vision {
 			feeder3.msgBadNest(nestNum % 2);
 		}
 	}
+	
+	/**
+	 * This is a message from the swing panel to force the lane to be jammed
+	 * @param nestNum The number of the nest whose lane is jammed
+	 */
+	public void msgLaneJammed(int nestNum){
+		if (nestNum == 0 || nestNum == 1){
+			feeder0.msgEmptyNest(nestNum % 2);
+		}
+		if (nestNum == 2 || nestNum == 3){
+			feeder1.msgEmptyNest(nestNum % 2);
+		}
+		if (nestNum == 4 || nestNum == 5){
+			feeder2.msgEmptyNest(nestNum % 2);
+		}
+		if (nestNum == 6 || nestNum == 7){
+			feeder3.msgEmptyNest(nestNum % 2);
+		}
+	}
 
 
 	//the following message existed in the wiki, but the parameter is different.  It takes a timer rather than feeder
