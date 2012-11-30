@@ -31,8 +31,8 @@ public class LaneManager extends Client {
 		laneSpeeds = new ArrayList<Integer>();
 		laneAmplitudes = new ArrayList<Integer>(); 
 		for (int i = 0; i < 8; i++){    // presets lane speeds and amplitudes
-			laneSpeeds.add(i+1);  
-			laneAmplitudes.add(i+1);
+			laneSpeeds.add(2);  
+			laneAmplitudes.add(2);
 		}
 		
 		setInterface();
@@ -99,6 +99,20 @@ public class LaneManager extends Client {
 			else if (identifier.equals("takepictureofnest")) {
 				int nestIndex = Integer.valueOf(pCmd.get(2));
 				((LanePanel) graphics).cameraFlash(nestIndex);
+			}
+			
+			// command from self
+			else if (identifier.equals("lanespeed")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int speed = Integer.valueOf(pCmd.get(3));
+				
+				// call graphics function to change speed
+				
+			}else if (identifier.equals("laneamplitude")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int amplitude = Integer.valueOf(pCmd.get(3));
+				
+				// call graphics function to change amplitude
 			}
 
 		}

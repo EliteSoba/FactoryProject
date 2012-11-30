@@ -160,7 +160,8 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 		c.gridx = 1;
 		c.gridy = 9;
 		this.add(item8, c);
-
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.gridy = 10;
 		this.add(go, c);

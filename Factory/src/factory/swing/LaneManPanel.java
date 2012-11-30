@@ -266,7 +266,7 @@ public class LaneManPanel extends JPanel{
 						int speed = (int)source.getValue();
 						// send speed to server
 						int lanenum = (Integer)laneSelect.getSelectedItem();
-						String set = "lm lm set lanespeed " + lanenum + " " + speed;
+						String set = "lm lm set lanespeed " + (lanenum-1) + " " + speed;
 						try {
 							laneManager.sendCommand(set);
 						} catch (Exception e) {
@@ -279,7 +279,7 @@ public class LaneManPanel extends JPanel{
 						int amplitude = (int)source.getValue();
 						// send amplitude to server
 						int lanenum = (Integer)laneSelect.getSelectedItem();
-						String set = "lm lm set laneamplitude " + lanenum + " " + amplitude;
+						String set = "lm lm set laneamplitude " + (lanenum-1) + " " + amplitude;
 						try {
 							laneManager.sendCommand(set);
 						} catch (Exception e) {
@@ -376,8 +376,8 @@ public class LaneManPanel extends JPanel{
 		public void actionPerformed(ActionEvent ae) {
 			if (ae.getSource() == laneJamButton) {
 				messageBox.append("Lane jam initated in " + laneBoxList.getSelectedItem() + ".\n");
+				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 				int lanenum = laneBoxList.getSelectedIndex();
-				lanenum = lanenum+1;
 				String set = "lm fcsa cmd lanejam " + lanenum;
 				try {
 					laneManager.sendCommand(set);
@@ -386,8 +386,8 @@ public class LaneManPanel extends JPanel{
 				} 
 			} else if (ae.getSource() == diverterButton) {
 				messageBox.append("Diverter was too slow switching to " + laneBoxList.getSelectedItem() + ".\n");
+				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 				int feedernum = feederBoxList.getSelectedIndex();
-				feedernum = feedernum+1;
 				String set = "lm fcsa cmd slowdiverter " + feedernum;
 				try {
 					laneManager.sendCommand(set);
@@ -396,8 +396,8 @@ public class LaneManPanel extends JPanel{
 				} 
 			} else if (ae.getSource() == badPartsButton) {
 				messageBox.append("Bad parts found in " + laneBoxList.getSelectedItem() + "'s nest.\n");
+				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 				int lanenum = laneBoxList.getSelectedIndex();
-				lanenum = lanenum+1;
 				String set = "lm va cmd badparts " + lanenum;
 				try {
 					laneManager.sendCommand(set);
@@ -406,8 +406,8 @@ public class LaneManPanel extends JPanel{
 				} 
 			} else if (ae.getSource() == blockingRobotButton) {
 				messageBox.append("A robot is blocking the camera at " + laneBoxList.getSelectedItem() + "'s nest.\n");
+				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 				int lanenum = laneBoxList.getSelectedIndex();
-				lanenum = lanenum+1;
 				String set = "lm fcsa cmd blockingrobot " + lanenum;
 				try {
 					laneManager.sendCommand(set);

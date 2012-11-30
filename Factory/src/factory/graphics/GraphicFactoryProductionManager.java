@@ -144,12 +144,12 @@ public class GraphicFactoryProductionManager extends JFrame {
 		panel.purgeBottomLane(feederNum);
 	}
 	
-	public void jamLane(int laneNum){
-		panel.jamLane(laneNum);
+	public void jamTopLane(int feederNum){
+		panel.jamTopLane(feederNum);
 	}
 	
-	public void unjamLane(int laneNum){
-		panel.unjamLane(laneNum);
+	public void unjamTopLane(int feederNum){
+		panel.unjamTopLane(feederNum);
 	}
 	
 	public void getBin(String partName)
