@@ -193,6 +193,7 @@ public class FeederAgent extends Agent implements Feeder {
 		else if (nestNumber == 1) 
 		{
 			bottomLane.jamState = JamState.MIGHT_BE_JAMMED;
+			DoJamLane(nestNumber);
 			bottomLane.lane.msgIncreaseAmplitude();
 		}
 		stateChanged();
@@ -434,7 +435,7 @@ public class FeederAgent extends Agent implements Feeder {
 		debug("Lane is no longer jammed!");
 		
 		la.jamState = JamState.NO_LONGER_JAMMED;
-		
+		DoUnjamLane(la);
 		myNestsHaveBeenChecked = false; // we make this false so that the schedule will 
 		// check to see if the nests are ready, and if so, tell the vision to take a picture
 		
@@ -1173,6 +1174,34 @@ public class FeederAgent extends Agent implements Feeder {
 			{
 				debug("jamming bottom lane");
 				server.command("fa lm cmd jambottomlane " + feederNumber); /** TODO: MULTI **/
+				try {
+					animation.acquire();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	/** Animation that unjams a jammed lane. **/
+	private void DoUnjamLane(MyLane la)
+	{
+		if (debugMode == false)
+		{
+			if (topLane == la)
+			{
+				debug("unjamming top lane");
+				server.command("fa lm cmd unjamtoplane " + feederNumber); /** TODO: MULTI **/
+				try {
+					animation.acquire();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			else if (bottomLane == la)
+			{
+				debug("unjamming bottom lane");
+				server.command("fa lm cmd unjambottomlane " + feederNumber); /** TODO: MULTI **/
 				try {
 					animation.acquire();
 				} catch (InterruptedException e) {

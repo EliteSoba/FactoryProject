@@ -108,6 +108,27 @@ public class FactoryProductionManager extends Client {
 				int feederSlot = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).purgeBottomLane(feederSlot);
 			}
+			else if (identifier.equals("jamtoplane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).jamTopLane(feederSlot);
+			}
+			else if (identifier.equals("jambottomlane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).jamBottomLane(feederSlot);
+			}
+			else if (identifier.equals("unjamtoplane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).unjamTopLane(feederSlot);
+			}
+			else if (identifier.equals("unjambottomlane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).unjamBottomLane(feederSlot);
+			}
+			
 
 			// Commands from GantryAgent:
 			else if (identifier.equals("pickuppurgebin"))
