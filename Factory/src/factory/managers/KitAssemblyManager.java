@@ -15,6 +15,7 @@ import java.util.Map;
 import factory.KitConfig;
 import factory.Part;
 import factory.client.Client;
+import factory.graphics.FactoryProductionPanel;
 import factory.graphics.KitAssemblyPanel;
 import factory.graphics.GraphicBin;
 import factory.graphics.GraphicItem;
@@ -187,6 +188,11 @@ public class KitAssemblyManager extends Client {
 			// Commands from ConveyorControllerAgent
 			else if (identifier.equals("emptykitenterscell")) {
 				((KitAssemblyPanel) graphics).newEmptyKit();
+			}
+			
+			// Commands from StandAgent
+			else if (identifier.equals("ruininspectionkit")) {
+				((KitAssemblyPanel) graphics).dropParts(pCmd.get(2));
 			}
 
 			//Commands from VisionAgent
