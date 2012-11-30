@@ -15,7 +15,6 @@ import factory.masterControl.MasterControl;
 public class VisionAgent extends Agent implements Vision {
 
 	public enum KitPicRequestState { NEED_TO_INSPECT, INSPECTED }
-	public enum InspectionResults { PASSED, FAILED }
 	public enum PictureRequestState { NESTS_READY, ASKED_PARTS_ROBOT, PARTS_ROBOT_CLEAR, PICTURE_TAKEN }
 
 	public ArrayList<PictureRequest> picRequests = new ArrayList<PictureRequest>(); 
@@ -35,7 +34,6 @@ public class VisionAgent extends Agent implements Vision {
 	public class KitPicRequest {
 
 		public KitPicRequestState state;
-		public InspectionResults inspectionResults;
 
 		public KitPicRequest(KitPicRequestState kprs) { 
 			state = kprs;
