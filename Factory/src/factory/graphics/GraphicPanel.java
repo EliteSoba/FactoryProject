@@ -505,17 +505,35 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void jamTopLane(int feederNum){
-		lane[feederNum].laneStart = false;
+		//lane[feederNum].laneStart = false;
+		lane[feederNum].lane1Jam = true;
 	}
 	
 	public void unjamTopLane(int feederNum){
-		lane[feederNum].laneStart = true;
+		//lane[feederNum].laneStart = true;
 		lane[feederNum].changeTopLaneSpeed(lane[feederNum].laneSpeed + 1);
 		if(lane[feederNum].laneSpeed > 8)	//laneSpeed max is 8
 			lane[feederNum].changeTopLaneSpeed(8);
-		lane[feederNum].vibrationAmplitude += 2;
+		lane[feederNum].vibrationAmplitude += 1;
 		if(lane[feederNum].vibrationAmplitude > 8)		//vibration amplitude max is 8
 			lane[feederNum].vibrationAmplitude = 8;
+		lane[feederNum].lane1Jam = false;
+	}
+	
+	public void jamBottomLane(int feederNum){
+		//lane[feederNum].laneStart = false;
+		lane[feederNum].lane2Jam = true;
+	}
+	
+	public void unjamBottomLane(int feederNum){
+		//lane[feederNum].laneStart = true;
+		lane[feederNum].changeBottomLaneSpeed(lane[feederNum].laneSpeed + 1);
+		if(lane[feederNum].laneSpeed > 8)	//laneSpeed max is 8
+			lane[feederNum].changeBottomLaneSpeed(8);
+		lane[feederNum].vibrationAmplitude += 1;
+		if(lane[feederNum].vibrationAmplitude > 8)		//vibration amplitude max is 8
+			lane[feederNum].vibrationAmplitude = 8;
+		lane[feederNum].lane2Jam = false;
 	}
 	
 	/**Movement methods*/
