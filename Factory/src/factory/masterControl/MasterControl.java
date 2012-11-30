@@ -585,7 +585,7 @@ public class MasterControl {
 	            }
 	            else if (cmd.get(3).equals("slowdiverter")) {
 	            	int feedernum = Integer.parseInt(cmd.get(4));
-	            	 ((VisionAgent) destination).msgSlowDiverter(feedernum);
+	            	// ((VisionAgent) destination).msgSlowDiverter(feedernum);
 	            }
             } // End VisionAgent Commands
 

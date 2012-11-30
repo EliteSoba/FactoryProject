@@ -3,6 +3,7 @@ package factory.test;
 import factory.FeederAgent;
 import factory.FeederAgent.DiverterState;
 import factory.FeederAgent.FeederState;
+import factory.FeederAgent.JamState;
 import factory.FeederAgent.MyLane;
 import factory.FeederAgent.MyLaneState;
 import factory.FeederAgent.MyPartRequest;
@@ -101,6 +102,30 @@ public class FeederTests extends TestCase{
 		feeder.msgBadNest(0);
 		
 		assertTrue(feeder.topLane.state != MyLaneState.BAD_NEST);
+		
+	}
+	
+	public void testMsgEmptyNest()
+	{
+		// set up for the test:
+		feeder.msgEmptyNest(0); // the top lane has an empty nest
+		
+		assertTrue(feeder.topLane.jamState == JamState.MIGHT_BE_JAMMED);
+		feeder.pickAndExecuteAnAction();
+		feeder.pickAndExecuteAnAction();
+		
+		assertTrue(feeder.topLane.jamState == JamState.TOLD_TO_INCREASE_AMPLITUDE);
+		feeder.msgLaneHasIncreasedItsAmplitude(top); // after the increase amplitude wait timer is over
+		
+		assertTrue(feeder.topLane.jamState == JamState.AMPLITUDE_WAS_INCREASED); 
+		feeder.pickAndExecuteAnAction();
+		
+		assertTrue(feeder.topLane.jamState == JamState.NO_LONGER_JAMMED);
+		assertTrue(feeder.myNestsHaveBeenChecked == false);
+		feeder.pickAndExecuteAnAction();
+		
+		assertTrue(feeder.myNestsHaveBeenChecked == true);
+
 		
 	}
 	

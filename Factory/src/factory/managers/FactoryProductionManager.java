@@ -116,7 +116,7 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("jambottomlane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((FactoryProductionPanel) graphics).jamBottomLane(feederSlot);
+				//((FactoryProductionPanel) graphics).jamBottomLane(feederSlot);
 			}
 			else if (identifier.equals("unjamtoplane"))
 			{
@@ -126,7 +126,7 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("unjambottomlane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				((FactoryProductionPanel) graphics).unjamBottomLane(feederSlot);
+				//((FactoryProductionPanel) graphics).unjamBottomLane(feederSlot);
 			}
 			
 

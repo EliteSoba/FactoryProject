@@ -187,13 +187,13 @@ public class FeederAgent extends Agent implements Feeder {
 		if (nestNumber == 0) 
 		{
 			topLane.jamState = JamState.MIGHT_BE_JAMMED;
-			DoJamLane(nestNumber);
+			DoJamLane(nestNumber); // and jam the lane
 			topLane.lane.msgIncreaseAmplitude();
 		}
 		else if (nestNumber == 1) 
 		{
 			bottomLane.jamState = JamState.MIGHT_BE_JAMMED;
-			DoJamLane(nestNumber);
+			DoJamLane(nestNumber); // and jam the lane
 			bottomLane.lane.msgIncreaseAmplitude();
 		}
 		stateChanged();
@@ -514,12 +514,12 @@ public class FeederAgent extends Agent implements Feeder {
 		boolean bottomNestStableTopWaitingForPicture = bottomLane.picState == PictureState.STABLE && 
 				topLane.picState == PictureState.TOLD_VISION_TO_TAKE_PICTURE;
 
-		boolean topNestJammed = topLane.jamState != JamState.NO_LONGER_JAMMED;
+		boolean topNestNoLongerJammed = topLane.jamState == JamState.NO_LONGER_JAMMED;
 		
-		boolean bottomNestJammed = bottomLane.jamState != JamState.NO_LONGER_JAMMED;
+		boolean bottomNestNoLongerJammed = bottomLane.jamState == JamState.NO_LONGER_JAMMED;
 
 		// Now check if any of the above conditions are true
-		if (!topNestJammed && !bottomNestJammed &&
+		if (topNestNoLongerJammed && bottomNestNoLongerJammed &&
 		(bothNestsStable || topNestStableBottomWaitingForPicture || bottomNestStableTopWaitingForPicture))
 		{
 			topLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;   // we have told the vision to take a picture, only send this once
@@ -531,11 +531,11 @@ public class FeederAgent extends Agent implements Feeder {
 				vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), ((Part)topLane.lane.getNest().getPart().clone()), bottomLane.lane.getNest(), ((Part)bottomLane.lane.getNest().getPart().clone()), this); // send the message to the vision
 			}
 			myNestsHaveBeenChecked = true;
-			stateChanged();
+//			stateChanged();
 			return true;
 		}
 
-		stateChanged();
+//		stateChanged();
 		return false;
 	}
 	private void nestWasDumped(MyLane la) {
