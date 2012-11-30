@@ -23,14 +23,14 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 
 	//buttons to select items to drop - will get the string of item name
 
-	JRadioButton item1; 
-	JRadioButton item2; 
-	JRadioButton item3; 
-	JRadioButton item4; 
-	JRadioButton item5; 
-	JRadioButton item6; 
-	JRadioButton item7; 
-	JRadioButton item8; 
+	JCheckBox item1; 
+	JCheckBox item2; 
+	JCheckBox item3; 
+	JCheckBox item4; 
+	JCheckBox item5; 
+	JCheckBox item6; 
+	JCheckBox item7; 
+	JCheckBox item8; 
 
 	//label the radio buttons with corresponding item labels
 	JLabel i1;
@@ -55,14 +55,14 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 		labelKit1 = new JLabel("Current Kit: ");
 		labelKit2 = new JLabel("No Kits to Ruin yet!!!");
 
-		item1 = new JRadioButton("N/A");
-		item2 = new JRadioButton("N/A");
-		item3 = new JRadioButton("N/A");
-		item4 = new JRadioButton("N/A");
-		item5 = new JRadioButton("N/A");
-		item6 = new JRadioButton("N/A");
-		item7 = new JRadioButton("N/A");
-		item8 = new JRadioButton("N/A");
+		item1 = new JCheckBox("Drop Part");
+		item2 = new JCheckBox("Drop Part");
+		item3 = new JCheckBox("Drop Part");
+		item4 = new JCheckBox("Drop Part");
+		item5 = new JCheckBox("Drop Part");
+		item6 = new JCheckBox("Drop Part");
+		item7 = new JCheckBox("Drop Part");
+		item8 = new JCheckBox("Drop Part");
 		
 		i1 = new JLabel("Part 1");
 		i2 = new JLabel("Part 2");
@@ -73,17 +73,20 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 		i7 = new JLabel("Part 7");
 		i8 = new JLabel("Part 8");
 
-		updateField = new JTextArea("System Messages\n",10,10);
+		updateField = new JTextArea("System Messages:\n",10,10);
+		updateField.setEditable(false);
 		go = new JButton("GO!");
 		//adding action listeners so people can click buttons
 		go.addActionListener(this);
 
 		c.gridx = 0;
 		c.gridy = 0;
+		c.gridwidth = 2;
 		c.fill = GridBagConstraints.VERTICAL;
 		c.insets = new Insets(5,10,20,10);
 		this.add(label, c);
 
+		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 1;
 		c.insets = new Insets(5,10,5,10);
@@ -127,7 +130,7 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 
 		c.gridx = 1;
 		c.gridy = 1;
-		this.add(labelKit2, c);
+		//this.add(labelKit2, c);
 
 		c.gridx = 1;
 		c.gridy = 2;
@@ -170,11 +173,21 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent ae) {
 		String cmd = new String (" ");
 		if(ae.getSource() == go){
-			cmd = "kam sa cmd kitdropparts " + concat();
+			String dropString = concat();
+			cmd = "kam sa cmd kitdropparts " + dropString;
+			System.out.println("kam: kit droppparts");
+			String message = "System Messages:\nDropping Parts:\n";
+			for (int i = 0; i < dropString.length(); i++) {
+				if (dropString.charAt(i) == '1')
+					message += "        Part " + (i+1) + "\n";
+			}
+			updateField.setText(message);
 						//get current kit in production
-						//if item selected pass none else pass normal part		
-			kitAssemblyManager.sendCommand(cmd);
-			System.out.println("kam: kit droppparts");	
+						//if item selected pass none else pass normal part
+			try {
+				kitAssemblyManager.sendCommand(cmd);
+			}
+			catch (NullPointerException e) {}
 		}
 	}
 
@@ -182,7 +195,7 @@ public class KitAssManPanel extends JPanel implements ActionListener{
 	public String concat(){
 		int p1,p2,p3,p4,p5,p6,p7,p8;
 		String parts = new String();
-		p1 = item1.isSelected()? 1: 0;
+		p1 = item1.isSelected()? 1 : 0;
 		p2 = item2.isSelected()? 1 : 0;
 		p3 = item3.isSelected()? 1 : 0;
 		p4 = item4.isSelected()? 1 : 0;
