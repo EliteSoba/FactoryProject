@@ -70,7 +70,7 @@ public class MasterControl {
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
             "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection",
-            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported", "ruininspectionkit","badparts"
+            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported", "ruininspectionkit","badparts","lanejam","slowdiverter"
 
     );
 
@@ -576,8 +576,15 @@ public class MasterControl {
             	destination = agentTreeMap.get(cmd.get(1));
 	            if(cmd.get(3).equals("badparts")){
 	            	int nestnum = Integer.parseInt(cmd.get(4));
-	            	nestnum = nestnum-1;
 			((VisionAgent) destination).msgNoGoodPartsFound(nestnum);
+	            }
+		    else if (cmd.get(3).equals("lanejam")) {
+	            	int lanenum = Integer.parseInt(cmd.get(4));
+	            	 ((VisionAgent) destination).msgLaneJammed(lanenum);
+	            }
+	            else if (cmd.get(3).equals("slowdiverter")) {
+	            	int feedernum = Integer.parseInt(cmd.get(4));
+	            	 ((VisionAgent) destination).msgSlowDiverter(feedernum);
 	            }
             } // End VisionAgent Commands
 
