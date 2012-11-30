@@ -36,7 +36,7 @@ public class FactoryProductionManager extends Client {
 	FactoryProductionPanel animation;
 
 	public FactoryProductionManager() {
-		super(Client.Type.fpm, null, null);
+		super(Client.Type.fpm);
 
 		buttons = new FactoryProdManPanel(this);
 		animation = new FactoryProductionPanel(this);

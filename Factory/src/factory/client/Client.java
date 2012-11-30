@@ -46,7 +46,7 @@ public abstract class Client extends JFrame implements ActionListener {
 	
 	Runnable independentInput = new Runnable(){
 		public void run(){
-			while(true){
+			for(;;){
 //				System.out.println("1");
 				if(connected)
 				try {
@@ -60,13 +60,13 @@ public abstract class Client extends JFrame implements ActionListener {
 		}//end run
 	}; //end independentInput
 	
-	public Client(Type t, JPanel buttons, JPanel Animation){
+	public Client(Type t){//, JPanel buttons, JPanel Animation){
 		
 		connected = false;
 		type = t;
-		UI = buttons;
+		//UI = buttons;
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		graphics = Animation;
+		//graphics = Animation;
 		connect(); //connects to server
 		System.out.println(connected);
 		//updater = new Timer(1000/30, this); //sets timer to update graphics

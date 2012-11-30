@@ -23,7 +23,7 @@ public class LaneManager extends Client {
 	ArrayList<Integer> laneAmplitudes; // stores amplitudes of each lane
 	
 	public LaneManager() {
-		super(Client.Type.lm, null, null); 
+		super(Client.Type.lm); 
 		
 		buttons = new LaneManPanel(this);
 		animation = new LanePanel(this);

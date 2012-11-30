@@ -19,7 +19,7 @@ public class PartsManager extends Client implements WindowListener{
 	public HashMap<String, Part> parts;  // parts list
 
 	public PartsManager() {
-		super(Client.Type.pm, null, null);
+		super(Client.Type.pm);
 		
 		parts = new HashMap<String, Part>();
 		loadData();

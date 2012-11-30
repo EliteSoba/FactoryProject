@@ -19,7 +19,7 @@ public class GantryManager extends Client {
 	GantryRobotPanel animation;
 	
 	public GantryManager() {
-		super(Client.Type.gm, null, null);
+		super(Client.Type.gm);
 		
 		buttons = new GantryManPanel();
 		buttons.setManager(this);
