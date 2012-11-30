@@ -296,6 +296,7 @@ public class LaneManPanel extends JPanel{
 
 	public class LaneNonNormPanel extends JPanel implements ActionListener {
 		JComboBox laneBoxList;
+		JComboBox feederBoxList;
 		JPanel partsMissingContainer;
 		JPanel partsBadContainer;
 		JButton laneJamButton;
@@ -329,7 +330,10 @@ public class LaneManPanel extends JPanel{
 				laneBoxList.addItem("Lane "+i);
 			}
 			laneBoxList.setSelectedIndex(0);
-
+			feederBoxList = new JComboBox();
+			for (int i = 1; i < 5; i++) {
+				feederBoxList.addItem("Feeder "+i);
+			}
 			partsMissingContainer = new JPanel();
 			partsBadContainer = new JPanel();
 
@@ -354,6 +358,8 @@ public class LaneManPanel extends JPanel{
 			boxContainer.add(label);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
 			boxContainer.add(laneBoxList);
+			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
+			boxContainer.add(feederBoxList);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
 			boxContainer.add(partsMissingContainer);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
