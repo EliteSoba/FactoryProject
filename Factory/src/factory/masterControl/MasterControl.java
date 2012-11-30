@@ -548,7 +548,7 @@ public class MasterControl {
 				if (cmd.get(3).equals("kitdropparts")){
 					String failString = cmd.get(4);
 					((StandAgent) destination).msgForceKitInspectionToFail();
-					command("sa kam ruininspectionkit " + failString);
+					command("sa kam cmd ruininspectionkit " + failString);
 				}
 			}//End StandAgent Commands
 
@@ -781,9 +781,9 @@ public class MasterControl {
 
 		// Check that the source != the destination
 
-		if(pCmd.get(0).equals(pCmd.get(1))){
+		/*if(pCmd.get(0).equals(pCmd.get(1))){
 			return "source and Destination cannot be the same";
-		}
+		}*/
 
 		// Check that the destination is not currently busy
         if(partOccupied.containsKey(pCmd.get(1))){

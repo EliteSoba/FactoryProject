@@ -35,9 +35,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected GraphicLaneManager [] lane;
 	
 	// CAMERA
-	protected int flashCounter;
+	protected ArrayList<Image> scanFlashAnimation;
+	protected int scanFlashCounter;
 	protected int flashFeederIndex;
-	protected static Image flashImage;
+	protected int scanFlashSpeed;
 	
 	// KIT MANAGER
 	protected GraphicConveyorBelt belt; //The conveyer belt
@@ -52,6 +53,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected GraphicGantryRobot gantryRobot;
 	
 	protected GraphicItem transferringItem;
+	
 	
 	public GraphicPanel(/*int offset/**/) {
 		WIDTH = 1100;
@@ -70,7 +72,9 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		isKitAssemblyManager = false;
 		isFactoryProductionManager = false;*/
 		
-		flashImage = Toolkit.getDefaultToolkit().getImage("Images/cameraFlash3x3.png");
+		scanFlashAnimation = GraphicAnimation.loadAnimationFromFolder("Images/cameraScan/", 0, ".png");
+		scanFlashCounter = 0;
+		scanFlashSpeed = 3;
 		transferringItem = null;
 		
 		/*belt = new GraphicConveyorBelt(0-offset, 0, this);
@@ -274,7 +278,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void cameraFlash(int nestIndex) {
 		if (isLaneManager || isFactoryProductionManager) {
-			flashCounter = 10;
+			scanFlashCounter = scanFlashAnimation.size();
 			flashFeederIndex = nestIndex;
 		}
 	}
@@ -639,7 +643,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isLaneManager)
 			message = "lm ";
 		else if (isGantryRobotManager)
-			message = "grm ";
+			message = "gm ";
 		else if (isKitAssemblyManager)
 			message = "kam ";
 		else if (isFactoryProductionManager)
@@ -813,17 +817,18 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 		
 		if(isLaneManager || isFactoryProductionManager) {
-			if(flashCounter >= 0)
+			if(scanFlashCounter > 0)
 			{
-				int flashX = nests.get(flashFeederIndex*2).getX()-20;
-				int flashY = nests.get(flashFeederIndex*2).getY()-12;
-				g.drawImage(flashImage, flashX, flashY, null);
-				flashX = nests.get(flashFeederIndex*2+1).getX()-20;
-				flashY = nests.get(flashFeederIndex*2+1).getY()-12;
-				g.drawImage(flashImage, flashX, flashY, null);
-				flashCounter --;
-				if(flashCounter == 1)
+				int flashX = nests.get(flashFeederIndex*2).getX()-12;
+				int flashY = nests.get(flashFeederIndex*2).getY()-6;
+				g.drawImage(scanFlashAnimation.get(scanFlashCounter/scanFlashSpeed), flashX, flashY, null);
+				scanFlashCounter ++;
+				System.out.println(scanFlashCounter);
+				if(scanFlashCounter/scanFlashSpeed == scanFlashAnimation.size())
+				{
+					scanFlashCounter = 0;
 					cameraFlashDone();
+				}
 			}
 		}
 		

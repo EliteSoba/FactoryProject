@@ -256,6 +256,9 @@ public class FactoryProductionManager extends Client {
 				}
 				((FactoryProdManPanel)UI).removePart(pCmd.get(2),affectedKits);
 			}
+			else if (identifier.equals("kitexported")) { // updates number of kits produced for schedule
+				((FactoryProdManPanel) UI).kitProduced();
+			}
 		}
 
 		else if(action.equals("req")){
@@ -274,9 +277,6 @@ public class FactoryProductionManager extends Client {
 					kit.listOfParts.add(partsList.get(partName));
 				}
 			}
-			else if (identifier.equals("kitsproduced")) { // updates number of kits produced for schedule
-				((FactoryProdManPanel) UI).kitProduced();
-			}
 			else if (identifier.equals("partconfig")) {
 				Part part = partsList.get(pCmd.get(2));
 				part.name = pCmd.get(2);
@@ -288,18 +288,15 @@ public class FactoryProductionManager extends Client {
 			
 				System.out.println(partsList.get(pCmd.get(2)));
 			}
-			else if (identifier.equals("nonnormative")) {
-				String caseName = pCmd.get(2);
-				if (caseName.equals("lanejam")) {
-					int lanenum = Integer.parseInt(pCmd.get(3));
+			else if (identifier.equals("lanejam")) {
+					int lanenum = Integer.parseInt(pCmd.get(2));
 					lanenum = lanenum+1;
 					 ((FactoryProdManPanel)UI).addMessage("A lane jam has occurred in lane " + lanenum + ".");
-				}
-				else if (caseName.equals("slowdiverter")) {
-					int feedernum = Integer.parseInt(pCmd.get(3));
+			}
+			else if (identifier.equals("slowdiverter")) {
+					int feedernum = Integer.parseInt(pCmd.get(2));
 					feedernum = feedernum+1;
 					((FactoryProdManPanel)UI).addMessage("The diverter at feeder " + feedernum + "switched over late.");
-				}
 			}
 		}
 
