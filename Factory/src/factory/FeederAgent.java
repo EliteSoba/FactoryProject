@@ -182,21 +182,38 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  the Feeder that it had a empty nest. 
 	 *  v.2
 	 * */
-	public void msgEmptyNest(Nest n) {
+	public void msgEmptyNest(int nestNumber) {
 		debug("received msgEmptyNest()");
-		if (topLane.lane.getNest() == n) 
+		if (nestNumber == 0) 
 		{
 			topLane.lane.msgIncreaseAmplitude();
 			topLane.jamState = JamState.MIGHT_BE_JAMMED;
 		}
-		else if (bottomLane.lane.getNest() == n) 
+		else if (nestNumber == 1) 
 		{
 			bottomLane.lane.msgIncreaseAmplitude();
 			bottomLane.jamState = JamState.MIGHT_BE_JAMMED;
 		}
 		stateChanged();
 	}
-
+	
+	/** 
+	 * The lane sends this message after it has waited a sufficient amount of time
+	 * after the lane has been told to increase its amplitude.
+	 */
+	public void msgLaneHasIncreasedItsAmplitude(Lane la)
+	{
+		if (topLane.lane == la)
+		{
+			topLane.jamState = JamState.AMPLITUDE_WAS_INCREASED;
+		}
+		else if (bottomLane.lane == la)
+		{
+			bottomLane.jamState = JamState.AMPLITUDE_WAS_INCREASED;
+		}
+		
+		stateChanged();
+	}
 
 	/** One of the Feeder's lanes sends this message to the
 	 *  Feeder telling him that his nest was sucessfully dumped.
@@ -276,6 +293,7 @@ public class FeederAgent extends Agent implements Feeder {
 			if (topLane.picState != PictureState.UNSTABLE) // otherwise, just wait for the nest to become stable
 			{
 				topLane.state = MyLaneState.BAD_NEST;
+				debug("top lane is a bad nest.");
 			}
 		}
 		else if (nestNumber == 1) // bottom nest
@@ -284,6 +302,7 @@ public class FeederAgent extends Agent implements Feeder {
 			if (bottomLane.picState != PictureState.UNSTABLE) // otherwise, just wait for the nest to become stable
 			{
 				bottomLane.state = MyLaneState.BAD_NEST;
+				debug("bottom lane is a bad nest.");
 			}
 		}
 		
@@ -361,6 +380,24 @@ public class FeederAgent extends Agent implements Feeder {
 			return true;
 		}
 		
+		if (bottomLane.jamState == JamState.MIGHT_BE_JAMMED)
+		{
+			laneMightBeJammed(bottomLane);
+			return true;
+		}
+		
+		if (topLane.jamState == JamState.AMPLITUDE_WAS_INCREASED)
+		{
+			laneIsNoLongerJammed(topLane);
+			return true;
+		}
+		
+		if (bottomLane.jamState == JamState.AMPLITUDE_WAS_INCREASED)
+		{
+			laneIsNoLongerJammed(bottomLane);
+			return true;
+		}
+		
 		if (topLane.state == MyLaneState.NEST_SUCCESSFULLY_DUMPED)
 		{
 			nestWasDumped(topLane);
@@ -389,6 +426,13 @@ public class FeederAgent extends Agent implements Feeder {
 		la.jamState = JamState.TOLD_TO_INCREASE_AMPLITUDE;
 		
 		la.lane.msgIncreaseAmplitude();
+	}
+	
+	private void laneIsNoLongerJammed(MyLane la)
+	{
+		debug("Lane is no longer jammed!");
+		
+		
 	}
 	
 	private void feedParts(MyPartRequest mpr) {

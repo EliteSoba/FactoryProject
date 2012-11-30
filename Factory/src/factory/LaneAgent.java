@@ -24,11 +24,12 @@ public class LaneAgent extends Agent implements Lane {
 	//	public LaneState state = LaneState.NORMAL; 
 	public Nest myNest;
 	public Timer jamTimer = new Timer();
+	private static int kJAM_TIME = 4; // 4 seconds
 	public int amplitude = 5;
 	public static int kMAX_AMPLITUDE = 20;
 	public enum NestState { NORMAL, HAS_STABILIZED, HAS_DESTABILIZED,
 						NEEDS_TO_DUMP, WAITING_FOR_DUMP_CONFIRMATION,
-						NEST_WAS_DUMPED, NEEDS_TO_INCREASE_AMPLITUDE }
+						NEST_WAS_DUMPED, NEEDS_TO_INCREASE_AMPLITUDE, IS_INCREASING_AMPLITUDE, AMPLITUDE_WAS_INCREASED }
 	public NestState nestState;
 
 	public enum MyPartState {  NEEDED, REQUESTED }
@@ -116,8 +117,12 @@ public class LaneAgent extends Agent implements Lane {
 		}
 		if (nestState == NestState.NEEDS_TO_INCREASE_AMPLITUDE)
 		{
-			//increaseAmplitude();
+			increaseAmplitude();
 			return true;
+		}
+		if (nestState == NestState.AMPLITUDE_WAS_INCREASED)
+		{
+			tellFeederAmplitudeWasIncreased();
 		}
 
 
@@ -147,19 +152,24 @@ public class LaneAgent extends Agent implements Lane {
 		stateChanged();
 	}
 
-//	public void increaseAmplitude() {
-//		jamTimer.schedule(new TimerTask(){
-//			public void run() {
-//				nestState = NestState.AMPLITUDE_WAS_INCREASED;
-//				debug("Lane amplitude timer expired.");
-//				stateChanged();
-//			}
-//		},(long) kOK_TO_PURGE_TIME * 1000); // okay to purge after this many seconds
-//
-//		nestState = NestState.NORMAL;
-//
-//		stateChanged();
-//	}
+	public void increaseAmplitude() {
+		jamTimer.schedule(new TimerTask(){
+			public void run() {
+				nestState = NestState.AMPLITUDE_WAS_INCREASED;
+				debug("Lane amplitude timer expired.");
+				stateChanged();
+			}
+		},(long) kJAM_TIME * 1000); 
+
+		nestState = NestState.IS_INCREASING_AMPLITUDE;
+
+		stateChanged();
+	}
+	
+	public void tellFeederAmplitudeWasIncreased() 
+	{
+		myFeeder.msgLaneHasIncreasedItsAmplitude(this);
+	}
 
 	public void askFeederToSendParts(MyPart part) { 
 		debug("asking feeder to send parts of type " + part.pt.name + ".");

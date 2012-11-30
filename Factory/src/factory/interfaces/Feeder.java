@@ -6,7 +6,7 @@ public interface Feeder {
 
 	public void msgHereAreParts(Part pt);
 
-	public void msgEmptyNest(Nest n);
+	public void msgEmptyNest(int nestNumber);
 
 	public void msgNestWasDumped(Lane la);
 
@@ -23,5 +23,7 @@ public interface Feeder {
 	public void msgNestHasStabilized(Lane lane);
 
 	public void msgNestHasDeStabilized(Lane lane);
+
+	public void msgLaneHasIncreasedItsAmplitude(Lane la);
 
 }
