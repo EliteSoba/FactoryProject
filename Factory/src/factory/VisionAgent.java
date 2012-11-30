@@ -26,19 +26,19 @@ public class VisionAgent extends Agent implements Vision {
 	public ArrayList<Nest> nests;
 	public boolean isUnitTesting = false;
 	
+	public Feeder feeder0;
 	public Feeder feeder1;
 	public Feeder feeder2;
 	public Feeder feeder3;
-	public Feeder feeder4;
 	
-	public VisionAgent(PartsRobot partsRobot, Stand stand, MasterControl mc, Feeder f1, Feeder f2, Feeder f3, Feeder f4){
+	public VisionAgent(PartsRobot partsRobot, Stand stand, MasterControl mc){
 		super(mc);
 		this.partsRobot = partsRobot;
 		this.stand = stand;
+		this.feeder0 = f0;
 		this.feeder1 = f1;
 		this.feeder2 = f2;
 		this.feeder3 = f3;
-		this.feeder4 = f4;
 	}
 
 	public class KitPicRequest {
@@ -102,16 +102,16 @@ public class VisionAgent extends Agent implements Vision {
 	 */
 	public void msgNoGoodPartsFound(int nestNum){
 		if (nestNum == 0 || nestNum == 1){
-			feeder1.msgBadNest(nestNum % 2);
+			feeder0.msgBadNest(nestNum % 2);
 		}
 		if (nestNum == 2 || nestNum == 3){
-			feeder2.msgBadNest(nestNum % 2);
+			feeder1.msgBadNest(nestNum % 2);
 		}
 		if (nestNum == 4 || nestNum == 5){
-			feeder3.msgBadNest(nestNum % 2);
+			feeder2.msgBadNest(nestNum % 2);
 		}
 		if (nestNum == 6 || nestNum == 7){
-			feeder4.msgBadNest(nestNum % 2);
+			feeder3.msgBadNest(nestNum % 2);
 		}
 	}
 
@@ -207,8 +207,6 @@ public class VisionAgent extends Agent implements Vision {
 	private void takePicture(PictureRequest pr){
 		try{
 			pictureAllowed.acquire();
-			int randomNumberOne = r.nextInt(3);
-			int randomNumberTwo = r.nextInt(3);
 			DoAnimationTakePictureOfNest(pr.nestOne);
 
 			partsRobot.msgPictureTaken(pr.nestOne, pr.nestTwo);
@@ -257,7 +255,20 @@ public class VisionAgent extends Agent implements Vision {
 	}
 
 
-
+	public void setFeeder(Feeder feeder, int feederNum){
+		if (feederNum == 0){
+			this.feeder0 = feeder;
+		}
+		if (feederNum == 1){
+			this.feeder1 = feeder;
+		}
+		if (feederNum == 2){
+			this.feeder2 = feeder;
+		}
+		if (feederNum == 3){
+			this.feeder3 = feeder;
+		}
+	}
 
 	public void setPartsRobot(PartsRobot pr) {
 		this.partsRobot = pr;
