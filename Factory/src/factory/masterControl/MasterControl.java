@@ -781,9 +781,9 @@ public class MasterControl {
 
 		// Check that the source != the destination
 
-		if(pCmd.get(0).equals(pCmd.get(1))){
+		/*if(pCmd.get(0).equals(pCmd.get(1))){
 			return "source and Destination cannot be the same";
-		}
+		}*/
 
 		// Check that the destination is not currently busy
         if(partOccupied.containsKey(pCmd.get(1))){
