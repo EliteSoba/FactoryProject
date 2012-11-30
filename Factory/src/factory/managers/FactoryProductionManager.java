@@ -195,7 +195,11 @@ public class FactoryProductionManager extends Client {
 				((FactoryProductionPanel) graphics).exportKit();
 			}
 			
-			//Commands from FCSAgent
+			// Commands from StandAgent
+			else if (identifier.equals("ruininspectionkit")) {
+				((FactoryProductionPanel) graphics).dropParts(pCmd.get(2));
+			}
+			// Commands from FCSAgent
 			else if (identifier.equals("kitexported")){
 				((FactoryProdManPanel) UI).kitProduced();
 			}
