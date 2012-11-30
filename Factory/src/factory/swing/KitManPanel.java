@@ -91,7 +91,6 @@ public class KitManPanel extends JPanel{
 
 		JLabel cKitNameLabel = new JLabel ("Kit Name : ");
 		JTextField cKitName = new JTextField(8);
-		JLabel cMessages = new JLabel ("Messages:");
 		JButton cSave = new JButton("Save Kit Configuration");
 
 
@@ -255,9 +254,6 @@ public class KitManPanel extends JPanel{
 
 			c.gridy = 7;
 			this.add(cItemComboBox8, c);
-
-			c.gridy = 8;
-			this.add(cMessages, c);
 
 			c.gridx = 2;
 			c.gridy = 0;
@@ -466,7 +462,6 @@ public class KitManPanel extends JPanel{
 		JLabel mKitNameLabel = new JLabel ("Kit Name : ");
 
 		JTextField mKitName = new JTextField(8);
-		JLabel mMessages = new JLabel ("Messages:");
 		JButton mSave = new JButton("Save Kit Configuration");
 
 		JButton mRemove = new JButton("Remove Kit");
@@ -658,10 +653,10 @@ public class KitManPanel extends JPanel{
 					if(testName.equals(tempName.toUpperCase()) && !testName.equals(currentKit.kitName.toUpperCase()))
 						nameTaken = true;
 				}
-				if(nameTaken){
-					mKitName.setText("Name taken.");
-				}else if (mKitName.getText().equals("")){
-					mKitName.setText("No input.");
+				if(nameTaken || testName.equals("NAMETAKEN")){
+					mKitName.setText("Name taken");
+				}else if (mKitName.getText().equals("") || testName.equals("NOINPUT") ){
+					mKitName.setText("No input");
 				}else{
 
 					KitConfig k = new KitConfig(mKitName.getText());
@@ -690,7 +685,7 @@ public class KitManPanel extends JPanel{
 						k.listOfParts.add(kitManager.getPartsList().get(mItemComboBox8.getSelectedItem()));
 					}
 
-					if(k.listOfParts.size() >=4){
+					if(k.listOfParts.size() >=4 && !testName.equals("MUSTHAVE>=4ITEMS")){
 						kitManager.removeFromKitConfigList(currentKit);
 						kitManager.addToKitConfigList(k);
 						editKit(k);
@@ -965,6 +960,7 @@ public class KitManPanel extends JPanel{
 			JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(
 					table, value, isSelected, hasFocus, row, column);
 			renderedLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			setToolTipText("Double-Click to edit kit.");
 			return renderedLabel;
 		}
 

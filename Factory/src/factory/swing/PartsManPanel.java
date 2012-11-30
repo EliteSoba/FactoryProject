@@ -105,7 +105,8 @@ public class PartsManPanel extends JPanel{
 		}
 	
 		table.setRowHeight(30);  // sets the row height
-
+		//table.getTableHeader().setToolTipText(
+		       // "Double-Click item to edit.");
 		scrollPane = new JScrollPane(table);  
 		scrollPane.setMaximumSize(new Dimension(460, 300));
 		table.setFillsViewportHeight(true);
@@ -266,12 +267,12 @@ public class PartsManPanel extends JPanel{
 					if(testName.equals(tempName.toUpperCase()))
 						nameTaken = true;
 				}
-				if(nameTaken){
-					name.setText("Name taken.");
-				}else if (name.getText().equals("")){
-					name.setText("No input.");
-				}else if ((Integer)nestStabalizationTime.getValue() <= 0){
-					name.setText("Invalid time.");	
+				if(nameTaken || testName.equals("NAMETAKEN")){
+					name.setText("Name taken");
+				}else if (name.getText().equals("") || testName.equals("NOINPUT")){
+					name.setText("No input");
+				}else if ((Integer)nestStabalizationTime.getValue() <= 0 || testName.equals("INVALIDTIME")){
+					name.setText("Invalid time");	
 				}else{
 
 					Part p = new Part(name.getText(), currentID, description.getText(),"Images/" + (String)imageSelection.getSelectedItem() + ".png", (Integer)nestStabalizationTime.getValue());
@@ -471,12 +472,12 @@ public class PartsManPanel extends JPanel{
 					if(testName.equals(tempName.toUpperCase()) && !testName.equals(currentPart.name.toUpperCase()))
 						nameTaken = true;
 				}
-				if(nameTaken){
-					name.setText("Name taken.");
-				}else if (name.getText().equals("")){
-					name.setText("No input.");
-				}else if ((Integer)nestStabalizationTime.getValue() <= 0){
-					name.setText("Invalid time.");	
+				if(nameTaken || testName.equals("NAMETAKEN")){
+					name.setText("Name taken");
+				}else if (name.getText().equals("") || testName.equals("NOINPUT")){
+					name.setText("No input");
+				}else if ((Integer)nestStabalizationTime.getValue() <= 0 || testName.equals("INVALIDTIME")){
+					name.setText("Invalid time");	
 				}else{
 
 					Part p = new Part(name.getText(), currentPart.id, description.getText(),"Images/" + 
@@ -590,6 +591,7 @@ public class PartsManPanel extends JPanel{
 			JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(
 					table, value, isSelected, hasFocus, row, column);
 			renderedLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			setToolTipText("Double-Click to edit item.");
 			return renderedLabel;
 		}
 
