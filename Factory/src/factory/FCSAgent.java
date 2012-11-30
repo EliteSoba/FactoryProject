@@ -134,6 +134,7 @@ public class FCSAgent extends Agent implements FCS{
 	 */
 	private void finishKits() {
 		this.state = KitProductionState.FINISHED;
+		
 	}
 	/**
 	 * Passes down the new Kit Configuration to the PartsRobot Agent
