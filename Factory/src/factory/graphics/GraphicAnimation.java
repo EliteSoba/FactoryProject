@@ -15,7 +15,7 @@ public enum GraphicAnimation
 		{
 			String filePath = folderPath + i + fileExtension;
 			File f = new File(filePath);
-			//System.out.println(filePath);
+			System.out.println(filePath);
 			if(f.exists())
 				imageList.add(new ImageIcon(filePath).getImage());
 			else
