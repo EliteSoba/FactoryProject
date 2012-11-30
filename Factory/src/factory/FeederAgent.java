@@ -68,7 +68,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	//enum for jam state
 	public enum JamState {MIGHT_BE_JAMMED, TOLD_TO_INCREASE_AMPLITUDE, 
-		AMPLITUDE_WAS_INCREASED, NOT_JAMMED }
+		AMPLITUDE_WAS_INCREASED, NO_LONGER_JAMMED }
 
 	public EventLog log = new EventLog();
 
@@ -107,7 +107,7 @@ public class FeederAgent extends Agent implements Feeder {
 		public MyLane(Lane lane){
 			this.state = MyLaneState.EMPTY;
 			this.lane = lane;
-			this.jamState = JamState.NOT_JAMMED;
+			this.jamState = JamState.NO_LONGER_JAMMED;
 		}
 	}
 
@@ -186,13 +186,14 @@ public class FeederAgent extends Agent implements Feeder {
 		debug("received msgEmptyNest()");
 		if (nestNumber == 0) 
 		{
-			topLane.lane.msgIncreaseAmplitude();
 			topLane.jamState = JamState.MIGHT_BE_JAMMED;
+			DoJamLane(nestNumber);
+			topLane.lane.msgIncreaseAmplitude();
 		}
 		else if (nestNumber == 1) 
 		{
-			bottomLane.lane.msgIncreaseAmplitude();
 			bottomLane.jamState = JamState.MIGHT_BE_JAMMED;
+			bottomLane.lane.msgIncreaseAmplitude();
 		}
 		stateChanged();
 	}
@@ -432,6 +433,10 @@ public class FeederAgent extends Agent implements Feeder {
 	{
 		debug("Lane is no longer jammed!");
 		
+		la.jamState = JamState.NO_LONGER_JAMMED;
+		
+		myNestsHaveBeenChecked = false; // we make this false so that the schedule will 
+		// check to see if the nests are ready, and if so, tell the vision to take a picture
 		
 	}
 	
@@ -496,6 +501,7 @@ public class FeederAgent extends Agent implements Feeder {
 	 * Feeder's 2 nests are ready for a picture. */
 	private boolean areMyNestsReadyForAPicture() {
 		myNestsHaveBeenChecked = true;
+	
 
 		// Determine if the Feeder's associated Nests are ready for a picture
 		boolean bothNestsStable = topLane.picState == PictureState.STABLE && 
@@ -507,8 +513,13 @@ public class FeederAgent extends Agent implements Feeder {
 		boolean bottomNestStableTopWaitingForPicture = bottomLane.picState == PictureState.STABLE && 
 				topLane.picState == PictureState.TOLD_VISION_TO_TAKE_PICTURE;
 
+		boolean topNestJammed = topLane.jamState != JamState.NO_LONGER_JAMMED;
+		
+		boolean bottomNestJammed = bottomLane.jamState != JamState.NO_LONGER_JAMMED;
+
 		// Now check if any of the above conditions are true
-		if (bothNestsStable || topNestStableBottomWaitingForPicture || bottomNestStableTopWaitingForPicture)
+		if (!topNestJammed && !bottomNestJammed &&
+		(bothNestsStable || topNestStableBottomWaitingForPicture || bottomNestStableTopWaitingForPicture))
 		{
 			topLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;   // we have told the vision to take a picture, only send this once
 			bottomLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE; // we have told the vision to take a picture, only send this once
@@ -1141,7 +1152,37 @@ public class FeederAgent extends Agent implements Feeder {
 			}
 		}
 	}
+	
+	
+	/** Animation that simulates a jammed lane. **/
+	private void DoJamLane(int laneNumber)
+	{
+		if (debugMode == false)
+		{
+			if (laneNumber == 0)
+			{
+				debug("jamming top lane");
+				server.command("fa lm cmd jamtoplane " + feederNumber); /** TODO: MULTI **/
+				try {
+					animation.acquire();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			else if (laneNumber == 1)
+			{
+				debug("jamming bottom lane");
+				server.command("fa lm cmd jambottomlane " + feederNumber); /** TODO: MULTI **/
+				try {
+					animation.acquire();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
+	
 
 	/** OTHER **/
 
