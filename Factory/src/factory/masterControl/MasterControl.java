@@ -572,9 +572,9 @@ public class MasterControl {
 	            if(cmd.get(3).equals("badparts")){
 	            	int nestnum = Integer.parseInt(cmd.get(4));
 	            	nestnum = nestnum-1;
-					((VisionAgent) destination).msgNoGoodPartsFound(nestnum);
+			((VisionAgent) destination).msgNoGoodPartsFound(nestnum);
 	            }
-            } // End VisionAgent commands
+            } // End VisionAgent Commands
 
 
 
