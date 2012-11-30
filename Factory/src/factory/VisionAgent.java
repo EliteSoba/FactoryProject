@@ -129,6 +129,25 @@ public class VisionAgent extends Agent implements Vision {
 			feeder3.msgEmptyNest(nestNum % 2);
 		}
 	}
+	
+	/**
+	 * This is a message from the swing panel to force the lane to be jammed
+	 * @param feederNum The number of the feeder whose diverter is slow
+	 */
+	public void msgSlowDiverter(int feederNum){
+		if (feederNum == 0){
+			feeder0.msgEmptyNest(feederNum);
+		}
+		if (feederNum == 1){
+			feeder1.msgEmptyNest(feederNum);
+		}
+		if (feederNum == 2){
+			feeder2.msgEmptyNest(feederNum);
+		}
+		if (feederNum == 3){
+			feeder3.msgEmptyNest(feederNum);
+		}
+	}
 
 
 	//the following message existed in the wiki, but the parameter is different.  It takes a timer rather than feeder
