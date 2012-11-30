@@ -1,7 +1,7 @@
 /*
 
 author: Joey Huang
-Last edited: 11/18/12 2:23pm
+Last edited: 11/29/12 11:55pm
 
 
 This program contains the user interface panel in the factory production manager client
