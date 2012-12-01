@@ -71,7 +71,7 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 	////Animations
 	private void DoEmptyKitArrivingAnimation() {
 		debug("doing EmptyKitArriving Animation");
-		server.command("cca kam cmd emptykitenterscell");
+		server.command(this,"cca kam cmd emptykitenterscell");
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
