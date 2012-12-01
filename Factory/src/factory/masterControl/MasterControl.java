@@ -330,7 +330,7 @@ public class MasterControl {
 	// parseDst is called by Clients and Agents and determines whether to
 	// call methods locally to Agents, or to send them through to a Client
 
-	public boolean command(String cmd){
+	public boolean command(Agent a, String cmd){
 		// Split into array
 		// Figure out destination
 		// Call either agentCmd() or clientCmd()
@@ -341,12 +341,7 @@ public class MasterControl {
 
 
 		if(clients.contains(parsedCommand.get(1))){
-            if(parsedCommand.get(1).equals("multi")){
-                return clientCmd(parsedCommand);
-            } else {
-                return clientCmd(parsedCommand);
-            }
-
+            return clientCmd(a, parsedCommand);
 		} else if(agents.contains(parsedCommand.get(1))) {
 			return agentCmd(parsedCommand);
 		} else if(parsedCommand.get(1).equals("mcs")) {
@@ -377,6 +372,8 @@ public class MasterControl {
 
 
 	}
+
+
 
 	// command sent to agent or agents
 	// agentCmd is the giant parser that figures out
@@ -549,7 +546,7 @@ public class MasterControl {
 				if (cmd.get(3).equals("kitdropparts")){
 					String failString = cmd.get(4);
 					((StandAgent) destination).msgForceKitInspectionToFail();
-					command("sa kam cmd ruininspectionkit " + failString);
+					command( stand, "sa kam cmd ruininspectionkit " + failString);
 				}
 			}//End StandAgent Commands
 
@@ -606,7 +603,7 @@ public class MasterControl {
 	// and then sends it.
 
 
-	public boolean clientCmd(ArrayList<String> cmd){	
+	public boolean clientCmd(Agent srcAgent, ArrayList<String> cmd){
 		String s = checkClientCmd(cmd);
 		System.out.println(s);
 		String a = cmd.get(0); // Source
@@ -625,9 +622,12 @@ public class MasterControl {
 		for(int i = 3; i < cmd.size(); i++){  // Command ... put command into string form
 			d+= cmd.get(i)+" ";
 		}
+
+        int reqConfirmations = 0;
         PartHandler fpmPH = null;
         if(partHandlers.containsKey("fpm")){
             fpmPH = determinePH("fpm");
+            reqConfirmations++;
         }
 
 		String fullCmd = envelopeCmd(c, d);
@@ -640,6 +640,7 @@ public class MasterControl {
 			if(destinations == null){
 				return false;
 			} else {
+                reqConfirmations += destinations.size();
 				for(PartHandler x : destinations){
                     if(partHandlerList.contains(x)){
                         if(!sendCmd(x, fullCmd)){
@@ -652,12 +653,18 @@ public class MasterControl {
                         return false;
                     }
                 }
-				return true;
+                //Set number of confirmations
+                srcAgent.setRequiredConfirmations(reqConfirmations);
+
+                return true;
 			}
         } else if(b.equals("fpm")){
             if(fpmPH != null){
                 return sendCmd(fpmPH, fullCmd);
             }
+            //Set number of confirmations
+            srcAgent.setRequiredConfirmations(reqConfirmations);
+
             return false;
         } else {
             if(fpmPH != null){
@@ -666,8 +673,12 @@ public class MasterControl {
                 }
             }
             PartHandler destinationPH = determinePH(b);
+            reqConfirmations++;
             if(partHandlerList.contains(destinationPH)){
-                return sendCmd(destinationPH, fullCmd);
+                boolean returnval = sendCmd(destinationPH, fullCmd);
+                //Set number of confirmations
+                srcAgent.setRequiredConfirmations(reqConfirmations);
+                return returnval;
             } else {
                 return false;
             }
