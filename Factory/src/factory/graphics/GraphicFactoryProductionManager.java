@@ -156,6 +156,14 @@ public class GraphicFactoryProductionManager extends JFrame {
 		panel.jamBottomLane(feederNum);
 	}
 	
+	public void setLaneAmplitudeTop(int feederNum){
+		panel.increaseTopLaneAmplitude(feederNum);
+	}
+	
+	public void setLaneSpeedTop(int feederNum){
+		panel.increaseTopLaneSpeed(feederNum);
+	}
+	
 	public void unjamBottomLane(int feederNum){
 		panel.unjamBottomLane(feederNum);
 	}
