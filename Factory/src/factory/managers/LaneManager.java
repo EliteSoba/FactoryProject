@@ -125,7 +125,34 @@ public class LaneManager extends Client {
 				int nestIndex = Integer.valueOf(pCmd.get(2));
 				((LanePanel) graphics).dumpNest(nestIndex, false);
 			}
+		
+			//Commands for speed and amplitude
+			/*else if(need the command id here)
+			{
+				//use changeTopLaneSpeed(int speed) speed here to change speed
+				laneSpeeds.get("lane number").changeTopLaneSpeed("speed");
+			}
+			
+			else if(need the command id here)
+			{
+				//use changeBottomLaneSpeed(int speed) speed here to change speed
+				laneSpeeds.get("lane number").changeVLaneSpeed("speed");
+			}
+			
+			else if(need the command id here)
+			{
+				//use changeBottomLaneAmplitude(int amp) 
+				laneAmplitudes.get("lanenumber").changeTopLaneAmplitude("lane Amplitude form command");
+			}
+			
+			else if(need the command id here)
+			{
+				//use changeBottomLaneAmplitude(int amp) 
+				laneAmplitudes.get("lanenumber").changeBottomLaneAmplitude("lane Amplitude form command");
 
+			}
+			*/
+			
 			//Commands from VisionAgent
 			else if (identifier.equals("takepictureofnest")) {
 				int nestIndex = Integer.valueOf(pCmd.get(2));
