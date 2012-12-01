@@ -211,9 +211,9 @@ public class LaneManPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			// TODO Auto-generated method stub
-			/*if(ae.getSource() == laneOn){
+			if(ae.getSource() == laneOn){
 				int lanenum = (Integer)laneSelect.getSelectedItem();
-				String set = "lm fcsa set lanepower " + lanenum;
+				String set = "lm lm set lanepower " + lanenum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -221,7 +221,7 @@ public class LaneManPanel extends JPanel{
 				} 
 			}else if (ae.getSource() == laneOff){
 				int lanenum = (Integer)laneSelect.getSelectedItem();
-				String set = "lm fcsa set lanepower " + lanenum;
+				String set = "lm lm set lanepower " + lanenum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -229,7 +229,7 @@ public class LaneManPanel extends JPanel{
 				} 
 			}else if (ae.getSource() == feederOn){
 				int feedernum = (Integer)feederSelect.getSelectedItem();
-				String set = "lm fcsa set feederpower " + feedernum;
+				String set = "lm lm set feederpower " + feedernum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -237,13 +237,13 @@ public class LaneManPanel extends JPanel{
 				} 
 			}else if (ae.getSource() == feederOff){
 				int feedernum = (Integer)feederSelect.getSelectedItem();
-				String set = "lm fcsa set feederpower " + feedernum;
+				String set = "lm lm set feederpower " + feedernum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
 					System.out.println("An error occurred trying to send message to power off feeder " + feedernum + ".");
 				} 
-			}else{*/  // updates speed and amplitude when JComboBox changes
+			}else{  // updates speed and amplitude when JComboBox changes
 				JComboBox cb = (JComboBox)ae.getSource();
 				System.out.println("Get");
 				if(cb == laneSelect){
@@ -251,7 +251,7 @@ public class LaneManPanel extends JPanel{
 					laneSpeed.setValue(laneManager.getLaneSpeed((Integer)cb.getSelectedItem()));
 					laneAmplitude.setValue(laneManager.getLaneAmplitude((Integer)cb.getSelectedItem()));
 				}
-			//}
+			}
 
 		}
 

@@ -71,7 +71,7 @@ public class MasterControl {
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
             "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection",
             "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported", "ruininspectionkit","badparts","lanejam","slowdiverter",
-            "jamtoplane","jambottomlane","unjamtoplane","unjambottomlane"
+            "jamtoplane","jambottomlane","unjamtoplane","unjambottomlane", "lanespeed", "laneamplitude", "lanepower", "feederpower"
 
     );
 
