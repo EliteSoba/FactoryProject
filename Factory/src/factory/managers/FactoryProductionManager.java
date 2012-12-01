@@ -61,6 +61,7 @@ public class FactoryProductionManager extends Client {
 
 		add(UI, BorderLayout.LINE_END);
 		pack();
+		this.setTitle("Factory Production Manager");
 		setVisible(true);
 	}
 

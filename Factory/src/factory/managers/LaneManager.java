@@ -53,6 +53,7 @@ public class LaneManager extends Client {
 		
 		pack();
 		setVisible(true);
+		this.setTitle("Lane Manager");
 	}
 
 	public void doCommand(ArrayList<String> pCmd) {
