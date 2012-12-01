@@ -95,6 +95,36 @@ public class LaneManager extends Client {
 				int feederSlot = Integer.valueOf(pCmd.get(2));
 				((LanePanel) graphics).purgeBottomLane(feederSlot);
 			}
+			else if (identifier.equals("jamtoplane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((LanePanel) graphics).jamTopLane(feederSlot);
+			}
+			else if (identifier.equals("jambottomlane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				//((LanePanel) graphics).jamBottomLane(feederSlot);
+			}
+			else if (identifier.equals("unjamtoplane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((LanePanel) graphics).unjamTopLane(feederSlot);
+			}
+			else if (identifier.equals("unjambottomlane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				//((LanePanel) graphics).unjamBottomLane(feederSlot);
+			}
+			else if (identifier.equals("dumptopnest"))
+			{
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				((LanePanel) graphics).dumpNest(nestIndex, true);
+			}
+			else if (identifier.equals("dumpbottomnest"))
+			{
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				((LanePanel) graphics).dumpNest(nestIndex, false);
+			}
 
 			//Commands from VisionAgent
 			else if (identifier.equals("takepictureofnest")) {
