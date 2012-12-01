@@ -36,6 +36,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton cameraFlash;
 	JButton feedLane1, feedLane2, purgeLane1, purgeLane2, purgeFeeder;
 	JButton jamLane1, unjamLane1,jamLane2, unjamLane2;
+	JButton stopLane1, stopLane2, startLane1, startLane2;
 	JButton changeAmplitude1, changeSpeed1;
 	JTextField partName;
 	JTextField itemIndex;
@@ -69,6 +70,10 @@ public class ControlPanel extends JPanel implements ActionListener{
 		unjamLane1 = new JButton("Unjam lane 1");
 		jamLane2 = new JButton("Jam lane 2");
 		unjamLane2 = new JButton("Unjam lane 2");
+		stopLane1 = new JButton("stop lane 1");
+		stopLane2 = new JButton("stop lane 2");
+		startLane1 = new JButton("start lane 1");
+		startLane2 = new JButton("start lane 2");
 		changeAmplitude1 = new JButton("Lane 1 Amp + 1");
 		changeSpeed1 = new JButton("Lane 1 speed + 1");
 		cameraFlash = new JButton("Camera Flash Nest 1");
@@ -100,6 +105,10 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.addButton(unjamLane1);
 		this.addButton(jamLane2);
 		this.addButton(unjamLane2);
+		this.addButton(stopLane1);
+		this.addButton(startLane1);
+		this.addButton(stopLane2);
+		this.addButton(startLane2);
 		this.addButton(changeAmplitude1);
 		this.addButton(changeSpeed1);
 		this.addButton(gantryRobotGoToStart);
