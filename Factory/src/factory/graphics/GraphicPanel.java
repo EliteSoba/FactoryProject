@@ -97,7 +97,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**TODO: Kit Assembly Methods*/
 	/**
 	 * Adds a Kit into the Factory via Conveyor Belt
-	 * @see newEmptyKitDone()
+	 * @see #newEmptyKitDone()
 	 */
 	public void newEmptyKit() {
 		//if (!belt.kitin())
@@ -108,7 +108,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Sends Kit Robot to pick up a Kit from the Conveyor Belt and move to the designated slot in the Kit Station
 	 * @param target The targeted slot in the Kit Station
-	 * @see moveEmptyKitToSlotDone()
+	 * @see #moveEmptyKitToSlotDone()
 	 */
 	public void moveEmptyKitToSlot(int target) {
 		//if (belt.pickUp() && !kitRobot.kitted() && station.getKit(target) == null) {
@@ -121,7 +121,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Sends Kit Robot to move a Kit from the designated slot in the Kit Station to the Inspection Station
 	 * @param target The targeted slot in the Kit Station
-	 * @see moveKitToInspectionDone()
+	 * @see #moveKitToInspectionDone()
 	 */
 	public void moveKitToInspection(int target) {
 		//if (!kitRobot.kitted() && station.getKit(target) != null) {
@@ -133,7 +133,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Takes a picture of the Kit in the Inspection Station
-	 * @see takePictureOfInspectionDone()
+	 * @see #takePictureOfInspectionDone()
 	 */
 	public void takePictureOfInspectionSlot() {
 		//if (station.hasCheck())
@@ -144,7 +144,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Dumps the Kit at the designated slot in the Kit Station
 	 * @param target The targeted slot in the Kit Station
-	 * @see dumpKitAtInspectionDone()
+	 * @see #dumpKitAtInspectionDone()
 	 */
 	public void dumpKitAtSlot(int target) {
 		if (isKitAssemblyManager || isFactoryProductionManager) {
@@ -155,7 +155,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Dumps the Kit in the Inspection Station
-	 * @see dumpKitAtInspectionDone()
+	 * @see #dumpKitAtInspectionDone()
 	 */
 	public void dumpKitAtInspection() {
 		//if (!kitRobot.kitted() && station.getCheck() != null)
@@ -165,7 +165,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Moves the Kit in the Inspection Station to the Conveyor Belt
-	 * @see moveKitFromInspectionToConveyorDone()
+	 * @see #moveKitFromInspectionToConveyorDone()
 	 */
 	public void moveKitFromInspectionToConveyor() {
 		//if (station.getCheck() != null && !kitRobot.kitted())
@@ -176,7 +176,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Moves the Kit in the Inspection Station back to the designated slot in the Kit Station
 	 * @param target The designated slot in the Kit Station
-	 * @see moveKitFromInspectionBackToStationDone()
+	 * @see #moveKitFromInspectionBackToStationDone()
 	 */
 	public void moveKitFromInspectionBackToStation(int target) {
 		if (isKitAssemblyManager || isFactoryProductionManager) {
@@ -187,7 +187,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Sends a Kit out of the Factory via Conveyor Belt
-	 * @see exportKitDone()
+	 * @see #exportKitDone()
 	 */
 	public void exportKit() {
 		if (isKitAssemblyManager || isFactoryProductionManager)
@@ -207,7 +207,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Moves Gantry Robot to pick up a Bin with the provided image
 	 * @param path The image path to the desired Part image
-	 * @see gantryRobotArrivedAtPickup()
+	 * @see #gantryRobotArrivedAtPickup()
 	 */
 	public void moveGantryRobotToPickup(String path)
 	{
@@ -221,7 +221,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Moves Gantry Robot to the designated Feeder to drop off Bin
 	 * @param feederIndex The designated Feeder
-	 * @see gantryRobotArrivedAtFeederForDropoff()
+	 * @see #gantryRobotArrivedAtFeederForDropoff()
 	 */
 	public void moveGantryRobotToFeederForDropoff(int feederIndex)
 	{
@@ -250,7 +250,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Moves Gantry Robot to the designated Feeder to pick up a purged Bin
 	 * @param feederIndex The designated Feeder
-	 * @see gantryRobotArrivedAtFeederForPickup()
+	 * @see #gantryRobotArrivedAtFeederForPickup()
 	 */
 	public void moveGantryRobotToFeederForPickup(int feederIndex)
 	{
@@ -274,7 +274,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Takes a picture of the designated Lane pair
 	 * @param nestIndex The designated Lane pair
-	 * @see cameraFlashDone()
+	 * @see #cameraFlashDone()
 	 */
 	public void cameraFlash(int nestIndex) {
 		if (isLaneManager || isFactoryProductionManager) {
@@ -288,7 +288,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * Moves Parts Robot to the designated Nest to pick up Part
 	 * @param nestIndex The designated Nest
 	 * @deprecated Use movePartsRobotToNest(int nestIndex, int itemIndex) instead
-	 * @see partsRobotArrivedAtNest()
+	 * @see #partsRobotArrivedAtNest()
 	 */
 	public void movePartsRobotToNest(int nestIndex) {
 		if (isFactoryProductionManager) {
@@ -303,7 +303,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * Moves Parts Robot to the designated Nest to pick up the Part at the given index
 	 * @param nestIndex The designated Nest
 	 * @param itemIndex The designated Part
-	 * @see partsRobotArrivedAtNest()
+	 * @see #partsRobotArrivedAtNest()
 	 */
 	public void movePartsRobotToNest(int nestIndex, int itemIndex) {
 		if (isFactoryProductionManager) {
@@ -318,7 +318,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Moves Parts Robot to the designated slot in the Kit Station
 	 * @param kitIndex The designated slot in the Kit Station
-	 * @see partsRobotArrivedAtStation()
+	 * @see #partsRobotArrivedAtStation()
 	 */
 	public void movePartsRobotToStation(int kitIndex) {
 		if (isFactoryProductionManager) {
@@ -341,7 +341,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Moves Parts Robot to the center of the Factory
-	 * @see partsRobotArrivedAtCenter()
+	 * @see #partsRobotArrivedAtCenter()
 	 */
 	public void movePartsRobotToCenter() {
 		if (isFactoryProductionManager) {
@@ -352,7 +352,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Drops whatever items the Parts Robot is holding
-	 * @see dropPartsRobotsItemsDone()
+	 * @see #dropPartsRobotsItemsDone()
 	 */
 	public void dropPartsRobotsItems() {
 		if (isFactoryProductionManager)
@@ -364,7 +364,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Begins feeding the designated Feeder
 	 * @param feederNum The designated Feeder
-	 * @see feedLaneDone(int feederNum) 
+	 * @see #feedLaneDone(int feederNum) 
 	 */
 	public void feedFeeder(int feederNum) {
 		//if(!lane[feederNum].lane1PurgeOn){	//If purging is on, cannot feed!
@@ -389,10 +389,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	/**
-	 * Begins feeding the designated Lane
+	 * Begins feeding the designated Lane.<br>
+	 * Divide laneNum by 2
 	 * @param laneNum The designated Lane
 	 * @deprecated Use feedFeeder(int feederNum) instead
-	 * @see feedLaneDone(int feederNum) Divide laneNum by 2
+	 * @see #feedLaneDone(int feederNum)
 	 */
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
 		//if(!lane[(laneNum) / 2].lane1PurgeOn){	//If purging is on, cannot feed!

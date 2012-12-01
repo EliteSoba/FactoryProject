@@ -109,7 +109,7 @@ public class GraphicConveyorBelt {
 	
 	/**
 	 * Moves a Kit ready to be exported out of the factory
-	 * @see factory.graphics.GraphicConveyorBelt.outKit
+	 * @see #outKit(GraphicKit)
 	 */
 	public void exportKit() {
 		if (kitout())

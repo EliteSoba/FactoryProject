@@ -540,7 +540,7 @@ public class GraphicKittingRobot {
 	}
 	/**
 	 * Sets if the Kit Robot is going to the Inspection Station
-	 * @param fromBelt If the Kit Robot is going to the Inspection Station
+	 * @param fromCheck If the Kit Robot is going to the Inspection Station
 	 */
 	public void setFromCheck(boolean fromCheck) {
 		this.fromCheck = fromCheck;
@@ -554,7 +554,7 @@ public class GraphicKittingRobot {
 	}
 	/**
 	 * Sets if the Kit Robot is going to the Inspection Station
-	 * @param fromBelt If the Kit Robot is going to the Inspection Station
+	 * @param checkKit If the Kit Robot is going to the Inspection Station
 	 */
 	public void setCheckKit(boolean checkKit) {
 		this.checkKit = checkKit;
@@ -582,7 +582,7 @@ public class GraphicKittingRobot {
 	}
 	/**
 	 * Sets if the Kit Robot is going to the Dump Station
-	 * @param fromBelt If the Kit Robot is going to the Dump Station
+	 * @param purgeInspectionKit If the Kit Robot is going to the Dump Station
 	 */
 	public void setPurgeInspectionKit(boolean purgeInspectionKit) {
 		this.purgeInspectionKit = purgeInspectionKit;
