@@ -591,7 +591,7 @@ public class GraphicLaneManager{
 					lane2Items.get(j).setVY(laneSpeed);
 				}
 				else if(lane2Items.get(j).getX() > itemXMax){
-					lane2Items.get(j).setVX(vXTop);
+					lane2Items.get(j).setVX(vXBottom);
 				}
 			}
 
@@ -623,11 +623,11 @@ public class GraphicLaneManager{
 						if(lane2Items.get(i).getY() >= itemYLaneDown){
 							lane2Items.get(i).setY(itemYLaneDown);
 							lane2Items.get(i).setVY(0);
-							lane2Items.get(i).setVX(vXTop);
+							lane2Items.get(i).setVX(vXBottom);
 						}
 					}
 					//Lane items move horizontally
-					if(lane2Items.get(i).getVX() == vXTop){
+					if(lane2Items.get(i).getVX() == vXBottom){
 						if(vibrationCount % 4 == 1){	//Vibration up and down every 2 paint calls
 							if(i%2 == 0){
 								lane2Items.get(i).setY(itemYLaneDown);
@@ -681,7 +681,7 @@ public class GraphicLaneManager{
 					if(lane2Items.get(i).getY() >= itemYLaneDown){
 						lane2Items.get(i).setY(itemYLaneDown);
 						lane2Items.get(i).setVY(0);
-						lane2Items.get(i).setVX(vXTop);
+						lane2Items.get(i).setVX(vXBottom);
 					}
 				}
 
@@ -694,7 +694,7 @@ public class GraphicLaneManager{
 							lane2Items.get(j).setVX(0);
 						}
 						else if(lane2Items.get(j).getX() > itemXMax + 5){
-							lane2Items.get(j).setVX(vXTop);
+							lane2Items.get(j).setVX(vXBottom);
 							lane2Items.get(j).setVY(0);
 						}
 					}
@@ -744,7 +744,7 @@ public class GraphicLaneManager{
 				} // End of Queue entering nest
 
 				//Lane items move horizontally
-				if(lane2Items.get(i).getVX() == vXTop){
+				if(lane2Items.get(i).getVX() == vXBottom){
 					if(vibrationCount % 4 == 1){	//Vibration up and down every 2 paint calls
 						if(i%2 == 0){
 							lane2Items.get(i).setY(itemYLaneDown);
