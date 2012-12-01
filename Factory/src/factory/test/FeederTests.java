@@ -17,6 +17,7 @@ import factory.test.mock.LoggedEvent;
 import factory.test.mock.MockGantry;
 import factory.test.mock.MockLane;
 import factory.test.mock.MockNest;
+import factory.test.mock.MockVision;
 import junit.framework.TestCase;
 
 public class FeederTests extends TestCase{
@@ -24,6 +25,7 @@ public class FeederTests extends TestCase{
 	MyPartRequest mpr;
 	FeederAgent feeder;
 	MockLane top, bottom;
+	MockVision vision;
 	MockGantry gantry;
 	Part p1,p2,p3,p4,p5,p6;
 	
@@ -35,6 +37,7 @@ public class FeederTests extends TestCase{
 		top = new MockLane("top");
 		bottom = new MockLane("bottom");
 		gantry = new MockGantry("gantry");
+		vision = new MockVision("vision");
 		
 		feeder = new FeederAgent("Feeder",0, top, bottom, gantry, null,null,true,true);
 		feeder.diverter = DiverterState.FEEDING_BOTTOM; // initial setting to test the switching of the lane diverter
@@ -64,6 +67,13 @@ public class FeederTests extends TestCase{
 		
 	}
 	
+	/**
+	 * This tests the non-normative case where the vision takes a picture
+	 * of a nest and doesn't see any good parts in the nest.
+	 * 
+	 * 1) Wait for parts to stabilize.
+	 * 2) Tell the vision you have waited for parts to stabilize
+	 */
 	public void testMsgBadNestBecausePartsAreBroken()
 	{
 		// set up for the test:
@@ -72,8 +82,7 @@ public class FeederTests extends TestCase{
 		MockNest topNest = new MockNest("topNest");
 		feeder.topLane.lane.setNest(topNest);
 		
-		
-		feeder.topLane.picState = PictureState.STABLE;
+		//feeder.topLane.picState = PictureState.STABLE;
 		
 		feeder.msgBadNest(0);
 		
@@ -85,49 +94,81 @@ public class FeederTests extends TestCase{
 
 		assertTrue(feeder.topLane.state == MyLaneState.EMPTY);
 		
-		
 	}
 	
-	public void testMsgBadNestBecausePartsAreUnstable()
-	{
-		// set up for the test:
-		feeder.topLane.part = p1;
-		
-		MockNest topNest = new MockNest("topNest");
-		feeder.topLane.lane.setNest(topNest);
-		
-		
-		feeder.topLane.picState = PictureState.UNSTABLE;
-		
-		feeder.msgBadNest(0);
-		
-		assertTrue(feeder.topLane.state != MyLaneState.BAD_NEST);
-		
-	}
+	
 	
 	public void testMsgEmptyNest()
 	{
-		// set up for the test:
-		feeder.msgEmptyNest(0); // the top lane has an empty nest
+		feeder.msgEmptyNest(0); // top lane has an empty nest
 		
-		assertTrue(feeder.topLane.jamState == JamState.MIGHT_BE_JAMMED);
-		feeder.pickAndExecuteAnAction();
+		assertEquals(feeder.topLane.jamState,JamState.MIGHT_BE_JAMMED);
 		feeder.pickAndExecuteAnAction();
 		
-		assertTrue(feeder.topLane.jamState == JamState.TOLD_TO_INCREASE_AMPLITUDE);
-		feeder.msgLaneHasIncreasedItsAmplitude(top); // after the increase amplitude wait timer is over
+		assertTrue("Top lane should receive msgIncreaseAmplitude(). Event log: "+ top.log.toString()
+				,top.log.containsString("msgIncreaseAmplitude()"));
 		
-		assertTrue(feeder.topLane.jamState == JamState.AMPLITUDE_WAS_INCREASED); 
+		feeder.msgLaneHasIncreasedItsAmplitude(top); // this message will be sent after the lane agent waits on a timer
 		feeder.pickAndExecuteAnAction();
-		
-		assertTrue(feeder.topLane.jamState == JamState.NO_LONGER_JAMMED);
-		assertTrue(feeder.myNestsHaveBeenChecked == false);
-		feeder.pickAndExecuteAnAction();
-		
-		assertTrue(feeder.myNestsHaveBeenChecked == true);
 
+		// feeder should call this -> vision.msgDoneIncreasingLaneAmplitude(feeder,0);
 		
+		assertTrue("Vision should receive msgDoneIncreasingLaneAmplitude(). Event log: "+ vision.log.toString()
+				,vision.log.containsString("msgDoneIncreasingLaneAmplitude()"));
+		
+		feeder.msgLaneOfMixedParts(0); // the vision sends this message after concluding 
+									   // that there must be a problem with the diverter switching
+		
+		feeder.pickAndExecuteAnAction();
+		
+		// ... 
+
 	}
+	
+//	public void OLDtestMsgEmptyNest()
+//	{
+//		// set up for the test:
+//		feeder.msgEmptyNest(0); // the top lane has an empty nest
+//		
+//		assertTrue(feeder.topLane.jamState == JamState.MIGHT_BE_JAMMED);
+//		feeder.pickAndExecuteAnAction();
+//		feeder.pickAndExecuteAnAction();
+//		
+//		assertTrue(feeder.topLane.jamState == JamState.TOLD_TO_INCREASE_AMPLITUDE);
+//		feeder.msgLaneHasIncreasedItsAmplitude(top); // after the increase amplitude wait timer is over
+//		
+//		assertTrue(feeder.topLane.jamState == JamState.AMPLITUDE_WAS_INCREASED); 
+//		feeder.pickAndExecuteAnAction();
+//		
+//		assertTrue(feeder.topLane.jamState == JamState.NO_LONGER_JAMMED);
+//		assertTrue(feeder.myNestsHaveBeenChecked == false);
+//		feeder.pickAndExecuteAnAction();
+//		
+//		assertTrue(feeder.myNestsHaveBeenChecked == true);
+//
+//		
+//	}
+	
+	
+	
+//	
+//	public void testMsgBadNestBecausePartsAreUnstable()
+//	{
+//		// set up for the test:
+//		feeder.topLane.part = p1;
+//		
+//		MockNest topNest = new MockNest("topNest");
+//		feeder.topLane.lane.setNest(topNest);
+//		
+//		
+//		feeder.topLane.picState = PictureState.UNSTABLE;
+//		
+//		feeder.msgBadNest(0);
+//		
+//		assertTrue(feeder.topLane.state != MyLaneState.BAD_NEST);
+//		
+//	}
+	
 	
 	/* SCENARIO #1: The very first part fed into the Feeder.
 	 * The Feeder is empty.

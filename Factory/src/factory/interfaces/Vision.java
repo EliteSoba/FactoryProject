@@ -15,5 +15,8 @@ public interface Vision {
 	public void msgVisionClearForPictureInNests(Nest nest, Nest nest2);
 	public void msgMyNestsReadyForPicture(Nest nestOne, Part nestOnePart, Nest nestTwo, Part nestTwoPart, Feeder feeder);
 	public void msgNewNestConfig( ArrayList<Nest> nests);
+
+	
+	public void msgDoneIncreasingLaneAmplitude(Feeder feeder,int nestNum0or1);
 	
 }
