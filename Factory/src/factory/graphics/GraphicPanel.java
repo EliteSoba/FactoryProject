@@ -366,8 +366,14 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		//if(!lane[feederNum].lane1PurgeOn){	//If purging is on, cannot feed!
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].bin.getBinItems().clear();
-			lane[feederNum].vibrationAmplitude = 2;		//resets amplitude to 2
-			lane[feederNum].laneSpeed = 1;		//resets laneSpeed to 1. Change to panel's slide bar
+			if(lane[feederNum].divergeUp){
+				lane[feederNum].changeTopLaneSpeed(1);			//resets laneSpeed to 1. Change to panel's slide bar
+				lane[feederNum].changeTopLaneAmplitude(2);		//resets amplitude to 2
+			}
+			else{
+				lane[feederNum].changeBottomLaneSpeed(1);		//resets laneSpeed to 1. Change to panel's slide bar
+				lane[feederNum].changeTopLaneAmplitude(2);		//resets amplitude to 2
+			}
 			for(int i = 0; i < lane[feederNum].bin.binSize;i++){		//unlimited items
 				lane[feederNum].bin.binItems.add(new GraphicItem(-40, 0, "Images/"+lane[feederNum].bin.partName+".png"));
 			}
@@ -388,8 +394,14 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		//if(!lane[(laneNum) / 2].lane1PurgeOn){	//If purging is on, cannot feed!
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[laneNum / 2].bin.getBinItems().clear();
-			lane[laneNum / 2].vibrationAmplitude = 2;		//resets amplitude to 2
-			lane[laneNum / 2].laneSpeed = 1;		//resets laneSpeed to 1. Change to panel's slide bar
+			if(lane[laneNum / 2].divergeUp){
+				lane[laneNum / 2].changeTopLaneSpeed(1);			//resets laneSpeed to 1. Change to panel's slide bar
+				lane[laneNum / 2].changeTopLaneAmplitude(2);		//resets amplitude to 2
+			}
+			else{
+				lane[laneNum / 2].changeBottomLaneSpeed(1);		//resets laneSpeed to 1. Change to panel's slide bar
+				lane[laneNum / 2].changeTopLaneAmplitude(2);		//resets amplitude to 2
+			}
 			for(int i = 0; i < lane[laneNum / 2].bin.binSize;i++){		//unlimited items
 				lane[laneNum / 2].bin.binItems.add(new GraphicItem(-40, 0, "Images/"+lane[laneNum / 2].bin.partName+".png"));
 			}
