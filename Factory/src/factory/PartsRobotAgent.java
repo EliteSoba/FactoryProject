@@ -703,7 +703,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoAnimationClearArms(){
 		debug("Executing DoAnimationClearArms()");
-		server.command("pra fpm cmd droppartsrobotsitems");
+		server.command(this,"pra fpm cmd droppartsrobotsitems");
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -716,7 +716,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoAnimationMovePartsRobotToNestAndGrabPart(int nest, int coordinate){
 		debug("Executing DoAnimationMovePartsRobotToNestAndGrabPart("+nest+")");
-		server.command("pra fpm cmd movetonest " + nest + " " + coordinate);
+		server.command(this,"pra fpm cmd movetonest " + nest + " " + coordinate);
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -729,7 +729,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoAnimationMovePartsRobotToCenter(){
 		debug("Executing DoAnimationMovePartsRobotToCenter()");
-		server.command("pra fpm cmd movetocenter");
+		server.command(this,"pra fpm cmd movetocenter");
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -742,7 +742,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoAnimationMovePartsRobotToStand(int kit){
 		debug("Executing DoAnimationMovePartsRobotToStand("+kit+")");
-		server.command("pra fpm cmd movetostand " + kit);
+		server.command(this,"pra fpm cmd movetostand " + kit);
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
@@ -755,7 +755,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoAnimationPutPartInKit(int arm){
 		debug("Executing DoAnimationPutPartInKit("+arm+")");
-		server.command("pra fpm cmd putpartinkit " + arm);
+		server.command(this,"pra fpm cmd putpartinkit " + arm);
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
