@@ -536,9 +536,9 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		lane[feederNum].changeTopLaneSpeed(lane[feederNum].laneSpeed + 1);
 		if(lane[feederNum].laneSpeed > 8)	//laneSpeed max is 8
 			lane[feederNum].changeTopLaneSpeed(8);
-		lane[feederNum].vibrationAmplitude += 1;
-		if(lane[feederNum].vibrationAmplitude > 8)		//vibration amplitude max is 8
-			lane[feederNum].vibrationAmplitude = 8;
+		lane[feederNum].vibrationAmplitudeTop += 1;
+		if(lane[feederNum].vibrationAmplitudeTop > 8)		//vibration amplitude max is 8
+			lane[feederNum].vibrationAmplitudeTop = 8;
 		lane[feederNum].lane1Jam = false;
 	}
 	
@@ -558,9 +558,9 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		lane[feederNum].changeBottomLaneSpeed(lane[feederNum].laneSpeed + 1);
 		if(lane[feederNum].laneSpeed > 8)	//laneSpeed max is 8
 			lane[feederNum].changeBottomLaneSpeed(8);
-		lane[feederNum].vibrationAmplitude += 1;
-		if(lane[feederNum].vibrationAmplitude > 8)		//vibration amplitude max is 8
-			lane[feederNum].vibrationAmplitude = 8;
+		lane[feederNum].vibrationAmplitudeBottom += 1;
+		if(lane[feederNum].vibrationAmplitudeBottom > 8)		//vibration amplitude max is 8
+			lane[feederNum].vibrationAmplitudeBottom = 8;
 		lane[feederNum].lane2Jam = false;
 	}
 	
@@ -569,19 +569,28 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * @param feederNum the designated feeder, 1-4
 	 */
 	public void increaseTopLaneAmplitude(int feederNum){
-		lane[feederNum].vibrationAmplitude++;
-		if(lane[feederNum].vibrationAmplitude > 8)
-			lane[feederNum].vibrationAmplitude = 8;
+		lane[feederNum].vibrationAmplitudeTop++;
+		if(lane[feederNum].vibrationAmplitudeTop > 8)
+			lane[feederNum].vibrationAmplitudeTop = 8;
 	}
+	
+	/**
+	 * Increase top lane speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void increaseTopLaneSpeed(int feederNum){
+		lane[feederNum].vXTop--;
+	}
+	
 	
 	/**
 	 * decrease the Top lane vibration speed by 1
 	 * @param feederNum the designated feeder, 1-4
 	 */
 	public void decreaseTopLaneAmplitude(int feederNum){
-		lane[feederNum].vibrationAmplitude--;
-		if(lane[feederNum].vibrationAmplitude < 1)
-			lane[feederNum].vibrationAmplitude = 1;
+		lane[feederNum].vibrationAmplitudeTop--;
+		if(lane[feederNum].vibrationAmplitudeTop < 1)
+			lane[feederNum].vibrationAmplitudeTop = 1;
 	}
 	
 	/**
@@ -589,9 +598,9 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * @param feederNum the designated feeder, 1-4
 	 */
 	public void increaseBottomLaneAmplitude(int feederNum){
-		lane[feederNum].vibrationAmplitude++;		//change to bottom vibrationAmplitude
-		if(lane[feederNum].vibrationAmplitude > 8)
-			lane[feederNum].vibrationAmplitude = 8;
+		lane[feederNum].vibrationAmplitudeBottom++;		//change to bottom vibrationAmplitude
+		if(lane[feederNum].vibrationAmplitudeBottom > 8)
+			lane[feederNum].vibrationAmplitudeBottom = 8;
 	}
 	
 	/**
@@ -599,9 +608,9 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * @param feederNum the designated feeder, 1-4
 	 */
 	public void decreaseBottomLaneAmplitude(int feederNum){
-		lane[feederNum].vibrationAmplitude--;		//change to bottom vibrationAmplitude
-		if(lane[feederNum].vibrationAmplitude < 1)
-			lane[feederNum].vibrationAmplitude = 1;
+		lane[feederNum].vibrationAmplitudeBottom--;		//change to bottom vibrationAmplitude
+		if(lane[feederNum].vibrationAmplitudeBottom < 1)
+			lane[feederNum].vibrationAmplitudeBottom = 1;
 	}
 	
 	
@@ -962,7 +971,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			
 	}
 	// sets speed for specified lane
-	public void setLaneSpeed(int laneIndex,int lanenum,int speed) {
+	public void setLaneSpeedBottom(int laneIndex,int lanenum,int speed) {
+		//lane[laneIndex].setLaneSpeed(lanenum,speed);
+	}
+	// sets speed for specified lane
+	public void setLaneSpeedTop(int laneIndex,int lanenum,int speed) {
 		//lane[laneIndex].setLaneSpeed(lanenum,speed);
 	}
 	// sets amplitude for specified lane
