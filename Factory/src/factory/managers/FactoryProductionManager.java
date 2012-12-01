@@ -61,6 +61,7 @@ public class FactoryProductionManager extends Client {
 
 		add(UI, BorderLayout.LINE_END);
 		pack();
+		this.setTitle("Factory Production Manager");
 		setVisible(true);
 	}
 
@@ -128,7 +129,16 @@ public class FactoryProductionManager extends Client {
 				int feederSlot = Integer.valueOf(pCmd.get(2));
 				//((FactoryProductionPanel) graphics).unjamBottomLane(feederSlot);
 			}
-			
+			else if (identifier.equals("dumptopnest"))
+			{
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).dumpNest(nestIndex, true);
+			}
+			else if (identifier.equals("dumpbottomnest"))
+			{
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).dumpNest(nestIndex, false);
+			}
 
 			// Commands from GantryAgent:
 			else if (identifier.equals("pickuppurgebin"))

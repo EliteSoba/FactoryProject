@@ -16,43 +16,44 @@ import factory.client.Client;
 public class LaneManager extends Client {
 
 	private static final long serialVersionUID = 6767006307991802656L;
-	
+
 	LaneManPanel buttons;
 	LanePanel animation;
 	ArrayList<Integer> laneSpeeds; // stores speeds of each lane
 	ArrayList<Integer> laneAmplitudes; // stores amplitudes of each lane
-	
+
 	public LaneManager() {
 		super(Client.Type.lm); 
-		
+
 		buttons = new LaneManPanel(this);
 		animation = new LanePanel(this);
-		
+
 		laneSpeeds = new ArrayList<Integer>();
 		laneAmplitudes = new ArrayList<Integer>(); 
 		for (int i = 0; i < 8; i++){    // presets lane speeds and amplitudes
 			laneSpeeds.add(2);  
 			laneAmplitudes.add(2);
 		}
-		
+
 		setInterface();
 	}
-	
+
 	public static void main(String[] args){
 		LaneManager l = new LaneManager(); 
 	}
-	
-	
+
+
 	public void setInterface() {
 		graphics = animation;
 		UI = buttons;
 
 		add(graphics, BorderLayout.CENTER);
-		
+
 		add(UI, BorderLayout.LINE_END);  
-		
+
 		pack();
 		setVisible(true);
+		this.setTitle("Lane Manager");
 	}
 
 	public void doCommand(ArrayList<String> pCmd) {
@@ -62,7 +63,7 @@ public class LaneManager extends Client {
 		String action = pCmd.get(0);
 		String identifier = pCmd.get(1);
 		if(action.equals("cmd")){
-			
+
 			// Commands from FeederAgent
 			if (identifier.equals("startfeeding"))
 			{
@@ -94,26 +95,43 @@ public class LaneManager extends Client {
 				int feederSlot = Integer.valueOf(pCmd.get(2));
 				((LanePanel) graphics).purgeBottomLane(feederSlot);
 			}
-			
+			else if (identifier.equals("jamtoplane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((LanePanel) graphics).jamTopLane(feederSlot);
+			}
+			else if (identifier.equals("jambottomlane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				//((LanePanel) graphics).jamBottomLane(feederSlot);
+			}
+			else if (identifier.equals("unjamtoplane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((LanePanel) graphics).unjamTopLane(feederSlot);
+			}
+			else if (identifier.equals("unjambottomlane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				//((LanePanel) graphics).unjamBottomLane(feederSlot);
+			}
+			else if (identifier.equals("dumptopnest"))
+			{
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				((LanePanel) graphics).dumpNest(nestIndex, true);
+			}
+			else if (identifier.equals("dumpbottomnest"))
+			{
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				((LanePanel) graphics).dumpNest(nestIndex, false);
+			}
+
 			//Commands from VisionAgent
 			else if (identifier.equals("takepictureofnest")) {
 				int nestIndex = Integer.valueOf(pCmd.get(2));
 				((LanePanel) graphics).cameraFlash(nestIndex);
 			}
-			
-			// command from self
-			else if (identifier.equals("lanespeed")){
-				int laneNumber = Integer.valueOf(pCmd.get(2));
-				int speed = Integer.valueOf(pCmd.get(3));
-				
-				// call graphics function to change speed
-				
-			}else if (identifier.equals("laneamplitude")){
-				int laneNumber = Integer.valueOf(pCmd.get(2));
-				int amplitude = Integer.valueOf(pCmd.get(3));
-				
-				// call graphics function to change amplitude
-			}
+
 
 		}
 		else if(action.equals("req")){
@@ -134,34 +152,50 @@ public class LaneManager extends Client {
 				((LanePanel) graphics).popNestItem(nestIndex, itemIndex);
 			}
 
+			// command from self
+			else if (identifier.equals("lanespeed")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int speed = Integer.valueOf(pCmd.get(3));
+
+				// call graphics function to change speed
+
+			}else if (identifier.equals("laneamplitude")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int amplitude = Integer.valueOf(pCmd.get(3));
+
+				// call graphics function to change amplitude
+			}else if (identifier.equals("lanepower")){
+				
+			}
+
 		}
 		else if(action.equals("cnf")){
 
 		}
 		else if(action.equals("mcs")){
-			   try {
-					this.server.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				   System.exit(0);
-			   }
+			try {
+				this.server.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.exit(0);
+		}
 		else 
-	   		  System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
+			System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 	}
-	
+
 	public void setLaneSpeed(int laneNumber, int speed){
 		laneSpeeds.set(laneNumber, speed);
 	}
-	
+
 	public void setLaneAmplitude(int laneNumber, int amplitude){
 		laneAmplitudes.set(laneNumber, amplitude);
 	}
-	
+
 	public int getLaneSpeed(int laneNumber){
 		return laneSpeeds.get(laneNumber-1);
 	}
-	
+
 	public int getLaneAmplitude(int laneNumber){
 		return laneAmplitudes.get(laneNumber-1);
 	}

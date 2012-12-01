@@ -55,6 +55,7 @@ public class KitAssemblyManager extends Client {
 		add(graphics, BorderLayout.CENTER);
 		add(UI, BorderLayout.LINE_END); 
 		pack();
+		this.setTitle("Kit Assembly Manager");
 
 		setVisible(true);
 

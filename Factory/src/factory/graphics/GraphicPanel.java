@@ -360,6 +360,12 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		dropPartsRobotsItemsDone();
 	}
 	
+	public void dumpNest(int nestIndex, boolean isTop) {
+		if (isLaneManager || isFactoryProductionManager) {
+			nests.get(nestIndex*2 + (isTop ? 0 : 1)).clearItems();
+		}
+	}
+	
 	/**TODO: Lane methods*/
 	/**
 	 * Begins feeding the designated Feeder

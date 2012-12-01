@@ -41,6 +41,7 @@ public class PartsManager extends Client implements WindowListener{
 		pack();
 		this.setSize(460,600);
 		this.setResizable(false);
+		this.setTitle("Parts Manager");
 		setVisible(true);
 	}
 	

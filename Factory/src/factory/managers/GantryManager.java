@@ -40,6 +40,7 @@ public class GantryManager extends Client {
 		
 		//add(UI, BorderLayout.LINE_END);
 		pack();
+		this.setTitle("Gantry Manager");
 		setVisible(true);
 	}
 

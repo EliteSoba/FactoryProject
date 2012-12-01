@@ -67,10 +67,6 @@ public class SaveTest {
 			newKitConfig.listOfParts.add(partsList.get("Alfonso"));
 			newKitConfig.listOfParts.add(partsList.get("Ryan"));
 			newKitConfig.listOfParts.add(partsList.get("Austin"));
-			newKitConfig.listOfParts.add(partsList.get("Sword"));
-			newKitConfig.listOfParts.add(partsList.get("Tentacle"));
-			newKitConfig.listOfParts.add(partsList.get("Wing"));
-			newKitConfig.listOfParts.add(partsList.get("Shoe"));
 			kitConfigList.put(newKitConfig.kitName,newKitConfig);
 
 //			newKitConfig = new KitConfig("Kit2");
