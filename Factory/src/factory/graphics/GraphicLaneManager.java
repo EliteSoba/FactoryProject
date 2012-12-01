@@ -818,7 +818,7 @@ public class GraphicLaneManager{
 	}
 
 	public void processTopLaneJam(){	
-		if(lane1Items.size() > 0){	//Moves Items into the jam
+		if(lane1Items.size() > 0){	//Moves Items after the jammed item until they are close to jammed item
 			lane1Items.get(0).setVX(0);
 			for(int i = 1; i < lane1Items.size();i++){
 				if(lane1Items.get(i).getY() > itemYLaneUp){
@@ -827,18 +827,18 @@ public class GraphicLaneManager{
 				else if(lane1Items.get(i).getX() > itemXMax){
 					lane1Items.get(i).setVX(vXTop);
 				}
-
-				lane1Items.get(i).setX(lane1Items.get(i).getX() + lane1Items.get(i).getVX());
+				
+				lane1Items.get(i).setX(lane1Items.get(i).getX() + lane1Items.get(i).getVX()); //move items to jammed item
 				lane1Items.get(i).setY(lane1Items.get(i).getY() + lane1Items.get(i).getVY());
 
 				if(lane1Items.get(i).getX() <= lane1Items.get(0).getX() + i*10){
 					if(lane1Items.get(i).getVY() == 0){
-						if(lane1Items.get(i).getX() >= itemXLane)
+						if(lane1Items.get(i).getX() >= itemXLane)				//stops item from going off end of lane
 							lane1Items.get(i).setX(itemXLane);
 						else
-							lane1Items.get(i).setX(lane1Items.get(0).getX() + i*10);
+							lane1Items.get(i).setX(lane1Items.get(0).getX() + i*10); //Lines up items after jammed item
 						if(lane1Items.get(i).getX() >= itemXLane){
-							lane1Items.remove(i);
+							lane1Items.remove(i);									 ////if item is too far back and will collide feeder remove it
 							i--;
 							continue;
 						}
@@ -922,7 +922,7 @@ public class GraphicLaneManager{
 				else if(lane2Items.get(i).getX() > itemXMax){
 					lane2Items.get(i).setVX(vX);
 				}*/
-			for(int i = 1; i <lane2Items.size();i++){
+			for(int i = 1; i <lane2Items.size();i++){	//set speeds for the bottom lanes
 				if(lane2Items.get(i).getY() < itemYLaneDown){
 					lane2Items.get(i).setVY(laneSpeed);
 					//lane2Items.get(i).setVX(0);
@@ -931,16 +931,16 @@ public class GraphicLaneManager{
 					lane2Items.get(i).setVX(vXBottom);
 					//lane2Items.get(i).setVY(0);
 				}	
-				lane2Items.get(i).setX(lane2Items.get(i).getX() + lane2Items.get(i).getVX());
+				lane2Items.get(i).setX(lane2Items.get(i).getX() + lane2Items.get(i).getVX()); //move items to jammed item
 				lane2Items.get(i).setY(lane2Items.get(i).getY() + lane2Items.get(i).getVY());
 
 				if(lane2Items.get(i).getX() <= lane2Items.get(0).getX() + i*10){
-					if(lane2Items.get(i).getVY() == 0){
-						if(lane2Items.get(i).getX() >= itemXLane)
+					if(lane2Items.get(i).getVY() == 0){								 //if no vertical velocity
+						if(lane2Items.get(i).getX() >= itemXLane)					 //stops item from going off end of lane
 							lane2Items.get(i).setX(itemXLane);
-						else
-							lane2Items.get(i).setX(lane2Items.get(0).getX() + i*10);
-						if(lane2Items.get(i).getX() >= itemXLane){
+						else														 //keep parts from overlapping
+							lane2Items.get(i).setX(lane2Items.get(0).getX() + i*10); //sets the coord. for where to stop part at
+						if(lane2Items.get(i).getX() >= itemXLane){					 //if item is too far back and will collide feeder remove it
 							lane2Items.remove(i);
 							i--;
 							continue;
@@ -949,11 +949,11 @@ public class GraphicLaneManager{
 				}
 			}
 		}
-
-		for(int i = 0;i<lane2Items.size();i++){	//Vibration
+		
+		for(int i = 0;i<lane2Items.size();i++){	//Vibration -- check if vertical velocity is 0 or horiz. velocity is vXBottom
 			if(lane2Items.get(i).getVY() == 0){	//In the queue
-				if(vibrationCount % 4 == 1){	//Vibration up and down every 2 paint calls
-					if(i%2 == 0){
+				if(vibrationCount % 4 == 1){	//Vibration up and down every 2 paint calls, for vertical vibration
+					if(i%2 == 0){				
 						lane2Items.get(i).setY(itemYLaneDown);
 					}
 					else if(i%2 == 1){
@@ -970,7 +970,7 @@ public class GraphicLaneManager{
 				}
 			}
 			else if(lane2Items.get(i).getVX() == vXBottom){
-				if(vibrationCount % 4 == 1){	//Vibration up and down every 2 paint calls
+				if(vibrationCount % 4 == 1){	//Vibration up and down every 2 paint calls, vertical vibration
 					if(i%2 == 0){
 						lane2Items.get(i).setY(itemYLaneDown);
 					}
@@ -990,7 +990,7 @@ public class GraphicLaneManager{
 					lane2Items.remove(i);
 					i--;
 				}
-			}
+			}																					//check if Vertical velocity is not 0
 			else if(lane2Items.get(i).getVY() == vY || lane2Items.get(i).getVY() == -(vY) ){	//Horizontal vibrating
 				if(vibrationCount % 4 == 1){	//Vibration left and right every 2 paint calls
 					if(i%2 == 0)
@@ -1012,24 +1012,24 @@ public class GraphicLaneManager{
 			}
 		}
 	}
-
+	
 	/**TODO: Comment these methods*/
-	public void changeTopLaneSpeed(int laneS){
+	public void changeTopLaneSpeed(int laneS){		////Changes top Lane Speed
 		laneSpeed = laneS;
 		vXTop = -laneSpeed; vY = laneSpeed;
 	}
-
-	public void changeBottomLaneSpeed(int laneS){	//Changes vX to bottomVX
+	
+	public void changeBottomLaneSpeed(int laneS){	//Changes Bottom Lane Speed
 		laneSpeed = laneS;
 		vXBottom = -laneSpeed; vY = laneSpeed;
 	}
-
+	//Change the virbration amplitudes
 	public void changeTopLaneAmplitude(int amp){
 		vibrationAmplitudeTop = amp;
 	}
 
 	public void changeBottomLaneAmplitude(int amp){
-		vibrationAmplitudeBottom = amp;	//change to bottom vibrationAmp
+		vibrationAmplitudeBottom = amp;	
 	}
 
 }
