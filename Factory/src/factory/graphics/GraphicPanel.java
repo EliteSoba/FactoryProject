@@ -194,6 +194,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			belt.exportKit();
 	}
 	
+	/**
+	 * Drops the requested Items from the next Inspected Kit
+	 * @param dropped The Binary String delineating the parts to drop
+	 */
 	public void dropParts(String dropped) {
 		if (isKitAssemblyManager || isFactoryProductionManager)
 			kitRobot.breakNextKit(dropped);
