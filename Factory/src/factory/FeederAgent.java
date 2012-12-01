@@ -179,7 +179,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/**
 	 *  The vision sends this message notifying 
-	 *  the Feeder that it had a empty nest. 
+	 *  the Feeder that it has an empty nest. 
 	 *  v.2
 	 * */
 	public void msgEmptyNest(int nestNumber) {
@@ -624,7 +624,6 @@ public class FeederAgent extends Agent implements Feeder {
 		switchDiverterIfNecessary(targetLane);
 
 
-		/** TODO: Complete these scenarios. */
 
 		/* SCENARIO #1: The very first part fed into the Feeder.
 		 * The Feeder is empty.
@@ -1000,7 +999,7 @@ public class FeederAgent extends Agent implements Feeder {
 				debug("it is now okay to purge this feeder.");
 				stateChanged();
 			}
-		},(long) kOK_TO_PURGE_TIME * 1000); // okay to purge after this many seconds
+		},(long) 4 * 1000); // okay to purge after this many seconds
 
 
 		DoStartFeeding(currentPart); // Feed the part that is currently in the Feeder 
@@ -1071,10 +1070,6 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** Animation that clears all of the parts out of the Feeder. */
 	private void DoPurgeFeeder() {
-//		// we need to wait a second so we don't receive a double message from 
-//        long timeToQuit = System.currentTimeMillis() + 1000;
-//        while (System.currentTimeMillis() < timeToQuit);		 
-
 		if (debugMode == false)
 		{
 			debug("purging feeder.");
