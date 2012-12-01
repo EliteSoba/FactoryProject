@@ -64,6 +64,13 @@ public class FeederTests extends TestCase{
 		
 	}
 	
+	/**
+	 * This tests the non-normative case where the vision takes a picture
+	 * of a nest and doesn't see any good parts in the nest.
+	 * 
+	 * 1) Wait for parts to stabilize.
+	 * 2) Tell the vision you have waited for parts to stabilize
+	 */
 	public void testMsgBadNestBecausePartsAreBroken()
 	{
 		// set up for the test:
@@ -72,8 +79,7 @@ public class FeederTests extends TestCase{
 		MockNest topNest = new MockNest("topNest");
 		feeder.topLane.lane.setNest(topNest);
 		
-		
-		feeder.topLane.picState = PictureState.STABLE;
+		//feeder.topLane.picState = PictureState.STABLE;
 		
 		feeder.msgBadNest(0);
 		
@@ -85,25 +91,8 @@ public class FeederTests extends TestCase{
 
 		assertTrue(feeder.topLane.state == MyLaneState.EMPTY);
 		
-		
 	}
 	
-	public void testMsgBadNestBecausePartsAreUnstable()
-	{
-		// set up for the test:
-		feeder.topLane.part = p1;
-		
-		MockNest topNest = new MockNest("topNest");
-		feeder.topLane.lane.setNest(topNest);
-		
-		
-		feeder.topLane.picState = PictureState.UNSTABLE;
-		
-		feeder.msgBadNest(0);
-		
-		assertTrue(feeder.topLane.state != MyLaneState.BAD_NEST);
-		
-	}
 	
 	public void testMsgEmptyNest()
 	{
@@ -128,6 +117,27 @@ public class FeederTests extends TestCase{
 
 		
 	}
+	
+	
+	
+//	
+//	public void testMsgBadNestBecausePartsAreUnstable()
+//	{
+//		// set up for the test:
+//		feeder.topLane.part = p1;
+//		
+//		MockNest topNest = new MockNest("topNest");
+//		feeder.topLane.lane.setNest(topNest);
+//		
+//		
+//		feeder.topLane.picState = PictureState.UNSTABLE;
+//		
+//		feeder.msgBadNest(0);
+//		
+//		assertTrue(feeder.topLane.state != MyLaneState.BAD_NEST);
+//		
+//	}
+	
 	
 	/* SCENARIO #1: The very first part fed into the Feeder.
 	 * The Feeder is empty.

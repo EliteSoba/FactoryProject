@@ -287,29 +287,21 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  the Feeder that it had a bad nest. 
 	 * */
 	public void msgBadNest(int nestNumber) {
-		
-		
+
+
 		if (nestNumber == 0) // top nest 
 		{
 			debug("received msgBadNest(topNest)");
-			if (topLane.picState != PictureState.UNSTABLE) // otherwise, just wait for the nest to become stable
-			{
-				topLane.state = MyLaneState.BAD_NEST;
-				debug("top lane is a bad nest.");
-			}
+			topLane.state = MyLaneState.BAD_NEST;
 		}
 		else if (nestNumber == 1) // bottom nest
 		{
 			debug("received msgBadNest(bottomNest)");
-			if (bottomLane.picState != PictureState.UNSTABLE) // otherwise, just wait for the nest to become stable
-			{
-				bottomLane.state = MyLaneState.BAD_NEST;
-				debug("bottom lane is a bad nest.");
-			}
+			bottomLane.state = MyLaneState.BAD_NEST;
 		}
-		
-		
-		
+
+
+
 		stateChanged();
 	}
 
@@ -565,17 +557,15 @@ public class FeederAgent extends Agent implements Feeder {
 
 		debug("Action: dump the "+ laneStr + "'s nest.");
 
-		DoStopFeeding(); // stop feeding the parts into the lane
+		//DoStopFeeding(); // stop feeding the parts into the lane, NOT SURE IF THIS IS NEEDED HERE...
 		
 		if (la == topLane)
 		{
-			DoPurgeTopLane(); // purge the appropriate lane
-			topLane.state = MyLaneState.EMPTY; // the lane has been purged
+			DoDumpTopNest(); 
 		}
 		else if (la == bottomLane)
 		{
-			DoPurgeBottomLane(); // purge the appropriate lane
-			bottomLane.state = MyLaneState.EMPTY; // the lane has been purged
+			DoDumpBottomNest(); 
 		}
 		
 		
@@ -1107,6 +1097,34 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			debug("switching lane");
 			server.command("fa lm cmd switchlane " + feederNumber);
+			try {
+				animation.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void DoDumpTopNest()
+	{
+		if (debugMode == false)
+		{
+			debug("dumping top nest");
+			server.command("fa lm cmd dumptopnest " + feederNumber);
+			try {
+				animation.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void DoDumpBottomNest()
+	{
+		if (debugMode == false)
+		{
+			debug("dumping top nest");
+			server.command("fa lm cmd dumpbottomnest " + feederNumber);
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
