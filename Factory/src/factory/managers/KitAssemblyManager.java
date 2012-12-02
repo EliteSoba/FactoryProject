@@ -32,7 +32,7 @@ public class KitAssemblyManager extends Client {
 	public Boolean kitsProduced = false;
 
 	public KitAssemblyManager() {
-		super(Client.Type.kam, null, null);
+		super(Client.Type.kam);
 
 		UI = new KitAssManPanel(this);
 		graphics = new KitAssemblyPanel(this);
@@ -55,6 +55,7 @@ public class KitAssemblyManager extends Client {
 		add(graphics, BorderLayout.CENTER);
 		add(UI, BorderLayout.LINE_END); 
 		pack();
+		this.setTitle("Kit Assembly Manager");
 
 		setVisible(true);
 

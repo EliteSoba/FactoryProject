@@ -25,7 +25,6 @@ public class MockVision extends MockAgent implements Vision {
 
 	}
 	public void msgVisionClearForPictureInNests(Nest nest1, Nest nest2) {
-		this.log.add(new LoggedEvent("msgVisionClearForPictureInNests("+nest1.getNestName()+","+nest2.getNestName()+") received from the PartsRobot")); 
 
 	}
 
@@ -40,6 +39,12 @@ public class MockVision extends MockAgent implements Vision {
 	public void msgNewNestConfig(ArrayList<Nest> nests) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public void msgDoneIncreasingLaneAmplitude(Feeder feeder, int nestNum0or1) {
+		this.log.add(new LoggedEvent("msgDoneIncreasingLaneAmplitude()")); 
 	}
 
 }

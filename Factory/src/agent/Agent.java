@@ -10,6 +10,7 @@ import factory.masterControl.MasterControl;
 public abstract class Agent {
 	Semaphore stateChange = new Semaphore(1,true);//binary semaphore, fair
 	private AgentThread agentThread;
+	private int requiredConfirmations;
 	
 	public MasterControl server;
 	public Semaphore animation = new Semaphore(0,true); // semaphore for animation interaction with server
@@ -49,7 +50,7 @@ public abstract class Agent {
 	}
 
 	protected void debug(String msg) {
-		if(true) {
+		if(false) {
 			print(msg, null);
 		}
 	}
@@ -87,12 +88,18 @@ public abstract class Agent {
 		}
 	}
 	
+	/** From the server. Sets the appropriate number of required confirmations. **/
+	public void setRequiredConfirmations(int num)
+	{
+		this.requiredConfirmations = num;
+	}
+	
 	/** MESSAGE from the animation, notifying the agent that the animation is done. **/
 	public void msgAnimationDone() {
-		if(animation.availablePermits() == 0){
+		this.requiredConfirmations--;
+		if(this.requiredConfirmations <= 0){
 			debug("msgAnimationDone() received by Agent");
 			animation.release();
-			
 		}
 	}
 

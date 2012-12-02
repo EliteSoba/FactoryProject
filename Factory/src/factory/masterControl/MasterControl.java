@@ -70,8 +70,10 @@ public class MasterControl {
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
             "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection",
-            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported", "ruininspectionkit","badparts","lanejam","slowdiverter",
-            "jamtoplane","jambottomlane","unjamtoplane","unjambottomlane"
+            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported",
+            "ruininspectionkit","badparts","lanejam","slowdiverter","jamtoplane","jambottomlane","unjamtoplane",
+            "unjambottomlane", "lanespeed", "laneamplitude", "lanepower", "feederpower", "dumptopnest", "dumpbottomnest",
+            "missingparts", "newpartputinlane", "partremovedfromlane", "partremovedfromnest"
 
     );
 
@@ -330,7 +332,7 @@ public class MasterControl {
 	// parseDst is called by Clients and Agents and determines whether to
 	// call methods locally to Agents, or to send them through to a Client
 
-	public boolean command(String cmd){
+	public boolean command(Agent a, String cmd){
 		// Split into array
 		// Figure out destination
 		// Call either agentCmd() or clientCmd()
@@ -341,12 +343,7 @@ public class MasterControl {
 
 
 		if(clients.contains(parsedCommand.get(1))){
-            if(parsedCommand.get(1).equals("multi")){
-                return clientCmd(parsedCommand);
-            } else {
-                return clientCmd(parsedCommand);
-            }
-
+            return clientCmd(a, parsedCommand);
 		} else if(agents.contains(parsedCommand.get(1))) {
 			return agentCmd(parsedCommand);
 		} else if(parsedCommand.get(1).equals("mcs")) {
@@ -378,6 +375,8 @@ public class MasterControl {
 
 	}
 
+
+
 	// command sent to agent or agents
 	// agentCmd is the giant parser that figures out
 	// what method to call on what agent.
@@ -400,7 +399,7 @@ public class MasterControl {
 //		}
 //
 //        System.out.println();
-
+        /**TODO: Location of Agent commands*/
 		if(cmd.get(2).equals("cnf")){
 
 			if(agentTreeMap.containsKey(cmd.get(1))){
@@ -549,14 +548,17 @@ public class MasterControl {
 				if (cmd.get(3).equals("kitdropparts")){
 					String failString = cmd.get(4);
 					((StandAgent) destination).msgForceKitInspectionToFail();
-					command("sa kam cmd ruininspectionkit " + failString);
+					command( stand, "sa kam cmd ruininspectionkit " + failString);
 				}
 			}//End StandAgent Commands
 
 			// FeederAgent Commands:
 			else if (cmd.get(1).equals("fa"))
 			{
-
+				destination = feederAgents.get(Integer.parseInt(cmd.get(4)));
+				if (cmd.get(3).equals("slowdiverter")) {
+					((FeederAgent) destination).msgBreakDiverterAlgorithm();
+				}
 			}//End FeederAgent Commands
 
             // NestAgent Commands:
@@ -571,28 +573,52 @@ public class MasterControl {
                 else if(cmd.get(3).equals("nestdestabilized")){
                     ((NestAgent) destination).msgNestHasDestabilized();
                 }
+                else if (cmd.get(3).equals("partremovedfromnest")) {
+                	String nameOfPart = cmd.get(5);
+                	((NestAgent) destination).msgPartRemovedFromNest(nameOfPart);
+                }
             }//End NestAgent Commands
 
-	else if (cmd.get(1).equals("va")) {
+            else if (cmd.get(1).equals("va")) {
             	destination = agentTreeMap.get(cmd.get(1));
-	            if(cmd.get(3).equals("badparts")){
-	            	int nestnum = Integer.parseInt(cmd.get(4));
-			((VisionAgent) destination).msgNoGoodPartsFound(nestnum);
-	            }
-		    else if (cmd.get(3).equals("lanejam")) {
-	            	int lanenum = Integer.parseInt(cmd.get(4));
-	            	 ((VisionAgent) destination).msgLaneJammed(lanenum);
-	            }
-	            else if (cmd.get(3).equals("slowdiverter")) {
-	            	int feedernum = Integer.parseInt(cmd.get(4));
-	            	 ((VisionAgent) destination).msgSlowDiverter(feedernum);
-	            }
+            	/*if(cmd.get(3).equals("badparts")){
+            		int nestnum = Integer.parseInt(cmd.get(4));
+            		((VisionAgent) destination).msgNoGoodPartsFound(nestnum);
+            	}
+            	else if (cmd.get(3).equals("lanejam")) {
+            		int lanenum = Integer.parseInt(cmd.get(4));
+            		((VisionAgent) destination).msgLaneJammed(lanenum);
+            	}
+            	else if (cmd.get(3).equals("slowdiverter")) {
+            		int feedernum = Integer.parseInt(cmd.get(4));
+            		// ((VisionAgent) destination).msgSlowDiverter(feedernum);
+            	}*/
+            	if (cmd.get(3).equals("missingparts")) {
+            		int feederNum = Integer.parseInt(cmd.get(4));
+            		int nestNum = Integer.parseInt(cmd.get(5));
+            		//((VisionAgent) destination).msgNoGoodPartsFound(feederNum, nestNum);
+            	}
             } // End VisionAgent Commands
-
-
-
-
-
+			
+			//LaneAgent Commands:
+            else if (cmd.get(1).equals("la")) {
+            	int lanenum = Integer.valueOf(cmd.get(4));
+            	destination = laneAgentTreeMap.get("l"+lanenum/2+(lanenum%2==0?"t":"b"));
+            	
+            	if (cmd.get(3).equals("newpartputinlane")) {
+            		int laneNum = Integer.valueOf(cmd.get(4));
+            		String partName = cmd.get(5);
+            		int condition = Integer.valueOf(cmd.get(6)); //1 = good, 0 = bad
+            		Part part = new Part(partName,999,"desc","imgpath",3);
+            		part.isGoodPart = (condition == 1);
+            		((LaneAgent) destination).msgPartAddedToLane(part); // Note: we are not really using any of these fields except part name.  stabilization time is handlded elsewhere
+            	}
+            	else if (cmd.get(3).equals("partremovedfromlane")) {
+            		int laneNum = Integer.valueOf(cmd.get(4));
+            		((LaneAgent) destination).msgPartRemovedFromLane();
+            	}
+            }
+			
 		}
 
 
@@ -606,7 +632,7 @@ public class MasterControl {
 	// and then sends it.
 
 
-	public boolean clientCmd(ArrayList<String> cmd){	
+	public boolean clientCmd(Agent srcAgent, ArrayList<String> cmd){
 		String s = checkClientCmd(cmd);
 		System.out.println(s);
 		String a = cmd.get(0); // Source
@@ -625,9 +651,12 @@ public class MasterControl {
 		for(int i = 3; i < cmd.size(); i++){  // Command ... put command into string form
 			d+= cmd.get(i)+" ";
 		}
+
+        int reqConfirmations = 0;
         PartHandler fpmPH = null;
         if(partHandlers.containsKey("fpm")){
             fpmPH = determinePH("fpm");
+            reqConfirmations++;
         }
 
 		String fullCmd = envelopeCmd(c, d);
@@ -640,6 +669,7 @@ public class MasterControl {
 			if(destinations == null){
 				return false;
 			} else {
+                reqConfirmations += destinations.size();
 				for(PartHandler x : destinations){
                     if(partHandlerList.contains(x)){
                         if(!sendCmd(x, fullCmd)){
@@ -652,12 +682,22 @@ public class MasterControl {
                         return false;
                     }
                 }
-				return true;
+                //Set number of confirmations
+                if(srcAgent != null){
+                	srcAgent.setRequiredConfirmations(reqConfirmations);
+                }
+
+                return true;
 			}
         } else if(b.equals("fpm")){
             if(fpmPH != null){
                 return sendCmd(fpmPH, fullCmd);
             }
+            //Set number of confirmations
+            if(srcAgent != null){
+            	srcAgent.setRequiredConfirmations(reqConfirmations);
+            }
+
             return false;
         } else {
             if(fpmPH != null){
@@ -666,8 +706,14 @@ public class MasterControl {
                 }
             }
             PartHandler destinationPH = determinePH(b);
+            reqConfirmations++;
             if(partHandlerList.contains(destinationPH)){
-                return sendCmd(destinationPH, fullCmd);
+                boolean returnval = sendCmd(destinationPH, fullCmd);
+                //Set number of confirmations
+                if(srcAgent != null){
+                	srcAgent.setRequiredConfirmations(reqConfirmations);
+                }
+                return returnval;
             } else {
                 return false;
             }

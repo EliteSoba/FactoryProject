@@ -8,6 +8,8 @@ package factory.swing;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Hashtable;
+
 import factory.managers.*;
 
 import javax.swing.*;
@@ -211,9 +213,9 @@ public class LaneManPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			// TODO Auto-generated method stub
-			/*if(ae.getSource() == laneOn){
+			if(ae.getSource() == laneOn){
 				int lanenum = (Integer)laneSelect.getSelectedItem();
-				String set = "lm fcsa set lanepower " + lanenum;
+				String set = "lm lm set lanepower on " + (lanenum-1);
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -221,7 +223,7 @@ public class LaneManPanel extends JPanel{
 				} 
 			}else if (ae.getSource() == laneOff){
 				int lanenum = (Integer)laneSelect.getSelectedItem();
-				String set = "lm fcsa set lanepower " + lanenum;
+				String set = "lm lm set lanepower off " + (lanenum-1);
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -229,7 +231,7 @@ public class LaneManPanel extends JPanel{
 				} 
 			}else if (ae.getSource() == feederOn){
 				int feedernum = (Integer)feederSelect.getSelectedItem();
-				String set = "lm fcsa set feederpower " + feedernum;
+				String set = "lm lm set feederpower on " + feedernum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -237,13 +239,13 @@ public class LaneManPanel extends JPanel{
 				} 
 			}else if (ae.getSource() == feederOff){
 				int feedernum = (Integer)feederSelect.getSelectedItem();
-				String set = "lm fcsa set feederpower " + feedernum;
+				String set = "lm lm set feederpower off " + feedernum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
 					System.out.println("An error occurred trying to send message to power off feeder " + feedernum + ".");
 				} 
-			}else{*/  // updates speed and amplitude when JComboBox changes
+			}else{  // updates speed and amplitude when JComboBox changes
 				JComboBox cb = (JComboBox)ae.getSource();
 				System.out.println("Get");
 				if(cb == laneSelect){
@@ -251,7 +253,7 @@ public class LaneManPanel extends JPanel{
 					laneSpeed.setValue(laneManager.getLaneSpeed((Integer)cb.getSelectedItem()));
 					laneAmplitude.setValue(laneManager.getLaneAmplitude((Integer)cb.getSelectedItem()));
 				}
-			//}
+			}
 
 		}
 
@@ -295,6 +297,8 @@ public class LaneManPanel extends JPanel{
 	}
 
 	public class LaneNonNormPanel extends JPanel implements ActionListener {
+		
+		JLabel badPartsLabel;
 		JComboBox laneBoxList;
 		JComboBox feederBoxList;
 		JPanel partsMissingContainer;
@@ -304,16 +308,33 @@ public class LaneManPanel extends JPanel{
 		JButton badPartsButton;
 		JButton blockingRobotButton;
 		JTextArea messageBox;
+		JSlider badPartsPercentage;
+		int badPartsPercentageMin;
+		int badPartsPercentageMax;
 
 		public LaneNonNormPanel() {
-
+			
+			badPartsLabel = new JLabel("% Bad Parts");
 			laneJamButton = new JButton("Lane Jam");
 			diverterButton = new JButton("Diverter Too Slow");
 			badPartsButton = new JButton("Bad Parts in Nest");
 			blockingRobotButton = new JButton("Robot Blocking Camera");
 			messageBox = new JTextArea("Actions...\n");
 			messageBox.setLineWrap(true);
-
+			badPartsPercentageMin = 0;
+			badPartsPercentageMax = 100;
+			badPartsPercentage = new JSlider(badPartsPercentageMin, badPartsPercentageMax);
+			Hashtable labelTable = new Hashtable();
+			for(int i = 0; i <=100; i+=25){
+				labelTable.put( new Integer( i ), new JLabel(i + "%") );
+			}
+			badPartsPercentage.setLabelTable( labelTable );
+			badPartsPercentage.setMinorTickSpacing(5);
+			badPartsPercentage.setMajorTickSpacing(25);
+			badPartsPercentage.setPaintTicks(true);
+			badPartsPercentage.setSnapToTicks(true);
+			badPartsPercentage.setPaintLabels(true);
+			badPartsPercentage.setValue(0);
 			laneJamButton.addActionListener(this);
 			diverterButton.addActionListener(this);
 			badPartsButton.addActionListener(this);
@@ -350,7 +371,9 @@ public class LaneManPanel extends JPanel{
 
 			partsMissingContainer.add(laneJamButton);
 			partsMissingContainer.add(diverterButton);
-
+			
+			partsBadContainer.add(badPartsLabel);
+			partsBadContainer.add(badPartsPercentage);
 			partsBadContainer.add(badPartsButton);
 			partsBadContainer.add(blockingRobotButton);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
@@ -379,7 +402,7 @@ public class LaneManPanel extends JPanel{
 				messageBox.append("Lane jam initated in " + laneBoxList.getSelectedItem() + ".\n");
 				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 				int lanenum = laneBoxList.getSelectedIndex();
-				String set = "lm va cmd lanejam " + lanenum;
+				String set = "lm va cmd missingparts " + lanenum/2 + " " + lanenum%2;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -389,17 +412,20 @@ public class LaneManPanel extends JPanel{
 				messageBox.append("Diverter was too slow switching to " + laneBoxList.getSelectedItem() + ".\n");
 				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 				int feedernum = feederBoxList.getSelectedIndex();
-				String set = "lm va cmd slowdiverter " + feedernum;
+				String set = "lm va cmd missingparts " + feedernum + " -1";
 				try {
 					laneManager.sendCommand(set);
+					//TODO: missingparts command appends a nest # (0-7), but slowdiverter is feeder-based (0-3).
+					//Figure out a way to determine how to do this.
+					laneManager.sendCommand("lm fa cmd slowdiverter " + feedernum);
 				} catch (Exception e) {
 					System.out.println("An error occurred trying initiate non-normative case: slow diverter change.");
 				} 
 			} else if (ae.getSource() == badPartsButton) {
 				messageBox.append("Bad parts found in " + laneBoxList.getSelectedItem() + "'s nest.\n");
 				messageBox.setCaretPosition(messageBox.getDocument().getLength());
-				int lanenum = laneBoxList.getSelectedIndex();
-				String set = "lm va cmd badparts " + lanenum;
+				int feedernum = feederBoxList.getSelectedIndex();
+				String set = "lm lm cmd badparts " + feedernum + " "+ badPartsPercentage.getValue();
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -418,7 +444,7 @@ public class LaneManPanel extends JPanel{
 			}
 
 		}
-
+		
 
 	}	
 }

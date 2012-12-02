@@ -19,7 +19,7 @@ public class GantryManager extends Client {
 	GantryRobotPanel animation;
 	
 	public GantryManager() {
-		super(Client.Type.gm, null, null);
+		super(Client.Type.gm);
 		
 		buttons = new GantryManPanel();
 		buttons.setManager(this);
@@ -40,6 +40,7 @@ public class GantryManager extends Client {
 		
 		//add(UI, BorderLayout.LINE_END);
 		pack();
+		this.setTitle("Gantry Manager");
 		setVisible(true);
 	}
 

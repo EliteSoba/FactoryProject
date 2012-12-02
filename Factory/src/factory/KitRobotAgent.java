@@ -440,31 +440,31 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	
 	private void DoMoveInspectedKitToConveyor() {
 		debug("doing moveInspectedKitToConveyor");
-		server.command("kra kam cmd putinspectionkitonconveyor");
+		server.command(this,"kra kam cmd putinspectionkitonconveyor");
 		waitForAnimation();
 	}
 	
 	private void DoPutEmptyKitAt(String pos) {
 		debug("doing PutEmptyKitAt Animation for the "+ pos);
-		server.command("kra kam cmd putemptykitatslot "+pos);
+		server.command(this,"kra kam cmd putemptykitatslot "+pos);
 		waitForAnimation();
 	}
 	
 	private void DoMoveKitToInspection(String pos) {
 		debug("doing MoveKitToInspection Animation.  moving the kit at the "+pos+" to the inspectionSlot");
-		server.command("kra kam cmd movekittoinspectionslot " + pos);
+		server.command(this,"kra kam cmd movekittoinspectionslot " + pos);
 		waitForAnimation();
 	}
 	
 	private void DoDumpKitAtSlot(String pos) {
 		debug("doing DoDumpKitAtSlot Animation.  dumping the kit at "+pos);
-		server.command("kra kam cmd dumpkitatslot "+pos);
+		server.command(this,"kra kam cmd dumpkitatslot "+pos);
 		waitForAnimation();
 	}
 	
 	private void DoPutKitBack(String pos) {
 		debug("doing DoPutKitBack Animation. putting the kit back at "+pos);
-		server.command("kra kam cmd movekitback "+pos);
+		server.command(this,"kra kam cmd movekitback "+pos);
 		waitForAnimation();
 		
 	}

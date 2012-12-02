@@ -1,5 +1,7 @@
 package factory.interfaces;
 
+import java.util.List;
+
 import factory.Part;
 
 public interface Nest {
@@ -10,8 +12,14 @@ public interface Nest {
 	String getNestName();
 	Part getPart();
 
+	boolean isBeingUsed();
+	List<Part> getParts();
+	
 	int getPosition();
 	void msgYouNeedPart(Part part);
+	
+	void msgPartRemovedFromNest(String partName);
+	
 	
 //	void msgPartsRobotGrabbingPartFromNest(int coordinate);
 //	void msgFeedingParts(int numParts);

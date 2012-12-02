@@ -79,7 +79,7 @@ class GraphicNest extends GraphicAnimatedObject
 	 *returns if the nest has items or not. 
 	 *True - has items
 	 *False - empty 
-	 * @return
+	 * @return {@code true} if the Nest has Items; {@code false} otherwise
 	 */
 	public boolean hasItem()
 	{

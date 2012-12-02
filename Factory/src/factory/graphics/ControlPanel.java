@@ -35,10 +35,13 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JButton gantryRobotFeeder1Dropoff, gantryRobotFeeder1Pickup;
 	JButton cameraFlash;
 	JButton feedLane1, feedLane2, purgeLane1, purgeLane2, purgeFeeder;
-	JButton jamLane, unjamLane;
+	JButton jamLane1, unjamLane1,jamLane2, unjamLane2;
+	JButton stopLane1, stopLane2, startLane1, startLane2;
+	JButton changeAmplitude1, changeSpeed1;
 	JTextField partName;
 	JTextField itemIndex;
 	JButton popItemToKit;
+	JButton drawString;
 	
 	public ControlPanel(GraphicFactoryProductionManager fpm) {
 		//Constructor
@@ -64,11 +67,20 @@ public class ControlPanel extends JPanel implements ActionListener{
 		purgeLane1 = new JButton("purge Lane 1");
 		purgeLane2 = new JButton("Purge Lane 2");
 		purgeFeeder = new JButton("purge Feeder");
-		jamLane = new JButton("Jam lane 1");
-		unjamLane = new JButton("Unjam lane 1");
+		jamLane1 = new JButton("Jam lane 1");
+		unjamLane1 = new JButton("Unjam lane 1");
+		jamLane2 = new JButton("Jam lane 2");
+		unjamLane2 = new JButton("Unjam lane 2");
+		stopLane1 = new JButton("stop lane 1");
+		stopLane2 = new JButton("stop lane 2");
+		startLane1 = new JButton("start lane 1");
+		startLane2 = new JButton("start lane 2");
+		changeAmplitude1 = new JButton("Lane 1 Amp + 1");
+		changeSpeed1 = new JButton("Lane 1 speed + 1");
 		cameraFlash = new JButton("Camera Flash Nest 1");
 		partName = new JTextField(10);
 		itemIndex = new JTextField(10);
+		drawString = new JButton("Draw String");
 		for (int i = 0; i < 20; i++) {
 			blank[i] = new JLabel("   ");
 			blank[i].setPreferredSize(new Dimension(150, 10));
@@ -91,14 +103,23 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.addButton(purgeLane1);
 		this.addButton(purgeLane2);
 		this.addButton(purgeFeeder);
-		this.addButton(jamLane);
-		this.addButton(unjamLane);
+		this.addButton(jamLane1);
+		this.addButton(unjamLane1);
+		this.addButton(jamLane2);
+		this.addButton(unjamLane2);
+		this.addButton(stopLane1);
+		this.addButton(startLane1);
+		this.addButton(stopLane2);
+		this.addButton(startLane2);
+		this.addButton(changeAmplitude1);
+		this.addButton(changeSpeed1);
 		this.addButton(gantryRobotGoToStart);
 		this.add(partName);
 		this.addButton(gantryRobotGetBin);
 		this.addButton(gantryRobotFeeder1Dropoff);
 		this.addButton(gantryRobotFeeder1Pickup);
 		this.addButton(cameraFlash);
+		this.addButton(drawString);
 		this.setPreferredSize(new Dimension(200, 720));
 	}
 	
@@ -106,7 +127,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.add(button);
 		//this.add(blank[blanki++]);
 		button.addActionListener(this);
-		button.setPreferredSize(new Dimension(170, 20));
+		button.setPreferredSize(new Dimension(170, 15));
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -152,10 +173,28 @@ public class ControlPanel extends JPanel implements ActionListener{
 			am.moveGantryToFeeder1Pickup();
 		else if(source == cameraFlash)
 			am.takePictureFeeder1();
-		else if(source == jamLane)
+		else if(source == jamLane1)
 			am.jamTopLane(0); 
-		else if(source == unjamLane)
+		else if(source == unjamLane1)
 			am.unjamTopLane(0); 
+		else if(source == jamLane2)
+			am.jamBottomLane(0); 
+		else if(source == unjamLane2)
+			am.unjamBottomLane(0); 
+		else if(source == stopLane1)
+			am.stopTopLane(0); 
+		else if(source == startLane1)
+			am.startTopLane(0); 
+		else if(source == stopLane2)
+			am.stopBottomLane(0); 
+		else if(source == startLane2)
+			am.startBottomLane(0); 
+		else if(source == changeAmplitude1)
+			am.setLaneAmplitudeTop(0);
+		else if(source == changeSpeed1)
+			am.setLaneSpeedTop(0);
+		else if(source == drawString)
+			am.drawString(itemIndex.getText());
 	}
 
 }

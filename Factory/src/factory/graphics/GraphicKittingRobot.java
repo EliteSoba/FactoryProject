@@ -305,8 +305,11 @@ public class GraphicKittingRobot {
 				toCheck = false;
 				if (KITISBROKED_8C != null) {
 					for (int i = 0; i < KITISBROKED_8C.length(); i++) {
-						if (KITISBROKED_8C.charAt(i) == '1')
+						if (KITISBROKED_8C.charAt(i) == '1') {
+							//TODO: Send message to someone with name of each lost item
+							//GP.sendMessage("kra partlost " + kit.getItem(i).getName());
 							kit.setItem(i, null);
+						}
 					}
 					KITISBROKED_8C = null;
 				}
@@ -540,7 +543,7 @@ public class GraphicKittingRobot {
 	}
 	/**
 	 * Sets if the Kit Robot is going to the Inspection Station
-	 * @param fromBelt If the Kit Robot is going to the Inspection Station
+	 * @param fromCheck If the Kit Robot is going to the Inspection Station
 	 */
 	public void setFromCheck(boolean fromCheck) {
 		this.fromCheck = fromCheck;
@@ -554,7 +557,7 @@ public class GraphicKittingRobot {
 	}
 	/**
 	 * Sets if the Kit Robot is going to the Inspection Station
-	 * @param fromBelt If the Kit Robot is going to the Inspection Station
+	 * @param checkKit If the Kit Robot is going to the Inspection Station
 	 */
 	public void setCheckKit(boolean checkKit) {
 		this.checkKit = checkKit;
@@ -582,7 +585,7 @@ public class GraphicKittingRobot {
 	}
 	/**
 	 * Sets if the Kit Robot is going to the Dump Station
-	 * @param fromBelt If the Kit Robot is going to the Dump Station
+	 * @param purgeInspectionKit If the Kit Robot is going to the Dump Station
 	 */
 	public void setPurgeInspectionKit(boolean purgeInspectionKit) {
 		this.purgeInspectionKit = purgeInspectionKit;

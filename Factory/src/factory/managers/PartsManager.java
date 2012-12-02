@@ -19,7 +19,7 @@ public class PartsManager extends Client implements WindowListener{
 	public HashMap<String, Part> parts;  // parts list
 
 	public PartsManager() {
-		super(Client.Type.pm, null, null);
+		super(Client.Type.pm);
 		
 		parts = new HashMap<String, Part>();
 		loadData();
@@ -41,6 +41,7 @@ public class PartsManager extends Client implements WindowListener{
 		pack();
 		this.setSize(460,600);
 		this.setResizable(false);
+		this.setTitle("Parts Manager");
 		setVisible(true);
 	}
 	

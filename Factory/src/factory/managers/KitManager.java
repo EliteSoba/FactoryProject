@@ -26,7 +26,7 @@ public class KitManager extends Client implements WindowListener{
 	private HashMap<String,Part> partsList;
 
 	public KitManager() {
-		super(Client.Type.km, null, null);
+		super(Client.Type.km);
 		loadData();
 		UI = new KitManPanel(this);
 
@@ -41,6 +41,7 @@ public class KitManager extends Client implements WindowListener{
 
 		add(UI, BorderLayout.LINE_END);
 		pack();
+		this.setTitle("Kit Manager");
 		setVisible(true);
 	}
 

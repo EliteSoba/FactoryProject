@@ -6,7 +6,7 @@ public interface Feeder {
 
 	public void msgHereAreParts(Part pt);
 
-	public void msgEmptyNest(int nestNumber);
+	public void msgLaneMightBeJammed(int nestNumber0or1);
 
 	public void msgNestWasDumped(Lane la);
 

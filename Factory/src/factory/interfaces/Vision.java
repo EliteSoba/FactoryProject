@@ -13,7 +13,11 @@ public interface Vision {
 	
 	 //Alfonso, which of these should we use?
 	public void msgVisionClearForPictureInNests(Nest nest, Nest nest2);
-	public void msgMyNestsReadyForPicture(Nest nestOne, Part nestOnePart, Nest nestTwo, Part nestTwoPart, Feeder feeder);
+	
+
+	public void msgMyNestsReadyForPicture(Nest nestOne, Nest nestTwo, Feeder feeder);
 	public void msgNewNestConfig( ArrayList<Nest> nests);
+
+	
 	
 }
