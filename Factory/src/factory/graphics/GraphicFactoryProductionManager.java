@@ -6,6 +6,11 @@ import javax.swing.*;
 
 import factory.Kit.KitState;
 
+/**
+ * @author Minh La, Tobias Lee, George Li
+ * @deprecated Only use for testing Graphics Methods.
+ */
+
 public class GraphicFactoryProductionManager extends JFrame {
 	
 	FactoryProductionPanel panel;
