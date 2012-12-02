@@ -1,6 +1,8 @@
 package factory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,7 +20,10 @@ public class LaneAgent extends Agent implements Lane {
 	}
 
 	/** DATA **/
-	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
+	public ArrayList<MyPart> myPartRequests = new ArrayList<MyPart>();
+	public List<Part> laneParts = Collections.synchronizedList(new ArrayList<Part>());
+	public int numberOfPartsInLane = 0;
+	
 	public Feeder myFeeder;
 	//	public enum LaneState { NORMAL, NEEDS_TO_PURGE, PURGING };  // not sure about this, need to update wiki still
 	//	public LaneState state = LaneState.NORMAL; 
@@ -45,7 +50,23 @@ public class LaneAgent extends Agent implements Lane {
 	}
 
 
-	/** MESSAGES **/	
+	/** MESSAGES **/
+	public void msgPartAddedToNest(Part part) {
+		laneParts.add(numberOfPartsInLane, part); // adds part to the index = numberOfPartsInNest
+		numberOfPartsInLane++;
+		stateChanged();
+	}
+	
+	public void msgPartRemovedFromLane() {
+		synchronized(laneParts)
+		{
+			laneParts.remove(0); // remove the first part in the list aka the one closest to the nest
+		}
+		
+		numberOfPartsInLane--;
+		stateChanged();
+	}
+	
 	public void msgIncreaseAmplitude() {
 		nestState = NestState.NEEDS_TO_INCREASE_AMPLITUDE;
 		stateChanged();
@@ -53,7 +74,7 @@ public class LaneAgent extends Agent implements Lane {
 
 	public void msgNestNeedsPart(Part part) {
 		debug("received msgNestNeedsPart("+part.name+").");
-		myParts.add(new MyPart(part));
+		myPartRequests.add(new MyPart(part));
 		stateChanged();
 	}
 
@@ -86,7 +107,7 @@ public class LaneAgent extends Agent implements Lane {
 	public boolean pickAndExecuteAnAction() {
 		
 
-		for(MyPart p : myParts)
+		for(MyPart p : myPartRequests)
 		{
 			if (p.state == MyPartState.NEEDED) 
 			{
@@ -214,9 +235,24 @@ public class LaneAgent extends Agent implements Lane {
 
 	@Override
 	public boolean hasMixedParts() {
-		// RETURN TRUE IF THIS LANE HAS MIXED PARTS
-		// TODO Auto-generated method stub
-		return false;
+
+		if (laneParts.size() > 1)
+		{
+			String nameOfAPart = laneParts.get(0).name;
+
+			synchronized(laneParts)
+			{
+				for (Part p : laneParts)
+				{
+					if (p.name.equals(nameOfAPart) == false)
+					{
+						return true; // there is more than one type of part in the nest!
+					}
+				}
+			}
+		}
+
+		return false; // there is only ONE type of part in the nest
 	}
 
 //	@Override

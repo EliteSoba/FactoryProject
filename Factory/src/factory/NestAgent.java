@@ -1,6 +1,7 @@
 package factory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import agent.Agent;
@@ -19,8 +20,10 @@ public class NestAgent extends Agent implements Nest {
 
 	/** DATA **/
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
+	public List<Part> nestParts = Collections.synchronizedList(new ArrayList<Part>());
+	public int numberOfPartsInNest = 0;
+
 	public Lane myLane;
-	public int numberOfParts = 0;
 	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED, PART_REMOVED, OUT_OF_PARTS}
 	public NestState nestState = NestState.NORMAL;
 	public Part currentPart;
@@ -49,6 +52,28 @@ public class NestAgent extends Agent implements Nest {
 		debug("received msgYouNeedPart("+part.name+").");
 		this.currentPart = part;
 		myParts.add(new MyPart(part));
+		stateChanged();
+	}
+	
+	public void msgPartAddedToNest(Part part) {
+		nestParts.add(numberOfPartsInNest, part); // adds part to the index = numberOfPartsInNest
+		numberOfPartsInNest++;
+		stateChanged();
+	}
+	
+	public void msgPartRemovedFromNest(String partName) {
+		synchronized(nestParts)
+		{
+			for (Part p : nestParts)
+			{
+				if (p.name.equals(partName))
+				{
+					nestParts.remove(p);
+				}
+			}
+		}
+		
+		numberOfPartsInNest--;
 		stateChanged();
 	}
 	
