@@ -1,10 +1,15 @@
 package factory;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
 import agent.Agent;
 import factory.Kit;
 import factory.Kit.KitState;
+import factory.KitRobotAgent.StandInfo;
 
 public class StandAgent extends Agent implements Stand {
 	
@@ -13,8 +18,11 @@ public class StandAgent extends Agent implements Stand {
 	public enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
 	public enum MySlotState { EMPTY, EMPTY_KIT_REQUESTED, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION, KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT, NEEDS_FIXING };
 	
-	//added this to force failure inspection
+	//TODO added this to force failure inspection
 	public boolean forceFail = false;
+	
+	//TODO added list of parts needed for repair
+	public List<String> brokenPartsList = Collections.synchronizedList(new ArrayList<String>());
 	
 	public enum KitRobotState { WANTS_ACCESS, NO_ACCESS };
 
@@ -99,8 +107,10 @@ public class StandAgent extends Agent implements Stand {
 	
 	/** MESSAGES **/
 	
-	public void msgForceKitInspectionToFail(){
+	//TODO added this to force kit inspection to fail.  This will be called each time a part is dropped
+	public void msgForceKitInspectionToFail(String brokenPart){
 		forceFail = true;
+		brokenPartsList.add(brokenPart);
 	}
 	
 	/**
@@ -217,6 +227,17 @@ public class StandAgent extends Agent implements Stand {
 				DoProcessEmptyBinFromConveyor();
 				return true;
 			}
+			
+			//TODO in scheduler, check top and bottom slot for NEEDS_FIXING in order to figure out 
+			//which parts need to be fixed
+			/**
+			 * If there is a kit that needs fixing, then fix it.
+			 */
+			if(topSlot.state  == MySlotState.NEEDS_FIXING || bottomSlot.state  == MySlotState.NEEDS_FIXING) {
+				DoProcessEmptyBinFromConveyor();
+				return true;
+			}
+			
 			/**
 			 * If there is a completed kit and the stand is not being used
 			 */
@@ -319,7 +340,6 @@ public class StandAgent extends Agent implements Stand {
 		else {
 			// Throw Exception
 		}
-	   
 	}
 	
 	/**

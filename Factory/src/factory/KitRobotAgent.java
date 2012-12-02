@@ -194,7 +194,9 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				actions.remove(StandInfo.INSPECTION_SLOT_DONE);
 				stand.msgKitRobotNoLongerUsingStand();
 			}
-		} else {
+		}
+		//TODO this is where kit inspection fails.  figure out why it removes all parts rather than just bad parts
+		else {
 			//kit failed inspection
 			debug("KitRobot sees that the kit failed inspection");
 			if (!actions.contains(StandInfo.KIT_GOOD) && !actions.contains(StandInfo.KIT_BAD)) {
