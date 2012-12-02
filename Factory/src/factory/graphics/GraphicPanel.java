@@ -217,6 +217,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void dropParts(String dropped) {
 		if (isKitAssemblyManager || isFactoryProductionManager)
 			kitRobot.breakNextKit(dropped);
+		if (isFactoryProductionManager)
+			drawString("Kit Inspection Failure Imminent!");
 	}
 	
 	/**TODO: Gantry Robot methods*/
@@ -570,6 +572,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void jamTopLane(int feederNum){
 		lane[feederNum].lane1Jam = true;
+		drawString("Lane " + (2*feederNum+1) + " is being Jammed!");
 	}
 	
 	/**
@@ -584,6 +587,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if(lane[feederNum].vibrationAmplitudeTop > 8)		//vibration amplitude max is 8
 			lane[feederNum].vibrationAmplitudeTop = 8;
 		lane[feederNum].lane1Jam = false;
+		drawString("Lane " + (2*feederNum+1) + " has been Unjammed!");
 	}
 	
 	/**
@@ -592,6 +596,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void jamBottomLane(int feederNum){
 		lane[feederNum].lane2Jam = true;
+		drawString("Lane " + (2*feederNum+2) + " is being Jammed!");
 	}
 	
 	/**
@@ -606,6 +611,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if(lane[feederNum].vibrationAmplitudeBottom > 8)		//vibration amplitude max is 8
 			lane[feederNum].vibrationAmplitudeBottom = 8;
 		lane[feederNum].lane2Jam = false;
+		drawString("Lane " + (2*feederNum+2) + " has been Unjammed!");
 	}
 	
 	/**
@@ -1082,7 +1088,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 					comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f);
 				gs.setComposite(comp);
 				gs.setFont(messageFont.deriveFont(24.0f));
-				gs.drawString(messageList.get(i),80,i*28+40);
+				gs.drawString(messageList.get(messageList.size()-i-1),80,(MAX_MESSAGES-i-1)*28+40);
 			}
 		}
 		if(messageCounter >= 400)
