@@ -214,6 +214,14 @@ public class GraphicFactoryProductionManager extends JFrame {
 		panel.drawString(s);
 	}
 	
+	public void startFeeder(int feederNum) {
+		panel.turnFeederOn(feederNum);
+	}
+	
+	public void stopFeeder(int feederNum) {
+		panel.turnFeederOff(feederNum);
+	}
+	
 	//Lane Manager Messages
 	public void feedLaneDone(int laneNum) {
 		System.out.println("Lane " + (laneNum + 1) + " has finished feeding.");

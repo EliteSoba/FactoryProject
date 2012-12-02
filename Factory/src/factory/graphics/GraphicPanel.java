@@ -971,13 +971,13 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		sendMessage("fa cnf " + feederNum);
 	}
 	
-	public void startFeederDone(int feederNum) {
+	/*public void startFeederDone(int feederNum) {
 		sendMessage("fa cnf " + feederNum);
 	}
 	
 	public void stopFeederDone(int feederNum) {
 		sendMessage("fa cnf " + feederNum);
-	}
+	}*/
 	
 	public void switchFeederLaneDone(int feederNum) {
 		sendMessage("fa cnf " + feederNum);
