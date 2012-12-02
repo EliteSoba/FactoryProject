@@ -1088,7 +1088,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 					comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f);
 				gs.setComposite(comp);
 				gs.setFont(messageFont.deriveFont(24.0f));
-				gs.drawString(messageList.get(i),80,i*28+40);
+				gs.drawString(messageList.get(messageList.size()-i-1),80,(MAX_MESSAGES-i-1)*28+40);
 			}
 		}
 		if(messageCounter >= 400)
