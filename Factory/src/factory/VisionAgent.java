@@ -144,16 +144,16 @@ public class VisionAgent extends Agent implements Vision {
 	 */
 	public void msgSlowDiverter(int feederNum){
 		if (feederNum == 0){
-			feeder0.msgEmptyNest(feederNum);
+			feeder_zero.msgEmptyNest(feederNum);
 		}
 		if (feederNum == 1){
-			feeder1.msgEmptyNest(feederNum);
+			feeder_one.msgEmptyNest(feederNum);
 		}
 		if (feederNum == 2){
-			feeder2.msgEmptyNest(feederNum);
+			feeder_two.msgEmptyNest(feederNum);
 		}
 		if (feederNum == 3){
-			feeder3.msgEmptyNest(feederNum);
+			feeder_three.msgEmptyNest(feederNum);
 		}
 	}
 

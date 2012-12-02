@@ -3,7 +3,6 @@ package factory;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-import factory.graphics.FrameKitAssemblyManager;
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
 import agent.Agent;

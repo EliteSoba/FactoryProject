@@ -234,7 +234,7 @@ public class StandAgent extends Agent implements Stand {
 			 * If there is a kit that needs fixing, then fix it.
 			 */
 			if(topSlot.state  == MySlotState.NEEDS_FIXING || bottomSlot.state  == MySlotState.NEEDS_FIXING) {
-				DoProcessEmptyBinFromConveyor();
+				DoProcessBadKit();
 				return true;
 			}
 			
@@ -342,6 +342,24 @@ public class StandAgent extends Agent implements Stand {
 		}
 	}
 	
+	//TODO added this
+	/**
+	 * Method that places the bin that needs fixing in the right slot
+	 */
+	private void DoProcessBadKit(){
+		debug("Executing DoProcessBadKit()");
+
+		if(topSlot.state  == MySlotState.NEEDS_FIXING) {
+			DoTellPartsRobotToFixKitAtSlot(topSlot);
+		}
+		else if(bottomSlot.state  == MySlotState.NEEDS_FIXING) {
+			DoTellPartsRobotToFixKitAtSlot(bottomSlot);
+		}
+		else {
+			// Throw Exception
+		}
+	}
+		
 	/**
 	 * Method that tells the PartsRobot to build Kit
 	 */
@@ -349,7 +367,22 @@ public class StandAgent extends Agent implements Stand {
 		debug("Executing DoTellPartsRobotToBuildKitAtSlot("+slot.name+")");
 		partsRobot.msgBuildKitAtSlot(slot.name);
 		slot.state = MySlotState.BUILDING_KIT;
-	} 
+	}
+
+	//TODO Added this
+	/**
+	 * Method that tells the PartsRobot to fix Kit at slot
+	 */
+	private void DoTellPartsRobotToFixKitAtSlot(MySlot slot){
+		debug("Executing DoTellPartsRobotToFixKitAtSlot("+slot.name+")");
+		debug("LIST OF PARTS NEEDED FOR BROKEN KIT:");
+		for (int i=0; i < brokenPartsList.size(); i++){
+			debug("Part " + i + ": " + brokenPartsList.get(i));
+		}
+		partsRobot.msgFixKitAtSlot(slot.name, brokenPartsList);
+		brokenPartsList.clear();
+		slot.state = MySlotState.BUILDING_KIT;
+	}
 	
 	/**
 	 * Method that tells the PartsRobot to deliver parts
