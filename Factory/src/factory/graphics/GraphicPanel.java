@@ -50,6 +50,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected ArrayList<GraphicNest> nests;
 	protected GraphicPartsRobot partsRobot;
 	
+	// FJ
+	
 	// GANTRY
 	protected GraphicGantryRobot gantryRobot;
 	
@@ -328,7 +330,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			partsRobot.setItemIndex(itemIndex);
 			partsRobot.setState(1);
 			partsRobot.adjustShift(5);
-			partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-10,nests.get(nestIndex).getY()-15,0);
+			partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-60,nests.get(nestIndex).getY()-15,0);
 			partsRobot.setDestinationNest(nestIndex);
 		}
 	}
@@ -513,7 +515,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void turnFeederOn(int feederNum){
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].feederOn = true;
-			//startFeederDone(feederNum);
+			startFeederDone(feederNum);
 		}
 	}
 	
@@ -524,7 +526,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void turnFeederOff(int feederNum){
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].feederOn = false;
-			//stopFeederDone(feederNum);
+			stopFeederDone(feederNum);
 		}
 	}
 	
@@ -971,13 +973,13 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		sendMessage("fa cnf " + feederNum);
 	}
 	
-	/*public void startFeederDone(int feederNum) {
+	public void startFeederDone(int feederNum) {
 		sendMessage("fa cnf " + feederNum);
 	}
 	
 	public void stopFeederDone(int feederNum) {
 		sendMessage("fa cnf " + feederNum);
-	}*/
+	}
 	
 	public void switchFeederLaneDone(int feederNum) {
 		sendMessage("fa cnf " + feederNum);

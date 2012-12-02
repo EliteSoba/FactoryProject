@@ -3,6 +3,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * @author George Li<p>
@@ -14,6 +15,10 @@ class GraphicPartsRobot extends GraphicRobot
 {
 	protected ArrayList<GraphicItem> items;			// inventory of items
 	int itemIndex;									// item requested by the back-end
+	ArrayList<Image> lightningAnimation;
+	int lightningAnimationSpeed;
+	int[] lightningAnimationCounters = {0, 0, 0, 0};
+	Random randomIntGenerator;
 	
 	/**
 	 * @deprecated Use GraphicPartsRobot(...) constructor
@@ -57,6 +62,10 @@ class GraphicPartsRobot extends GraphicRobot
 		imageHeight = init_imageHeight;
 		image = Toolkit.getDefaultToolkit().getImage(init_imagePath);
 		itemIndex = 0;
+		lightningAnimation = GraphicAnimation.loadAnimationFromFolder("Images/robotLightning/", 0, ".png");
+		lightningAnimationSpeed = 3;
+		//lightningAnimationCounters = new int[4];
+		randomIntGenerator = new Random();
 		// The parts robot will prioritize: right, up, down, left
 		movementCheckingOrders = new int[4];
 		movementCheckingOrders[0] = 1;
@@ -205,10 +214,21 @@ class GraphicPartsRobot extends GraphicRobot
 	{
 		// Draw the robot
 		super.paint(g);
+		// Draw lightning
+		for(int i = 0; i < 4; i++)
+		{
+			if(items.get(i) != null)
+			{
+				g.drawImage(lightningAnimation.get(lightningAnimationCounters[i]/lightningAnimationSpeed),x-60,y+22+i*13,null);
+				lightningAnimationCounters[i]++;
+				if(lightningAnimationCounters[i]/lightningAnimationSpeed >= lightningAnimation.size())
+					lightningAnimationCounters[i] = 0;
+			}
+		}
 		// Draw the items the robot is carrying
 		for(int i = 0; i < items.size(); i++)
 			if(items.get(i) != null)				// don't try to paint null items
-				items.get(i).paint(g, x+imageWidth-25,y+10+i*20);
+				items.get(i).paint(g, x+imageWidth+15,y+20+i*13);
 	}
 
 }
