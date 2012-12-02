@@ -4,6 +4,8 @@ import java.awt.*;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -51,12 +53,19 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	// GANTRY
 	protected GraphicGantryRobot gantryRobot;
 	
+	// MESSAGES
+	protected ArrayList<String> messageList;
+	protected Font messageFont;
+	protected int messageCounter;
+	private static int MAX_MESSAGES = 5;
+	
 	protected GraphicItem transferringItem;
 	
 	public GraphicPanel(/*int offset/**/) {
 		WIDTH = 1100;
 		HEIGHT = 720;
 		am = null;
+		messageList = new ArrayList<String>();
 		/*lane = null;
 		belt = null;
 		station = null;
@@ -71,6 +80,13 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		isFactoryProductionManager = false;*/
 		
 		flashImage = Toolkit.getDefaultToolkit().getImage("Images/cameraFlash3x3.png");
+		try {
+			messageFont = Font.createFont(Font.TRUETYPE_FONT,new File("Fonts/digitalism.ttf"));
+		} catch (FontFormatException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		messageCounter = -1;
 		transferringItem = null;
 		
 		/*belt = new GraphicConveyorBelt(0-offset, 0, this);
@@ -1042,6 +1058,28 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			
 			g4.dispose();
 		}
+		
+
+		// Draw messages
+		Graphics2D gs = (Graphics2D)g;
+		if(messageCounter > 0 && isFactoryProductionManager)
+		{
+			for(int i = 0; i < messageList.size(); i++)
+			{
+				Composite comp;
+				if(messageCounter > 300)
+					comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(400f-messageCounter)/125);
+				else
+					comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f);
+				gs.setComposite(comp);
+				gs.setFont(messageFont.deriveFont(24.0f));
+				gs.drawString(messageList.get(i),80,i*28+40);
+			}
+		}
+		if(messageCounter >= 400)
+			messageCounter = -1;
+		if(messageCounter > 0)
+			messageCounter ++;
 	}
 	
 	public boolean isKitAssemblyManager() {
@@ -1078,5 +1116,12 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void setLaneAmplitude(int laneIndex,int lanenum,int amplitude) {
 		//lane[laneIndex].setLaneAmplitude(lanenum, amplitude);
 	}
-
+	
+	public void drawString(String s)
+	{
+		if(messageList.size() == MAX_MESSAGES)
+			messageList.remove(0);
+		messageList.add(s);
+		messageCounter = 1;
+	}
 }
