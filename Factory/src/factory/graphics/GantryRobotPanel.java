@@ -44,6 +44,8 @@ public class GantryRobotPanel extends GraphicPanel implements ActionListener{
 		gantryRobotStateCheck();
 		gantryRobot.move();
 		
+		moveLanes();
+		
 		repaint();
 	}
 	

@@ -654,7 +654,9 @@ public class MasterControl {
                     }
                 }
                 //Set number of confirmations
-                srcAgent.setRequiredConfirmations(reqConfirmations);
+                if(srcAgent != null){
+                	srcAgent.setRequiredConfirmations(reqConfirmations);
+                }
 
                 return true;
 			}
@@ -663,7 +665,9 @@ public class MasterControl {
                 return sendCmd(fpmPH, fullCmd);
             }
             //Set number of confirmations
-            srcAgent.setRequiredConfirmations(reqConfirmations);
+            if(srcAgent != null){
+            	srcAgent.setRequiredConfirmations(reqConfirmations);
+            }
 
             return false;
         } else {
@@ -677,7 +681,9 @@ public class MasterControl {
             if(partHandlerList.contains(destinationPH)){
                 boolean returnval = sendCmd(destinationPH, fullCmd);
                 //Set number of confirmations
-                srcAgent.setRequiredConfirmations(reqConfirmations);
+                if(srcAgent != null){
+                	srcAgent.setRequiredConfirmations(reqConfirmations);
+                }
                 return returnval;
             } else {
                 return false;

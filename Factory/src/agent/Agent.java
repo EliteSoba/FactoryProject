@@ -97,8 +97,7 @@ public abstract class Agent {
 	/** MESSAGE from the animation, notifying the agent that the animation is done. **/
 	public void msgAnimationDone() {
 		this.requiredConfirmations--;
-	
-		if(this.requiredConfirmations == 0){
+		if(this.requiredConfirmations <= 0){
 			debug("msgAnimationDone() received by Agent");
 			animation.release();
 		}

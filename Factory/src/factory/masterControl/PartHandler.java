@@ -54,13 +54,13 @@ public class PartHandler implements Runnable {
 	    for(;;) {
             cmd = gotCmd();
             if(haveCMD) {//if there was a command then call parseCmd and send the cmd to Server to assess
-                    error = master.command(cmd);
+                    error = master.command(null,cmd);
                     //sets haveCMD to false because parseCmd notified server
                     haveCMD = false;
             }
             if(error == false)
             {
-            	out.println("err command was invalid");
+            	out.println("err command was invalid (" + cmd + ")");
             }
             if(factoryDone){
                 break;

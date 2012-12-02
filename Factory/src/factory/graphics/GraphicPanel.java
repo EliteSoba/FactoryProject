@@ -501,7 +501,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		// The following 2 lines were causing the bin to disappear, which is undesirable	
 //		lane[(feederNum)].bin = null;
 //		lane[(feederNum)].binExists = false;
-		if (isLaneManager || isFactoryProductionManager) {
+		if (isGantryRobotManager || isLaneManager || isFactoryProductionManager) {
 			lane[(feederNum)].purgeFeeder();
 			//purgeFeederDone(feederNum); // send the confirmation //Done inside GraphicLaneManager
 		}
@@ -733,7 +733,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * Moves Parts down the Lanes
 	 */
 	public void moveLanes() {
-		if (isLaneManager || isFactoryProductionManager) {
+		if (isGantryRobotManager || isLaneManager || isFactoryProductionManager) {
 			for (int i = 0; i < lane.length; i++)
 				lane[i].moveLane();
 		}

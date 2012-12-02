@@ -307,4 +307,10 @@ public class VisionAgent extends Agent implements Vision {
 	public void setPartsRobot(PartsRobot pr) {
 		this.partsRobot = pr;
 	}
+
+	@Override
+	public void msgDoneIncreasingLaneAmplitude(Feeder feeder, int nestNum0or1) {
+		// TODO Auto-generated method stub
+		
+	}
 }
