@@ -68,8 +68,8 @@ public class FeederAgent extends Agent implements Feeder {
 		TOLD_NEST_TO_DUMP, NEST_SUCCESSFULLY_DUMPED}
 
 	//enum for jam state
-	public enum JamState {MIGHT_BE_JAMMED, TOLD_TO_INCREASE_AMPLITUDE, 
-		AMPLITUDE_WAS_INCREASED, NO_LONGER_JAMMED }
+	public enum JamState {MIGHT_BE_JAMMED, IS_JAMMED, TOLD_TO_INCREASE_AMPLITUDE, 
+		AMPLITUDE_WAS_INCREASED, NO_LONGER_JAMMED, MESSED_UP_BECAUSE_OTHER_LANE_HAS_MIXED_PARTS }
 
 	public EventLog log = new EventLog();
 
@@ -103,7 +103,9 @@ public class FeederAgent extends Agent implements Feeder {
 		public MyLaneState state = MyLaneState.EMPTY;
 		public PictureState picState = PictureState.UNSTABLE; // initially it should be empty. essentially unstbale
 		public JamState jamState;
+		public int laneMightBeJammedMessageCount = 0;
 		public Part part;
+		public boolean hasMixedParts = false;
 
 		public MyLane(Lane lane){
 			this.state = MyLaneState.EMPTY;
@@ -176,7 +178,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 		stateChanged();
 	}
-	
+
 	/** The GUI sends this message telling the Feeder to change its diverting algorithm 
 	 * so that the diverter is too slow in switching and parts will be fed into the wrong lane.
 	 * v.2
@@ -192,35 +194,38 @@ public class FeederAgent extends Agent implements Feeder {
 	 * */
 	public void msgLaneMightBeJammed(int nestNumber) {
 		debug("received msgEmptyNest(" + nestNumber + ")");
+
 		
 		if (nestNumber == 0) 
 		{
-			if (bottomLane.lane.hasMixedParts())
-			{
-				// the top lane is empty because the diverter timing was incorrect and did not feed 
-				// any/enough parts into the top lane it fed the top lane's parts into the bottom lane
-			}
-			else
+			topLane.laneMightBeJammedMessageCount++;
+
+			if (topLane.laneMightBeJammedMessageCount == 1) // There might be a jam -> the lane needs to increase its amplitude to dislodge the jammed part.
 			{
 				topLane.jamState = JamState.MIGHT_BE_JAMMED;
-				DoIncreaseLaneAmplitude(nestNumber);
+			}
+			else if (topLane.laneMightBeJammedMessageCount > 1) // Increasing the amplitude (which breaks any lane jams) did not work.
+			{
+				// the only other possibility is that the diverter switching algorithm is incorrect
+				bottomLane.hasMixedParts = true;
 			}
 		}
 		else if (nestNumber == 1) 
 		{
-			if (topLane.lane.hasMixedParts())
-			{
-				// the bottom lane is empty because the diverter timing was incorrect and did not feed 
-				// any/enough parts into the bottom lane it fed the top lane's parts into the bottom lane
-			}
-			else
+			bottomLane.laneMightBeJammedMessageCount++;
+
+			if (bottomLane.laneMightBeJammedMessageCount == 1) // There might be a jam -> the lane needs to increase its amplitude to dislodge the jammed part.
 			{
 				bottomLane.jamState = JamState.MIGHT_BE_JAMMED;
-				DoIncreaseLaneAmplitude(nestNumber);
 			}
+			else if (bottomLane.laneMightBeJammedMessageCount > 1) // Increasing the amplitude (which breaks any lane jams) did not work.
+			{
+				// the only other possibility is that the diverter switching algorithm is incorrect
+				topLane.hasMixedParts = true;
+			}		
 		}
-		
-		
+
+
 		stateChanged();
 	}
 
@@ -369,12 +374,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 		if (state == FeederState.SHOULD_START_FEEDING) 
 		{ 
-			//			log.add(new LoggedEvent(
-			//					"Trying to decide which lane to feed parts to."));
-
-			// Which lane should it feed to?
-
-
+			//not sure if this is needed...
 		}
 
 		synchronized(requestedParts)
@@ -413,6 +413,32 @@ public class FeederAgent extends Agent implements Feeder {
 			laneMightBeJammed(bottomLane);
 			return true;
 		}
+		
+		if (topLane.hasMixedParts)
+		{
+			laneHasMixedParts(topLane);
+			return true;
+		}
+		
+		if (bottomLane.hasMixedParts)
+		{
+			laneHasMixedParts(bottomLane);
+			return true;
+		}
+		
+		/*
+		if (topLane.jamState == JamState.MESSED_UP_BECAUSE_OTHER_LANE_HAS_MIXED_PARTS)
+		{
+			laneHasMixedParts(bottomLane);
+			return true;
+		}
+		
+		if (bottomLane.jamState == JamState.MESSED_UP_BECAUSE_OTHER_LANE_HAS_MIXED_PARTS)
+		{
+			laneHasMixedParts(bottomLane);
+			return true;
+		}
+		*/
 
 		if (topLane.jamState == JamState.AMPLITUDE_WAS_INCREASED)
 		{
@@ -446,13 +472,33 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 
+
+
+
 	/** ACTIONS **/
+	private void laneHasMixedParts(MyLane la) {
+		
+		// Get more parts for the other lane because it is
+		// lacking in parts - its parts were fed to the wrong lane		
+		this.msgLaneNeedsPart(la.part, la.lane); 
+		la.jamState = JamState.NO_LONGER_JAMMED;
+
+		// purge the lane with the mixed parts
+		if (topLane == la)
+		{
+			DoPurgeTopLane();
+		}
+		
+	}
+	
 	private void laneMightBeJammed(MyLane la)
 	{
 		debug("Lane might be jammed!");
 
 		la.jamState = JamState.TOLD_TO_INCREASE_AMPLITUDE;
 
+		DoIncreaseLaneAmplitude(la);
+		
 		la.lane.msgIncreaseAmplitude();
 	}
 
@@ -1051,11 +1097,22 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** Animation that increases the amplitude of the lane. **/
-	private void DoIncreaseLaneAmplitude(int laneNum0or1)
+	private void DoIncreaseLaneAmplitude(MyLane la)
 	{
+		int laneNum;
+		
+		if (topLane == la)
+		{
+			laneNum = 0;
+		}
+		else
+		{
+			laneNum = 1;
+		}
+		
 		if (debugMode == false)
 		{
-			server.command(this,"fa lm cmd setlaneamplitude " + feederNumber+laneNum0or1 + " " + 8); // 0-7lane# 1-8amplitude
+			server.command(this,"fa lm cmd setlaneamplitude " + (feederNumber+laneNum) + " " + 8); // 0-7lane# 1-8amplitude
 			debug("Feeder " + feederNumber + " started feeding.");
 			try {
 				animation.acquire();
