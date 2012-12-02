@@ -8,6 +8,8 @@ package factory.swing;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Hashtable;
+
 import factory.managers.*;
 
 import javax.swing.*;
@@ -295,6 +297,8 @@ public class LaneManPanel extends JPanel{
 	}
 
 	public class LaneNonNormPanel extends JPanel implements ActionListener {
+		
+		JLabel badPartsLabel;
 		JComboBox laneBoxList;
 		JComboBox feederBoxList;
 		JPanel partsMissingContainer;
@@ -304,16 +308,33 @@ public class LaneManPanel extends JPanel{
 		JButton badPartsButton;
 		JButton blockingRobotButton;
 		JTextArea messageBox;
+		JSlider badPartsPercentage;
+		int badPartsPercentageMin;
+		int badPartsPercentageMax;
 
 		public LaneNonNormPanel() {
-
+			
+			badPartsLabel = new JLabel("% Bad Parts");
 			laneJamButton = new JButton("Lane Jam");
 			diverterButton = new JButton("Diverter Too Slow");
 			badPartsButton = new JButton("Bad Parts in Nest");
 			blockingRobotButton = new JButton("Robot Blocking Camera");
 			messageBox = new JTextArea("Actions...\n");
 			messageBox.setLineWrap(true);
-
+			badPartsPercentageMin = 0;
+			badPartsPercentageMax = 100;
+			badPartsPercentage = new JSlider(badPartsPercentageMin, badPartsPercentageMax);
+			Hashtable labelTable = new Hashtable();
+			for(int i = 0; i <=100; i+=25){
+				labelTable.put( new Integer( i ), new JLabel(i + "%") );
+			}
+			badPartsPercentage.setLabelTable( labelTable );
+			badPartsPercentage.setMinorTickSpacing(5);
+			badPartsPercentage.setMajorTickSpacing(25);
+			badPartsPercentage.setPaintTicks(true);
+			badPartsPercentage.setSnapToTicks(true);
+			badPartsPercentage.setPaintLabels(true);
+			badPartsPercentage.setValue(0);
 			laneJamButton.addActionListener(this);
 			diverterButton.addActionListener(this);
 			badPartsButton.addActionListener(this);
@@ -350,7 +371,9 @@ public class LaneManPanel extends JPanel{
 
 			partsMissingContainer.add(laneJamButton);
 			partsMissingContainer.add(diverterButton);
-
+			
+			partsBadContainer.add(badPartsLabel);
+			partsBadContainer.add(badPartsPercentage);
 			partsBadContainer.add(badPartsButton);
 			partsBadContainer.add(blockingRobotButton);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
@@ -402,7 +425,7 @@ public class LaneManPanel extends JPanel{
 				messageBox.append("Bad parts found in " + laneBoxList.getSelectedItem() + "'s nest.\n");
 				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 				int lanenum = laneBoxList.getSelectedIndex();
-				String set = "lm va cmd badparts " + lanenum;
+				String set = "lm va cmd badparts " + lanenum + badPartsPercentage.getValue();
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -421,7 +444,7 @@ public class LaneManPanel extends JPanel{
 			}
 
 		}
-
+		
 
 	}	
 }

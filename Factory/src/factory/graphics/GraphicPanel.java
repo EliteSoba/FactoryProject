@@ -4,8 +4,6 @@ import java.awt.*;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -25,7 +23,6 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public static final Image TILE_IMAGE = Toolkit.getDefaultToolkit().getImage("Images/Tiles/floorTileXGrill.png");
 	public static final int TILE_SIZE = 128;
 	public static final int DELAY = 20;
-	public static final int MAX_MESSAGES = 5;
 	
 	protected Client am; //The Client that holds this
 	
@@ -54,18 +51,12 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	// GANTRY
 	protected GraphicGantryRobot gantryRobot;
 	
-	// MESSAGES
-	protected ArrayList<String> messageList;
-	protected Font messageFont;
-	protected int messageCounter;
-	
 	protected GraphicItem transferringItem;
 	
 	public GraphicPanel(/*int offset/**/) {
 		WIDTH = 1100;
 		HEIGHT = 720;
 		am = null;
-		messageList = new ArrayList<String>();
 		/*lane = null;
 		belt = null;
 		station = null;
@@ -80,13 +71,6 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		isFactoryProductionManager = false;*/
 		
 		flashImage = Toolkit.getDefaultToolkit().getImage("Images/cameraFlash3x3.png");
-		try {
-			messageFont = Font.createFont(Font.TRUETYPE_FONT,new File("Fonts/digitalism.ttf"));
-		} catch (FontFormatException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		messageCounter = -1;
 		transferringItem = null;
 		
 		/*belt = new GraphicConveyorBelt(0-offset, 0, this);
@@ -376,6 +360,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		dropPartsRobotsItemsDone();
 	}
 	
+	/**
+	 * Dumps the Items at the given Nest
+	 * @param nestIndex The given Nest Pair
+	 * @param isTop If the Nest to be purged is on the Top or the Bottom
+	 */
 	public void dumpNest(int nestIndex, boolean isTop) {
 		if (isLaneManager || isFactoryProductionManager) {
 			nests.get(nestIndex*2 + (isTop ? 0 : 1)).clearItems();
@@ -561,7 +550,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Jams the top lane. All items stops behind the first item.
-	 * @param feederNum The designated feeder, 1-4
+	 * @param feederNum The designated feeder, 0-3
 	 */
 	public void jamTopLane(int feederNum){
 		lane[feederNum].lane1Jam = true;
@@ -569,7 +558,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Unjams the top lane. Return back to normal.
-	 * @param feederNum The designated feeder, 1-4
+	 * @param feederNum The designated feeder, 0-3
 	 */
 	public void unjamTopLane(int feederNum){
 		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane1Speed + 1);
@@ -583,7 +572,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Jams the bottom lane. All items stops behind the first item.
-	 * @param feederNum The designated feeder, 1-4
+	 * @param feederNum The designated feeder, 0-3
 	 */
 	public void jamBottomLane(int feederNum){
 		lane[feederNum].lane2Jam = true;
@@ -591,7 +580,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Unjams the bottom lane. Return back to normal.
-	 * @param feederNum The designated feeder, 1-4
+	 * @param feederNum The designated feeder, 0-3
 	 */
 	public void unjamBottomLane(int feederNum){
 		lane[feederNum].changeBottomLaneSpeed(lane[feederNum].lane2Speed + 1);
@@ -603,18 +592,34 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		lane[feederNum].lane2Jam = false;
 	}
 	
+	/**
+	 * Stops the Top Lane of the given Lane Pair
+	 * @param feederNum The relevant Lane Pair
+	 */
 	public void stopTopLane(int feederNum){
 		lane[feederNum].lane1Start = false;
 	}
 
+	/**
+	 * Starts the Top Lane of the given Lane Pair
+	 * @param feederNum The relevant Lane Pair
+	 */
 	public void startTopLane(int feederNum){
 		lane[feederNum].lane1Start = true;
 	}
 
+	/**
+	 * Stop the Bottom Lane of the given Lane Pair
+	 * @param feederNum The relevant Lane Pair
+	 */
 	public void stopBottomLane(int feederNum){
 		lane[feederNum].lane2Start = false;
 	}
 
+	/**
+	 * Starts the Bottom Lane of the given Lane Pair
+	 * @param feederNum The relevant Lane Pair
+	 */
 	public void startBottomLane(int feederNum){
 		lane[feederNum].lane2Start = true;
 	}
@@ -893,7 +898,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void partsRobotArrivedAtNest() {
-		sendMessage("lm set nestitemtaken " + partsRobot.getDestinationNest() + " " + partsRobot.getItemIndex());
+		if (isFactoryProductionManager) {
+			sendMessage("lm set nestitemtaken " + partsRobot.getDestinationNest() + " " + partsRobot.getItemIndex());
+			sendMessage("na cmd partremovedfromnest " + partsRobot.getDestinationNest() + " " + nests.get(partsRobot.getDestinationNest()).getItemAt(partsRobot.getItemIndex()).getName());
+		}
 		sendMessage("pra cnf");
 	}
 
@@ -910,8 +918,9 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void partsRobotPopItemToCurrentKitDone() {
-		if (isFactoryProductionManager)
+		if (isFactoryProductionManager) {
 			sendMessage("kam set itemtype " + partsRobot.getDestinationKit() + " " + transferringItem.getImagePath());
+		}
 		sendMessage("pra cnf");
 	}
 
@@ -1033,27 +1042,6 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			
 			g4.dispose();
 		}
-		
-		// Draw messages
-		Graphics2D gs = (Graphics2D)g;
-		if(messageCounter > 0 && isFactoryProductionManager)
-		{
-			for(int i = 0; i < messageList.size(); i++)
-			{
-				Composite comp;
-				if(messageCounter > 300)
-					comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(400f-messageCounter)/125);
-				else
-					comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f);
-				gs.setComposite(comp);
-				gs.setFont(messageFont.deriveFont(24.0f));
-				gs.drawString(messageList.get(i),80,i*28+40);
-			}
-		}
-		if(messageCounter >= 400)
-			messageCounter = -1;
-		if(messageCounter > 0)
-			messageCounter ++;
 	}
 	
 	public boolean isKitAssemblyManager() {
@@ -1090,12 +1078,5 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void setLaneAmplitude(int laneIndex,int lanenum,int amplitude) {
 		//lane[laneIndex].setLaneAmplitude(lanenum, amplitude);
 	}
-	
-	public void drawString(String s)
-	{
-		if(messageList.size() == MAX_MESSAGES)
-			messageList.remove(0);
-		messageList.add(s);
-		messageCounter = 1;
-	}
+
 }

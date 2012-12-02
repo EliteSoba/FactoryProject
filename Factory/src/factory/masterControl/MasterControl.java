@@ -73,7 +73,7 @@ public class MasterControl {
             "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported",
             "ruininspectionkit","badparts","lanejam","slowdiverter","jamtoplane","jambottomlane","unjamtoplane",
             "unjambottomlane", "lanespeed", "laneamplitude", "lanepower", "feederpower", "dumptopnest", "dumpbottomnest",
-            "missingparts"
+            "missingparts", "newpartputinlane", "partremovedfromlane", "partremovedfromnest"
 
     );
 
@@ -557,7 +557,7 @@ public class MasterControl {
 			{
 				destination = feederAgents.get(Integer.parseInt(cmd.get(4)));
 				if (cmd.get(3).equals("slowdiverter")) {
-					//TODO: Add message here. ((FeederAgent) destination).
+					((FeederAgent) destination).msgBreakDiverterAlgorithm();
 				}
 			}//End FeederAgent Commands
 
@@ -572,6 +572,9 @@ public class MasterControl {
                 }
                 else if(cmd.get(3).equals("nestdestabilized")){
                     ((NestAgent) destination).msgNestHasDestabilized();
+                }
+                else if (cmd.get(3).equals("partremovedfromnest")) {
+                	//TODO: Add message here. ((NestAgent) destination).
                 }
             }//End NestAgent Commands
 
@@ -592,14 +595,26 @@ public class MasterControl {
             	if (cmd.get(3).equals("missingparts")) {
             		int feederNum = Integer.parseInt(cmd.get(4));
             		int nestNum = Integer.parseInt(cmd.get(5));
-            		((VisionAgent) destination).msgNoGoodPartsFound(feederNum, nestNum);
+            		//((VisionAgent) destination).msgNoGoodPartsFound(feederNum, nestNum);
             	}
             } // End VisionAgent Commands
-
-
-
-
-
+			
+			//LaneAgent Commands:
+            else if (cmd.get(1).equals("la")) {
+            	destination = laneAgentTreeMap.get(cmd.get(4));
+            	
+            	if (cmd.get(3).equals("newpartputinlane")) {
+            		int laneNum = Integer.valueOf(cmd.get(4));
+            		String partName = cmd.get(5);
+            		int condition = Integer.valueOf(cmd.get(6)); //1 = good, 0 = bad
+            		//TODO: Add message here ((LaneAgent) destination).
+            	}
+            	else if (cmd.get(3).equals("partremovedfromlane")) {
+            		int laneNum = Integer.valueOf(cmd.get(4));
+            		//TODO: Add message here ((LaneAgent) destination).
+            	}
+            }
+			
 		}
 
 
