@@ -41,6 +41,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JTextField partName;
 	JTextField itemIndex;
 	JButton popItemToKit;
+	JButton drawString;
 	
 	public ControlPanel(GraphicFactoryProductionManager fpm) {
 		//Constructor
@@ -79,6 +80,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		cameraFlash = new JButton("Camera Flash Nest 1");
 		partName = new JTextField(10);
 		itemIndex = new JTextField(10);
+		drawString = new JButton("Draw String");
 		for (int i = 0; i < 20; i++) {
 			blank[i] = new JLabel("   ");
 			blank[i].setPreferredSize(new Dimension(150, 10));
@@ -117,6 +119,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.addButton(gantryRobotFeeder1Dropoff);
 		this.addButton(gantryRobotFeeder1Pickup);
 		this.addButton(cameraFlash);
+		this.addButton(drawString);
 		this.setPreferredSize(new Dimension(200, 720));
 	}
 	
@@ -124,7 +127,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.add(button);
 		//this.add(blank[blanki++]);
 		button.addActionListener(this);
-		button.setPreferredSize(new Dimension(170, 20));
+		button.setPreferredSize(new Dimension(170, 15));
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -190,6 +193,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 			am.setLaneAmplitudeTop(0);
 		else if(source == changeSpeed1)
 			am.setLaneSpeedTop(0);
+		else if(source == drawString)
+			am.drawString(itemIndex.getText());
 	}
 
 }

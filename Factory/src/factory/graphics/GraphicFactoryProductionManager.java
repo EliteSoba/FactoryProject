@@ -204,6 +204,11 @@ public class GraphicFactoryProductionManager extends JFrame {
 		panel.cameraFlash(0);
 	}
 	
+	public void drawString(String s)
+	{
+		panel.drawString(s);
+	}
+	
 	//Lane Manager Messages
 	public void feedLaneDone(int laneNum) {
 		System.out.println("Lane " + (laneNum + 1) + " has finished feeding.");
