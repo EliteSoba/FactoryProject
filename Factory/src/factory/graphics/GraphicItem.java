@@ -31,8 +31,10 @@ public class GraphicItem {
 	/**Whether or not this Item goes to the top or bottom Lane of a Lane pair*/
 	private boolean divergeUp;
 	private boolean isBad;
-
+	/**Whether the item is in queue or not**/
 	private boolean inQueue;
+	/**whether the item has not been deleted through crashing**/
+	private boolean successfullyTransferred;
 	
 	/**
 	 * Creates an Item with the given image at the given x and y coordinates
@@ -52,7 +54,7 @@ public class GraphicItem {
 		stepX = 20;
 		stepY = 5;
 		divergeUp = false;
-		
+		successfullyTransferred = true;
 		isBad = false;
 	}
 	
@@ -246,6 +248,14 @@ public class GraphicItem {
 	
 	public void setIsBad() {
 		isBad = true;
+	}
+	
+	public boolean getSuccessfullyTransferred() {
+		return successfullyTransferred;
+	}
+	
+	public void setSuccessfullyTransferred(boolean sT) {
+		successfullyTransferred = sT;
 	}
 	
 }
