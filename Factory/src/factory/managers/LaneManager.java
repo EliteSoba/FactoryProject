@@ -198,9 +198,31 @@ public class LaneManager extends Client {
 					((LanePanel) graphics).getLane(laneNumber/2).changeBottomLaneAmplitude(amplitude);
 				// call graphics function to change amplitude
 			}else if (identifier.equals("lanepower")){
+				int laneNumber = Integer.valueOf(pCmd.get(3));
 				
+				if(pCmd.get(2).equals("on")){
+					if(laneNumber % 2 == 0){
+						((LanePanel) graphics).startTopLane(laneNumber/2);
+					}else{
+
+						((LanePanel) graphics).startBottomLane(laneNumber/2);
+					}
+				}else if(pCmd.get(3).equals("off")){
+					if(laneNumber % 2 == 0){
+						((LanePanel) graphics).stopTopLane(laneNumber/2);
+					}else{
+
+						((LanePanel) graphics).stopTopLane(laneNumber/2);
+					}
+				}
 			}else if (identifier.equals("feederpower")){
+				int feederNumber = Integer.valueOf(pCmd.get(3));
 				
+				if(pCmd.get(2).equals("on")){
+					((LanePanel) graphics).turnFeederOff(feederNumber);
+				}else if(pCmd.get(3).equals("off")){
+					((LanePanel) graphics).turnFeederOff(feederNumber);
+				}
 			}
 
 		}
