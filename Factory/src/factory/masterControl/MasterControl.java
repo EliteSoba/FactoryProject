@@ -574,7 +574,8 @@ public class MasterControl {
                     ((NestAgent) destination).msgNestHasDestabilized();
                 }
                 else if (cmd.get(3).equals("partremovedfromnest")) {
-                	//TODO: Add message here. ((NestAgent) destination).
+                	String nameOfPart = cmd.get(5);
+                	((NestAgent) destination).msgPartRemovedFromNest(nameOfPart);
                 }
             }//End NestAgent Commands
 
@@ -601,17 +602,20 @@ public class MasterControl {
 			
 			//LaneAgent Commands:
             else if (cmd.get(1).equals("la")) {
-            	destination = laneAgentTreeMap.get(cmd.get(4));
+            	int lanenum = Integer.valueOf(cmd.get(4));
+            	destination = laneAgentTreeMap.get("l"+lanenum/2+(lanenum%2==0?"t":"b"));
             	
             	if (cmd.get(3).equals("newpartputinlane")) {
             		int laneNum = Integer.valueOf(cmd.get(4));
             		String partName = cmd.get(5);
             		int condition = Integer.valueOf(cmd.get(6)); //1 = good, 0 = bad
-            		//TODO: Add message here ((LaneAgent) destination).
+            		Part part = new Part(partName,999,"desc","imgpath",3);
+            		part.isGoodPart = (condition == 1);
+            		((LaneAgent) destination).msgPartAddedToLane(part); // Note: we are not really using any of these fields except part name.  stabilization time is handlded elsewhere
             	}
             	else if (cmd.get(3).equals("partremovedfromlane")) {
             		int laneNum = Integer.valueOf(cmd.get(4));
-            		//TODO: Add message here ((LaneAgent) destination).
+            		((LaneAgent) destination).msgPartRemovedFromLane();
             	}
             }
 			

@@ -18,6 +18,9 @@ public interface Nest {
 	int getPosition();
 	void msgYouNeedPart(Part part);
 	
+	void msgPartRemovedFromNest(String partName);
+	
+	
 //	void msgPartsRobotGrabbingPartFromNest(int coordinate);
 //	void msgFeedingParts(int numParts);
 }

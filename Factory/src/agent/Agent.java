@@ -50,7 +50,7 @@ public abstract class Agent {
 	}
 
 	protected void debug(String msg) {
-		if(true) {
+		if(false) {
 			print(msg, null);
 		}
 	}
