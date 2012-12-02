@@ -291,8 +291,7 @@ public class GraphicLaneManager {
 			bin.getBinType().paint(g);
 		// Draw bin
 		if (binExists)
-			g.drawImage(bin.getBinImage().getImage(), feederX + 85,
-					feederY + 15, null);
+			g.drawImage(bin.getBinImage().getImage(), feederX + 85, feederY + 15, null);
 		// Draw feeder
 		g.drawImage(feederIcon.getImage(), feederX, feederY, null);
 		// Draw and animate diverger lights
@@ -302,8 +301,7 @@ public class GraphicLaneManager {
 			dLightOffY += 80;
 		else
 			dLightOnY += 80;
-		divergerLightOnImage = new ImageIcon("Images/divergerLights/dLight"
-				+ divergerLightAnimationCounter + ".png");
+		divergerLightOnImage = new ImageIcon("Images/divergerLights/dLight" + divergerLightAnimationCounter + ".png");
 		g.drawImage(divergerLightOnImage.getImage(), feederX, dLightOnY, null);
 		g.drawImage(divergerLightOffImage.getImage(), feederX, dLightOffY, null);
 		if (divergerLightAnimationCounter == 20)
@@ -322,8 +320,7 @@ public class GraphicLaneManager {
 	public void moveLane() {
 		for (int i = 0; i < 2; i++) {
 			stabilizationCount[i]++;
-			if (binExists
-					&& stabilizationCount[i] >= bin.getStabilizationTime()) {
+			if (binExists && stabilizationCount[i] >= bin.getStabilizationTime()) {
 				isStable[i] = true;
 				if (stabilizationCount[i] == bin.getStabilizationTime())
 					graphicPanel.sendMessage("na cmd neststabilized n" + laneManagerID + (i == 0 ? "t" : "b"));
@@ -400,8 +397,8 @@ public class GraphicLaneManager {
 	}
 
 	/**
-	 * Moves the items in the lane. Processes both top and bottom lane DOES
-	 * EVERYTHING
+	 * Moves the items in the lane. Processes both top and bottom lane
+	 * DOES EVERYTHING
 	 */
 
 	public void processTopLane() {
@@ -423,28 +420,19 @@ public class GraphicLaneManager {
 				graphicPanel.purgeTopLaneDone(laneManagerID);
 			} else {
 				for (int i = 0; i < lane1Items.size(); i++) {
-					lane1Items.get(i).setX(
-							lane1Items.get(i).getX()
-									+ lane1Items.get(i).getVX());
-					lane1Items.get(i).setY(
-							lane1Items.get(i).getY()
-									+ lane1Items.get(i).getVY());
+					lane1Items.get(i).setX(lane1Items.get(i).getX() + lane1Items.get(i).getVX());
+					lane1Items.get(i).setY(lane1Items.get(i).getY() + lane1Items.get(i).getVY());
 
 					// Lane items move vertically
-					if (lane1Items.get(i).getVY() == vY
-							|| lane1Items.get(i).getVY() == -(vY)) {
-						if (vibrationCount % 4 == 1) { // Vibration left and
-														// right every 2 paint
-														// calls
+					if (lane1Items.get(i).getVY() == vY || lane1Items.get(i).getVY() == -(vY)) {
+						if (vibrationCount % 4 == 1) { // Vibration left and right every 2 paint calls
 							if (i % 2 == 0)
 								lane1Items.get(i).setX(itemXLane);
 							else if (i % 2 == 1)
-								lane1Items.get(i).setX(
-										itemXLane + vibrationAmplitudeTop);
+								lane1Items.get(i).setX(itemXLane + vibrationAmplitudeTop);
 						} else if (vibrationCount % 4 == 3) {
 							if (i % 2 == 0)
-								lane1Items.get(i).setX(
-										itemXLane + vibrationAmplitudeTop);
+								lane1Items.get(i).setX(itemXLane + vibrationAmplitudeTop);
 							else if (i % 2 == 1)
 								lane1Items.get(i).setX(itemXLane);
 						}
@@ -466,13 +454,11 @@ public class GraphicLaneManager {
 							if (i % 2 == 0) {
 								lane1Items.get(i).setY(itemYLaneUp);
 							} else if (i % 2 == 1) {
-								lane1Items.get(i).setY(
-										itemYLaneUp - vibrationAmplitudeTop);
+								lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitudeTop);
 							}
 						} else if (vibrationCount % 4 == 3) {
 							if (i % 2 == 0) {
-								lane1Items.get(i).setY(
-										itemYLaneUp - vibrationAmplitudeTop);
+								lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitudeTop);
 							} else if (i % 2 == 1) {
 								lane1Items.get(i).setY(itemYLaneUp);
 							}
@@ -492,10 +478,8 @@ public class GraphicLaneManager {
 		} // end of purge statements
 		else { // Normal lane processing
 			for (int i = 0; i < lane1Items.size(); i++) {
-				lane1Items.get(i).setX(
-						lane1Items.get(i).getX() + lane1Items.get(i).getVX());
-				lane1Items.get(i).setY(
-						lane1Items.get(i).getY() + lane1Items.get(i).getVY());
+				lane1Items.get(i).setX(lane1Items.get(i).getX() + lane1Items.get(i).getVX());
+				lane1Items.get(i).setY(lane1Items.get(i).getY() + lane1Items.get(i).getVY());
 
 				for (int j = 0; j < lane1Items.size(); j++) {
 					if (lane1Items.get(j).getY() > itemYLaneUp) {
@@ -509,19 +493,16 @@ public class GraphicLaneManager {
 
 				// MOVES ITEMS DOWN LANE
 				// Lane items move vertically
-				if (lane1Items.get(i).getVY() == vY
-						|| lane1Items.get(i).getVY() == -(vY)) {
+				if (lane1Items.get(i).getVY() == vY || lane1Items.get(i).getVY() == -(vY)) {
 					if (vibrationCount % 4 == 1) { // Vibration left and right
 													// every 2 paint calls
 						if (i % 2 == 0)
 							lane1Items.get(i).setX(itemXLane);
 						else if (i % 2 == 1)
-							lane1Items.get(i).setX(
-									itemXLane + vibrationAmplitudeTop);
+							lane1Items.get(i).setX(itemXLane + vibrationAmplitudeTop);
 					} else if (vibrationCount % 4 == 3) {
 						if (i % 2 == 0)
-							lane1Items.get(i).setX(
-									itemXLane + vibrationAmplitudeTop);
+							lane1Items.get(i).setX(itemXLane + vibrationAmplitudeTop);
 						else if (i % 2 == 1)
 							lane1Items.get(i).setX(itemXLane);
 					}
@@ -548,24 +529,10 @@ public class GraphicLaneManager {
 						stabilizationCount[0] = 0;
 						graphicPanel.sendMessage("la cmd partremovedfromlane " + (2*laneManagerID));
 						graphicPanel.sendMessage("na cmd nestdestabilized n" + laneManagerID + "t");
-						lane1Items.get(i).setX(
-								lane_xPos
-										+ 3
-										+ 25
-										* (int) (graphicPanel.getNest()
-												.get(laneManagerID * 2)
-												.getSize() / 3));
+						lane1Items.get(i).setX(lane_xPos + 3 + 25*(int)(graphicPanel.getNest().get(laneManagerID*2).getSize()/3));
 						boolean testDiverge = lane1Items.get(i).getDivergeUp();
-						lane1Items.get(i).setY(
-								lane_yPos
-										+ 3
-										+ 25
-										* (graphicPanel.getNest()
-												.get(laneManagerID * 2)
-												.getSize() % 3) + 80
-										* ((testDiverge) ? 0 : 1));
-						graphicPanel.getNest().get(laneManagerID * 2)
-								.addItem(lane1Items.get(i));
+						lane1Items.get(i).setY(lane_yPos + 3 + 25*(graphicPanel.getNest().get(laneManagerID*2).getSize()%3) + 80* ((testDiverge) ? 0 : 1));
+						graphicPanel.getNest().get(laneManagerID * 2).addItem(lane1Items.get(i));
 						if (lane1QueueTaken.size() > 0)
 							lane1QueueTaken.remove(0);
 						lane1Items.remove(i);
@@ -574,29 +541,20 @@ public class GraphicLaneManager {
 					}
 				} else { // Nest Greater than 9
 					for (int j = 0; j < lane1Items.size(); j++) {
-						if (lane1Items.get(j).getX() < itemXMax
-								+ (lane1QueueTaken.size() + 1) * 10) {
-							// lane1Items.get(j).setX(itemXMax +
-							// lane1QueueTaken.size() * 8);
+						if (lane1Items.get(j).getX() < itemXMax + (lane1QueueTaken.size() + 1) * 10) {
+							// lane1Items.get(j).setX(itemXMax + lane1QueueTaken.size()*8);
 							lane1Items.get(j).setVX(0);
 						}
 					}
 
-					if (lane1Items.get(i).getX() <= (itemXMax + 5 + 5 + (lane1QueueTaken
-							.size()) * 10)
-							&& lane1Items.get(i).getX() >= itemXMax) {
+					if (lane1Items.get(i).getX() <= (itemXMax + 5 + 5 + (lane1QueueTaken.size()) * 10) && lane1Items.get(i).getX() >= itemXMax) {
 						// Queue is full, delete crashing Items
 						if (!lane1Items.get(i).getInQueue()) {
-							lane1Items.get(i).setX(
-									itemXMax + 5 + (lane1QueueTaken.size())
-											* 10);
+							lane1Items.get(i).setX(itemXMax + 5 + (lane1QueueTaken.size())*10);
 							lane1Items.get(i).setInQueue(true);
 						}
-						if (lane1Items.get(i).getX() == (itemXMax + 5 + (lane1QueueTaken
-								.size()) * 10)) {
-							if (lane1QueueTaken.size() > 13) { // To be changed
-																// according to
-																// size of lane
+						if (lane1Items.get(i).getX() == (itemXMax + 5 + (lane1QueueTaken.size())*10)) {
+							if (lane1QueueTaken.size() > 13) { // To be changed according to size of lane
 
 								lane1Items.remove(i);
 								i--;
@@ -618,42 +576,29 @@ public class GraphicLaneManager {
 						graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane1Items.get(i).getName() + (lane1Items.get(i).getIsBad()?" 0":" 1"));
 						lane1Items.get(i).setSuccessfullyTransferred(false);
 					}
-					if (vibrationCount % 4 == 1) { // Vibration up and down
-													// every 2 paint calls
+					if (vibrationCount % 4 == 1) { // Vibration up and down every 2 paint calls
 						if (i % 2 == 0) {
 							lane1Items.get(i).setY(itemYLaneUp);
 						} else if (i % 2 == 1) {
-							lane1Items.get(i).setY(
-									itemYLaneUp - vibrationAmplitudeTop);
+							lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitudeTop);
 						}
 					} else if (vibrationCount % 4 == 3) {
 						if (i % 2 == 0) {
-							lane1Items.get(i).setY(
-									itemYLaneUp - vibrationAmplitudeTop);
+							lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitudeTop);
 						} else if (i % 2 == 1) {
 							lane1Items.get(i).setY(itemYLaneUp);
 						}
 					}
 
 					if (graphicPanel.getNest().get(laneManagerID * 2).getSize() >= 9) {
-						if (lane1Items.get(i).getX() <= (itemXMax + 5 + 5 + (lane1QueueTaken
-								.size()) * 10)
-								&& lane1Items.get(i).getX() >= itemXMax + 5) {
+						if (lane1Items.get(i).getX() <= (itemXMax + 5 + 5 + (lane1QueueTaken.size())*10) && lane1Items.get(i).getX() >= itemXMax + 5) {
 							// Queue is full, delete crashing Items
 							if (!lane1Items.get(i).getInQueue()) {
-								lane1Items.get(i).setX(
-										itemXMax + 5 + (lane1QueueTaken.size())
-												* 10);
+								lane1Items.get(i).setX(itemXMax + 5 + (lane1QueueTaken.size())*10);
 								lane1Items.get(i).setInQueue(true);
 							}
-							if (lane1Items.get(i).getX() <= (itemXMax + 5 + (lane1QueueTaken
-									.size()) * 10)) {
-								if (lane1QueueTaken.size() > 14) { // To be
-																	// changed
-																	// according
-																	// to size
-																	// of lane
-
+							if (lane1Items.get(i).getX() <= (itemXMax + 5 + (lane1QueueTaken.size())*10)) {
+								if (lane1QueueTaken.size() > 14) { // To be changed according to size of lane
 									lane1Items.remove(i);
 									i--;
 									// continue;
@@ -671,24 +616,10 @@ public class GraphicLaneManager {
 						stabilizationCount[0] = 0;
 						graphicPanel.sendMessage("la cmd partremovedfromlane " + (2*laneManagerID));
 						graphicPanel.sendMessage("na cmd nestdestabilized n" + laneManagerID + "t");
-						lane1Items.get(i).setX(
-								lane_xPos
-										+ 3
-										+ 25
-										* (int) (graphicPanel.getNest()
-												.get(laneManagerID * 2)
-												.getSize() / 3));
+						lane1Items.get(i).setX(lane_xPos + 3 + 25*(int)(graphicPanel.getNest().get(laneManagerID*2).getSize()/3));
 						boolean testDiverge = lane1Items.get(i).getDivergeUp();
-						lane1Items.get(i).setY(
-								lane_yPos
-										+ 3
-										+ 25
-										* (graphicPanel.getNest()
-												.get(laneManagerID * 2)
-												.getSize() % 3) + 80
-										* ((testDiverge) ? 0 : 1));
-						graphicPanel.getNest().get(laneManagerID * 2)
-								.addItem(lane1Items.get(i));
+						lane1Items.get(i).setY(lane_yPos + 3 + 25*(graphicPanel.getNest().get(laneManagerID*2).getSize()%3) + 80*((testDiverge) ? 0 : 1));
+						graphicPanel.getNest().get(laneManagerID*2).addItem(lane1Items.get(i));
 						if (lane1QueueTaken.size() > 0)
 							lane1QueueTaken.remove(0);
 						lane1Items.remove(i);
@@ -696,18 +627,15 @@ public class GraphicLaneManager {
 					}
 				} else { // Vibration while waiting in queue
 					if (lane1Items.get(i).getVY() == 0) { // In the queue
-						if (vibrationCount % 4 == 1) { // Vibration up and down
-														// every 2 paint calls
+						if (vibrationCount % 4 == 1) { // Vibration up and down every 2 paint calls
 							if (i % 2 == 0) {
 								lane1Items.get(i).setY(itemYLaneUp);
 							} else if (i % 2 == 1) {
-								lane1Items.get(i).setY(
-										itemYLaneUp - vibrationAmplitudeTop);
+								lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitudeTop);
 							}
 						} else if (vibrationCount % 4 == 3) {
 							if (i % 2 == 0) {
-								lane1Items.get(i).setY(
-										itemYLaneUp - vibrationAmplitudeTop);
+								lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitudeTop);
 							} else if (i % 2 == 1) {
 								lane1Items.get(i).setY(itemYLaneUp);
 							}
@@ -719,8 +647,7 @@ public class GraphicLaneManager {
 	}
 
 	public void processBottomLane() {
-		if (lane2PurgeOn) { // If purge is on, empties the nest and destroys
-							// items on lane
+		if (lane2PurgeOn) { // If purge is on, empties the nest and destroys items on lane
 			graphicPanel.getNest().get(laneManagerID * 2 + 1).clearItems();
 			for (int j = 0; j < lane2Items.size(); j++) {
 				if (lane2Items.get(j).getY() < itemYLaneDown) {
@@ -736,28 +663,19 @@ public class GraphicLaneManager {
 				graphicPanel.purgeBottomLaneDone(laneManagerID);
 			} else {
 				for (int i = 0; i < lane2Items.size(); i++) {
-					lane2Items.get(i).setX(
-							lane2Items.get(i).getX()
-									+ lane2Items.get(i).getVX());
-					lane2Items.get(i).setY(
-							lane2Items.get(i).getY()
-									+ lane2Items.get(i).getVY());
+					lane2Items.get(i).setX(lane2Items.get(i).getX() + lane2Items.get(i).getVX());
+					lane2Items.get(i).setY(lane2Items.get(i).getY() + lane2Items.get(i).getVY());
 
 					// Lane items move vertically
-					if (lane2Items.get(i).getVY() == vY
-							|| lane2Items.get(i).getVY() == -(vY)) {
-						if (vibrationCount % 4 == 1) { // Vibration left and
-														// right every 2 paint
-														// calls
+					if (lane2Items.get(i).getVY() == vY || lane2Items.get(i).getVY() == -(vY)) {
+						if (vibrationCount % 4 == 1) { // Vibration left and right every 2 paint calls
 							if (i % 2 == 0)
 								lane2Items.get(i).setX(itemXLane);
 							else if (i % 2 == 1)
-								lane2Items.get(i).setX(
-										itemXLane + vibrationAmplitudeBottom);
+								lane2Items.get(i).setX(itemXLane + vibrationAmplitudeBottom);
 						} else if (vibrationCount % 4 == 3) {
 							if (i % 2 == 0)
-								lane2Items.get(i).setX(
-										itemXLane + vibrationAmplitudeBottom);
+								lane2Items.get(i).setX(itemXLane + vibrationAmplitudeBottom);
 							else if (i % 2 == 1)
 								lane2Items.get(i).setX(itemXLane);
 						}
@@ -774,20 +692,15 @@ public class GraphicLaneManager {
 							graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane2Items.get(i).getName() + (lane2Items.get(i).getIsBad()?" 0":" 1"));
 							lane2Items.get(i).setSuccessfullyTransferred(false);
 						}
-						if (vibrationCount % 4 == 1) { // Vibration up and down
-														// every 2 paint calls
+						if (vibrationCount % 4 == 1) { // Vibration up and down every 2 paint calls
 							if (i % 2 == 0) {
 								lane2Items.get(i).setY(itemYLaneDown);
 							} else if (i % 2 == 1) {
-								lane2Items.get(i).setY(
-										itemYLaneDown
-												+ vibrationAmplitudeBottom);
+								lane2Items.get(i).setY(itemYLaneDown + vibrationAmplitudeBottom);
 							}
 						} else if (vibrationCount % 4 == 3) {
 							if (i % 2 == 0) {
-								lane2Items.get(i).setY(
-										itemYLaneDown
-												+ vibrationAmplitudeBottom);
+								lane2Items.get(i).setY(itemYLaneDown + vibrationAmplitudeBottom);
 							} else if (i % 2 == 1) {
 								lane2Items.get(i).setY(itemYLaneDown);
 							}
@@ -806,12 +719,9 @@ public class GraphicLaneManager {
 			}
 		} // end of purge statements
 		else {
-			for (int i = 0; i < lane2Items.size(); i++) { // Do the same for
-															// lane 2
-				lane2Items.get(i).setX(
-						lane2Items.get(i).getX() + lane2Items.get(i).getVX());
-				lane2Items.get(i).setY(
-						lane2Items.get(i).getY() + lane2Items.get(i).getVY());
+			for (int i = 0; i < lane2Items.size(); i++) { // Do the same for lane 2
+				lane2Items.get(i).setX(lane2Items.get(i).getX() + lane2Items.get(i).getVX());
+				lane2Items.get(i).setY(lane2Items.get(i).getY() + lane2Items.get(i).getVY());
 
 				for (int j = 0; j < lane2Items.size(); j++) {
 					if (lane2Items.get(j).getY() < itemYLaneDown) {
@@ -824,19 +734,15 @@ public class GraphicLaneManager {
 				}
 
 				// Lane items move vertically
-				if (lane2Items.get(i).getVY() == vY
-						|| lane2Items.get(i).getVY() == -(vY)) {
-					if (vibrationCount % 4 == 1) { // Vibration left and right
-													// every 2 paint calls
+				if (lane2Items.get(i).getVY() == vY || lane2Items.get(i).getVY() == -(vY)) {
+					if (vibrationCount % 4 == 1) { // Vibration left and right every 2 paint calls
 						if (i % 2 == 0)
 							lane2Items.get(i).setX(itemXLane);
 						else if (i % 2 == 1)
-							lane2Items.get(i).setX(
-									itemXLane + vibrationAmplitudeBottom);
+							lane2Items.get(i).setX(itemXLane + vibrationAmplitudeBottom);
 					} else if (vibrationCount % 4 == 3) {
 						if (i % 2 == 0)
-							lane2Items.get(i).setX(
-									itemXLane + vibrationAmplitudeBottom);
+							lane2Items.get(i).setX(itemXLane + vibrationAmplitudeBottom);
 						else if (i % 2 == 1)
 							lane2Items.get(i).setX(itemXLane);
 					}
@@ -864,24 +770,10 @@ public class GraphicLaneManager {
 						stabilizationCount[1] = 0;
 						graphicPanel.sendMessage("la cmd partremovedfromlane " + (2*laneManagerID + 1));
 						graphicPanel.sendMessage("na cmd nestdestabilized n" + laneManagerID + "b");
-						lane2Items.get(i).setX(
-								lane_xPos
-										+ 3
-										+ 25
-										* (int) (graphicPanel.getNest()
-												.get(laneManagerID * 2 + 1)
-												.getSize() / 3));
+						lane2Items.get(i).setX(lane_xPos + 3 + 25*(int)(graphicPanel.getNest().get(laneManagerID*2 + 1).getSize()/3));
 						boolean testDiverge = lane2Items.get(i).getDivergeUp();
-						lane2Items.get(i).setY(
-								lane_yPos
-										+ 3
-										+ 25
-										* (graphicPanel.getNest()
-												.get(laneManagerID * 2 + 1)
-												.getSize() % 3) + 80
-										* ((testDiverge) ? 0 : 1));
-						graphicPanel.getNest().get(laneManagerID * 2 + 1)
-								.addItem(lane2Items.get(i));
+						lane2Items.get(i).setY(lane_yPos + 3 + 25*(graphicPanel.getNest().get(laneManagerID*2 + 1).getSize()%3) + 80*((testDiverge) ? 0 : 1));
+						graphicPanel.getNest().get(laneManagerID*2 + 1).addItem(lane2Items.get(i));
 						if (lane2QueueTaken.size() > 0)
 							lane2QueueTaken.remove(0);
 						lane2Items.remove(i);
@@ -890,27 +782,18 @@ public class GraphicLaneManager {
 					}
 				} else { // Nest Greater than 9
 					for (int j = 0; j < lane2Items.size(); j++) {
-						if (lane2Items.get(j).getX() < itemXMax
-								+ (lane2QueueTaken.size() + 1) * 10) {
+						if (lane2Items.get(j).getX() < itemXMax + (lane2QueueTaken.size() + 1)*10) {
 							lane2Items.get(j).setVX(0);
 						}
 					}
-					if (lane2Items.get(i).getX() <= (itemXMax + 5 + 5 + (lane2QueueTaken
-							.size()) * 10)
-							&& lane2Items.get(i).getX() >= itemXMax) {
+					if (lane2Items.get(i).getX() <= (itemXMax + 5 + 5 + (lane2QueueTaken.size())*10) && lane2Items.get(i).getX() >= itemXMax) {
 						// Queue is full, delete crashing Items
 						if (!lane2Items.get(i).getInQueue()) {
-							lane2Items.get(i).setX(
-									itemXMax + 5 + (lane2QueueTaken.size())
-											* 10);
+							lane2Items.get(i).setX(itemXMax + 5 + (lane2QueueTaken.size())*10);
 							lane2Items.get(i).setInQueue(true);
 						}
-						if (lane2Items.get(i).getX() == (itemXMax + 5 + (lane2QueueTaken
-								.size()) * 10)) {
-							if (lane2QueueTaken.size() > 13) { // To be changed
-																// according to
-																// size of lane
-
+						if (lane2Items.get(i).getX() == (itemXMax + 5 + (lane2QueueTaken.size())*10)) {
+							if (lane2QueueTaken.size() > 13) { // To be changed according to size of lane
 								lane2Items.remove(i);
 								i--;
 								// continue;
@@ -931,43 +814,29 @@ public class GraphicLaneManager {
 						graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane2Items.get(i).getName() + (lane2Items.get(i).getIsBad()?" 0":" 1"));
 						lane2Items.get(i).setSuccessfullyTransferred(false);
 					}
-					if (vibrationCount % 4 == 1) { // Vibration up and down
-													// every 2 paint calls
+					if (vibrationCount % 4 == 1) { // Vibration up and down every 2 paint calls
 						if (i % 2 == 0) {
 							lane2Items.get(i).setY(itemYLaneDown);
 						} else if (i % 2 == 1) {
-							lane2Items.get(i).setY(
-									itemYLaneDown + vibrationAmplitudeBottom);
+							lane2Items.get(i).setY(itemYLaneDown + vibrationAmplitudeBottom);
 						}
 					} else if (vibrationCount % 4 == 3) {
 						if (i % 2 == 0) {
-							lane2Items.get(i).setY(
-									itemYLaneDown + vibrationAmplitudeBottom);
+							lane2Items.get(i).setY(itemYLaneDown + vibrationAmplitudeBottom);
 						} else if (i % 2 == 1) {
 							lane2Items.get(i).setY(itemYLaneDown);
 						}
 					}
 
-					if (graphicPanel.getNest().get(laneManagerID * 2 + 1)
-							.getSize() >= 9) {
-						if (lane2Items.get(i).getX() <= (itemXMax + 5 + 5 + (lane2QueueTaken
-								.size()) * 10)
-								&& lane2Items.get(i).getX() >= itemXMax + 5) {
+					if (graphicPanel.getNest().get(laneManagerID * 2 + 1).getSize() >= 9) {
+						if (lane2Items.get(i).getX() <= (itemXMax + 5 + 5 + (lane2QueueTaken.size()) * 10) && lane2Items.get(i).getX() >= itemXMax + 5) {
 							// Queue is full, delete crashing Items
 							if (!lane2Items.get(i).getInQueue()) {
-								lane2Items.get(i).setX(
-										itemXMax + 5 + (lane2QueueTaken.size())
-												* 10);
+								lane2Items.get(i).setX(itemXMax + 5 + (lane2QueueTaken.size())* 10);
 								lane2Items.get(i).setInQueue(true);
 							}
-							if (lane2Items.get(i).getX() <= (itemXMax + 5 + (lane2QueueTaken
-									.size()) * 10)) {
-								if (lane2QueueTaken.size() > 14) { // To be
-																	// changed
-																	// according
-																	// to size
-																	// of lane
-
+							if (lane2Items.get(i).getX() <= (itemXMax + 5 + (lane2QueueTaken.size()) * 10)) {
+								if (lane2QueueTaken.size() > 14) { // To be changed according to size of lane
 									lane2Items.remove(i);
 									i--;
 									// continue;
@@ -987,47 +856,26 @@ public class GraphicLaneManager {
 						stabilizationCount[1] = 0;
 						graphicPanel.sendMessage("la cmd partremovedfromlane " + (2*laneManagerID + 1));
 						graphicPanel.sendMessage("na cmd nestdestabilized n" + laneManagerID + "b");
-						lane2Items.get(i).setX(
-								lane_xPos
-										+ 3
-										+ 25
-										* (int) (graphicPanel.getNest()
-												.get(laneManagerID * 2 + 1)
-												.getSize() / 3));
+						lane2Items.get(i).setX( lane_xPos + 3 + 25*(int)(graphicPanel.getNest().get(laneManagerID*2 + 1).getSize()/3));
 						boolean testDiverge = !lane2Items.get(i).getDivergeUp();
-						lane2Items.get(i).setY(
-								lane_yPos
-										+ 3
-										+ 25
-										* (graphicPanel.getNest()
-												.get(laneManagerID * 2 + 1)
-												.getSize() % 3) + 80
-										* ((testDiverge) ? 0 : 1));
-						graphicPanel.getNest().get(laneManagerID * 2 + 1)
-								.addItem(lane2Items.get(i));
+						lane2Items.get(i).setY(lane_yPos + 3 + 25*(graphicPanel.getNest().get(laneManagerID*2 + 1).getSize()%3) + 80*((testDiverge) ? 0 : 1));
+						graphicPanel.getNest().get(laneManagerID*2 + 1).addItem(lane2Items.get(i));
 						if (lane2QueueTaken.size() > 0)
 							lane2QueueTaken.remove(0);
 						lane2Items.remove(i);
 						i--;
 					}
 				} else {
-					if (lane2Items.get(i).getVY() == 0) { // lane 2 queue
-															// stopped moving.
-															// needs to vibrate
-						if (vibrationCount % 4 == 1) { // Vibration up and down
-														// every 2 paint calls
+					if (lane2Items.get(i).getVY() == 0) { // lane 2 queue stopped moving. needs to vibrate
+						if (vibrationCount % 4 == 1) { // Vibration up and down every 2 paint calls
 							if (i % 2 == 0) {
 								lane2Items.get(i).setY(itemYLaneDown);
 							} else if (i % 2 == 1) {
-								lane2Items.get(i).setY(
-										itemYLaneDown
-												+ vibrationAmplitudeBottom);
+								lane2Items.get(i).setY(itemYLaneDown + vibrationAmplitudeBottom);
 							}
 						} else if (vibrationCount % 4 == 3) {
 							if (i % 2 == 0) {
-								lane2Items.get(i).setY(
-										itemYLaneDown
-												+ vibrationAmplitudeBottom);
+								lane2Items.get(i).setY(itemYLaneDown + vibrationAmplitudeBottom);
 							} else if (i % 2 == 1) {
 								lane2Items.get(i).setY(itemYLaneDown);
 							}
@@ -1039,8 +887,7 @@ public class GraphicLaneManager {
 	}
 
 	public void processTopLaneJam() {
-		if (lane1Items.size() > 0) { // Moves Items after the jammed item until
-										// they are close to jammed item
+		if (lane1Items.size() > 0) { // Moves Items after the jammed item until they are close to jammed item
 			lane1Items.get(0).setVX(0);
 			for (int i = 1; i < lane1Items.size(); i++) {
 				if (lane1Items.get(i).getY() > itemYLaneUp) {
@@ -1049,18 +896,15 @@ public class GraphicLaneManager {
 					lane1Items.get(i).setVX(vXTop);
 				}
 
-				lane1Items.get(i).setX(
-						lane1Items.get(i).getX() + lane1Items.get(i).getVX()); // move items to jammed item
-				lane1Items.get(i).setY(
-						lane1Items.get(i).getY() + lane1Items.get(i).getVY());
+				lane1Items.get(i).setX(lane1Items.get(i).getX() + lane1Items.get(i).getVX()); // move items to jammed item
+				lane1Items.get(i).setY(lane1Items.get(i).getY() + lane1Items.get(i).getVY());
 
 				if (lane1Items.get(i).getX() <= lane1Items.get(0).getX() + i * 10) {
 					if (lane1Items.get(i).getVY() == 0) {
 						if (lane1Items.get(i).getX() >= itemXLane) // stops item from going off end of lane
 							lane1Items.get(i).setX(itemXLane);
 						else
-							lane1Items.get(i).setX(
-									lane1Items.get(0).getX() + i * 10); // Lines up items after jammed item
+							lane1Items.get(i).setX(lane1Items.get(0).getX() + i * 10); // Lines up items after jammed item
 						if (lane1Items.get(i).getX() >= itemXLane) {
 							lane1Items.remove(i); // //if item is too far back and will collide. remove it
 							i--;
@@ -1085,31 +929,26 @@ public class GraphicLaneManager {
 					if (i % 2 == 0) {
 						lane1Items.get(i).setY(itemYLaneUp);
 					} else if (i % 2 == 1) {
-						lane1Items.get(i).setY(
-								itemYLaneUp - vibrationAmplitudeTop);
+						lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitudeTop);
 					}
 				} else if (vibrationCount % 4 == 3) {
 					if (i % 2 == 0) {
-						lane1Items.get(i).setY(
-								itemYLaneUp - vibrationAmplitudeTop);
+						lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitudeTop);
 					} else if (i % 2 == 1) {
 						lane1Items.get(i).setY(itemYLaneUp);
 					}
 				}
 			} else if (lane1Items.get(i).getVX() == vXTop) {	//vibration
 				
-				if (vibrationCount % 4 == 1) { // Vibration up and down every 2
-												// paint calls
+				if (vibrationCount % 4 == 1) { // Vibration up and down every 2 paint calls
 					if (i % 2 == 0) {
 						lane1Items.get(i).setY(itemYLaneUp);
 					} else if (i % 2 == 1) {
-						lane1Items.get(i).setY(
-								itemYLaneUp - vibrationAmplitudeTop);
+						lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitudeTop);
 					}
 				} else if (vibrationCount % 4 == 3) {
 					if (i % 2 == 0) {
-						lane1Items.get(i).setY(
-								itemYLaneUp - vibrationAmplitudeTop);
+						lane1Items.get(i).setY(itemYLaneUp - vibrationAmplitudeTop);
 					} else if (i % 2 == 1) {
 						lane1Items.get(i).setY(itemYLaneUp);
 					}
@@ -1118,19 +957,15 @@ public class GraphicLaneManager {
 					lane1Items.remove(i);
 					i--;
 				}
-			} else if (lane1Items.get(i).getVY() == vY
-					|| lane1Items.get(i).getVY() == -(vY)) { // Horizontal vibrating
-				if (vibrationCount % 4 == 1) { // Vibration left and right every
-												// 2 paint calls
+			} else if (lane1Items.get(i).getVY() == vY || lane1Items.get(i).getVY() == -(vY)) { // Horizontal vibrating
+				if (vibrationCount % 4 == 1) { // Vibration left and right every 2 paint calls
 					if (i % 2 == 0)
 						lane1Items.get(i).setX(itemXLane);
 					else if (i % 2 == 1)
-						lane1Items.get(i).setX(
-								itemXLane + vibrationAmplitudeTop);
+						lane1Items.get(i).setX(itemXLane + vibrationAmplitudeTop);
 				} else if (vibrationCount % 4 == 3) {
 					if (i % 2 == 0)
-						lane1Items.get(i).setX(
-								itemXLane + vibrationAmplitudeTop);
+						lane1Items.get(i).setX(itemXLane + vibrationAmplitudeTop);
 					else if (i % 2 == 1)
 						lane1Items.get(i).setX(itemXLane);
 				}
@@ -1155,8 +990,7 @@ public class GraphicLaneManager {
 			 * if(lane2Items.get(i).getX() > itemXMax){
 			 * lane2Items.get(i).setVX(vX); }
 			 */
-			for (int i = 1; i < lane2Items.size(); i++) { // set speeds for the
-															// bottom lanes
+			for (int i = 1; i < lane2Items.size(); i++) { // set speeds for the bottom lanes
 				if (lane2Items.get(i).getY() < itemYLaneDown) {
 					lane2Items.get(i).setVY(lane2Speed);
 					// lane2Items.get(i).setVX(0);
@@ -1164,21 +998,16 @@ public class GraphicLaneManager {
 					lane2Items.get(i).setVX(vXBottom);
 					// lane2Items.get(i).setVY(0);
 				}
-				lane2Items.get(i).setX(
-						lane2Items.get(i).getX() + lane2Items.get(i).getVX()); // move items to jammed item
-				lane2Items.get(i).setY(
-						lane2Items.get(i).getY() + lane2Items.get(i).getVY());
+				lane2Items.get(i).setX(lane2Items.get(i).getX() + lane2Items.get(i).getVX()); // move items to jammed item
+				lane2Items.get(i).setY(lane2Items.get(i).getY() + lane2Items.get(i).getVY());
 
-				if (lane2Items.get(i).getX() <= lane2Items.get(0).getX() + i
-						* 10) {
-					if (lane2Items.get(i).getVY() == 0) { // if no vertical
-															// velocity
+				if (lane2Items.get(i).getX() <= lane2Items.get(0).getX() + i*10) {
+					if (lane2Items.get(i).getVY() == 0) { // if no vertical velocity
 						if (lane2Items.get(i).getX() >= itemXLane) // stops item from going off end of lane
 							lane2Items.get(i).setX(itemXLane);
 						else
 							// keep parts from overlapping
-							lane2Items.get(i).setX(
-									lane2Items.get(0).getX() + i * 10); // sets the coord. for where to stop part at
+							lane2Items.get(i).setX(lane2Items.get(0).getX() + i * 10); // sets the coord. for where to stop part at
 						if (lane2Items.get(i).getX() >= itemXLane) { // if item is too far back and will collide feeder remove it
 							lane2Items.remove(i);
 							i--;
@@ -1196,42 +1025,31 @@ public class GraphicLaneManager {
 			}
 		}
 
-		for (int i = 0; i < lane2Items.size(); i++) { // Vibration -- check if
-														// vertical velocity is
-														// 0 or horiz. velocity
-														// is vXBottom
+		for (int i = 0; i < lane2Items.size(); i++) { // Vibration -- check if vertical velocity is 0 or horiz. velocity is vXBottom
 			if (lane2Items.get(i).getVY() == 0) { // In the queue
-				if (vibrationCount % 4 == 1) { // Vibration up and down every 2
-												// paint calls, for vertical
-												// vibration
+				if (vibrationCount % 4 == 1) { // Vibration up and down every 2 paint calls, for vertical vibration
 					if (i % 2 == 0) {
 						lane2Items.get(i).setY(itemYLaneDown);
 					} else if (i % 2 == 1) {
-						lane2Items.get(i).setY(
-								itemYLaneDown + vibrationAmplitudeBottom);
+						lane2Items.get(i).setY(itemYLaneDown + vibrationAmplitudeBottom);
 					}
 				} else if (vibrationCount % 4 == 3) {
 					if (i % 2 == 0) {
-						lane2Items.get(i).setY(
-								itemYLaneDown + vibrationAmplitudeBottom);
+						lane2Items.get(i).setY(itemYLaneDown + vibrationAmplitudeBottom);
 					} else if (i % 2 == 1) {
 						lane2Items.get(i).setY(itemYLaneDown);
 					}
 				}
 			} else if (lane2Items.get(i).getVX() == vXBottom) {
-				if (vibrationCount % 4 == 1) { // Vibration up and down every 2
-												// paint calls, vertical
-												// vibration
+				if (vibrationCount % 4 == 1) { // Vibration up and down every 2 paint calls, vertical vibration
 					if (i % 2 == 0) {
 						lane2Items.get(i).setY(itemYLaneDown);
 					} else if (i % 2 == 1) {
-						lane2Items.get(i).setY(
-								itemYLaneDown + vibrationAmplitudeBottom);
+						lane2Items.get(i).setY(itemYLaneDown + vibrationAmplitudeBottom);
 					}
 				} else if (vibrationCount % 4 == 3) {
 					if (i % 2 == 0) {
-						lane2Items.get(i).setY(
-								itemYLaneDown + vibrationAmplitudeBottom);
+						lane2Items.get(i).setY(itemYLaneDown + vibrationAmplitudeBottom);
 					} else if (i % 2 == 1) {
 						lane2Items.get(i).setY(itemYLaneDown);
 					}
@@ -1241,20 +1059,15 @@ public class GraphicLaneManager {
 					i--;
 				}
 			} // check if Vertical velocity is not 0
-			else if (lane2Items.get(i).getVY() == vY
-					|| lane2Items.get(i).getVY() == -(vY)) { // Horizontal
-																// vibrating
-				if (vibrationCount % 4 == 1) { // Vibration left and right every
-												// 2 paint calls
+			else if (lane2Items.get(i).getVY() == vY || lane2Items.get(i).getVY() == -(vY)) { // Horizontal vibrating
+				if (vibrationCount % 4 == 1) { // Vibration left and right every 2 paint calls
 					if (i % 2 == 0)
 						lane2Items.get(i).setX(itemXLane);
 					else if (i % 2 == 1)
-						lane2Items.get(i).setX(
-								itemXLane + vibrationAmplitudeBottom);
+						lane2Items.get(i).setX(itemXLane + vibrationAmplitudeBottom);
 				} else if (vibrationCount % 4 == 3) {
 					if (i % 2 == 0)
-						lane2Items.get(i).setX(
-								itemXLane + vibrationAmplitudeBottom);
+						lane2Items.get(i).setX(itemXLane + vibrationAmplitudeBottom);
 					else if (i % 2 == 1)
 						lane2Items.get(i).setX(itemXLane);
 				}

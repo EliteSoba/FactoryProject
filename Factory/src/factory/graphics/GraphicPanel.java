@@ -852,7 +852,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	/**
-	 * Sends message to Server depending
+	 * Sends message to Server with variable source
 	 * @param command The command to send
 	 */
 	public void sendMessage(String command) {
