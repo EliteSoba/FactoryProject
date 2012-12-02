@@ -59,6 +59,7 @@ public class GraphicLaneManager {
 	int laneManagerID;
 	/** Counters to keep track of lane animation. 7 sprites **/
 	int laneAnimationCounter1, laneAnimationCounter2, laneAnimationSpeed;
+	/** Counters to keep of diverger switch**/
 	int divergerLaneAnimationCounter1, divergerLaneAnimationCounter2;
 	/** Counter for diverger light animation **/
 	int divergerLightAnimationCounter;
@@ -384,8 +385,7 @@ public class GraphicLaneManager {
 	}
 
 	/**
-	 * Moves the items in the lane. Processes both top and bottom lane
-	 * DOES EVERYTHING
+	 * Moves the items in the lane. Processes top lane
 	 */
 
 	public void processTopLane() {
@@ -646,6 +646,9 @@ public class GraphicLaneManager {
 		} // END OF LANE 1
 	}
 
+	/**
+	 * Moves the items in the lane. Processes bottom lane
+	 */
 	public void processBottomLane() {
 		if (lane2PurgeOn) { // If purge is on, empties the nest and destroys items on lane
 			graphicPanel.getNest().get(laneManagerID * 2 + 1).clearItems();
@@ -884,6 +887,10 @@ public class GraphicLaneManager {
 		}
 	}
 
+	/**
+	 * Moves the items in the lane. Processes top lane when jammed
+	 * Stop items after the first part
+	 */
 	public void processTopLaneJam() {
 		if (lane1Items.size() > 0) { // Moves Items after the jammed item until they are close to jammed item
 			lane1Items.get(0).setVX(0);
@@ -974,18 +981,14 @@ public class GraphicLaneManager {
 		}
 	}
 
+	/**
+	 * Moves the items in the lane. Processes bottom lane when jammed
+	 * Stop items after the first part
+	 */
 	public void processBottomLaneJam() {
 		if (lane2Items.size() > 0) { // Moves Items into the jam
 			lane2Items.get(0).setVX(0);
 
-			/*
-			 * for(int i = 1; i < lane2Items.size();i++){
-			 * 
-			 * if(lane2Items.get(i).getY() < itemYLaneDown){
-			 * lane2Items.get(i).setVY(laneSpeed); } else
-			 * if(lane2Items.get(i).getX() > itemXMax){
-			 * lane2Items.get(i).setVX(vX); }
-			 */
 			for (int i = 1; i < lane2Items.size(); i++) { // set speeds for the bottom lanes
 				if (lane2Items.get(i).getY() < itemYLaneDown) {
 					lane2Items.get(i).setVY(lane2Speed);
@@ -1092,24 +1095,40 @@ public class GraphicLaneManager {
 		return badProbability;
 	}
 
-	/** TODO: Comment these methods */
+	/**
+	 * Changes the speed of the top lane.
+	 * Changes vX and vY
+	 * @param laneS the lane speed of top lane
+	 */
 	public void changeTopLaneSpeed(int laneS) { // //Changes top Lane Speed
 		lane1Speed = laneS;
 		vXTop = -lane1Speed;
 		vY = lane1Speed;
 	}
 
+	/**
+	 * Changes the speed of the bottom lane.
+	 * Changes vX and vY
+	 * @param laneS the lane speed of bottom lane
+	 */
 	public void changeBottomLaneSpeed(int laneS) { // Changes Bottom Lane Speed
 		lane2Speed = laneS;
 		vXBottom = -lane2Speed;
 		vY = lane2Speed;
 	}
 
-	// Change the virbration amplitudes
+	/**
+	 * Changes the amplitude of the top lane.
+	 * @param amp the amplitude of top lane
+	 */
 	public void changeTopLaneAmplitude(int amp) {
 		vibrationAmplitudeTop = amp;
 	}
 
+	/**
+	 * Changes the amplitude of the bottom lane.
+	 * @param amp the amplitude of top lane
+	 */
 	public void changeBottomLaneAmplitude(int amp) {
 		vibrationAmplitudeBottom = amp;
 	}
