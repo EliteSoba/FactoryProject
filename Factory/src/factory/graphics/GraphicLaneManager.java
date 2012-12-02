@@ -321,9 +321,8 @@ public class GraphicLaneManager {
 			if (binExists
 					&& stabilizationCount[i] >= bin.getStabilizationTime()) {
 				isStable[i] = true;
-				if (stabilizationCount[i] == bin.getStabilizationTime())
-					graphicPanel.sendMessage("na cmd neststabilized n"
-							+ laneManagerID + (i == 0 ? "t" : "b"));
+				if (stabilizationCount[i] == bin.getStabilizationTime());
+					//graphicPanel.sendMessage("na cmd neststabilized n" + laneManagerID + (i == 0 ? "t" : "b"));
 			} else
 				isStable[i] = false;
 		}
@@ -450,6 +449,7 @@ public class GraphicLaneManager {
 					if (lane1Items.get(i).getVX() == vXTop) {
 						if (lane1Items.get(i).getSuccessfullyTransferred()) {
 							//TODO: Send the message
+							graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane1Items.get(i).getName() + " 1");
 							lane1Items.get(i).setSuccessfullyTransferred(false);
 						}
 						if (vibrationCount % 4 == 1) { // Vibration up and down
@@ -537,8 +537,7 @@ public class GraphicLaneManager {
 						lane1Items.get(i).setVY(0);
 						lane1Items.get(i).setVX(0);
 						stabilizationCount[0] = 0;
-						graphicPanel.sendMessage("fa cmd nestdestabilized n"
-								+ laneManagerID + "t");
+						graphicPanel.sendMessage("la cmd partremovedfromlane " + (2*laneManagerID));
 						lane1Items.get(i).setX(
 								lane_xPos
 										+ 3
@@ -606,6 +605,7 @@ public class GraphicLaneManager {
 				if (lane1Items.get(i).getVX() == vXTop) {
 					if (lane1Items.get(i).getSuccessfullyTransferred()) {
 						//TODO: Send the message
+						graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane1Items.get(i).getName() + " 1");
 						lane1Items.get(i).setSuccessfullyTransferred(false);
 					}
 					if (vibrationCount % 4 == 1) { // Vibration up and down
@@ -659,8 +659,7 @@ public class GraphicLaneManager {
 						lane1Items.get(i).setVY(0);
 						lane1Items.get(i).setVX(0);
 						stabilizationCount[0] = 0;
-						graphicPanel.sendMessage("fa cmd nestdestabilized n"
-								+ laneManagerID + "t");
+						graphicPanel.sendMessage("la cmd partremovedfromlane " + (2*laneManagerID));
 						lane1Items.get(i).setX(
 								lane_xPos
 										+ 3
@@ -761,6 +760,7 @@ public class GraphicLaneManager {
 					if (lane2Items.get(i).getVX() == vXBottom) {
 						if (lane2Items.get(i).getSuccessfullyTransferred()) {
 							//TODO: Send the message
+							graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane1Items.get(i).getName() + " 1");
 							lane2Items.get(i).setSuccessfullyTransferred(false);
 						}
 						if (vibrationCount % 4 == 1) { // Vibration up and down
@@ -851,8 +851,7 @@ public class GraphicLaneManager {
 						lane2Items.get(i).setVY(0);
 						lane2Items.get(i).setVX(0);
 						stabilizationCount[1] = 0;
-						graphicPanel.sendMessage("fa cmd nestdestabilized n"
-								+ laneManagerID + "b");
+						graphicPanel.sendMessage("la cmd partremovedfromlane " + (2*laneManagerID + 1));
 						lane2Items.get(i).setX(
 								lane_xPos
 										+ 3
@@ -917,6 +916,7 @@ public class GraphicLaneManager {
 				if (lane2Items.get(i).getVX() == vXBottom) {
 					if (lane2Items.get(i).getSuccessfullyTransferred()) {
 						//TODO: Send the message
+						graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane1Items.get(i).getName() + " 1");
 						lane2Items.get(i).setSuccessfullyTransferred(false);
 					}
 					if (vibrationCount % 4 == 1) { // Vibration up and down
@@ -973,8 +973,7 @@ public class GraphicLaneManager {
 						lane2Items.get(i).setVY(0);
 						lane2Items.get(i).setVX(0);
 						stabilizationCount[1] = 0;
-						graphicPanel.sendMessage("fa cmd nestdestabilized n"
-								+ laneManagerID + "b");
+						graphicPanel.sendMessage("la cmd partremovedfromlane " + (2*laneManagerID + 1));
 						lane2Items.get(i).setX(
 								lane_xPos
 										+ 3
@@ -1057,6 +1056,7 @@ public class GraphicLaneManager {
 						else{
 							if (lane1Items.get(i).getSuccessfullyTransferred()) {
 								//TODO: Send the message
+								graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane1Items.get(i).getName() + " 1");
 								lane1Items.get(i).setSuccessfullyTransferred(false);
 							}
 						}
@@ -1174,6 +1174,7 @@ public class GraphicLaneManager {
 						else{
 							if (lane2Items.get(i).getSuccessfullyTransferred()) {
 								//TODO: Send the message
+								graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane1Items.get(i).getName() + " 1");
 								lane2Items.get(i).setSuccessfullyTransferred(false);
 							}
 						}
