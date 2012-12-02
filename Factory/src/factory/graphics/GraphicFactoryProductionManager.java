@@ -169,19 +169,19 @@ public class GraphicFactoryProductionManager extends JFrame {
 	}
 	
 	public void stopTopLane(int feederNum){
-		panel.jamTopLane(feederNum);
+		panel.stopTopLane(feederNum);
 	}
 	
 	public void startTopLane(int feederNum){
-		panel.unjamTopLane(feederNum);
+		panel.startTopLane(feederNum);
 	}
 	
 	public void stopBottomLane(int feederNum){
-		panel.jamBottomLane(feederNum);
+		panel.stopBottomLane(feederNum);
 	}
 	
 	public void startBottomLane(int feederNum){
-		panel.jamBottomLane(feederNum);
+		panel.startBottomLane(feederNum);
 	}
 	
 	public void getBin(String partName)

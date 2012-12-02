@@ -388,7 +388,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 				lane[feederNum].bin.binItems.add(new GraphicItem(-40, 0, "Images/"+lane[feederNum].bin.partName+".png"));
 			}
 			if(lane[feederNum].hasBin() && lane[feederNum].bin.getBinItems().size() > 0){
-				lane[feederNum].laneStart = true;
+				if(lane[feederNum].divergeUp)
+					lane[feederNum].lane1Start = true;
+				else
+					lane[feederNum].lane2Start = true;
 				lane[feederNum].feederOn = true;
 			}
 		}
@@ -418,8 +421,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			}
 			
 			if(lane[(laneNum) / 2].hasBin() && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
-				lane[(laneNum) / 2].laneStart = true;
 				lane[(laneNum) / 2].divergeUp = ((laneNum) % 2 == 0);
+				if(lane[(laneNum) / 2].divergeUp)
+					lane[(laneNum) / 2].lane1Start = true;
+				else
+					lane[(laneNum) / 2].lane2Start = true;
 				lane[(laneNum) / 2].feederOn = true;
 			}
 		}
@@ -433,7 +439,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void startLane(int laneNum){
 		if (isLaneManager || isFactoryProductionManager) {
-			lane[(laneNum) / 2].laneStart = true;
+			if(lane[(laneNum) / 2].divergeUp)
+				lane[(laneNum) / 2].lane1Start = true;
+			else
+				lane[(laneNum) / 2].lane2Start = true;
 		}
 	}
 	
@@ -468,7 +477,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void stopLane(int laneNum){
 		if (isLaneManager || isFactoryProductionManager)
-			lane[(laneNum) / 2].laneStart = false;
+			if(lane[(laneNum) / 2].divergeUp)
+				lane[(laneNum) / 2].lane1Start = false;
+			else
+				lane[(laneNum) / 2].lane2Start = false;
 	}
 	
 	/**
@@ -515,7 +527,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].lane1PurgeOn = true;
 			lane[feederNum].feederOn = false;
-			lane[feederNum].laneStart = true;
+			lane[feederNum].lane1Start = true;
 		}
 	}
 	
@@ -527,7 +539,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].lane2PurgeOn = true;
 			lane[feederNum].feederOn = false;
-			lane[feederNum].laneStart = true;
+			lane[feederNum].lane2Start = true;
 		}
 	}
 	
@@ -576,19 +588,19 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void stopTopLane(int feederNum){
-		lane[feederNum].laneStart = false;
+		lane[feederNum].lane1Start = false;
 	}
 
 	public void startTopLane(int feederNum){
-		lane[feederNum].laneStart = true;
+		lane[feederNum].lane1Start = true;
 	}
 
 	public void stopBottomLane(int feederNum){
-		lane[feederNum].laneStart = false;
+		lane[feederNum].lane2Start = false;
 	}
 
 	public void startBottomLane(int feederNum){
-		lane[feederNum].laneStart = true;
+		lane[feederNum].lane2Start = true;
 	}
 	
 	/**
