@@ -592,7 +592,7 @@ public class MasterControl {
             	if (cmd.get(3).equals("missingparts")) {
             		int feederNum = Integer.parseInt(cmd.get(4));
             		int nestNum = Integer.parseInt(cmd.get(5));
-            		((VisionAgent) destination).msgNoGoodPartsFound(feederNum, nestNum);
+            		//((VisionAgent) destination).msgNoGoodPartsFound(feederNum, nestNum);
             	}
             } // End VisionAgent Commands
 

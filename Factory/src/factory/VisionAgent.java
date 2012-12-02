@@ -15,7 +15,7 @@ import factory.masterControl.MasterControl;
 public class VisionAgent extends Agent implements Vision {
 
 	public enum kitPictureRequeststate { NEED_TO_INSPECT, INSPECTED }
-	public enum PictureRequestState { NESTS_READY, ASKED_PARTS_ROBOT, PARTS_ROBOT_CLEAR, PICTURE_TAKEN }
+	public enum PictureRequestState { NESTS_READY, ANALYZED, ASKED_PARTS_ROBOT, PARTS_ROBOT_CLEAR, PICTURE_TAKEN }
 
 	public ArrayList<PictureRequest> pictureRequests = new ArrayList<PictureRequest>(); 
 	public ArrayList<KitPicRequest> kitPictureRequests = new ArrayList<KitPicRequest>();     
@@ -79,7 +79,14 @@ public class VisionAgent extends Agent implements Vision {
 	}
 
 	public void msgMyNestsReadyForPicture(Nest nestOne, Nest nestTwo, Feeder feeder) {
-		debug("msgMyNestsReadyForPicture("+nestOne.getPart().name+","+nestTwo.getPart().name+")");
+		if(nestOne.getPart() != null && nestTwo.getPart() !=null){
+			debug("msgMyNestsReadyForPicture("+nestOne.getPart().name+","+nestTwo.getPart().name+")");
+
+		}
+		else {
+			debug("msgMyNestsReadyForPicture(null,null)");
+
+		}
 		pictureRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
 		this.stateChanged();
 	}
@@ -106,26 +113,27 @@ public class VisionAgent extends Agent implements Vision {
 
 	public boolean pickAndExecuteAnAction() {
 
-		for(PictureRequest pr: pictureRequests){
-			
-			if(pr.state == PictureRequestState.PARTS_ROBOT_CLEAR){
-				Nest one = this.nests.get(this.nests.indexOf(pr.nestOne));
-				Nest two = this.nests.get(this.nests.indexOf(pr.nestTwo));
+		synchronized (pictureRequests) {
+			for (PictureRequest pr : pictureRequests) {
 
-				if(one.getPart().name == pr.nestOne.getPart().name && two.getPart().name == pr.nestTwo.getPart().name){
-					takePicture(pr);
+				if (pr.state == PictureRequestState.PARTS_ROBOT_CLEAR) {
+					Nest one = this.nests.get(this.nests.indexOf(pr.nestOne));
+					Nest two = this.nests.get(this.nests.indexOf(pr.nestTwo));
+
+					if (one.getPart().name == pr.nestOne.getPart().name
+							&& two.getPart().name == pr.nestTwo.getPart().name) {
+						takePicture(pr);
+					}
+					return true;
 				}
-				return true;
+			}
+			for (PictureRequest pr : pictureRequests) {
+				if (pr.state == PictureRequestState.NESTS_READY) {
+					processPictureRequest(pr);
+					return true;
+				}
 			}
 		}
-
-		for(PictureRequest pr: pictureRequests){
-			if(pr.state == PictureRequestState.NESTS_READY){
-				processPictureRequest(pr);
-				return true;
-			}
-		}
-
 		for(KitPicRequest k: kitPictureRequests){
 			if(k.state == kitPictureRequeststate.NEED_TO_INSPECT){
 				inspectKit(k);
@@ -142,11 +150,10 @@ public class VisionAgent extends Agent implements Vision {
 
 	private void processPictureRequest(PictureRequest pr){
 
-		Nest one = this.nests.get(this.nests.indexOf(pr.nestOne));
-		Nest two = this.nests.get(this.nests.indexOf(pr.nestTwo));
+		pr.state = PictureRequestState.ANALYZED;
 		
-		pr.nestOneState = calculateNestState(one);
-		pr.nestTwoState = calculateNestState(two);
+		pr.nestOneState = calculateNestState(pr.nestOne);
+		pr.nestTwoState = calculateNestState(pr.nestTwo);
 	}
 	
 	private void inspectKit(KitPicRequest k) {
@@ -239,17 +246,13 @@ public class VisionAgent extends Agent implements Vision {
 
 	private int calculateNestState(Nest nest){
 		
-		// Check if the nest is empty
-		if(nest.nestParts.size() == 0) {
-			//If it is being used 
-			if(nest.){
-				
-			}
+		// Check if the nest is not used
+		if(!nest.isBeingUsed()) {
+			return 0;
 		}
 		
 		return 0;
 	}
-	
 	
 	public void setFeeder(Feeder feeder, int feederNum){
 		if (feederNum == 0){
