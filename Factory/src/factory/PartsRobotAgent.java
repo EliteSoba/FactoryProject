@@ -367,7 +367,6 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		this.vision.msgNewNestConfig(nestsToVision);
 		
 		// Reset the slots to empty
-		
 		if(this.topSlotState == SlotState.BUILDING && this.stand.getSlotKit("topSlot") != null && this.stand.getSlotKit("topSlot").parts.size() != 0){
 			this.topSlot = null;
 			this.topSlotState = SlotState.EMPTY;
