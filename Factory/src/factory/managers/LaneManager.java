@@ -199,6 +199,8 @@ public class LaneManager extends Client {
 				// call graphics function to change amplitude
 			}else if (identifier.equals("lanepower")){
 				
+			}else if (identifier.equals("feederpower")){
+				
 			}
 
 		}
