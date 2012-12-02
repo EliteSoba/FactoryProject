@@ -360,6 +360,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		dropPartsRobotsItemsDone();
 	}
 	
+	/**
+	 * Dumps the Items at the given Nest
+	 * @param nestIndex The given Nest Pair
+	 * @param isTop If the Nest to be purged is on the Top or the Bottom
+	 */
 	public void dumpNest(int nestIndex, boolean isTop) {
 		if (isLaneManager || isFactoryProductionManager) {
 			nests.get(nestIndex*2 + (isTop ? 0 : 1)).clearItems();
@@ -545,7 +550,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Jams the top lane. All items stops behind the first item.
-	 * @param feederNum The designated feeder, 1-4
+	 * @param feederNum The designated feeder, 0-3
 	 */
 	public void jamTopLane(int feederNum){
 		lane[feederNum].lane1Jam = true;
@@ -553,7 +558,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Unjams the top lane. Return back to normal.
-	 * @param feederNum The designated feeder, 1-4
+	 * @param feederNum The designated feeder, 0-3
 	 */
 	public void unjamTopLane(int feederNum){
 		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane1Speed + 1);
@@ -567,7 +572,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Jams the bottom lane. All items stops behind the first item.
-	 * @param feederNum The designated feeder, 1-4
+	 * @param feederNum The designated feeder, 0-3
 	 */
 	public void jamBottomLane(int feederNum){
 		lane[feederNum].lane2Jam = true;
@@ -575,7 +580,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Unjams the bottom lane. Return back to normal.
-	 * @param feederNum The designated feeder, 1-4
+	 * @param feederNum The designated feeder, 0-3
 	 */
 	public void unjamBottomLane(int feederNum){
 		lane[feederNum].changeBottomLaneSpeed(lane[feederNum].lane2Speed + 1);
@@ -587,18 +592,34 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		lane[feederNum].lane2Jam = false;
 	}
 	
+	/**
+	 * Stops the Top Lane of the given Lane Pair
+	 * @param feederNum The relevant Lane Pair
+	 */
 	public void stopTopLane(int feederNum){
 		lane[feederNum].lane1Start = false;
 	}
 
+	/**
+	 * Starts the Top Lane of the given Lane Pair
+	 * @param feederNum The relevant Lane Pair
+	 */
 	public void startTopLane(int feederNum){
 		lane[feederNum].lane1Start = true;
 	}
 
+	/**
+	 * Stop the Bottom Lane of the given Lane Pair
+	 * @param feederNum The relevant Lane Pair
+	 */
 	public void stopBottomLane(int feederNum){
 		lane[feederNum].lane2Start = false;
 	}
 
+	/**
+	 * Starts the Bottom Lane of the given Lane Pair
+	 * @param feederNum The relevant Lane Pair
+	 */
 	public void startBottomLane(int feederNum){
 		lane[feederNum].lane2Start = true;
 	}

@@ -246,18 +246,42 @@ public class GraphicItem {
 		return imagePath;
 	}
 	
-	public void setIsBad() {
-		isBad = true;
+	/**
+	 * Sets whether or not the Item is bad
+	 * @param bad If the item is bad
+	 */
+	public void setIsBad(boolean bad) {
+		isBad = bad;
 	}
 	
+	/**
+	 * Gets if the Item is bad or not
+	 * @return {@code true} if the Item is bad; {@code false} otherwise
+	 */
+	public boolean getIsBad() {
+		return isBad;
+	}
+	
+	/**
+	 * Gets if the Item was successfully transferred into the Lane
+	 * @return {@code true} if the Item was successfully transferred to the Lane; {@code false} otherwise
+	 */
 	public boolean getSuccessfullyTransferred() {
 		return successfullyTransferred;
 	}
 	
+	/**
+	 * Sets if the Item was successfully transferred into the Lane or not
+	 * @param sT Whether or not the Item was/will be successfully transferred
+	 */
 	public void setSuccessfullyTransferred(boolean sT) {
 		successfullyTransferred = sT;
 	}
 	
+	/**
+	 * Gets the name of the Item derived from its Image path
+	 * @return The name of the Item derived from its Image path
+	 */
 	public String getName() {
 		return imagePath.substring(imagePath.indexOf("/")+1, imagePath.indexOf("."));
 	}
