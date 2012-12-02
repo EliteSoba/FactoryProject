@@ -552,7 +552,7 @@ public class MasterControl {
 				}
 				else if (cmd.get(3).equals("partlost")) {
 					String partName = cmd.get(4);
-					((StandAgent) destination).msgForceKitInspectionToFail(/*partName*/);
+					((StandAgent) destination).msgForceKitInspectionToFail(partName);
 				}
 			}//End StandAgent Commands
 
