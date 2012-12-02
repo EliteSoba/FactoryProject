@@ -186,9 +186,9 @@ public class ControlPanel extends JPanel implements ActionListener{
 		else if(source == startLane1)
 			am.startTopLane(0); 
 		else if(source == stopLane2)
-			am.stopBottomLane(0); 
+			am.stopFeeder(0); 
 		else if(source == startLane2)
-			am.startBottomLane(0); 
+			am.startFeeder(0); 
 		else if(source == changeAmplitude1)
 			am.setLaneAmplitudeTop(0);
 		else if(source == changeSpeed1)
