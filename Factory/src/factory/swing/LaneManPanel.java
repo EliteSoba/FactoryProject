@@ -215,7 +215,7 @@ public class LaneManPanel extends JPanel{
 			// TODO Auto-generated method stub
 			if(ae.getSource() == laneOn){
 				int lanenum = (Integer)laneSelect.getSelectedItem();
-				String set = "lm lm cmd lanepower on " + (lanenum-1);
+				String set = "lm lm set lanepower on " + (lanenum-1);
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -223,7 +223,7 @@ public class LaneManPanel extends JPanel{
 				} 
 			}else if (ae.getSource() == laneOff){
 				int lanenum = (Integer)laneSelect.getSelectedItem();
-				String set = "lm lm cmd lanepower off " + (lanenum-1);
+				String set = "lm lm set lanepower off " + (lanenum-1);
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -231,7 +231,7 @@ public class LaneManPanel extends JPanel{
 				} 
 			}else if (ae.getSource() == feederOn){
 				int feedernum = (Integer)feederSelect.getSelectedItem();
-				String set = "lm lm cmd feederpower on " + feedernum;
+				String set = "lm lm set feederpower on " + feedernum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -239,7 +239,7 @@ public class LaneManPanel extends JPanel{
 				} 
 			}else if (ae.getSource() == feederOff){
 				int feedernum = (Integer)feederSelect.getSelectedItem();
-				String set = "lm lm cmd feederpower off " + feedernum;
+				String set = "lm lm set feederpower off " + feedernum;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
