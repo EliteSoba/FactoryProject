@@ -28,11 +28,12 @@ public class FeederAgent extends Agent implements Feeder {
 	public Gantry gantry;
 
 	private final static int kNUM_PARTS_FED = 15;
-	private final static int kOK_TO_PURGE_TIME = 7;
+	private final static int kOK_TO_PURGE_TIME = 7; 
+	private final static int kPICTURE_DELAY_TIME = 3;
 	public int feederNumber;
+	public boolean visionShouldTakePicture = true;
 	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());
 
-	public boolean myNestsHaveBeenChecked = false;
 	public boolean debugMode;
 	public boolean printDebugStatements;
 	public Part currentPart;
@@ -44,7 +45,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	//list of timers to indicate when it's OK to feed, when the feeder is empty, and when the part is resettled
 	public Timer okayToPurgeTimer = new Timer();
-	public Timer feederEmptyTimer = new Timer();
+	public Timer takePictureTimer = new Timer();
 	public Timer partResettleTimer = new Timer();
 	public boolean feederHasABinUnderneath = false; // no bin underneath the feeder initially
 
@@ -134,7 +135,7 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  him that his nest has become stable.
 	 */ 
 	public void msgNestHasStabilized(Lane lane) {
-		myNestsHaveBeenChecked = false;
+//		myNestsHaveBeenChecked = false; // no longer used
 
 		// figure out which lane sent the message
 		if(topLane.lane == lane)
@@ -159,7 +160,7 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  The Lane sends this message to the Feeder notifying him that his nest has become unstable.
 	 */ 
 	public void msgNestHasDeStabilized(Lane lane) {
-		myNestsHaveBeenChecked = false;
+//		myNestsHaveBeenChecked = false; // no longer used
 
 		// figure out which lane sent the message
 		if(topLane.lane == lane)
@@ -311,9 +312,10 @@ public class FeederAgent extends Agent implements Feeder {
 	public boolean pickAndExecuteAnAction() {
 
 		// Determine if the Nests need to be checked to see if they are ready for a picture
-		if (myNestsHaveBeenChecked == false)
+		if (visionShouldTakePicture == true)
 		{
-			return areMyNestsReadyForAPicture();
+			takePicture();
+			return true;
 		}
 
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
@@ -428,8 +430,7 @@ public class FeederAgent extends Agent implements Feeder {
 		
 		la.jamState = JamState.NO_LONGER_JAMMED;
 		DoUnjamLane(la);
-		myNestsHaveBeenChecked = false; // we make this false so that the schedule will 
-		// check to see if the nests are ready, and if so, tell the vision to take a picture
+//		myNestsHaveBeenChecked = false; // no longer used
 		
 	}
 	
@@ -490,46 +491,25 @@ public class FeederAgent extends Agent implements Feeder {
 		//		return true;
 	}
 
-	/** This action checks to see if the 
-	 * Feeder's 2 nests are ready for a picture. */
-	private boolean areMyNestsReadyForAPicture() {
-		myNestsHaveBeenChecked = true;
-	
-
-		// Determine if the Feeder's associated Nests are ready for a picture
-		boolean bothNestsStable = topLane.picState == PictureState.STABLE && 
-				bottomLane.picState == PictureState.STABLE;
-
-		boolean topNestStableBottomWaitingForPicture = topLane.picState == PictureState.STABLE && 
-				bottomLane.picState == PictureState.TOLD_VISION_TO_TAKE_PICTURE;
-
-		boolean bottomNestStableTopWaitingForPicture = bottomLane.picState == PictureState.STABLE && 
-				topLane.picState == PictureState.TOLD_VISION_TO_TAKE_PICTURE;
-
-		boolean topNestNoLongerJammed = topLane.jamState == JamState.NO_LONGER_JAMMED;
-		
-		boolean bottomNestNoLongerJammed = bottomLane.jamState == JamState.NO_LONGER_JAMMED;
-
-		// Now check if any of the above conditions are true
-		if (topNestNoLongerJammed && bottomNestNoLongerJammed &&
-		(bothNestsStable || topNestStableBottomWaitingForPicture || bottomNestStableTopWaitingForPicture))
-		{
-			topLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE;   // we have told the vision to take a picture, only send this once
-			bottomLane.picState = PictureState.TOLD_VISION_TO_TAKE_PICTURE; // we have told the vision to take a picture, only send this once
-			debug("Feeder sends msgMyNestsReadyForPicture() to vision.");
-			debug("Hey vision: topLane.part = " + topLane.part.name + " and bottomLane.part = " + bottomLane.part.name);
-			if (this.requestedParts.size() == 0)
+	/** This action checks to see if the feeder should tell the vision to take a picture. **/
+	private void takePicture() {
+		if (this.requestedParts.size() == 0)
 			{
-				vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), ((Part)topLane.lane.getNest().getPart().clone()), bottomLane.lane.getNest(), ((Part)bottomLane.lane.getNest().getPart().clone()), this); // send the message to the vision
+				debug("Feeder sends msgMyNestsReadyForPicture() to vision.");
+				vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this); // send the message to the vision
 			}
-			myNestsHaveBeenChecked = true;
-//			stateChanged();
-			return true;
-		}
-
-//		stateChanged();
-		return false;
+		visionShouldTakePicture = false; // pic was taken	
+		
+		takePictureTimer.schedule(new TimerTask(){
+			public void run() {
+				visionShouldTakePicture = true;
+				stateChanged();
+			}
+		},(long) kPICTURE_DELAY_TIME * 1000); // okay to purge after this many seconds
+		
 	}
+	
+	
 	private void nestWasDumped(MyLane la) {
 		String laneStr = "Top Lane";
 		if (bottomLane == la)
@@ -999,7 +979,7 @@ public class FeederAgent extends Agent implements Feeder {
 				debug("it is now okay to purge this feeder.");
 				stateChanged();
 			}
-		},(long) 4 * 1000); // okay to purge after this many seconds
+		},(long) kOK_TO_PURGE_TIME * 1000); // okay to purge after this many seconds
 
 
 		DoStartFeeding(currentPart); // Feed the part that is currently in the Feeder 
