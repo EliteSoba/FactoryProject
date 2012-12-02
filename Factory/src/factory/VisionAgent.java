@@ -93,26 +93,22 @@ public class VisionAgent extends Agent implements Vision {
 	}
 	
 	/**
-	 * This is a message from the swing panel to force the nest to have no good parts
-	 * @param nestNum The number of the nest that has no good parts
+	 * A message stating that a non-normative situation has occurred and Parts are missing from the Nest
+	 * @param feederNum The number of the Lane Pair that needs the message
+	 * @param nestNum {@code 0} for Top, {@code 1} for Bottom, {@code -1} for Current Diverter Target
 	 */
-	public void msgNoGoodPartsFound(int nestNum){
-		if (nestNum == 0 || nestNum == 1){
-			feeder0.msgBadNest(nestNum % 2);
-		}
-		if (nestNum == 2 || nestNum == 3){
-			feeder1.msgBadNest(nestNum % 2);
-		}
-		if (nestNum == 4 || nestNum == 5){
-			feeder2.msgBadNest(nestNum % 2);
-		}
-		if (nestNum == 6 || nestNum == 7){
-			feeder3.msgBadNest(nestNum % 2);
+	public void msgNoGoodPartsFound(int feederNum, int nestNum){
+		switch (feederNum) {
+		case 0:	feeder0.msgBadNest(nestNum);	break;
+		case 1:	feeder1.msgBadNest(nestNum);	break;
+		case 2:	feeder2.msgBadNest(nestNum);	break;
+		case 3:	feeder3.msgBadNest(nestNum);	break;
 		}
 	}
 	
 	/**
 	 * This is a message from the swing panel to force the lane to be jammed
+	 * @deprecated Use {@link #msgNoGoodPartsFound(int)} instead for generic mishap
 	 * @param nestNum The number of the nest whose lane is jammed
 	 */
 	public void msgLaneJammed(int nestNum){
@@ -132,6 +128,7 @@ public class VisionAgent extends Agent implements Vision {
 	
 	/**
 	 * This is a message from the swing panel to force the lane to be jammed
+	 * @deprecated Use {@link #msgNoGoodPartsFound(int)} instead for generic mishap
 	 * @param feederNum The number of the feeder whose diverter is slow
 	 */
 	public void msgSlowDiverter(int feederNum){

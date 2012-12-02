@@ -70,8 +70,10 @@ public class MasterControl {
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
             "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection",
-            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported", "ruininspectionkit","badparts","lanejam","slowdiverter",
-            "jamtoplane","jambottomlane","unjamtoplane","unjambottomlane", "lanespeed", "laneamplitude", "lanepower", "feederpower", "dumptopnest", "dumpbottomnest"
+            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported",
+            "ruininspectionkit","badparts","lanejam","slowdiverter","jamtoplane","jambottomlane","unjamtoplane",
+            "unjambottomlane", "lanespeed", "laneamplitude", "lanepower", "feederpower", "dumptopnest", "dumpbottomnest",
+            "missingparts"
 
     );
 
@@ -397,7 +399,7 @@ public class MasterControl {
 //		}
 //
 //        System.out.println();
-
+        /**TODO: Location of Agent commands*/
 		if(cmd.get(2).equals("cnf")){
 
 			if(agentTreeMap.containsKey(cmd.get(1))){
@@ -570,20 +572,25 @@ public class MasterControl {
                 }
             }//End NestAgent Commands
 
-	else if (cmd.get(1).equals("va")) {
+            else if (cmd.get(1).equals("va")) {
             	destination = agentTreeMap.get(cmd.get(1));
-	            if(cmd.get(3).equals("badparts")){
-	            	int nestnum = Integer.parseInt(cmd.get(4));
-			((VisionAgent) destination).msgNoGoodPartsFound(nestnum);
-	            }
-		    else if (cmd.get(3).equals("lanejam")) {
-	            	int lanenum = Integer.parseInt(cmd.get(4));
-	            	 ((VisionAgent) destination).msgLaneJammed(lanenum);
-	            }
-	            else if (cmd.get(3).equals("slowdiverter")) {
-	            	int feedernum = Integer.parseInt(cmd.get(4));
-	            	// ((VisionAgent) destination).msgSlowDiverter(feedernum);
-	            }
+            	/*if(cmd.get(3).equals("badparts")){
+            		int nestnum = Integer.parseInt(cmd.get(4));
+            		((VisionAgent) destination).msgNoGoodPartsFound(nestnum);
+            	}
+            	else if (cmd.get(3).equals("lanejam")) {
+            		int lanenum = Integer.parseInt(cmd.get(4));
+            		((VisionAgent) destination).msgLaneJammed(lanenum);
+            	}
+            	else if (cmd.get(3).equals("slowdiverter")) {
+            		int feedernum = Integer.parseInt(cmd.get(4));
+            		// ((VisionAgent) destination).msgSlowDiverter(feedernum);
+            	}*/
+            	if (cmd.get(3).equals("missingparts")) {
+            		int feederNum = Integer.parseInt(cmd.get(4));
+            		int nestNum = Integer.parseInt(cmd.get(5));
+            		((VisionAgent) destination).msgNoGoodPartsFound(feederNum, nestNum);
+            	}
             } // End VisionAgent Commands
 
 

@@ -299,6 +299,14 @@ public class FeederAgent extends Agent implements Feeder {
 			debug("received msgBadNest(bottomNest)");
 			bottomLane.state = MyLaneState.BAD_NEST;
 		}
+		
+		else if (nestNumber == -1) {
+			debug("received msgBadNest(currentNest)");
+			if (diverter == DiverterState.FEEDING_BOTTOM)
+				bottomLane.state = MyLaneState.BAD_NEST;
+			else
+				topLane.state = MyLaneState.BAD_NEST;
+		}
 
 
 
