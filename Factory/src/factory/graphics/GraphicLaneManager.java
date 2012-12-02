@@ -77,7 +77,7 @@ public class GraphicLaneManager{
 	/**boolean for when nest is stable. true - stable. false - not stable**/
 	boolean isStable[];
 	/**Lane speed for each lane. To be inputted from panel. Not for v1!**/
-	int laneSpeed;
+	int lane1Speed, lane2Speed;
 	/**The max distance the item must reach before changing direction**/
 	int itemYMax, itemXMax;
 	/**the coordinates of the expected location of items in lanes**/
@@ -106,8 +106,8 @@ public class GraphicLaneManager{
 		lane2Items = new ArrayList<GraphicItem>();
 		lane1QueueTaken = new ArrayList<Boolean>();
 		lane2QueueTaken = new ArrayList<Boolean>();
-		laneSpeed = 1;				//Change speed of the lane later
-		vXTop = -laneSpeed; vXBottom = -laneSpeed; vY = laneSpeed;
+		lane1Speed = 1; lane2Speed = 1;				//Change speed of the lane later
+		vXTop = -lane1Speed; vXBottom = -lane2Speed; vY = lane1Speed;
 		itemXMax = lane_xPos + 75;
 		itemYMax = lane_yPos + 70 + 40;
 		itemXLane = lane_xPos + 220;
@@ -290,11 +290,11 @@ public class GraphicLaneManager{
 							bin.getBinItems().get(0).setX(lane_xPos + 220);
 							bin.getBinItems().get(0).setY(lane_yPos + 70);
 							if(divergeUp){
-								bin.getBinItems().get(0).setVY(-laneSpeed);
+								bin.getBinItems().get(0).setVY(-lane1Speed);
 								bin.getBinItems().get(0).setDivergeUp(true);
 							}
 							else{
-								bin.getBinItems().get(0).setVY(laneSpeed);
+								bin.getBinItems().get(0).setVY(lane1Speed);
 								bin.getBinItems().get(0).setDivergeUp(false);
 							}
 							bin.getBinItems().get(0).setVX(0);
@@ -346,7 +346,7 @@ public class GraphicLaneManager{
 			graphicPanel.getNest().get(laneManagerID * 2).clearItems();
 			for(int j = 0; j <lane1Items.size();j++){
 				if(lane1Items.get(j).getY() > itemYLaneUp){
-					lane1Items.get(j).setVY(-laneSpeed);
+					lane1Items.get(j).setVY(-lane1Speed);
 				}
 				else if(lane1Items.get(j).getX() > itemXMax){
 					lane1Items.get(j).setVX(vXTop);
@@ -420,7 +420,16 @@ public class GraphicLaneManager{
 				lane1Items.get(i).setX(lane1Items.get(i).getX() + lane1Items.get(i).getVX());
 				lane1Items.get(i).setY(lane1Items.get(i).getY() + lane1Items.get(i).getVY());
 
-
+				for(int j = 0; j <lane1Items.size();j++){
+					if(lane1Items.get(j).getY() > itemYLaneUp){
+						lane1Items.get(j).setVY(-lane1Speed);
+						lane1Items.get(j).setVX(0);
+					}
+					else if(lane1Items.get(j).getX() > itemXMax + 5){
+						lane1Items.get(j).setVX(vXTop);
+						lane1Items.get(j).setVY(0);
+					}
+				}
 
 				//MOVES ITEMS DOWN LANE
 				//Lane items move vertically
@@ -447,7 +456,7 @@ public class GraphicLaneManager{
 				if(graphicPanel.getNest().get(laneManagerID * 2).getSize() < 9){
 					for(int j = 0; j <lane1Items.size();j++){
 						if(lane1Items.get(j).getY() > itemYLaneUp){
-							lane1Items.get(j).setVY(-laneSpeed);
+							lane1Items.get(j).setVY(-lane1Speed);
 							lane1Items.get(j).setVX(0);
 						}
 						else if(lane1Items.get(j).getX() > itemXMax + 5){
@@ -588,7 +597,7 @@ public class GraphicLaneManager{
 			graphicPanel.getNest().get(laneManagerID * 2 + 1).clearItems();
 			for(int j = 0; j <lane2Items.size();j++){
 				if(lane2Items.get(j).getY() < itemYLaneDown){
-					lane2Items.get(j).setVY(laneSpeed);
+					lane2Items.get(j).setVY(lane2Speed);
 				}
 				else if(lane2Items.get(j).getX() > itemXMax){
 					lane2Items.get(j).setVX(vXBottom);
@@ -662,7 +671,16 @@ public class GraphicLaneManager{
 				lane2Items.get(i).setX(lane2Items.get(i).getX() + lane2Items.get(i).getVX());
 				lane2Items.get(i).setY(lane2Items.get(i).getY() + lane2Items.get(i).getVY());
 
-
+				for(int j = 0; j <lane2Items.size();j++){
+					if(lane2Items.get(j).getY() < itemYLaneDown){
+						lane2Items.get(j).setVY(lane2Speed);
+						lane2Items.get(j).setVX(0);
+					}
+					else if(lane2Items.get(j).getX() > itemXMax + 5){
+						lane2Items.get(j).setVX(vXBottom);
+						lane2Items.get(j).setVY(0);
+					}
+				}
 
 				//Lane items move vertically
 				if(lane2Items.get(i).getVY() == vY || lane2Items.get(i).getVY() == -(vY) ){
@@ -690,7 +708,7 @@ public class GraphicLaneManager{
 				if(graphicPanel.getNest().get(laneManagerID * 2 + 1).getSize() < 9){
 					for(int j = 0; j <lane2Items.size();j++){
 						if(lane2Items.get(j).getY() < itemYLaneDown){
-							lane2Items.get(j).setVY(laneSpeed);
+							lane2Items.get(j).setVY(lane2Speed);
 							lane2Items.get(j).setVX(0);
 						}
 						else if(lane2Items.get(j).getX() > itemXMax + 5){
@@ -830,7 +848,7 @@ public class GraphicLaneManager{
 			lane1Items.get(0).setVX(0);
 			for(int i = 1; i < lane1Items.size();i++){
 				if(lane1Items.get(i).getY() > itemYLaneUp){
-					lane1Items.get(i).setVY(-laneSpeed);
+					lane1Items.get(i).setVY(-lane1Speed);
 				}
 				else if(lane1Items.get(i).getX() > itemXMax){
 					lane1Items.get(i).setVX(vXTop);
@@ -932,7 +950,7 @@ public class GraphicLaneManager{
 				}*/
 			for(int i = 1; i <lane2Items.size();i++){	//set speeds for the bottom lanes
 				if(lane2Items.get(i).getY() < itemYLaneDown){
-					lane2Items.get(i).setVY(laneSpeed);
+					lane2Items.get(i).setVY(lane2Speed);
 					//lane2Items.get(i).setVX(0);
 				}
 				else if(lane2Items.get(i).getX() > itemXMax){
@@ -1023,13 +1041,13 @@ public class GraphicLaneManager{
 	
 	/**TODO: Comment these methods*/
 	public void changeTopLaneSpeed(int laneS){		////Changes top Lane Speed
-		laneSpeed = laneS;
-		vXTop = -laneSpeed; vY = laneSpeed;
+		lane1Speed = laneS;
+		vXTop = -lane1Speed; vY = lane1Speed;
 	}
 	
 	public void changeBottomLaneSpeed(int laneS){	//Changes Bottom Lane Speed
-		laneSpeed = laneS;
-		vXBottom = -laneSpeed; vY = laneSpeed;
+		lane2Speed = laneS;
+		vXBottom = -lane2Speed; vY = lane2Speed;
 	}
 	//Change the virbration amplitudes
 	public void changeTopLaneAmplitude(int amp){
