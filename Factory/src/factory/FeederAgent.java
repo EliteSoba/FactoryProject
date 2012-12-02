@@ -176,7 +176,15 @@ public class FeederAgent extends Agent implements Feeder {
 
 		stateChanged();
 	}
-
+	
+	/** The GUI sends this message telling the Feeder to change its diverting algorithm 
+	 * so that the diverter is too slow in switching and parts will be fed into the wrong lane.
+	 * v.2
+	 */
+	public void msgBreakDiverterAlgorithm()
+	{
+		
+	}
 
 	/**
 	 *  The vision sends this message notifying the Feeder that its lane might be jammed.

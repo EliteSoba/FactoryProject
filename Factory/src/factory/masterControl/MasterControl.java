@@ -557,7 +557,7 @@ public class MasterControl {
 			{
 				destination = feederAgents.get(Integer.parseInt(cmd.get(4)));
 				if (cmd.get(3).equals("slowdiverter")) {
-					//TODO: Add message here. ((FeederAgent) destination).
+					((FeederAgent) destination).msgBreakDiverterAlgorithm();
 				}
 			}//End FeederAgent Commands
 
