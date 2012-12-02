@@ -56,12 +56,15 @@ public class NestAgent extends Agent implements Nest {
 	}
 	
 	public void msgPartAddedToNest(Part part) {
+		debug("RECEIVED: msgPartAddedToNest(" + part.name + ").");
 		nestParts.add(numberOfPartsInNest, part); // adds part to the index = numberOfPartsInNest
 		numberOfPartsInNest++;
 		stateChanged();
 	}
 	
 	public void msgPartRemovedFromNest(String partName) {
+		debug("RECEIVED: msgPartRemovedFromNest(" + partName + ").");
+		
 		synchronized(nestParts)
 		{
 			for (Part p : nestParts)
@@ -91,7 +94,7 @@ public class NestAgent extends Agent implements Nest {
 	 * that its parts have stabilized after resettling.
 	 */
 	public void msgNestHasStabilized() {
-		//debug("NEST HAS STABILIZED");
+		debug("RECEIVED: msgNestHasStabilized().");
 		nestState = NestState.HAS_STABILIZED;
 		stateChanged();
 	}
@@ -101,7 +104,7 @@ public class NestAgent extends Agent implements Nest {
 	 * parts have destabilized (become unstable!)
 	 */
 	public void msgNestHasDestabilized() {
-		//debug("NEST HAS BECOME UNSTABLE");
+		debug("RECEIVED: msgNestHasDestabilized().");
 		nestState = NestState.HAS_DESTABILIZED;
 		stateChanged();
 	}
@@ -235,10 +238,31 @@ public class NestAgent extends Agent implements Nest {
 
 	@Override
 	public int getPosition() {
-		// TODO Auto-generated method stub
 		return this.position;
 	}
 
+	@Override
+	public boolean isBeingUsed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public List<Part> getParts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	
+	
+	
+	/** Overriding this for debugging purposes - print the Nest debug statements. */
+	protected void debug(String msg) {
+		if(true) {
+			print(msg, null);
+		}
+	}
 	
 
 	

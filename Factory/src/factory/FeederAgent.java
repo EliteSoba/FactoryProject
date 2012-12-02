@@ -29,7 +29,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	private final static int kNUM_PARTS_FED = 15;
 	private final static int kOK_TO_PURGE_TIME = 7; 
-	private final static int kPICTURE_DELAY_TIME = 3;
+	private final static int kPICTURE_DELAY_TIME = 5;
 	public int feederNumber;
 	public boolean visionShouldTakePicture = true;
 	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());
@@ -578,13 +578,14 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 		visionShouldTakePicture = false; // pic was taken	
 
+		
 		takePictureTimer.schedule(new TimerTask(){
 			public void run() {
 				visionShouldTakePicture = true;
 				stateChanged();
 			}
-		},(long) kPICTURE_DELAY_TIME * 1000); // okay to purge after this many seconds
-
+		},(long) kPICTURE_DELAY_TIME * 1000); // we set this to a slightly different time for each feeder
+		
 	}
 
 
@@ -625,7 +626,7 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			DoDumpBottomNest(); 
 		}
-
+		
 
 		this.msgLaneNeedsPart(la.part, la.lane); // and feed more of the same type of part that used 
 		// to be in the lane before the bad nest msg
@@ -1355,16 +1356,7 @@ public class FeederAgent extends Agent implements Feeder {
 	}
 
 
-	/** Overriding this for debugging purposes - only print the Feeder debug statements. */
-	protected void debug(String msg) {
-		if(true) {
-			print(msg, null);
-		}
-	}
-
-
-
-
+	
 
 }
 

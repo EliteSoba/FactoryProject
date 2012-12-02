@@ -51,19 +51,24 @@ public class LaneAgent extends Agent implements Lane {
 
 
 	/** MESSAGES **/
-	public void msgPartAddedToNest(Part part) {
+	public void msgPartAddedToLane(Part part) {
+		debug("RECEIVED: msgPartAddedToLane().");
 		laneParts.add(numberOfPartsInLane, part); // adds part to the index = numberOfPartsInNest
 		numberOfPartsInLane++;
 		stateChanged();
 	}
 	
 	public void msgPartRemovedFromLane() {
-		synchronized(laneParts)
+		debug("RECEIVED: msgPartRemovedFromLane().");
+		if (laneParts.size() > 0)
 		{
-			laneParts.remove(0); // remove the first part in the list aka the one closest to the nest
+			synchronized(laneParts)
+			{
+				laneParts.remove(0); // remove the first part in the list aka the one closest to the nest
+			}
+
+			numberOfPartsInLane--;
 		}
-		
-		numberOfPartsInLane--;
 		stateChanged();
 	}
 	
@@ -253,6 +258,14 @@ public class LaneAgent extends Agent implements Lane {
 		}
 
 		return false; // there is only ONE type of part in the nest
+	}
+	
+	
+	/** Overriding this for debugging purposes - print the Lane debug statements. */
+	protected void debug(String msg) {
+		if(true) {
+			print(msg, null);
+		}
 	}
 
 //	@Override

@@ -25,6 +25,8 @@ public void msgNestHasDestabilized();
 
 public boolean hasMixedParts();
 
+public void msgPartAddedToLane(Part part);
+
 //public void msgFeedingParts(int numParts);
 //
 //public void msgNestIsOutOfParts();
