@@ -22,6 +22,7 @@ public class LaneAgent extends Agent implements Lane {
 	/** DATA **/
 	public ArrayList<MyPart> myPartRequests = new ArrayList<MyPart>();
 	public List<Part> laneParts = Collections.synchronizedList(new ArrayList<Part>());
+	public int numberOfPartsInLane = 0;
 	
 	public Feeder myFeeder;
 	//	public enum LaneState { NORMAL, NEEDS_TO_PURGE, PURGING };  // not sure about this, need to update wiki still
@@ -49,7 +50,23 @@ public class LaneAgent extends Agent implements Lane {
 	}
 
 
-	/** MESSAGES **/	
+	/** MESSAGES **/
+	public void msgPartAddedToNest(Part part) {
+		laneParts.add(numberOfPartsInLane, part); // adds part to the index = numberOfPartsInNest
+		numberOfPartsInLane++;
+		stateChanged();
+	}
+	
+	public void msgPartRemovedFromLane() {
+		synchronized(laneParts)
+		{
+			laneParts.remove(0); // remove the first part in the list aka the one closest to the nest
+		}
+		
+		numberOfPartsInLane--;
+		stateChanged();
+	}
+	
 	public void msgIncreaseAmplitude() {
 		nestState = NestState.NEEDS_TO_INCREASE_AMPLITUDE;
 		stateChanged();

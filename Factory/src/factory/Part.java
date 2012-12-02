@@ -10,7 +10,7 @@ public class Part implements Serializable,  Cloneable{
 	public String description;
 	public String imagePath; //file path of the image associated with the part
 	public int nestStabilizationTime;   // The average time that the part takes to reach the nest to be used by the feeder
-	public boolean isGoodPart; 
+	public boolean isGoodPart = true; // normally good
 
 	public Part(String n,int i,String d,String p,int t) {
 		name = n;

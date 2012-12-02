@@ -128,11 +128,10 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** MESSAGES **/
 
-
-
 	/**
 	 *  The Lane sends this message to the Feeder notifying 
 	 *  him that his nest has become stable.
+	 *  @deprecated
 	 */ 
 	public void msgNestHasStabilized(Lane lane) {
 		//		myNestsHaveBeenChecked = false; // no longer used
@@ -158,6 +157,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/**
 	 *  The Lane sends this message to the Feeder notifying him that his nest has become unstable.
+	 *  @deprecated
 	 */ 
 	public void msgNestHasDeStabilized(Lane lane) {
 		//		myNestsHaveBeenChecked = false; // no longer used
