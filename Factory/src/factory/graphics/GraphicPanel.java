@@ -234,7 +234,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(1);
 			gantryRobot.setPartPath(path);
-			gantryRobot.setDestination(WIDTH-100,-100,0);
+			gantryRobot.setDestination(WIDTH-140,-125,0);
 		}
 	}
 	
@@ -261,7 +261,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(3);
 			gantryRobot.setDestinationFeeder(feederIndex);
-			gantryRobot.setDestination(lane[feederIndex].feederX+115, lane[feederIndex].feederY+15,180);
+			gantryRobot.setDestination(lane[feederIndex].feederX+125, lane[feederIndex].feederY+5,180);
 		}
 			//gantryRobotArrivedAtFeederForDropoff();
 		//}
@@ -285,7 +285,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(5);
 			gantryRobot.setDestinationFeeder(feederIndex);
-			gantryRobot.setDestination(lane[feederIndex].feederX+115, lane[feederIndex].feederY+15,180);
+			gantryRobot.setDestination(lane[feederIndex].feederX+125, lane[feederIndex].feederY+5,180);
 		}
 		//}
 	}

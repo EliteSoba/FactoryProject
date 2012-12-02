@@ -143,6 +143,6 @@ class GraphicGantryRobot extends GraphicRobot
 		super.paint(g);
 		// Draw the bin if it has one
 		if(hasBin)
-			g.drawImage(binImage, x+imageWidth-25, y, 50, 95, null);
+			g.drawImage(binImage, x+imageWidth-5, y+10, 50, 95, null);
 	}
 }
