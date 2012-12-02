@@ -81,7 +81,11 @@ public class NestAgent extends Agent implements Nest {
 	 * that its parts have stabilized after resettling.
 	 */
 	public void msgNestHasStabilized() {
+<<<<<<< HEAD
 		//debug("NEST HAS STABILIZED");
+=======
+		debug("RECEIVED: msgNestHasStabilized().");
+>>>>>>> Fixed HEAD<<< things
 		nestState = NestState.STABLE;
 		stateChanged();
 	}
@@ -91,7 +95,11 @@ public class NestAgent extends Agent implements Nest {
 	 * parts have destabilized (become unstable!)
 	 */
 	public void msgNestHasDestabilized() {
+<<<<<<< HEAD
 		//debug("NEST HAS BECOME UNSTABLE");
+=======
+		debug("RECEIVED: msgNestHasDestabilized().");
+>>>>>>> Fixed HEAD<<< things
 		nestState = NestState.UNSTABLE;
 		stateChanged();
 	}
@@ -169,6 +177,14 @@ public class NestAgent extends Agent implements Nest {
 	public List<Part> getParts() {
 		return this.nestParts;
 	}
+<<<<<<< HEAD
+=======
+
+	
+	
+	
+
+>>>>>>> Fixed HEAD<<< things
 
 	@Override
 	public NestState getState() {
@@ -179,9 +195,14 @@ public class NestAgent extends Agent implements Nest {
 	public Lane getLane() {
 		return this.myLane;
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> Fixed HEAD<<< things
 	
-
+	public void setBeingUsed(boolean val){
+		this.beingUsed = val;
+	}
 	
 
 }
