@@ -575,6 +575,22 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		lane[feederNum].lane2Jam = false;
 	}
 	
+	public void stopTopLane(int feederNum){
+		lane[feederNum].laneStart = false;
+	}
+
+	public void startTopLane(int feederNum){
+		lane[feederNum].laneStart = true;
+	}
+
+	public void stopBottomLane(int feederNum){
+		lane[feederNum].laneStart = false;
+	}
+
+	public void startBottomLane(int feederNum){
+		lane[feederNum].laneStart = true;
+	}
+	
 	/**
 	 * increase the Top lane vibration speed by 1
 	 * @param feederNum the designated feeder, 1-4

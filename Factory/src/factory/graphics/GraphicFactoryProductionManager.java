@@ -168,6 +168,22 @@ public class GraphicFactoryProductionManager extends JFrame {
 		panel.unjamBottomLane(feederNum);
 	}
 	
+	public void stopTopLane(int feederNum){
+		panel.jamTopLane(feederNum);
+	}
+	
+	public void startTopLane(int feederNum){
+		panel.unjamTopLane(feederNum);
+	}
+	
+	public void stopBottomLane(int feederNum){
+		panel.jamBottomLane(feederNum);
+	}
+	
+	public void startBottomLane(int feederNum){
+		panel.jamBottomLane(feederNum);
+	}
+	
 	public void getBin(String partName)
 	{
 		panel.moveGantryRobotToPickup(partName);
