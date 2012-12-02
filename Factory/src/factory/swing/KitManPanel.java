@@ -91,7 +91,7 @@ public class KitManPanel extends JPanel{
 
 		JLabel cKitNameLabel = new JLabel ("Kit Name : ");
 		JTextField cKitName = new JTextField(8);
-		JButton cSave = new JButton("Save Kit Configuration");
+		JButton cSave = new JButton("Save Kit");
 
 
 		//initializing components
@@ -193,11 +193,12 @@ public class KitManPanel extends JPanel{
 
 			setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
-			c.fill = GridBagConstraints.VERTICAL;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.insets =new Insets(20,5,5,0);
 			c.gridx = 0;
 			c.gridy = 0;
 			this.add(cLabel1, c);
-
+			c.insets =new Insets(0,5,5,0);
 			c.gridy = 1;
 			this.add(cLabel2, c);
 
@@ -229,11 +230,12 @@ public class KitManPanel extends JPanel{
 			c.gridx = 1;
 			c.gridy = 9;
 			this.add(cKitName, c);
-
+			c.insets = new Insets(20,5,5,0);
 			c.gridx = 1;
 			c.gridy = 0;
 			this.add(cItemComboBox1, c);
-
+			
+			c.insets = new Insets(0,5,5,0);
 			c.gridy = 1;
 			this.add(cItemComboBox2, c);
 
@@ -257,9 +259,11 @@ public class KitManPanel extends JPanel{
 
 			c.gridx = 2;
 			c.gridy = 0;
+			c.insets = new Insets(20,5,5,0);
 			this.add(cItemFrame1, c);
 
 			c.gridy = 1;
+			c.insets = new Insets(0,5,5,0);
 			this.add(cItemFrame2, c);
 
 			c.gridy = 2;
@@ -462,7 +466,7 @@ public class KitManPanel extends JPanel{
 		JLabel mKitNameLabel = new JLabel ("Kit Name : ");
 
 		JTextField mKitName = new JTextField(8);
-		JButton mSave = new JButton("Save Kit Configuration");
+		JButton mSave = new JButton("Save Kit");
 
 		JButton mRemove = new JButton("Remove Kit");
 		JButton cancel = new JButton("Cancel");
@@ -542,14 +546,15 @@ public class KitManPanel extends JPanel{
 			// lays out components
 			setLayout(new GridBagLayout());
 
-			c.fill = GridBagConstraints.VERTICAL;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.insets = new Insets(20,5,5,0);
 			c.gridx = 0;
 			c.gridy = 0;
 			//add(mKitComboBox, c);
-
+			
 			c.gridy = 1;
 			add(mLabel1, c);
-
+			c.insets = new Insets(0,5,5,0);
 			c.gridy = 2;
 			add(mLabel2, c);
 
@@ -573,9 +578,11 @@ public class KitManPanel extends JPanel{
 
 			c.gridx = 1;
 			c.gridy = 1;
+			c.insets = new Insets(20,5,5,0);
 			add(mItemComboBox1, c);
-
+			
 			c.gridy = 2;
+			c.insets = new Insets(0,5,5,0);
 			add(mItemComboBox2, c);
 
 			c.gridy = 3;
@@ -616,9 +623,11 @@ public class KitManPanel extends JPanel{
 
 			c.gridx = 2;
 			c.gridy = 1;
+			c.insets = new Insets(20,5,5,0);
 			add(mItemFrame1, c);
 
 			c.gridy = 2;
+			c.insets = new Insets(0,5,5,0);
 			add(mItemFrame2, c);
 
 			c.gridy = 3;
