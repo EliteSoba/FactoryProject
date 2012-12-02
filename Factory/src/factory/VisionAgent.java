@@ -1,7 +1,6 @@
 package factory;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import agent.Agent;
 import java.util.*;
@@ -27,6 +26,8 @@ public class VisionAgent extends Agent implements Vision {
 	public Semaphore pictureAllowed = new Semaphore(1);
 	
 	public ArrayList<Nest> nests;
+	
+	public int[] nestJammedWaiting = new int[8];
 	
 	public Feeder feeder_zero;
 	public Feeder feeder_one;
@@ -66,9 +67,6 @@ public class VisionAgent extends Agent implements Vision {
 			this.feeder = feeder;
 		}
 	} 
-
-
-
 
 /** ================================================================================ **/
 /** 									MESSAGES 									 **/
@@ -219,8 +217,27 @@ public class VisionAgent extends Agent implements Vision {
 
 		pr.state = PictureRequestState.ANALYZED;
 		
+		if(this.nests == null || !this.nests.contains(pr.nestOne) || !this.nests.contains(pr.nestTwo)){
+			pictureRequests.remove(pr);
+			return;
+		}
+		
+		int nestOneIndex = this.nests.indexOf(pr.nestOne);
+		int nestTwoIndex = this.nests.indexOf(pr.nestTwo);
+		
 		pr.nestOneState = calculateNestState(pr.nestOne);
 		pr.nestTwoState = calculateNestState(pr.nestTwo);
+		
+		if(pr.nestOneState == 0 && pr.nestTwoState == 0 ){
+			// Both nests are unused, just ignore picture request
+			pictureRequests.remove(pr);
+			nestJammedWaiting[nestOneIndex] = 0;
+			nestJammedWaiting[nestTwoIndex] = 0;
+			return;
+		}
+		
+		
+		
 	}
 	
 	private void inspectKit(KitPicRequest k) {
@@ -317,6 +334,22 @@ public class VisionAgent extends Agent implements Vision {
 		if(!nest.isBeingUsed()) {
 			return 0;
 		}
+		
+		// If it is empty
+		else if(nest.getParts().size() == 0) {
+			return  1;
+		}
+		
+		// If it is full and stable
+		else if(nest.getParts().size() == 9 && nest.getState() == factory.interfaces.Nest.NestState.STABLE){
+			
+		}
+		// If it is full and unstable
+		else if(nest.getParts().size() == 9 && nest.getState() == factory.interfaces.Nest.NestState.UNSTABLE){
+			
+		}
+		
+		//NestState.
 		
 		return 0;
 	}
