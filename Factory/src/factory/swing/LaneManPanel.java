@@ -231,7 +231,7 @@ public class LaneManPanel extends JPanel{
 				} 
 			}else if (ae.getSource() == feederOn){
 				int feedernum = (Integer)feederSelect.getSelectedItem();
-				String set = "lm lm set feederpower on " + feedernum;
+				String set = "lm lm set feederpower on " + (feedernum-1);
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -239,7 +239,7 @@ public class LaneManPanel extends JPanel{
 				} 
 			}else if (ae.getSource() == feederOff){
 				int feedernum = (Integer)feederSelect.getSelectedItem();
-				String set = "lm lm set feederpower off " + feedernum;
+				String set = "lm lm set feederpower off " + (feedernum-1);
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
