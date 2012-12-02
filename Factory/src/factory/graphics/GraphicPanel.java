@@ -513,7 +513,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void turnFeederOn(int feederNum){
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].feederOn = true;
-			startFeederDone(feederNum);
+			//startFeederDone(feederNum);
 		}
 	}
 	
@@ -524,7 +524,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void turnFeederOff(int feederNum){
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].feederOn = false;
-			stopFeederDone(feederNum);
+			//stopFeederDone(feederNum);
 		}
 	}
 	

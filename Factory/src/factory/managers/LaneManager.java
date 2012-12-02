@@ -225,7 +225,7 @@ public class LaneManager extends Client {
 				int feederNumber = Integer.valueOf(pCmd.get(3));
 				
 				if(pCmd.get(2).equals("on")){
-					((LanePanel) graphics).turnFeederOff(feederNumber);
+					((LanePanel) graphics).turnFeederOn(feederNumber);
 				}else if(pCmd.get(2).equals("off")){
 					((LanePanel) graphics).turnFeederOff(feederNumber);
 				}
