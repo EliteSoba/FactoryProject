@@ -253,6 +253,12 @@ public class FactoryProductionManager extends Client {
 
 
 			//Swing Receive Commands
+			// commands from lane manager
+			else if (identifier.equals("badparts")) {
+				int feederIndex = Integer.valueOf(pCmd.get(2));
+				int badPercent = Integer.valueOf(pCmd.get(3));
+				((FactoryProductionPanel) graphics).setBadProbability(feederIndex, badPercent);
+			}
 			// commands from kit manager
 			else if (identifier.equals("addkitname")) {		// add new kit configuration to kit configuration list
 				KitConfig newKit = new KitConfig(pCmd.get(2));

@@ -705,6 +705,15 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			lane[feederNum].vibrationAmplitudeBottom = 1;
 	}
 	
+	/**
+	 * Sets the probability that an Item fed into the given Lane will be bad
+	 * @param feederNum The given Lane
+	 * @param probability The probability that an Item will be bad
+	 */
+	public void setBadProbability(int feederNum, int probability) {
+		lane[feederNum].setBadProbability(probability);
+	}
+	
 	
 	/**Movement methods*/
 	/**

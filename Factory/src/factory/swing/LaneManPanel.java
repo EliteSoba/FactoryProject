@@ -424,8 +424,8 @@ public class LaneManPanel extends JPanel{
 			} else if (ae.getSource() == badPartsButton) {
 				messageBox.append("Bad parts found in " + laneBoxList.getSelectedItem() + "'s nest.\n");
 				messageBox.setCaretPosition(messageBox.getDocument().getLength());
-				int lanenum = laneBoxList.getSelectedIndex();
-				String set = "lm va cmd badparts " + lanenum + badPartsPercentage.getValue();
+				int feedernum = feederBoxList.getSelectedIndex();
+				String set = "lm lm cmd badparts " + feedernum + " "+ badPartsPercentage.getValue();
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {

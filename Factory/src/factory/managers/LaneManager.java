@@ -158,6 +158,12 @@ public class LaneManager extends Client {
 				int nestIndex = Integer.valueOf(pCmd.get(2));
 				((LanePanel) graphics).cameraFlash(nestIndex);
 			}
+			// commands from lane manager
+			else if (identifier.equals("badparts")) {
+				int feederIndex = Integer.valueOf(pCmd.get(2));
+				int badPercent = Integer.valueOf(pCmd.get(3));
+				((LanePanel) graphics).setBadProbability(feederIndex, badPercent);
+			}
 
 
 		}
