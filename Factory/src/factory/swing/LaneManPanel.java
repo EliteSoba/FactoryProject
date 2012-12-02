@@ -215,7 +215,7 @@ public class LaneManPanel extends JPanel{
 			// TODO Auto-generated method stub
 			if(ae.getSource() == laneOn){
 				int lanenum = (Integer)laneSelect.getSelectedItem();
-				String set = "lm lm set lanepower on " + lanenum;
+				String set = "lm lm set lanepower on " + (lanenum-1);
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -223,7 +223,7 @@ public class LaneManPanel extends JPanel{
 				} 
 			}else if (ae.getSource() == laneOff){
 				int lanenum = (Integer)laneSelect.getSelectedItem();
-				String set = "lm lm set lanepower off " + lanenum;
+				String set = "lm lm set lanepower off " + (lanenum-1);
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {

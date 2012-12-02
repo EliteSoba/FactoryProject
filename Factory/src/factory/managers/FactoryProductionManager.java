@@ -21,7 +21,7 @@ import factory.graphics.FactoryProductionPanel;
 import factory.graphics.GraphicBin;
 import factory.graphics.GraphicItem;
 import factory.graphics.GraphicPanel;
-import factory.graphics.LanePanel;
+import factory.graphics.FactoryProductionPanel;
 import factory.swing.FactoryProdManPanel;
 import factory.Part;
 import factory.KitConfig;
@@ -357,9 +357,31 @@ public class FactoryProductionManager extends Client {
 					((FactoryProductionPanel) graphics).getLane(laneNumber/2).changeBottomLaneAmplitude(amplitude);
 				// call graphics function to change amplitude
 			}else if (identifier.equals("lanepower")){
-
-			}else if (identifier.equals("feederpower")){
+				int laneNumber = Integer.valueOf(pCmd.get(3));
 				
+				if(pCmd.get(2).equals("on")){
+					if(laneNumber % 2 == 0){
+						((FactoryProductionPanel) graphics).startTopLane(laneNumber/2);
+					}else{
+
+						((FactoryProductionPanel) graphics).startBottomLane(laneNumber/2);
+					}
+				}else if(pCmd.get(2).equals("off")){
+					if(laneNumber % 2 == 0){
+						((FactoryProductionPanel) graphics).stopTopLane(laneNumber/2);
+					}else{
+
+						((FactoryProductionPanel) graphics).stopBottomLane(laneNumber/2);
+					}
+				}
+			}else if (identifier.equals("feederpower")){
+				int feederNumber = Integer.valueOf(pCmd.get(3));
+				
+				if(pCmd.get(2).equals("on")){
+					((FactoryProductionPanel) graphics).turnFeederOff(feederNumber);
+				}else if(pCmd.get(2).equals("off")){
+					((FactoryProductionPanel) graphics).turnFeederOff(feederNumber);
+				}
 			}
 		}
 

@@ -213,12 +213,12 @@ public class LaneManager extends Client {
 
 						((LanePanel) graphics).startBottomLane(laneNumber/2);
 					}
-				}else if(pCmd.get(3).equals("off")){
+				}else if(pCmd.get(2).equals("off")){
 					if(laneNumber % 2 == 0){
 						((LanePanel) graphics).stopTopLane(laneNumber/2);
 					}else{
 
-						((LanePanel) graphics).stopTopLane(laneNumber/2);
+						((LanePanel) graphics).stopBottomLane(laneNumber/2);
 					}
 				}
 			}else if (identifier.equals("feederpower")){
@@ -226,7 +226,7 @@ public class LaneManager extends Client {
 				
 				if(pCmd.get(2).equals("on")){
 					((LanePanel) graphics).turnFeederOff(feederNumber);
-				}else if(pCmd.get(3).equals("off")){
+				}else if(pCmd.get(2).equals("off")){
 					((LanePanel) graphics).turnFeederOff(feederNumber);
 				}
 			}
