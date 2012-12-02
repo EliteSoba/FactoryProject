@@ -555,7 +555,10 @@ public class MasterControl {
 			// FeederAgent Commands:
 			else if (cmd.get(1).equals("fa"))
 			{
-
+				destination = feederAgents.get(Integer.parseInt(cmd.get(4)));
+				if (cmd.get(3).equals("slowdiverter")) {
+					//TODO: Add message here. ((FeederAgent) destination).
+				}
 			}//End FeederAgent Commands
 
             // NestAgent Commands:
