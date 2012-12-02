@@ -544,8 +544,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * @param feederNum The designated feeder, 1-4
 	 */
 	public void unjamTopLane(int feederNum){
-		lane[feederNum].changeTopLaneSpeed(lane[feederNum].laneSpeed + 1);
-		if(lane[feederNum].laneSpeed > 8)	//laneSpeed max is 8
+		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane1Speed + 1);
+		if(lane[feederNum].lane1Speed > 8)	//laneSpeed max is 8
 			lane[feederNum].changeTopLaneSpeed(8);
 		lane[feederNum].vibrationAmplitudeTop += 1;
 		if(lane[feederNum].vibrationAmplitudeTop > 8)		//vibration amplitude max is 8
@@ -566,8 +566,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * @param feederNum The designated feeder, 1-4
 	 */
 	public void unjamBottomLane(int feederNum){
-		lane[feederNum].changeBottomLaneSpeed(lane[feederNum].laneSpeed + 1);
-		if(lane[feederNum].laneSpeed > 8)	//laneSpeed max is 8
+		lane[feederNum].changeBottomLaneSpeed(lane[feederNum].lane2Speed + 1);
+		if(lane[feederNum].lane2Speed > 8)	//laneSpeed max is 8
 			lane[feederNum].changeBottomLaneSpeed(8);
 		lane[feederNum].vibrationAmplitudeBottom += 1;
 		if(lane[feederNum].vibrationAmplitudeBottom > 8)		//vibration amplitude max is 8
@@ -592,6 +592,47 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	/**
+	 * Increase top lane speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void increaseTopLaneSpeed(int feederNum){
+		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane1Speed + 1); //change top LaneSpeed
+		if( lane[feederNum].lane1Speed > 8)
+			lane[feederNum].lane1Speed = 8;
+	}
+	
+	/**
+	 * Decrease top lane speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	
+	public void decreaseTopLaneSpeed(int feederNum){
+		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane1Speed - 1); //change top LaneSpeed
+		if( lane[feederNum].lane1Speed < 1)
+			lane[feederNum].lane1Speed = 1;
+	}
+	
+	/**
+	 * Increase bottom lane speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void increaseBottomLaneSpeed(int feederNum){
+		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane2Speed + 1); //change bottom LaneSpeed
+		if( lane[feederNum].lane2Speed > 8)
+			lane[feederNum].lane2Speed = 8;
+	}
+	
+	/**
+	 * Decrease bottom lane speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void decreaseBottomLaneSpeed(int feederNum){
+		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane2Speed - 1); //change bottom LaneSpeed
+		if( lane[feederNum].lane2Speed < 1)
+			lane[feederNum].lane2Speed = 1;
+	}
+	
+	/**
 	 * increase the Top lane vibration speed by 1
 	 * @param feederNum the designated feeder, 1-4
 	 */
@@ -600,15 +641,6 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if(lane[feederNum].vibrationAmplitudeTop > 8)
 			lane[feederNum].vibrationAmplitudeTop = 8;
 	}
-	
-	/**
-	 * Increase top lane speed by 1
-	 * @param feederNum the designated feeder, 1-4
-	 */
-	public void increaseTopLaneSpeed(int feederNum){
-		lane[feederNum].vXTop--;
-	}
-	
 	
 	/**
 	 * decrease the Top lane vibration speed by 1
