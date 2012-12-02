@@ -73,7 +73,7 @@ public class MasterControl {
             "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported",
             "ruininspectionkit","badparts","lanejam","slowdiverter","jamtoplane","jambottomlane","unjamtoplane",
             "unjambottomlane", "lanespeed", "laneamplitude", "lanepower", "feederpower", "dumptopnest", "dumpbottomnest",
-            "missingparts", "newpartputinlane", "partremovedfromlane", "partremovedfromnest"
+            "missingparts", "newpartputinlane", "partremovedfromlane", "partremovedfromnest", "partlost"
 
     );
 
@@ -547,8 +547,12 @@ public class MasterControl {
             	destination = agentTreeMap.get(cmd.get(1));
 				if (cmd.get(3).equals("kitdropparts")){
 					String failString = cmd.get(4);
-					((StandAgent) destination).msgForceKitInspectionToFail();
+					//((StandAgent) destination).msgForceKitInspectionToFail();
 					command( stand, "sa kam cmd ruininspectionkit " + failString);
+				}
+				else if (cmd.get(3).equals("partlost")) {
+					String partName = cmd.get(4);
+					((StandAgent) destination).msgForceKitInspectionToFail(/*partName*/);
 				}
 			}//End StandAgent Commands
 

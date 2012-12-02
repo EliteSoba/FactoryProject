@@ -307,7 +307,7 @@ public class GraphicKittingRobot {
 					for (int i = 0; i < KITISBROKED_8C.length(); i++) {
 						if (KITISBROKED_8C.charAt(i) == '1') {
 							//TODO: Send message to someone with name of each lost item
-							//GP.sendMessage("kra partlost " + kit.getItem(i).getName());
+							GP.sendMessage("sa cmd partlost " + kit.getItem(i).getName());
 							kit.setItem(i, null);
 						}
 					}
