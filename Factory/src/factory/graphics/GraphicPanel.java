@@ -82,7 +82,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		flashImage = Toolkit.getDefaultToolkit().getImage("Images/cameraFlash3x3.png");
 		try {
 			messageFont = Font.createFont(Font.TRUETYPE_FONT,new File("Fonts/digitalism.ttf"));
-		} catch (FontFormatException | IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
