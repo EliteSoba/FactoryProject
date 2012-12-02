@@ -379,7 +379,7 @@ public class LaneManPanel extends JPanel{
 				messageBox.append("Lane jam initated in " + laneBoxList.getSelectedItem() + ".\n");
 				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 				int lanenum = laneBoxList.getSelectedIndex();
-				String set = "lm va cmd missingparts " + lanenum;
+				String set = "lm va cmd missingparts " + lanenum/2 + " " + lanenum%2;
 				try {
 					laneManager.sendCommand(set);
 				} catch (Exception e) {
@@ -389,7 +389,7 @@ public class LaneManPanel extends JPanel{
 				messageBox.append("Diverter was too slow switching to " + laneBoxList.getSelectedItem() + ".\n");
 				messageBox.setCaretPosition(messageBox.getDocument().getLength());
 				int feedernum = feederBoxList.getSelectedIndex();
-				String set = "lm va cmd missingparts " + feedernum;
+				String set = "lm va cmd missingparts " + feedernum + " -1";
 				try {
 					laneManager.sendCommand(set);
 					//TODO: missingparts command appends a nest # (0-7), but slowdiverter is feeder-based (0-3).
