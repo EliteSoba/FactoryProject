@@ -19,6 +19,5 @@ public interface Vision {
 	public void msgNewNestConfig( ArrayList<Nest> nests);
 
 	
-	public void msgDoneIncreasingLaneAmplitude(Feeder feeder,int nestNum0or1);
 	
 }
