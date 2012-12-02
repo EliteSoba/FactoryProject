@@ -1011,6 +1011,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 				g.drawImage(TILE_IMAGE, j, k, TILE_SIZE, TILE_SIZE, null);
 			}
 		}
+		g.drawImage(new ImageIcon("Images/Tiles/floorTileAperture.png").getImage(),320,512,TILE_SIZE,TILE_SIZE,null);
 		//g.setColor(new Color(200, 200, 200));
 		//g.fillRect(0, 0, getWidth(), getHeight());
 		
