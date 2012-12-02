@@ -198,6 +198,8 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		
 		this.stateChanged();
 	}
+
+	
 /** ================================================================================ **/
 /** 									SCHEDULER 									 **/
 /** ================================================================================ **/
@@ -293,12 +295,6 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	public void DoProcessNewKitConfiguration() {
 		debug("Executing DoProcessNewKitConfiguration()");
-	
-
-		if(currentKitConfiguration == null){
-			debug("AAAAAAAAAAAAAAAAA");
-			System.exit(0);
-		}
 		
 		// set parts to corresponding nests - this algorithm won't replace lanes that are needed in the new one but already present in the old
 		List<Integer> newNeeded = new ArrayList<Integer>();

@@ -14,22 +14,24 @@ import factory.masterControl.MasterControl;
 
 public class VisionAgent extends Agent implements Vision {
 
-	public enum KitPicRequestState { NEED_TO_INSPECT, INSPECTED }
+	public enum kitPictureRequeststate { NEED_TO_INSPECT, INSPECTED }
 	public enum PictureRequestState { NESTS_READY, ASKED_PARTS_ROBOT, PARTS_ROBOT_CLEAR, PICTURE_TAKEN }
 
-	public ArrayList<PictureRequest> picRequests = new ArrayList<PictureRequest>(); 
-	public ArrayList<KitPicRequest> kitPicRequests = new ArrayList<KitPicRequest>();     
+	public ArrayList<PictureRequest> pictureRequests = new ArrayList<PictureRequest>(); 
+	public ArrayList<KitPicRequest> kitPictureRequests = new ArrayList<KitPicRequest>();     
+	
 	public PartsRobot partsRobot;
 	public Stand stand;
 	public Random r = new Random();
-	public Semaphore pictureAllowed = new Semaphore(1);
-	public ArrayList<Nest> nests;
-	public boolean isUnitTesting = false;
 	
-	public Feeder feeder0;
-	public Feeder feeder1;
-	public Feeder feeder2;
-	public Feeder feeder3;
+	public Semaphore pictureAllowed = new Semaphore(1);
+	
+	public ArrayList<Nest> nests;
+	
+	public Feeder feeder_zero;
+	public Feeder feeder_one;
+	public Feeder feeder_two;
+	public Feeder feeder_three;
 	
 	public VisionAgent(PartsRobot partsRobot, Stand stand, MasterControl mc){
 		super(mc);
@@ -39,11 +41,11 @@ public class VisionAgent extends Agent implements Vision {
 
 	public class KitPicRequest {
 
-		public KitPicRequestState state;
+		public kitPictureRequeststate state;
 		public boolean forceFail = false;
 
-		public KitPicRequest(KitPicRequestState kprs, boolean forceFail) { 
-			state = kprs;
+		public KitPicRequest(boolean forceFail) { 
+			state = kitPictureRequeststate.NEED_TO_INSPECT;
 			this.forceFail = forceFail;
 		}
 	}
@@ -51,17 +53,15 @@ public class VisionAgent extends Agent implements Vision {
 	public class PictureRequest {
 
 		public Nest nestOne;
-		public Part nestOnePart;
-		public Part nestTwoPart;
 		public Nest nestTwo;
+		public int nestOneState = 0;
+		public int nestTwoState = 0;
 		public PictureRequestState state;
 		public Feeder feeder;
 
-		public PictureRequest(Nest nestOne, Part nestOnePart, Nest nestTwo, Part nestTwoPart, Feeder feeder){
+		public PictureRequest(Nest nestOne, Nest nestTwo, Feeder feeder){
 			this.state = PictureRequestState.NESTS_READY;
 			this.nestOne = nestOne;
-			this.nestOnePart = nestOnePart;
-			this.nestOnePart = nestOnePart;
 			this.nestTwo = nestTwo;
 			this.feeder = feeder;
 		}
@@ -70,103 +70,44 @@ public class VisionAgent extends Agent implements Vision {
 
 
 
-	// *** MESSAGES ***
+/** ================================================================================ **/
+/** 									MESSAGES 									 **/
+/** ================================================================================ **/
 
-	public void msgNewNestConfig( ArrayList<Nest> nests){
+	public void msgNewNestConfig(ArrayList<Nest> nests){
 		this.nests = nests;
 	}
 
-	public void msgMyNestsReadyForPicture(Nest nestOne, Part nestOnePart, Nest nestTwo, Part nestTwoPart, Feeder feeder) {
-		if(!isUnitTesting)
+	public void msgMyNestsReadyForPicture(Nest nestOne, Nest nestTwo, Feeder feeder) {
 		debug("msgMyNestsReadyForPicture("+nestOne.getPart().name+","+nestTwo.getPart().name+")");
-		picRequests.add(new PictureRequest(nestOne, nestOnePart, nestTwo,  nestOnePart, feeder));
+		pictureRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
 		this.stateChanged();
 	}
 
 	public void msgVisionClearForPictureInNests(Nest nestOne, Nest nestTwo) {
-		for( PictureRequest pr: picRequests) {
+		for( PictureRequest pr: pictureRequests) {
 			if(pr.nestOne == nestOne && pr.nestTwo == nestTwo){
 				pr.state = PictureRequestState.PARTS_ROBOT_CLEAR;
 			}
 		}
 		this.stateChanged();
 	}
-	
-	/**
-	 * A message stating that a non-normative situation has occurred and Parts are missing from the Nest
-	 * @param feederNum The number of the Lane Pair that needs the message
-	 * @param nestNum {@code 0} for Top, {@code 1} for Bottom, {@code -1} for Current Diverter Target
-	 */
-	public void msgNoGoodPartsFound(int feederNum, int nestNum){
-		switch (feederNum) {
-		case 0:	feeder0.msgBadNest(nestNum);	break;
-		case 1:	feeder1.msgBadNest(nestNum);	break;
-		case 2:	feeder2.msgBadNest(nestNum);	break;
-		case 3:	feeder3.msgBadNest(nestNum);	break;
-		}
-	}
-	
-	/**
-	 * This is a message from the swing panel to force the lane to be jammed
-	 * @deprecated Use {@link #msgNoGoodPartsFound(int)} instead for generic mishap
-	 * @param nestNum The number of the nest whose lane is jammed
-	 */
-	public void msgLaneJammed(int nestNum){
-		if (nestNum == 0 || nestNum == 1){
-			feeder0.msgEmptyNest(nestNum % 2);
-		}
-		if (nestNum == 2 || nestNum == 3){
-			feeder1.msgEmptyNest(nestNum % 2);
-		}
-		if (nestNum == 4 || nestNum == 5){
-			feeder2.msgEmptyNest(nestNum % 2);
-		}
-		if (nestNum == 6 || nestNum == 7){
-			feeder3.msgEmptyNest(nestNum % 2);
-		}
-	}
-	
-	/**
-	 * This is a message from the swing panel to force the lane to be jammed
-	 * @deprecated Use {@link #msgNoGoodPartsFound(int)} instead for generic mishap
-	 * @param feederNum The number of the feeder whose diverter is slow
-	 */
-	public void msgSlowDiverter(int feederNum){
-		if (feederNum == 0){
-			feeder0.msgEmptyNest(feederNum);
-		}
-		if (feederNum == 1){
-			feeder1.msgEmptyNest(feederNum);
-		}
-		if (feederNum == 2){
-			feeder2.msgEmptyNest(feederNum);
-		}
-		if (feederNum == 3){
-			feeder3.msgEmptyNest(feederNum);
-		}
-	}
-
-
-	//the following message existed in the wiki, but the parameter is different.  It takes a timer rather than feeder
-	//Yeah, that was my fault.  It is no longer needed.
-	//	@Override
-	//	public void msgMyNestsReadyForPicture(Nest nest, Nest nest2, TimerTask timerTask) {
-	//		// TODO Auto-generated method stub
-	//		
-	//	}
-
 
 	public void msgAnalyzeKitAtInspection(Kit kit) {
 		debug("Received msgAnalyzeKitAtInspection() from the kit robot.");
-		kitPicRequests.add(new KitPicRequest(KitPicRequestState.NEED_TO_INSPECT, kit.forceFail));
+		kitPictureRequests.add(new KitPicRequest(kit.forceFail));
 		stateChanged();
 	}
 
 
-	// *** SCHEDULER ***
+/** ================================================================================ **/
+/** 									SCHEDULER 									 **/
+/** ================================================================================ **/
+
 	public boolean pickAndExecuteAnAction() {
 
-		for(PictureRequest pr: picRequests){
+		for(PictureRequest pr: pictureRequests){
+			
 			if(pr.state == PictureRequestState.PARTS_ROBOT_CLEAR){
 				Nest one = this.nests.get(this.nests.indexOf(pr.nestOne));
 				Nest two = this.nests.get(this.nests.indexOf(pr.nestTwo));
@@ -174,28 +115,19 @@ public class VisionAgent extends Agent implements Vision {
 				if(one.getPart().name == pr.nestOne.getPart().name && two.getPart().name == pr.nestTwo.getPart().name){
 					takePicture(pr);
 				}
-				else {
-					debug("#################");
-					debug("#################");
-					debug("#################");
-					debug("WRONG PICTURE!!!");
-					debug("#################");
-					debug("#################");
-					debug("#################");
-				}
 				return true;
 			}
 		}
 
-		for(PictureRequest pr: picRequests){
+		for(PictureRequest pr: pictureRequests){
 			if(pr.state == PictureRequestState.NESTS_READY){
-				checkLineOfSight(pr);
+				processPictureRequest(pr);
 				return true;
 			}
 		}
 
-		for(KitPicRequest k: kitPicRequests){
-			if(k.state == KitPicRequestState.NEED_TO_INSPECT){
+		for(KitPicRequest k: kitPictureRequests){
+			if(k.state == kitPictureRequeststate.NEED_TO_INSPECT){
 				inspectKit(k);
 				return true;
 			}
@@ -204,7 +136,19 @@ public class VisionAgent extends Agent implements Vision {
 		return false;
 	}
 
-	// *** ACTIONS ***
+/** ================================================================================ **/
+/** 									ACTIONS 									 **/
+/** ================================================================================ **/
+
+	private void processPictureRequest(PictureRequest pr){
+
+		Nest one = this.nests.get(this.nests.indexOf(pr.nestOne));
+		Nest two = this.nests.get(this.nests.indexOf(pr.nestTwo));
+		
+		pr.nestOneState = calculateNestState(one);
+		pr.nestTwoState = calculateNestState(two);
+	}
+	
 	private void inspectKit(KitPicRequest k) {
 
 		try{
@@ -214,9 +158,8 @@ public class VisionAgent extends Agent implements Vision {
 
 		}
 
-		if (!isUnitTesting){
-			DoTakePicture();
-		}
+		DoAnimationTakePictureOfInstpectionSlot();
+		
 		if (k.forceFail == true)
 			stand.msgResultsOfKitAtInspection(KitState.FAILED_INSPECTION);
 		else
@@ -231,9 +174,8 @@ public class VisionAgent extends Agent implements Vision {
 
 		pictureAllowed.release();
 
-		k.state = KitPicRequestState.INSPECTED;
+		k.state = kitPictureRequeststate.INSPECTED;
 	}
-
 
 	private void takePicture(PictureRequest pr){
 		try{
@@ -250,15 +192,25 @@ public class VisionAgent extends Agent implements Vision {
 				partsRobot.msgHereArePartCoordinatesForNest(pr.nestTwo, pr.nestTwo.getPart(), r.nextInt(9));
 			}
 
-			picRequests.remove(pr);
+			pictureRequests.remove(pr);
 			pictureAllowed.release();
 			stateChanged();
 		}
 		catch(Exception ex){}
 	}
 
-	private void DoTakePicture() {
-		debug("Executing DoTakePicture()");
+	private void checkLineOfSight(PictureRequest pr){
+		debug("Executing checkLineOfSight()");
+		partsRobot.msgClearLineOfSight(pr.nestOne, pr.nestTwo);
+		pr.state = PictureRequestState.ASKED_PARTS_ROBOT;
+	}
+
+/** ================================================================================ **/
+/** 									ANIMATIONS 									 **/
+/** ================================================================================ **/
+	
+	private void DoAnimationTakePictureOfInstpectionSlot() {
+		debug("Executing DoAnimationTakePictureOfInstpectionSlot()");
 		server.command(this,"va kam cmd takepictureofinspection");
 		try {
 			animation.acquire();
@@ -268,6 +220,7 @@ public class VisionAgent extends Agent implements Vision {
 
 
 	}
+	
 	private void DoAnimationTakePictureOfNest(Nest nest) {
 
 		debug("Executing DoAnimationTakePicture()");
@@ -279,25 +232,37 @@ public class VisionAgent extends Agent implements Vision {
 		}
 
 	}
-	private void checkLineOfSight(PictureRequest pr){
-		debug("Executing checkLineOfSight()");
-		partsRobot.msgClearLineOfSight(pr.nestOne, pr.nestTwo);
-		pr.state = PictureRequestState.ASKED_PARTS_ROBOT;
+
+/** ================================================================================ **/
+/** 									HELPERS 									 **/
+/** ================================================================================ **/
+
+	private int calculateNestState(Nest nest){
+		
+		// Check if the nest is empty
+		if(nest.nestParts.size() == 0) {
+			//If it is being used 
+			if(nest.){
+				
+			}
+		}
+		
+		return 0;
 	}
-
-
+	
+	
 	public void setFeeder(Feeder feeder, int feederNum){
 		if (feederNum == 0){
-			this.feeder0 = feeder;
+			this.feeder_zero = feeder;
 		}
 		if (feederNum == 1){
-			this.feeder1 = feeder;
+			this.feeder_one = feeder;
 		}
 		if (feederNum == 2){
-			this.feeder2 = feeder;
+			this.feeder_two = feeder;
 		}
 		if (feederNum == 3){
-			this.feeder3 = feeder;
+			this.feeder_three = feeder;
 		}
 	}
 
@@ -305,9 +270,5 @@ public class VisionAgent extends Agent implements Vision {
 		this.partsRobot = pr;
 	}
 
-	@Override
-	public void msgDoneIncreasingLaneAmplitude(Feeder feeder, int nestNum0or1) {
-		// TODO Auto-generated method stub
-		
-	}
+
 }
