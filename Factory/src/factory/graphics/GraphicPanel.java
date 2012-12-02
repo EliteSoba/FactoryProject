@@ -582,12 +582,12 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * @param feederNum The designated feeder, 0-3
 	 */
 	public void unjamTopLane(int feederNum){
-		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane1Speed + 1);
-		if(lane[feederNum].lane1Speed > 8)	//laneSpeed max is 8
-			lane[feederNum].changeTopLaneSpeed(8);
-		lane[feederNum].vibrationAmplitudeTop += 1;
-		if(lane[feederNum].vibrationAmplitudeTop > 8)		//vibration amplitude max is 8
-			lane[feederNum].vibrationAmplitudeTop = 8;
+//		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane1Speed + 1);
+//		if(lane[feederNum].lane1Speed > 8)	//laneSpeed max is 8
+//			lane[feederNum].changeTopLaneSpeed(8);
+//		lane[feederNum].vibrationAmplitudeTop += 1;
+//		if(lane[feederNum].vibrationAmplitudeTop > 8)		//vibration amplitude max is 8
+//			lane[feederNum].vibrationAmplitudeTop = 8;
 		lane[feederNum].lane1Jam = false;
 		drawString("Lane " + (2*feederNum+1) + " has been Unjammed!");
 	}
@@ -606,12 +606,12 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * @param feederNum The designated feeder, 0-3
 	 */
 	public void unjamBottomLane(int feederNum){
-		lane[feederNum].changeBottomLaneSpeed(lane[feederNum].lane2Speed + 1);
-		if(lane[feederNum].lane2Speed > 8)	//laneSpeed max is 8
-			lane[feederNum].changeBottomLaneSpeed(8);
-		lane[feederNum].vibrationAmplitudeBottom += 1;
-		if(lane[feederNum].vibrationAmplitudeBottom > 8)		//vibration amplitude max is 8
-			lane[feederNum].vibrationAmplitudeBottom = 8;
+//		lane[feederNum].changeBottomLaneSpeed(lane[feederNum].lane2Speed + 1);
+//		if(lane[feederNum].lane2Speed > 8)	//laneSpeed max is 8
+//			lane[feederNum].changeBottomLaneSpeed(8);
+//		lane[feederNum].vibrationAmplitudeBottom += 1;
+//		if(lane[feederNum].vibrationAmplitudeBottom > 8)		//vibration amplitude max is 8
+//			lane[feederNum].vibrationAmplitudeBottom = 8;
 		lane[feederNum].lane2Jam = false;
 		drawString("Lane " + (2*feederNum+2) + " has been Unjammed!");
 	}
