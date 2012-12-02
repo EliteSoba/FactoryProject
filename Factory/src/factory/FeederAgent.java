@@ -179,12 +179,16 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/**
-	 *  The vision sends this message notifying 
-	 *  the Feeder that it has an empty nest. 
+	 *  The vision sends this message notifying the Feeder that its lane might be jammed.
 	 *  v.2
 	 * */
-	public void msgEmptyNest(int nestNumber) {
+	public void msgLaneMightBeJammed(int nestNumber) {
 		debug("received msgEmptyNest()");
+		if (bottomLane.lane.hasMixedParts() == true && nestNumber == 0)
+		{
+			
+		}
+		
 		if (nestNumber == 0) 
 		{
 			topLane.jamState = JamState.MIGHT_BE_JAMMED;
@@ -1248,6 +1252,7 @@ public class FeederAgent extends Agent implements Feeder {
 			print(msg, null);
 		}
 	}
+
 
 
 

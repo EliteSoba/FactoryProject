@@ -23,6 +23,8 @@ public void msgNestHasStabilized();
 
 public void msgNestHasDestabilized();
 
+public boolean hasMixedParts();
+
 //public void msgFeedingParts(int numParts);
 //
 //public void msgNestIsOutOfParts();

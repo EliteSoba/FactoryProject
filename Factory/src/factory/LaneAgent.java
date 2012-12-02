@@ -212,6 +212,13 @@ public class LaneAgent extends Agent implements Lane {
 		myFeeder = f;
 	}
 
+	@Override
+	public boolean hasMixedParts() {
+		// RETURN TRUE IF THIS LANE HAS MIXED PARTS
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 //	@Override
 //	public void msgFeedingParts(int numParts) {
 //		debug("msgFeedingParts()");
