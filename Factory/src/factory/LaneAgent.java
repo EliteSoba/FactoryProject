@@ -235,9 +235,24 @@ public class LaneAgent extends Agent implements Lane {
 
 	@Override
 	public boolean hasMixedParts() {
-		// RETURN TRUE IF THIS LANE HAS MIXED PARTS
-		// TODO Auto-generated method stub
-		return false;
+
+		if (laneParts.size() > 1)
+		{
+			String nameOfAPart = laneParts.get(0).name;
+
+			synchronized(laneParts)
+			{
+				for (Part p : laneParts)
+				{
+					if (p.name.equals(nameOfAPart) == false)
+					{
+						return true; // there is more than one type of part in the nest!
+					}
+				}
+			}
+		}
+
+		return false; // there is only ONE type of part in the nest
 	}
 
 //	@Override
