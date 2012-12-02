@@ -964,7 +964,7 @@ public class FeederAgent extends Agent implements Feeder {
 		//			topLane.part = mpr.pt;
 		//		}
 
-		feedParts(mpr);
+		//feedParts(mpr);
 		// The feeder should start feeding now
 		//state = FeederState.SHOULD_START_FEEDING;
 
@@ -992,7 +992,6 @@ public class FeederAgent extends Agent implements Feeder {
 
 		DoStartFeeding(currentPart); // Feed the part that is currently in the Feeder 
 		// into its appropriate lane
-
 
 		//stateChanged();
 	}

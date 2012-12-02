@@ -1,4 +1,4 @@
-//Contributors: Ben Mayeux,Stephanie Reagle, Joey Huang, Tobias Lee, Ryan Cleary
+//Contributors: Ben Mayeux,Stephanie Reagle, Joey Huang, Tobias Lee, Ryan Cleary, Marc Mendiola
 //CS 200
 
 // Last edited: 11/18/12 4:51pm by Joey Huang
@@ -21,6 +21,7 @@ import factory.graphics.FactoryProductionPanel;
 import factory.graphics.GraphicBin;
 import factory.graphics.GraphicItem;
 import factory.graphics.GraphicPanel;
+import factory.graphics.LanePanel;
 import factory.swing.FactoryProdManPanel;
 import factory.Part;
 import factory.KitConfig;
@@ -225,7 +226,7 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("exportkitfromcell")) {
 				((FactoryProductionPanel) graphics).exportKit();
 			}
-			
+
 			// Commands from StandAgent
 			else if (identifier.equals("ruininspectionkit")) {
 				((FactoryProductionPanel) graphics).dropParts(pCmd.get(2));
@@ -245,7 +246,7 @@ public class FactoryProductionManager extends Client {
 				int nestIndex = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).cameraFlash(nestIndex);
 			}
-			
+
 			else if (identifier.equals("takepictureofinspection")) {
 				((FactoryProductionPanel) graphics).takePictureOfInspectionSlot();
 			}
@@ -316,18 +317,42 @@ public class FactoryProductionManager extends Client {
 				part.nestStabilizationTime = Integer.parseInt(pCmd.get(5));
 				part.description = pCmd.get(6);
 
-			
+
 				System.out.println(partsList.get(pCmd.get(2)));
 			}
 			else if (identifier.equals("lanejam")) {
-					int lanenum = Integer.parseInt(pCmd.get(2));
-					lanenum = lanenum+1;
-					 ((FactoryProdManPanel)UI).addMessage("A lane jam has occurred in lane " + lanenum + ".");
+				int lanenum = Integer.parseInt(pCmd.get(2));
+				lanenum = lanenum+1;
+				((FactoryProdManPanel)UI).addMessage("A lane jam has occurred in lane " + lanenum + ".");
 			}
 			else if (identifier.equals("slowdiverter")) {
-					int feedernum = Integer.parseInt(pCmd.get(2));
-					feedernum = feedernum+1;
-					((FactoryProdManPanel)UI).addMessage("The diverter at feeder " + feedernum + "switched over late.");
+				int feedernum = Integer.parseInt(pCmd.get(2));
+				feedernum = feedernum+1;
+				((FactoryProdManPanel)UI).addMessage("The diverter at feeder " + feedernum + "switched over late.");
+			}
+
+			// command from lane manager
+			else if (identifier.equals("lanespeed")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int speed = Integer.valueOf(pCmd.get(3));
+				if(laneNumber % 2 == 0)
+					((FactoryProductionPanel) graphics).getLane(laneNumber/2).changeTopLaneSpeed(speed);
+				else
+					((FactoryProductionPanel) graphics).getLane(laneNumber/2).changeBottomLaneSpeed(speed);
+				// call graphics function to change speed
+
+			}else if (identifier.equals("laneamplitude")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int amplitude = Integer.valueOf(pCmd.get(3));
+				if(laneNumber % 2 == 0)
+					((FactoryProductionPanel) graphics).getLane(laneNumber/2).changeTopLaneAmplitude(amplitude);
+				else
+					((FactoryProductionPanel) graphics).getLane(laneNumber/2).changeBottomLaneAmplitude(amplitude);
+				// call graphics function to change amplitude
+			}else if (identifier.equals("lanepower")){
+
+			}else if (identifier.equals("feederpower")){
+				
 			}
 		}
 
