@@ -378,9 +378,9 @@ public class FactoryProductionManager extends Client {
 				int feederNumber = Integer.valueOf(pCmd.get(3));
 				
 				if(pCmd.get(2).equals("on")){
-					((FactoryProductionPanel) graphics).turnFeederOn(feederNumber);
+					((FactoryProductionPanel) graphics).startFeeder(feederNumber);
 				}else if(pCmd.get(2).equals("off")){
-					((FactoryProductionPanel) graphics).turnFeederOff(feederNumber);
+					((FactoryProductionPanel) graphics).stopFeeder(feederNumber);
 				}
 			}
 		}

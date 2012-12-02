@@ -533,6 +533,26 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	/**
+	 * Turns designated Feeder on - No confirmation
+	 * @param feederNum The designated Feeder
+	 */
+	public void startFeeder(int feederNum) {
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].feederOn = true;
+		}
+	}
+	
+	/**
+	 * Turns designated Feeder off - No confirmation
+	 * @param feederNum The designated Feeder
+	 */
+	public void stopFeeder(int feederNum) {
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].feederOn = false;
+		}
+	}
+	
+	/**
 	 * Purges the designated Feeder
 	 * @param feederNum The designated Feeder
 	 */
