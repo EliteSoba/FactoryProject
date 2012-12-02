@@ -1,6 +1,8 @@
 package factory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,7 +20,9 @@ public class LaneAgent extends Agent implements Lane {
 	}
 
 	/** DATA **/
-	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
+	public ArrayList<MyPart> myPartRequests = new ArrayList<MyPart>();
+	public List<Part> laneParts = Collections.synchronizedList(new ArrayList<Part>());
+	
 	public Feeder myFeeder;
 	//	public enum LaneState { NORMAL, NEEDS_TO_PURGE, PURGING };  // not sure about this, need to update wiki still
 	//	public LaneState state = LaneState.NORMAL; 
@@ -53,7 +57,7 @@ public class LaneAgent extends Agent implements Lane {
 
 	public void msgNestNeedsPart(Part part) {
 		debug("received msgNestNeedsPart("+part.name+").");
-		myParts.add(new MyPart(part));
+		myPartRequests.add(new MyPart(part));
 		stateChanged();
 	}
 
@@ -86,7 +90,7 @@ public class LaneAgent extends Agent implements Lane {
 	public boolean pickAndExecuteAnAction() {
 		
 
-		for(MyPart p : myParts)
+		for(MyPart p : myPartRequests)
 		{
 			if (p.state == MyPartState.NEEDED) 
 			{

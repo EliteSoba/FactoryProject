@@ -1,6 +1,7 @@
 package factory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import agent.Agent;
@@ -19,6 +20,8 @@ public class NestAgent extends Agent implements Nest {
 
 	/** DATA **/
 	public ArrayList<MyPart> myParts = new ArrayList<MyPart>();
+	public List<Part> nestParts = Collections.synchronizedList(new ArrayList<Part>());
+
 	public Lane myLane;
 	public int numberOfParts = 0;
 	public enum NestState { NORMAL, NEEDS_TO_DUMP, HAS_STABILIZED, HAS_DESTABILIZED, PART_REMOVED, OUT_OF_PARTS}
