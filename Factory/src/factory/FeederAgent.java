@@ -280,6 +280,7 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  It is the end of a chain of messages originally sent by the PartsRobot.
 	 */
 	public void msgLaneNeedsPart(Part part, Lane lane) {
+		debug("received msgLaneNeedsPart(" + part.name + ")");
 		//		MyLane targetLane = null;
 		//		
 		//		if (topLane.lane == lane)
@@ -793,8 +794,11 @@ public class FeederAgent extends Agent implements Feeder {
 			debug("SCENARIO #6");
 			purgeFeeder();  
 			state = FeederState.WAITING_FOR_PARTS;
+			debug("1");
 			partRequested.state = MyPartRequestState.ASKED_GANTRY;
+			debug("2");
 			gantry.msgFeederNeedsPart(partRequested.pt, this);
+			debug("3");
 		}
 
 
@@ -1012,7 +1016,9 @@ public class FeederAgent extends Agent implements Feeder {
 	private void purgeFeeder(){
 
 		DoStopFeeding(); // Stop sending parts into the lane(s)
+		debug("1.1");
 		DoPurgeFeeder(); // Purge the feeder 
+		debug("1.2");
 
 		currentPart = null; // and the feeder no longer has a part in it, so its current part is null
 
@@ -1387,6 +1393,13 @@ public class FeederAgent extends Agent implements Feeder {
 			targetLane = bottomLane;
 
 		return targetLane;
+	}
+
+	
+	protected void debug(String msg) {
+		if(true) {
+			print(msg, null);
+		}
 	}
 
 
