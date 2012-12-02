@@ -334,7 +334,8 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("slowdiverter")) {
 				int feedernum = Integer.parseInt(pCmd.get(2));
 				feedernum = feedernum+1;
-				((FactoryProdManPanel)UI).addMessage("The diverter at feeder " + feedernum + "switched over late.");
+				((FactoryProdManPanel)UI).addMessage("The diverter at feeder " + feedernum + " switched over late.");
+				((FactoryProductionPanel) graphics).drawString("The Diverter of Feeder " + feedernum + " is slow!");
 			}
 
 			// command from lane manager
