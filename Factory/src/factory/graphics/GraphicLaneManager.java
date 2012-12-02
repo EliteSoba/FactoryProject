@@ -321,8 +321,8 @@ public class GraphicLaneManager {
 			if (binExists
 					&& stabilizationCount[i] >= bin.getStabilizationTime()) {
 				isStable[i] = true;
-				if (stabilizationCount[i] == bin.getStabilizationTime());
-					//graphicPanel.sendMessage("na cmd neststabilized n" + laneManagerID + (i == 0 ? "t" : "b"));
+				if (stabilizationCount[i] == bin.getStabilizationTime())
+					graphicPanel.sendMessage("na cmd neststabilized n" + laneManagerID + (i == 0 ? "t" : "b"));
 			} else
 				isStable[i] = false;
 		}
@@ -538,6 +538,7 @@ public class GraphicLaneManager {
 						lane1Items.get(i).setVX(0);
 						stabilizationCount[0] = 0;
 						graphicPanel.sendMessage("la cmd partremovedfromlane " + (2*laneManagerID));
+						graphicPanel.sendMessage("na cmd nestdestabilized n" + laneManagerID + "t");
 						lane1Items.get(i).setX(
 								lane_xPos
 										+ 3
@@ -660,6 +661,7 @@ public class GraphicLaneManager {
 						lane1Items.get(i).setVX(0);
 						stabilizationCount[0] = 0;
 						graphicPanel.sendMessage("la cmd partremovedfromlane " + (2*laneManagerID));
+						graphicPanel.sendMessage("na cmd nestdestabilized n" + laneManagerID + "t");
 						lane1Items.get(i).setX(
 								lane_xPos
 										+ 3
@@ -852,6 +854,7 @@ public class GraphicLaneManager {
 						lane2Items.get(i).setVX(0);
 						stabilizationCount[1] = 0;
 						graphicPanel.sendMessage("la cmd partremovedfromlane " + (2*laneManagerID + 1));
+						graphicPanel.sendMessage("na cmd nestdestabilized n" + laneManagerID + "b");
 						lane2Items.get(i).setX(
 								lane_xPos
 										+ 3
@@ -974,6 +977,7 @@ public class GraphicLaneManager {
 						lane2Items.get(i).setVX(0);
 						stabilizationCount[1] = 0;
 						graphicPanel.sendMessage("la cmd partremovedfromlane " + (2*laneManagerID + 1));
+						graphicPanel.sendMessage("na cmd nestdestabilized n" + laneManagerID + "b");
 						lane2Items.get(i).setX(
 								lane_xPos
 										+ 3
