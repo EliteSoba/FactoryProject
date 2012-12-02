@@ -60,7 +60,7 @@ public class GraphicLaneManager {
 	/** lane Manager Number **/
 	int laneManagerID;
 	/** Counters to keep track of lane animation. 7 sprites **/
-	int laneAnimationCounter1, laneAnimationCounter2, laneAnimationSpeed;
+	int laneAnimationCounter1, laneAnimationCounter2;//, laneAnimationSpeed;
 	int divergerLaneAnimationCounter1, divergerLaneAnimationCounter2;
 	/** Counter for diverger light animation **/
 	int divergerLightAnimationCounter;
@@ -112,7 +112,7 @@ public class GraphicLaneManager {
 		// declaration of variables
 		laneAnimationCounter1 = 0;
 		laneAnimationCounter2 = 0;
-		laneAnimationSpeed = 2; // default value
+		//laneAnimationSpeed = 2; // default value
 		lane1Items = new ArrayList<GraphicItem>();
 		lane2Items = new ArrayList<GraphicItem>();
 		lane1QueueTaken = new ArrayList<Boolean>();
@@ -248,19 +248,21 @@ public class GraphicLaneManager {
 				/ laneAnimationSpeed + ".png").getImage(), lane_xPos + 75,
 				lane_yPos + 100, 180, 40, null);
 		*/
-		g2.drawImage(new ImageIcon("Images/lane/"+laneAnimationCounter1/laneAnimationSpeed+".png").getImage(),lane_xPos+75,lane_yPos+20,180,40,null);
-		g2.drawImage(new ImageIcon("Images/lane/"+laneAnimationCounter2/laneAnimationSpeed+".png").getImage(),lane_xPos+75,lane_yPos+100,180,40,null);
-		g2.drawImage(new ImageIcon("Images/divergerLane/"+laneAnimationCounter1/laneAnimationSpeed+".png").getImage(),lane_xPos+210,lane_yPos+60,40,20,null);
-		g2.drawImage(new ImageIcon("Images/divergerLane/"+(6-laneAnimationCounter2/laneAnimationSpeed)+".png").getImage(),lane_xPos+210,lane_yPos+80,40,20,null);
+		int lane1AnimationSpeed = 9-lane1Speed;
+		int lane2AnimationSpeed = 9-lane2Speed;
+		g2.drawImage(new ImageIcon("Images/lane/"+laneAnimationCounter1/lane1AnimationSpeed+".png").getImage(),lane_xPos+75,lane_yPos+20,180,40,null);
+		g2.drawImage(new ImageIcon("Images/lane/"+laneAnimationCounter2/lane2AnimationSpeed+".png").getImage(),lane_xPos+75,lane_yPos+100,180,40,null);
+		g2.drawImage(new ImageIcon("Images/divergerLane/"+laneAnimationCounter1/lane1AnimationSpeed+".png").getImage(),lane_xPos+210,lane_yPos+60,40,20,null);
+		g2.drawImage(new ImageIcon("Images/divergerLane/"+(6-laneAnimationCounter2/lane2AnimationSpeed)+".png").getImage(),lane_xPos+210,lane_yPos+80,40,20,null);
 		
 		if(lane1Start)
 			laneAnimationCounter1 ++;
 		if(lane2Start)
 			laneAnimationCounter2 ++;
 		
-		if (laneAnimationCounter1 == laneAnimationSpeed * 7) // 7 = number of images
+		if (laneAnimationCounter1 == lane1AnimationSpeed*7) // 7 = number of images
 			laneAnimationCounter1 = 0;
-		if (laneAnimationCounter2 == laneAnimationSpeed * 7) // 7 = number of images
+		if (laneAnimationCounter2 == lane2AnimationSpeed*7) // 7 = number of images
 			laneAnimationCounter2 = 0;
 		
 		for (int i = 0; i < lane1Items.size(); i++)
