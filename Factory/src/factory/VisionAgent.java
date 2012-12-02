@@ -97,73 +97,6 @@ public class VisionAgent extends Agent implements Vision {
 		}
 		this.stateChanged();
 	}
-	
-	/**
-	 * This is a message from the swing panel to force the nest to have no good parts
-	 * @param nestNum The number of the nest that has no good parts
-	 */
-	public void msgNoGoodPartsFound(int nestNum){
-		if (nestNum == 0 || nestNum == 1){
-			feeder_zero.msgBadNest(nestNum % 2);
-		}
-		if (nestNum == 2 || nestNum == 3){
-			feeder_one.msgBadNest(nestNum % 2);
-		}
-		if (nestNum == 4 || nestNum == 5){
-			feeder_two.msgBadNest(nestNum % 2);
-		}
-		if (nestNum == 6 || nestNum == 7){
-			feeder_three.msgBadNest(nestNum % 2);
-		}
-	}
-	
-	/**
-	 * This is a message from the swing panel to force the lane to be jammed
-	 * @param nestNum The number of the nest whose lane is jammed
-	 */
-	public void msgLaneJammed(int nestNum){
-		if (nestNum == 0 || nestNum == 1){
-			feeder_zero.msgEmptyNest(nestNum % 2);
-		}
-		if (nestNum == 2 || nestNum == 3){
-			feeder_one.msgEmptyNest(nestNum % 2);
-		}
-		if (nestNum == 4 || nestNum == 5){
-			feeder_two.msgEmptyNest(nestNum % 2);
-		}
-		if (nestNum == 6 || nestNum == 7){
-			feeder_three.msgEmptyNest(nestNum % 2);
-		}
-	}
-	
-	/**
-	 * This is a message from the swing panel to force the diverter to be slow
-	 * @param feederNum The number of the feeder whose diverter is slow
-	 */
-	public void msgSlowDiverter(int feederNum){
-		if (feederNum == 0){
-			feeder_zero.msgEmptyNest(feederNum);
-		}
-		if (feederNum == 1){
-			feeder_one.msgEmptyNest(feederNum);
-		}
-		if (feederNum == 2){
-			feeder_two.msgEmptyNest(feederNum);
-		}
-		if (feederNum == 3){
-			feeder_three.msgEmptyNest(feederNum);
-		}
-	}
-
-
-	//the following message existed in the wiki, but the parameter is different.  It takes a timer rather than feeder
-	//Yeah, that was my fault.  It is no longer needed.
-	//	@Override
-	//	public void msgMyNestsReadyForPicture(Nest nest, Nest nest2, TimerTask timerTask) {
-	//		// TODO Auto-generated method stub
-	//		
-	//	}
-
 
 	public void msgAnalyzeKitAtInspection(Kit kit) {
 		debug("Received msgAnalyzeKitAtInspection() from the kit robot.");
@@ -235,9 +168,6 @@ public class VisionAgent extends Agent implements Vision {
 			nestJammedWaiting[nestTwoIndex] = 0;
 			return;
 		}
-		
-		
-		
 	}
 	
 	private void inspectKit(KitPicRequest k) {
