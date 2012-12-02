@@ -128,24 +128,24 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** MESSAGES **/
 
-	
-	
+
+
 	/**
 	 *  The Lane sends this message to the Feeder notifying 
 	 *  him that his nest has become stable.
 	 */ 
 	public void msgNestHasStabilized(Lane lane) {
-//		myNestsHaveBeenChecked = false; // no longer used
+		//		myNestsHaveBeenChecked = false; // no longer used
 
 		// figure out which lane sent the message
 		if(topLane.lane == lane)
 		{
-//			debug("My TOP lane has stabilized and so it's ready for a picture.");
+			//			debug("My TOP lane has stabilized and so it's ready for a picture.");
 			topLane.picState = PictureState.STABLE;
 		}
 		else if(bottomLane.lane == lane)
 		{
-//			debug("My BOTTOM lane has stabilized and so it's ready for a picture.");
+			//			debug("My BOTTOM lane has stabilized and so it's ready for a picture.");
 			bottomLane.picState = PictureState.STABLE;
 		}
 
@@ -160,17 +160,17 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  The Lane sends this message to the Feeder notifying him that his nest has become unstable.
 	 */ 
 	public void msgNestHasDeStabilized(Lane lane) {
-//		myNestsHaveBeenChecked = false; // no longer used
+		//		myNestsHaveBeenChecked = false; // no longer used
 
 		// figure out which lane sent the message
 		if(topLane.lane == lane)
 		{
-//			debug("Uhoh, my TOP lane has destabilized!");
+			//			debug("Uhoh, my TOP lane has destabilized!");
 			topLane.picState = PictureState.UNSTABLE;
 		}
 		else if(bottomLane.lane == lane)
 		{
-//			debug("Uhoh, my BOTTOM lane has destabilized!");
+			//			debug("Uhoh, my BOTTOM lane has destabilized!");
 			bottomLane.picState = PictureState.UNSTABLE;
 		}
 
@@ -183,27 +183,39 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  v.2
 	 * */
 	public void msgLaneMightBeJammed(int nestNumber) {
-		debug("received msgEmptyNest()");
-		if (bottomLane.lane.hasMixedParts() == true && nestNumber == 0)
-		{
-			
-		}
+		debug("received msgEmptyNest(" + nestNumber + ")");
 		
 		if (nestNumber == 0) 
 		{
-			topLane.jamState = JamState.MIGHT_BE_JAMMED;
-			DoJamLane(nestNumber); // and jam the lane
-			topLane.lane.msgIncreaseAmplitude();
+			if (bottomLane.lane.hasMixedParts())
+			{
+				// the top lane is empty because the diverter timing was incorrect and did not feed 
+				// any/enough parts into the top lane it fed the top lane's parts into the bottom lane
+			}
+			else
+			{
+				topLane.jamState = JamState.MIGHT_BE_JAMMED;
+				DoIncreaseLaneAmplitude(nestNumber);
+			}
 		}
 		else if (nestNumber == 1) 
 		{
-			bottomLane.jamState = JamState.MIGHT_BE_JAMMED;
-			DoJamLane(nestNumber); // and jam the lane
-			bottomLane.lane.msgIncreaseAmplitude();
+			if (topLane.lane.hasMixedParts())
+			{
+				// the bottom lane is empty because the diverter timing was incorrect and did not feed 
+				// any/enough parts into the bottom lane it fed the top lane's parts into the bottom lane
+			}
+			else
+			{
+				bottomLane.jamState = JamState.MIGHT_BE_JAMMED;
+				DoIncreaseLaneAmplitude(nestNumber);
+			}
 		}
+		
+		
 		stateChanged();
 	}
-	
+
 	/** 
 	 * The lane sends this message after it has waited a sufficient amount of time
 	 * after the lane has been told to increase its amplitude.
@@ -218,7 +230,7 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			bottomLane.jamState = JamState.AMPLITUDE_WAS_INCREASED;
 		}
-		
+
 		stateChanged();
 	}
 
@@ -247,21 +259,21 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  It is the end of a chain of messages originally sent by the PartsRobot.
 	 */
 	public void msgLaneNeedsPart(Part part, Lane lane) {
-//		MyLane targetLane = null;
-//		
-//		if (topLane.lane == lane)
-//			targetLane = topLane;
-//		else
-//			targetLane = bottomLane;
-		
+		//		MyLane targetLane = null;
+		//		
+		//		if (topLane.lane == lane)
+		//			targetLane = topLane;
+		//		else
+		//			targetLane = bottomLane;
+
 		if (lane != null && part != null)
 		{
-//			if (lane.getNest().getPart() != null)
-//			{
-//			if (lane.getNest().getPart().id != part.id)
-//				purgeLane(targetLane);
-//			}
-			
+			//			if (lane.getNest().getPart() != null)
+			//			{
+			//			if (lane.getNest().getPart().id != part.id)
+			//				purgeLane(targetLane);
+			//			}
+
 			requestedParts.add(new MyPartRequest(part, lane)); // add this part request to the list of part requests
 		}
 		stateChanged();
@@ -304,7 +316,7 @@ public class FeederAgent extends Agent implements Feeder {
 			debug("received msgBadNest(bottomNest)");
 			bottomLane.state = MyLaneState.BAD_NEST;
 		}
-		
+
 		else if (nestNumber == -1) {
 			debug("received msgBadNest(currentNest)");
 			if (diverter == DiverterState.FEEDING_BOTTOM)
@@ -387,25 +399,25 @@ public class FeederAgent extends Agent implements Feeder {
 			laneMightBeJammed(topLane);
 			return true;
 		}
-		
+
 		if (bottomLane.jamState == JamState.MIGHT_BE_JAMMED)
 		{
 			laneMightBeJammed(bottomLane);
 			return true;
 		}
-		
+
 		if (topLane.jamState == JamState.AMPLITUDE_WAS_INCREASED)
 		{
 			laneIsNoLongerJammed(topLane);
 			return true;
 		}
-		
+
 		if (bottomLane.jamState == JamState.AMPLITUDE_WAS_INCREASED)
 		{
 			laneIsNoLongerJammed(bottomLane);
 			return true;
 		}
-		
+
 		if (topLane.state == MyLaneState.NEST_SUCCESSFULLY_DUMPED)
 		{
 			nestWasDumped(topLane);
@@ -430,22 +442,22 @@ public class FeederAgent extends Agent implements Feeder {
 	private void laneMightBeJammed(MyLane la)
 	{
 		debug("Lane might be jammed!");
-		
+
 		la.jamState = JamState.TOLD_TO_INCREASE_AMPLITUDE;
-		
+
 		la.lane.msgIncreaseAmplitude();
 	}
-	
+
 	private void laneIsNoLongerJammed(MyLane la)
 	{
 		debug("Lane is no longer jammed!");
-		
+
 		la.jamState = JamState.NO_LONGER_JAMMED;
 		DoUnjamLane(la);
-//		myNestsHaveBeenChecked = false; // no longer used
-		
+		//		myNestsHaveBeenChecked = false; // no longer used
+
 	}
-	
+
 	private void feedParts(MyPartRequest mpr) {
 		debug("feedParts("+mpr.pt.name+")");
 
@@ -506,22 +518,22 @@ public class FeederAgent extends Agent implements Feeder {
 	/** This action checks to see if the feeder should tell the vision to take a picture. **/
 	private void takePicture() {
 		if (this.requestedParts.size() == 0)
-			{
-				debug("Feeder sends msgMyNestsReadyForPicture() to vision.");
-				vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this); // send the message to the vision
-			}
+		{
+			debug("Feeder sends msgMyNestsReadyForPicture() to vision.");
+			vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this); // send the message to the vision
+		}
 		visionShouldTakePicture = false; // pic was taken	
-		
+
 		takePictureTimer.schedule(new TimerTask(){
 			public void run() {
 				visionShouldTakePicture = true;
 				stateChanged();
 			}
 		},(long) kPICTURE_DELAY_TIME * 1000); // okay to purge after this many seconds
-		
+
 	}
-	
-	
+
+
 	private void nestWasDumped(MyLane la) {
 		String laneStr = "Top Lane";
 		if (bottomLane == la)
@@ -550,7 +562,7 @@ public class FeederAgent extends Agent implements Feeder {
 		debug("Action: dump the "+ laneStr + "'s nest.");
 
 		//DoStopFeeding(); // stop feeding the parts into the lane, NOT SURE IF THIS IS NEEDED HERE...
-		
+
 		if (la == topLane)
 		{
 			DoDumpTopNest(); 
@@ -559,11 +571,11 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			DoDumpBottomNest(); 
 		}
-		
-		
+
+
 		this.msgLaneNeedsPart(la.part, la.lane); // and feed more of the same type of part that used 
-												 // to be in the lane before the bad nest msg
-		
+		// to be in the lane before the bad nest msg
+
 	}
 
 
@@ -682,8 +694,8 @@ public class FeederAgent extends Agent implements Feeder {
 			partRequested.state = MyPartRequestState.ASKED_GANTRY;
 			gantry.msgFeederNeedsPart(partRequested.pt, this);
 		}
-		
-		
+
+
 		/* SCENARIO #6: The Feeder has the wrong part but the target lane has the right part.
 		 * The Feeder has the wrong part.
 		 * The target lane can be empty or have the right part.
@@ -697,12 +709,12 @@ public class FeederAgent extends Agent implements Feeder {
 			partRequested.state = MyPartRequestState.ASKED_GANTRY;
 			gantry.msgFeederNeedsPart(partRequested.pt, this);
 		}
-		
-		
 
 
 
-//		stateChanged();
+
+
+		//		stateChanged();
 	}
 
 
@@ -730,7 +742,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 		startFeeding();
 
-		
+
 		//stateChanged(); // there is a stateChanged() inside startFeeding()
 	}
 
@@ -980,7 +992,7 @@ public class FeederAgent extends Agent implements Feeder {
 		//debug("action start feeding.");
 
 		state = FeederState.IS_FEEDING; // we want to feed until the feeder's state changes to OK_TO_PURGE
-		
+
 		// This timer will run so that we don't automatically purge a
 		// lane when a second request comes to the feeder (note: the 
 		// feeder almost always has multiple requests coming in at once)
@@ -1028,6 +1040,38 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** ANIMATIONS */
+
+
+	/** Animation that increases the amplitude of the lane. **/
+	private void DoIncreaseLaneAmplitude(int laneNum0or1)
+	{
+		if (debugMode == false)
+		{
+			server.command(this,"fa lm cmd setlaneamplitude " + feederNumber+laneNum0or1 + " " + 8); // 0-7lane# 1-8amplitude
+			debug("Feeder " + feederNumber + " started feeding.");
+			try {
+				animation.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	} 				
+
+
+	/** Resets the amplitude of the lane to a normal amplitude. **/
+	private void DoResetLaneAmplitude(int laneNum0or1)
+	{
+		if (debugMode == false)
+		{
+			server.command(this,"fa lm cmd setlaneamplitude " + feederNumber+laneNum0or1 + " " + 2); // 0-7lane# 1-8amplitude
+			debug("Feeder " + feederNumber + " started feeding.");
+			try {
+				animation.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	/** Animation that makes the Feeder START feeding parts into the lane. */
 	private void DoStartFeeding(Part part) {
@@ -1090,7 +1134,7 @@ public class FeederAgent extends Agent implements Feeder {
 			}
 		}
 	}
-	
+
 	private void DoDumpTopNest()
 	{
 		if (debugMode == false)
@@ -1104,7 +1148,7 @@ public class FeederAgent extends Agent implements Feeder {
 			}
 		}
 	}
-	
+
 	private void DoDumpBottomNest()
 	{
 		if (debugMode == false)
@@ -1157,8 +1201,8 @@ public class FeederAgent extends Agent implements Feeder {
 			}
 		}
 	}
-	
-	
+
+
 	/** Animation that simulates a jammed lane. **/
 	private void DoJamLane(int laneNumber)
 	{
@@ -1186,7 +1230,7 @@ public class FeederAgent extends Agent implements Feeder {
 			}
 		}
 	}
-	
+
 	/** Animation that unjams a jammed lane. **/
 	private void DoUnjamLane(MyLane la)
 	{
@@ -1215,7 +1259,7 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 	}
 
-	
+
 
 	/** OTHER **/
 
