@@ -367,6 +367,8 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			DoSwitchLane();
 			diverterTimerState = DiverterTimerState.TIMER_OFF;
+			slowDiverterTimer.cancel(); // we don't want this timer to keep running
+			slowDiverterTimer.purge();
 			return true;
 		}
 		
@@ -712,10 +714,7 @@ public class FeederAgent extends Agent implements Feeder {
 			TargetLaneHasDesiredPart = false; // its null, so can't be the desired part
 
 
-		// First, switch the diverter if you need to.
-		switchDiverterIfNecessary(targetLane);
-
-
+		
 
 		/* SCENARIO #1: The very first part fed into the Feeder.
 		 * The Feeder is empty.
@@ -810,6 +809,9 @@ public class FeederAgent extends Agent implements Feeder {
 
 		MyLane targetLane = targetLaneOfPartRequest(deliveredPart);
 
+		// First, switch the diverter if you need to.
+		switchDiverterIfNecessary(targetLane);
+		
 		// Remove the part request, it is no longer needed
 		synchronized(requestedParts)
 		{
@@ -1371,7 +1373,7 @@ public class FeederAgent extends Agent implements Feeder {
 	/** Method called from the GUI setting the speed of the Diverter switching algorithm. **/
 	public void setDiverterSpeed(int num)
 	{
-		this.kSLOW_DIVERTER_TIME = num;
+		this.diverterSpeed = num;
 	}
 
 

@@ -476,8 +476,7 @@ public class MasterControl {
 				
 				if (cmd.get(3).equals("diverterspeed")) {
 					int diverterSpeed = Integer.valueOf(cmd.get(5));
-					//TODO: Add command to set Diverter Speed here
-					//((FeederAgent) destination).
+					((FeederAgent) destination).setDiverterSpeed(diverterSpeed);
 				}
 			}
 
