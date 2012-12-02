@@ -258,4 +258,8 @@ public class GraphicItem {
 		successfullyTransferred = sT;
 	}
 	
+	public String getName() {
+		return imagePath.substring(imagePath.indexOf("/")+1, imagePath.indexOf("."));
+	}
+	
 }

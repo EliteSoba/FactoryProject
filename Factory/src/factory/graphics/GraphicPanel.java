@@ -877,7 +877,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void partsRobotArrivedAtNest() {
-		sendMessage("lm set nestitemtaken " + partsRobot.getDestinationNest() + " " + partsRobot.getItemIndex());
+		if (isFactoryProductionManager) {
+			sendMessage("lm set nestitemtaken " + partsRobot.getDestinationNest() + " " + partsRobot.getItemIndex());
+			sendMessage("na cmd partremovedfromnest " + partsRobot.getDestinationNest() + " " + nests.get(partsRobot.getDestinationNest()).getItemAt(partsRobot.getItemIndex()).getName());
+		}
 		sendMessage("pra cnf");
 	}
 
@@ -894,8 +897,9 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void partsRobotPopItemToCurrentKitDone() {
-		if (isFactoryProductionManager)
+		if (isFactoryProductionManager) {
 			sendMessage("kam set itemtype " + partsRobot.getDestinationKit() + " " + transferringItem.getImagePath());
+		}
 		sendMessage("pra cnf");
 	}
 
