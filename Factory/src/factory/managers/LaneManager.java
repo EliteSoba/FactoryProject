@@ -1,4 +1,4 @@
-//Ben Mayeux and Stephanie Reagle
+//Ben Mayeux and Stephanie Reagle and Marc Mendiola
 //CS 200
 
 package factory.managers;
@@ -183,13 +183,19 @@ public class LaneManager extends Client {
 			else if (identifier.equals("lanespeed")){
 				int laneNumber = Integer.valueOf(pCmd.get(2));
 				int speed = Integer.valueOf(pCmd.get(3));
-
+				if(laneNumber % 2 == 0)
+					((LanePanel) graphics).getLane(laneNumber/2).changeTopLaneSpeed(speed);
+				else
+					((LanePanel) graphics).getLane(laneNumber/2).changeBottomLaneSpeed(speed);
 				// call graphics function to change speed
 
 			}else if (identifier.equals("laneamplitude")){
 				int laneNumber = Integer.valueOf(pCmd.get(2));
 				int amplitude = Integer.valueOf(pCmd.get(3));
-
+				if(laneNumber % 2 == 0)
+					((LanePanel) graphics).getLane(laneNumber/2).changeTopLaneAmplitude(amplitude);
+				else
+					((LanePanel) graphics).getLane(laneNumber/2).changeBottomLaneAmplitude(amplitude);
 				// call graphics function to change amplitude
 			}else if (identifier.equals("lanepower")){
 				
