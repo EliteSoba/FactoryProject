@@ -250,6 +250,7 @@ public class GraphicLaneManager {
 		*/
 		int lane1AnimationSpeed = 9-lane1Speed;
 		int lane2AnimationSpeed = 9-lane2Speed;
+		//System.out.println(laneAnimationCounter1/lane1AnimationSpeed);
 		g2.drawImage(new ImageIcon("Images/lane/"+laneAnimationCounter1/lane1AnimationSpeed+".png").getImage(),lane_xPos+75,lane_yPos+20,180,40,null);
 		g2.drawImage(new ImageIcon("Images/lane/"+laneAnimationCounter2/lane2AnimationSpeed+".png").getImage(),lane_xPos+75,lane_yPos+100,180,40,null);
 		g2.drawImage(new ImageIcon("Images/divergerLane/"+laneAnimationCounter1/lane1AnimationSpeed+".png").getImage(),lane_xPos+210,lane_yPos+60,40,20,null);
@@ -260,9 +261,9 @@ public class GraphicLaneManager {
 		if(lane2Start)
 			laneAnimationCounter2 ++;
 		
-		if (laneAnimationCounter1 == lane1AnimationSpeed*7) // 7 = number of images
+		if (laneAnimationCounter1 >= lane1AnimationSpeed*7) // 7 = number of images
 			laneAnimationCounter1 = 0;
-		if (laneAnimationCounter2 == lane2AnimationSpeed*7) // 7 = number of images
+		if (laneAnimationCounter2 >= lane2AnimationSpeed*7) // 7 = number of images
 			laneAnimationCounter2 = 0;
 		
 		for (int i = 0; i < lane1Items.size(); i++)
