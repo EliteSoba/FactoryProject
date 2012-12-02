@@ -131,7 +131,7 @@ public class VisionAgent extends Agent implements Vision {
 	}
 	
 	/**
-	 * This is a message from the swing panel to force the lane to be jammed
+	 * This is a message from the swing panel to force the diverter to be slow
 	 * @param feederNum The number of the feeder whose diverter is slow
 	 */
 	public void msgSlowDiverter(int feederNum){
