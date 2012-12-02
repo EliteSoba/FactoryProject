@@ -60,7 +60,7 @@ public class GraphicLaneManager {
 	/** lane Manager Number **/
 	int laneManagerID;
 	/** Counters to keep track of lane animation. 7 sprites **/
-	int laneAnimationCounter1, laneAnimationCounter2;//, laneAnimationSpeed;
+	int laneAnimationCounter1, laneAnimationCounter2, laneAnimationSpeed;
 	int divergerLaneAnimationCounter1, divergerLaneAnimationCounter2;
 	/** Counter for diverger light animation **/
 	int divergerLightAnimationCounter;
@@ -112,7 +112,7 @@ public class GraphicLaneManager {
 		// declaration of variables
 		laneAnimationCounter1 = 0;
 		laneAnimationCounter2 = 0;
-		//laneAnimationSpeed = 2; // default value
+		laneAnimationSpeed = 2; // default value
 		lane1Items = new ArrayList<GraphicItem>();
 		lane2Items = new ArrayList<GraphicItem>();
 		lane1QueueTaken = new ArrayList<Boolean>();
@@ -448,6 +448,10 @@ public class GraphicLaneManager {
 					}
 					// Lane items move horizontally
 					if (lane1Items.get(i).getVX() == vXTop) {
+						if (lane1Items.get(i).getSuccessfullyTransferred()) {
+							//TODO: Send the message
+							lane1Items.get(i).setSuccessfullyTransferred(false);
+						}
 						if (vibrationCount % 4 == 1) { // Vibration up and down
 														// every 2 paint calls
 							if (i % 2 == 0) {
@@ -600,6 +604,10 @@ public class GraphicLaneManager {
 
 				// Lane items move horizontally
 				if (lane1Items.get(i).getVX() == vXTop) {
+					if (lane1Items.get(i).getSuccessfullyTransferred()) {
+						//TODO: Send the message
+						lane1Items.get(i).setSuccessfullyTransferred(false);
+					}
 					if (vibrationCount % 4 == 1) { // Vibration up and down
 													// every 2 paint calls
 						if (i % 2 == 0) {
@@ -751,6 +759,10 @@ public class GraphicLaneManager {
 					}
 					// Lane items move horizontally
 					if (lane2Items.get(i).getVX() == vXBottom) {
+						if (lane2Items.get(i).getSuccessfullyTransferred()) {
+							//TODO: Send the message
+							lane2Items.get(i).setSuccessfullyTransferred(false);
+						}
 						if (vibrationCount % 4 == 1) { // Vibration up and down
 														// every 2 paint calls
 							if (i % 2 == 0) {
@@ -903,6 +915,10 @@ public class GraphicLaneManager {
 
 				// Lane items move horizontally
 				if (lane2Items.get(i).getVX() == vXBottom) {
+					if (lane2Items.get(i).getSuccessfullyTransferred()) {
+						//TODO: Send the message
+						lane2Items.get(i).setSuccessfullyTransferred(false);
+					}
 					if (vibrationCount % 4 == 1) { // Vibration up and down
 													// every 2 paint calls
 						if (i % 2 == 0) {
@@ -1022,37 +1038,27 @@ public class GraphicLaneManager {
 				}
 
 				lane1Items.get(i).setX(
-						lane1Items.get(i).getX() + lane1Items.get(i).getVX()); // move
-																				// items
-																				// to
-																				// jammed
-																				// item
+						lane1Items.get(i).getX() + lane1Items.get(i).getVX()); // move items to jammed item
 				lane1Items.get(i).setY(
 						lane1Items.get(i).getY() + lane1Items.get(i).getVY());
 
-				if (lane1Items.get(i).getX() <= lane1Items.get(0).getX() + i
-						* 10) {
+				if (lane1Items.get(i).getX() <= lane1Items.get(0).getX() + i * 10) {
 					if (lane1Items.get(i).getVY() == 0) {
-						if (lane1Items.get(i).getX() >= itemXLane) // stops item
-																	// from
-																	// going off
-																	// end of
-																	// lane
+						if (lane1Items.get(i).getX() >= itemXLane) // stops item from going off end of lane
 							lane1Items.get(i).setX(itemXLane);
 						else
 							lane1Items.get(i).setX(
-									lane1Items.get(0).getX() + i * 10); // Lines
-																		// up
-																		// items
-																		// after
-																		// jammed
-																		// item
+									lane1Items.get(0).getX() + i * 10); // Lines up items after jammed item
 						if (lane1Items.get(i).getX() >= itemXLane) {
-							lane1Items.remove(i); // //if item is too far back
-													// and will collide feeder
-													// remove it
+							lane1Items.remove(i); // //if item is too far back and will collide. remove it
 							i--;
 							continue;
+						}
+						else{
+							if (lane1Items.get(i).getSuccessfullyTransferred()) {
+								//TODO: Send the message
+								lane1Items.get(i).setSuccessfullyTransferred(false);
+							}
 						}
 					}
 				}
@@ -1077,7 +1083,8 @@ public class GraphicLaneManager {
 						lane1Items.get(i).setY(itemYLaneUp);
 					}
 				}
-			} else if (lane1Items.get(i).getVX() == vXTop) {
+			} else if (lane1Items.get(i).getVX() == vXTop) {	//vibration
+				
 				if (vibrationCount % 4 == 1) { // Vibration up and down every 2
 												// paint calls
 					if (i % 2 == 0) {
@@ -1099,8 +1106,7 @@ public class GraphicLaneManager {
 					i--;
 				}
 			} else if (lane1Items.get(i).getVY() == vY
-					|| lane1Items.get(i).getVY() == -(vY)) { // Horizontal
-																// vibrating
+					|| lane1Items.get(i).getVY() == -(vY)) { // Horizontal vibrating
 				if (vibrationCount % 4 == 1) { // Vibration left and right every
 												// 2 paint calls
 					if (i % 2 == 0)
@@ -1146,11 +1152,7 @@ public class GraphicLaneManager {
 					// lane2Items.get(i).setVY(0);
 				}
 				lane2Items.get(i).setX(
-						lane2Items.get(i).getX() + lane2Items.get(i).getVX()); // move
-																				// items
-																				// to
-																				// jammed
-																				// item
+						lane2Items.get(i).getX() + lane2Items.get(i).getVX()); // move items to jammed item
 				lane2Items.get(i).setY(
 						lane2Items.get(i).getY() + lane2Items.get(i).getVY());
 
@@ -1158,38 +1160,22 @@ public class GraphicLaneManager {
 						* 10) {
 					if (lane2Items.get(i).getVY() == 0) { // if no vertical
 															// velocity
-						if (lane2Items.get(i).getX() >= itemXLane) // stops item
-																	// from
-																	// going off
-																	// end of
-																	// lane
+						if (lane2Items.get(i).getX() >= itemXLane) // stops item from going off end of lane
 							lane2Items.get(i).setX(itemXLane);
 						else
 							// keep parts from overlapping
 							lane2Items.get(i).setX(
-									lane2Items.get(0).getX() + i * 10); // sets
-																		// the
-																		// coord.
-																		// for
-																		// where
-																		// to
-																		// stop
-																		// part
-																		// at
-						if (lane2Items.get(i).getX() >= itemXLane) { // if item
-																		// is
-																		// too
-																		// far
-																		// back
-																		// and
-																		// will
-																		// collide
-																		// feeder
-																		// remove
-																		// it
+									lane2Items.get(0).getX() + i * 10); // sets the coord. for where to stop part at
+						if (lane2Items.get(i).getX() >= itemXLane) { // if item is too far back and will collide feeder remove it
 							lane2Items.remove(i);
 							i--;
 							continue;
+						}
+						else{
+							if (lane2Items.get(i).getSuccessfullyTransferred()) {
+								//TODO: Send the message
+								lane2Items.get(i).setSuccessfullyTransferred(false);
+							}
 						}
 					}
 				}
