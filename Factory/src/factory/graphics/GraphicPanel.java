@@ -24,7 +24,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public int WIDTH, HEIGHT;
 	public static final Image TILE_IMAGE = Toolkit.getDefaultToolkit().getImage("Images/Tiles/floorTilePortal.jpg");
 	public static final int TILE_SIZE = 128;
-	public static final int DELAY = 1;
+	public static final int DELAY = 20;
 	
 	protected Client am; //The Client that holds this
 	
@@ -40,6 +40,9 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected int flashCounter;
 	protected int flashFeederIndex;
 	protected static Image flashImage;
+	protected ArrayList<Image> scanAnimation;
+	protected int scanAnimationCounter;
+	protected int scanAnimationSpeed;
 	
 	// KIT MANAGER
 	protected GraphicConveyorBelt belt; //The conveyer belt
@@ -49,8 +52,6 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	// PARTS MANAGER
 	protected ArrayList<GraphicNest> nests;
 	protected GraphicPartsRobot partsRobot;
-	
-	// FJ
 	
 	// GANTRY
 	protected GraphicGantryRobot gantryRobot;
@@ -81,7 +82,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		isKitAssemblyManager = false;
 		isFactoryProductionManager = false;*/
 		
-		flashImage = Toolkit.getDefaultToolkit().getImage("Images/cameraFlash3x3.png");
+		//flashImage = Toolkit.getDefaultToolkit().getImage("Images/cameraFlash3x3.png");
+		scanAnimation = GraphicAnimation.loadAnimationFromFolder("Images/scanFlash/", 0, ".png");
+		scanAnimationCounter = -1;
+		scanAnimationSpeed = 3;
 		try {
 			messageFont = Font.createFont(Font.TRUETYPE_FONT,new File("Fonts/digitalism.ttf"));
 		} catch (Exception e) {
@@ -298,7 +302,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void cameraFlash(int nestIndex) {
 		if (isLaneManager || isFactoryProductionManager) {
-			flashCounter = 10;
+			scanAnimationCounter = 0;
 			flashFeederIndex = nestIndex;
 		}
 	}
@@ -1069,17 +1073,20 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 		
 		if(isLaneManager || isFactoryProductionManager) {
-			if(flashCounter >= 0)
+			if(scanAnimationCounter != -1)
 			{
-				int flashX = nests.get(flashFeederIndex*2).getX()-20;
-				int flashY = nests.get(flashFeederIndex*2).getY()-12;
-				g.drawImage(flashImage, flashX, flashY, null);
-				flashX = nests.get(flashFeederIndex*2+1).getX()-20;
-				flashY = nests.get(flashFeederIndex*2+1).getY()-12;
-				g.drawImage(flashImage, flashX, flashY, null);
-				flashCounter --;
-				if(flashCounter == 1)
+				int flashX = nests.get(flashFeederIndex*2).getX()-16;
+				int flashY = nests.get(flashFeederIndex*2).getY()-8;
+				g.drawImage(scanAnimation.get(scanAnimationCounter/scanAnimationSpeed), flashX, flashY, null);
+				//flashX = nests.get(flashFeederIndex*2+1).getX()-20;
+				//flashY = nests.get(flashFeederIndex*2+1).getY()-12;
+				//g.drawImage(flashImage, flashX, flashY, null);
+				scanAnimationCounter ++;
+				if(scanAnimationCounter/scanAnimationSpeed >= 15)
+				{
+					scanAnimationCounter = -1;
 					cameraFlashDone();
+				}
 			}
 		}
 		
