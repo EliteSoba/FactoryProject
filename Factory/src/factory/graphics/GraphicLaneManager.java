@@ -114,8 +114,8 @@ public class GraphicLaneManager {
 		lane2Items = new ArrayList<GraphicItem>();
 		lane1QueueTaken = new ArrayList<Boolean>();
 		lane2QueueTaken = new ArrayList<Boolean>();
-		lane1Speed = 1;
-		lane2Speed = 1; // Change speed of the lane later
+		lane1Speed = 2;
+		lane2Speed = 2; // Change speed of the lane later
 		vXTop = -lane1Speed;
 		vXBottom = -lane2Speed;
 		vY = lane1Speed;
