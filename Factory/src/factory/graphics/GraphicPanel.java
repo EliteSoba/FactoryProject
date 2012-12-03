@@ -28,6 +28,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	protected Client am; //The Client that holds this
 	
+	// Checks for which managers to instantiate objects for
 	protected boolean isLaneManager;
 	protected boolean isGantryRobotManager;
 	protected boolean isKitAssemblyManager;
