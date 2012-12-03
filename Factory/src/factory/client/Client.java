@@ -75,6 +75,8 @@ public abstract class Client extends JFrame implements ActionListener {
 		Thread inputThread = new Thread(independentInput);
 		inputThread.start();
 		this.addWindowListener(new WindowCloser(this));
+		if(t != Type.fpm)
+			this.setDefaultCloseOperation(HIDE_ON_CLOSE);
 		
 		
 	}
@@ -144,10 +146,13 @@ public abstract class Client extends JFrame implements ActionListener {
 	
 		public void windowClosing(WindowEvent e) {
 			
-			if(client.type == Type.fpm && connected == true)
+			if(client.type == Type.fpm && connected == true){
 				client.sendCommand("fpm mcs cmd stopfactory");
 				
 			client.quit();
+			}
+			else
+				client.close();
 		}
 
 		
@@ -198,7 +203,12 @@ public abstract class Client extends JFrame implements ActionListener {
 		if(type == Type.fpm || connected == false)
 			System.exit(0);
 	}
-    public void VERY_DISAMBIGUOUS_FUNCTION()
+    public void close() {
+		
+		
+	}
+
+	public void VERY_DISAMBIGUOUS_FUNCTION()
     {
     	functionWithinAFunction();
     }
