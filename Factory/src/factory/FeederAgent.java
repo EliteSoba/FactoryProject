@@ -652,9 +652,6 @@ public class FeederAgent extends Agent implements Feeder {
 		
 		la.state = MyLaneState.EMPTY;
 
-		this.msgLaneNeedsPart(la.part, la.lane); // and feed more of the same type of part that used 
-		// to be in the lane before the bad nest msg
-
 	}
 
 
