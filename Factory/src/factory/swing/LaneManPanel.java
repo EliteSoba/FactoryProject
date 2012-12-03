@@ -440,6 +440,11 @@ public class LaneManPanel extends JPanel{
 				String set = "lm va cmd missingparts " + lanenum/2 + " " + lanenum%2;
 				try {
 					laneManager.sendCommand(set);
+					
+					if (lanenum%2 == 0)
+						laneManager.sendCommand("lm lm cmd jamtoplane " + lanenum/2);
+					else
+						laneManager.sendCommand("lm lm cmd jambottomlane " + lanenum/2);
 				} catch (Exception e) {
 					System.out.println("An error occurred trying to initiate non-normative case: lane jam.");
 				} 
