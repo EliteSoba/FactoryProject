@@ -78,13 +78,17 @@ public class VisionAgent extends Agent implements Vision {
 	}
 
 	public void msgMyNestsReadyForPicture(Nest nestOne, Nest nestTwo, Feeder feeder) {
-		if(nestOne.getPart() != null && nestTwo.getPart() !=null){
-			debug("received msgMyNestsReadyForPicture("+nestOne.getPart().name+","+nestTwo.getPart().name+")");
-			pictureRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
-		}
-		else {
+		synchronized (pictureRequests) {
+			if (nestOne.getPart() != null && nestTwo.getPart() != null) {
+				debug("received msgMyNestsReadyForPicture("
+						+ nestOne.getPart().name + "," + nestTwo.getPart().name
+						+ ")");
+				pictureRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
+			} else {
 
-			debug("received msgMyNestsReadyForPicture("+ nestOne.getPart()+","+ nestTwo.getPart()+")");
+				debug("received msgMyNestsReadyForPicture(" + nestOne.getPart()
+						+ "," + nestTwo.getPart() + ")");
+			}
 		}
 		this.stateChanged();
 	}
@@ -311,8 +315,11 @@ public class VisionAgent extends Agent implements Vision {
 				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
 			}
 			// OK+OK => grab PART nest 2
-			else if(pr.nestOneState == 9 && pr.nestTwoState == 2){
+			else if(pr.nestOneState == 9 && pr.nestTwoState == 3){
 				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 9 && pr.nestTwoState == 9){
 			}
 			
 			else {
@@ -384,9 +391,15 @@ public class VisionAgent extends Agent implements Vision {
 		for(Part p : nest.getParts()){
 			if(!nest.getPart().name.equals(p.name)){
 				pure = false;
+
+				debug("######### JAMMED #############");
+				debug(nest.getPart().name + " != " + p.name);
+				debug("######################################");
+				break;
 			}
 		}
-		if(!pure){
+		if(!pure && nest.getParts().size() > 0){
+			
 			sendMessageToFeederAboutMixedParts(nest);
 			return 9;
 		}
@@ -428,18 +441,55 @@ public class VisionAgent extends Agent implements Vision {
 		int index = this.nests.indexOf(n);
 		
 		if(n.getParts().size() == 0 && n.getLane().getParts().size() == 0){
+
+			debug("######### NEED PART #############");
+			debug("NEST: "+n+" PART: "+n.getPart().name);
+			debug("######################################");
 			n.msgYouNeedPart(n.getPart());
 		}
 		switch(index){
-			case 0: feeder_zero.msgLaneMightBeJammed(0); break;
-			case 1: feeder_zero.msgLaneMightBeJammed(1); break;
-			case 2: feeder_one.msgLaneMightBeJammed(0); break;
-			case 3: feeder_one.msgLaneMightBeJammed(1); break;
-			case 4: feeder_two.msgLaneMightBeJammed(0); break;
-			case 5: feeder_two.msgLaneMightBeJammed(1); break;
-			case 6: feeder_three.msgLaneMightBeJammed(0); break;
-			case 7: feeder_three.msgLaneMightBeJammed(1); break;
+			case 0: feeder_zero.msgLaneMightBeJammed(0);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 0 PART:");
+			debug("######################################");
+			 break;
+			case 1: feeder_zero.msgLaneMightBeJammed(1);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 0 PART:");
+			debug("######################################");
+			 break;
+			case 2: feeder_one.msgLaneMightBeJammed(0);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 1 PART:");
+			debug("######################################");
+			 break;
+			case 3: feeder_one.msgLaneMightBeJammed(1);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 1 PART:");
+			debug("######################################");
+			 break;
+			case 4: feeder_two.msgLaneMightBeJammed(0);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 2 PART:");
+			debug("######################################");
+			 break;
+			case 5: feeder_two.msgLaneMightBeJammed(1);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 2 PART:");
+			debug("######################################");
+			 break;
+			case 6: feeder_three.msgLaneMightBeJammed(0);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 3 PART:");
+			debug("######################################");
+			 break;
+			case 7: feeder_three.msgLaneMightBeJammed(1);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 3 PART:");
+			debug("#####################################");
+			 break;
 		}
+		
 	}
 
 	public void sendMessageToFeederAboutMixedParts(Nest n){
