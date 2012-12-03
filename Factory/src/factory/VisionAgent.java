@@ -224,8 +224,6 @@ public class VisionAgent extends Agent implements Vision {
 				}
 			}
 			
-			// Check all other scenarios
-			
 			
 			// Both nests are unused, ignore
 			if(pr.nestOneState == 0 && pr.nestTwoState == 0 ){
@@ -277,6 +275,10 @@ public class VisionAgent extends Agent implements Vision {
 				sendMessageToFeederAboutJam(pr.nestOne);
 				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
 			}
+			// Jammed+OK => grab PART nest 2
+			else if(pr.nestOneState == 2 && pr.nestTwoState == 9 ){
+				sendMessageToFeederAboutJam(pr.nestOne);
+			}
 			
 
 			
@@ -297,6 +299,25 @@ public class VisionAgent extends Agent implements Vision {
 			else if(pr.nestOneState == 3 && pr.nestTwoState == 3 ){
 				tellPartsRobotToGrabPartFromNest(pr.nestOne);
 				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 3 && pr.nestTwoState == 9 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestOne);
+			}
+			
+
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 9 && pr.nestTwoState == 2 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 9 && pr.nestTwoState == 2){
+				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
+			}
+			
+			else {
+				debug(""+pr.nestOneState+" -- "+pr.nestTwoState);
+				System.exit(0);
 			}
 			
 
@@ -359,6 +380,17 @@ public class VisionAgent extends Agent implements Vision {
 		// Get index of nest to use the arrays to store the number of jams etc.
 		int nestIndex = this.nests.indexOf(nest);
 		
+		boolean pure = true;
+		for(Part p : nest.getParts()){
+			if(!nest.getPart().name.equals(p.name)){
+				pure = false;
+			}
+		}
+		if(!pure){
+			sendMessageToFeederAboutMixedParts(nest);
+			return 9;
+		}
+		
 		// Check if the nest is not used
 		if(!nest.isBeingUsed()) {
 			nestJammedWaiting[nestIndex] = 0;
@@ -410,6 +442,21 @@ public class VisionAgent extends Agent implements Vision {
 		}
 	}
 
+	public void sendMessageToFeederAboutMixedParts(Nest n){
+		int index = this.nests.indexOf(n);
+		
+		switch(index){
+			case 0: feeder_zero.msgNestHasMixedParts(0); break;
+			case 1: feeder_zero.msgNestHasMixedParts(1); break;
+			case 2: feeder_one.msgNestHasMixedParts(0); break;
+			case 3: feeder_one.msgNestHasMixedParts(1); break;
+			case 4: feeder_two.msgNestHasMixedParts(0); break;
+			case 5: feeder_two.msgNestHasMixedParts(1); break;
+			case 6: feeder_three.msgNestHasMixedParts(0); break;
+			case 7: feeder_three.msgNestHasMixedParts(1); break;
+		}
+	}
+	
 	public void sendMessageToFeederAboutBadNest(Nest n){
 		
 		int index = this.nests.indexOf(n);
