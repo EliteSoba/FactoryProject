@@ -317,15 +317,17 @@ public class LaneManPanel extends JPanel{
 		JTextArea messageBox; // prints messages (actions selected)
 		JSlider badPartsPercentage; // % of bad parts in nest (3.1) selector
 
-
+		// limits for sliders
 		int badPartsPercentageMin;
 		int badPartsPercentageMax;
 		JSlider diverterSpeed;
 		int diverterSpeedMin;
 		int diverterSpeedMax;
 
-		public LaneNonNormPanel() { // constructor
+		// constructor
+		public LaneNonNormPanel() {
 			
+			// initializing variables
 			badPartsLabel = new JLabel("% Bad Parts");
 			laneJamButton = new JButton("Lane Jam");
 			diverterButton = new JButton("Diverter Too Slow");
@@ -337,6 +339,8 @@ public class LaneManPanel extends JPanel{
 			badPartsPercentageMin = 0;
 			badPartsPercentageMax = 100;
 			badPartsPercentage = new JSlider(badPartsPercentageMin, badPartsPercentageMax);
+			
+			// hash table for bad parts percentage slider for easy access
 			Hashtable labelTable = new Hashtable();
 			for(int i = 0; i <=100; i+=25){
 				labelTable.put( new Integer( i ), new JLabel(i + "%") );
@@ -350,7 +354,7 @@ public class LaneManPanel extends JPanel{
 			badPartsPercentage.setValue(0);
 			
 			diverterSpeedMin = 0;
-			diverterSpeedMax = 12;
+			diverterSpeedMax = 20;
 			diverterSpeed = new JSlider(diverterSpeedMin, diverterSpeedMax);
 			labelTable = new Hashtable();
 			labelTable.put( new Integer(diverterSpeedMin), new JLabel("Slow") );
