@@ -1,6 +1,7 @@
 package factory.graphics;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
@@ -28,8 +29,11 @@ public class GraphicKittingStation {
 	
 	/**The maximum number of kits a station can hold*/
 	public static final int MAX_KITS = 2;
-	public static final Image TRASH_CHUTE_IMAGE = new ImageIcon("Images/trashChute.png").getImage();
+	//public static final Image TRASH_CHUTE_IMAGE = new ImageIcon("Images/trashChute.png").getImage();
 	public static final Image KITTING_STATION_IMAGE = new ImageIcon("Images/kittingStation.png").getImage();
+	protected ArrayList<Image> trashChuteAnimation;
+	protected int trashChuteAnimationCounter;
+	protected int trashChuteAnimationSpeed;
 	
 	/**
 	 * Creates a Kit Station at the given x and y coordinates
@@ -47,6 +51,10 @@ public class GraphicKittingStation {
 		for (int i = 0; i < MAX_KITS; i++)
 			kits[i] = null;
 		check = null;
+		
+		trashChuteAnimation = GraphicAnimation.loadAnimationFromFolder("Images/trashChute/", 1, ".png");
+		trashChuteAnimationCounter = 0;
+		trashChuteAnimationSpeed = 2;
 	}
 	
 	/**
@@ -58,7 +66,12 @@ public class GraphicKittingStation {
 		g.drawImage(KITTING_STATION_IMAGE, x, y, null);
 		
 		// Draw trash chute
-		g.drawImage(TRASH_CHUTE_IMAGE, x, y+313, null);
+		//System.out.println(trashChuteAnimationCounter);
+		g.drawImage(trashChuteAnimation.get(trashChuteAnimationCounter/trashChuteAnimationSpeed),x,y+313,null);
+		trashChuteAnimationCounter ++;
+		if(trashChuteAnimationCounter/trashChuteAnimationSpeed >= trashChuteAnimation.size())
+			trashChuteAnimationCounter = 0;
+		//g.drawImage(TRASH_CHUTE_IMAGE, x, y+313, null);
 
 		// Draw kits
 		drawKits(g);
