@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import factory.managers.*;
+import factory.swing.LaneManPanel.LaneNonNormPanel;
 import factory.swing.LaneManPanel.LaneNonNormPanel.SliderDetection;
 
 
@@ -43,8 +44,14 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	JTable table; // table to house production schedule
 	JButton stopFactory; // terminate all factory operations - close program
 
+	JPanel preferencesPanel; // normative controls
+	LaneNonNormPanel nonnormativePanel; // nonnormative controls
+	
 	public FactoryProdManPanel(FactoryProductionManager fpm) { 
 		factoryProductionManager = fpm;
+		preferencesPanel = new LanePreferencesPanel();
+		nonnormativePanel = new LaneNonNormPanel();
+		
 		newOrderPanel = new JPanel();
 		kitNameBox = new JComboBox();
 		kitNameBox.setPreferredSize(new Dimension(225,25));
@@ -137,6 +144,8 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		tabContainer = new JTabbedPane();
 		tabContainer.addTab("New Order",newOrderPanel);
 		tabContainer.addTab("Schedule",schedulePanel);
+		tabContainer.addTab("Lane Controls",preferencesPanel);
+		tabContainer.addTab("Non-Normative",nonnormativePanel);
 		tabContainer.setPreferredSize(new Dimension(290,710));
 		add(tabContainer);
 	}
