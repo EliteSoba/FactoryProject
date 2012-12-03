@@ -371,7 +371,7 @@ public class FactoryProductionManager extends Client {
 			}else if (identifier.equals("laneamplitude")){
 				int laneNumber = Integer.valueOf(pCmd.get(2));
 				int amplitude = Integer.valueOf(pCmd.get(3));
-				((LanePanel) graphics).GUIsetLaneAmplitude(laneNumber/2, laneNumber%2, amplitude);
+				((FactoryProductionPanel) graphics).setLaneAmplitude(laneNumber/2, laneNumber%2, amplitude);
 				// call graphics function to change amplitude
 			}else if (identifier.equals("guilaneamplitude")){
 				int laneNumber = Integer.valueOf(pCmd.get(2));
