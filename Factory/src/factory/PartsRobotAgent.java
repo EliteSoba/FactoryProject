@@ -31,6 +31,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 
 	// int to keep track of number of kits built
 	public int kitsToBuild;
+	
 	// Kits to keep track of kits in slots
 	public KitConfig topSlot;
 	public KitConfig bottomSlot;
@@ -126,6 +127,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		debug("Received msgMakeKit("+kitConfig.kitName+")");
 		this.currentKitConfiguration = kitConfig;
 		this.currentKitConfigurationState = KitConfigState.REQUESTED;
+		this.kitsToBuild = kitConfig.quantity;
 		this.stateChanged();
 	}
 
@@ -265,13 +267,13 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			}
 
 			// If stand told us to build Kit
-			if (this.currentKitConfigurationState == KitConfigState.PRODUCING && this.topSlotState == SlotState.BUILD_REQUESTED){
+			if (this.currentKitConfigurationState == KitConfigState.PRODUCING && this.topSlotState == SlotState.BUILD_REQUESTED && this.kitsToBuild > 0){
 				DoStartBuildingKitAtSlot("topSlot");
 				return true;
 			}
 
 			// If stand told us to build Kit
-			if (this.currentKitConfigurationState == KitConfigState.PRODUCING && this.bottomSlotState == SlotState.BUILD_REQUESTED){
+			if (this.currentKitConfigurationState == KitConfigState.PRODUCING && this.bottomSlotState == SlotState.BUILD_REQUESTED && this.kitsToBuild > 0){
 				DoStartBuildingKitAtSlot("bottomSlot");
 				return true;
 			}
@@ -436,6 +438,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	//TODO edited this... added the if statements
 	public void DoStartBuildingKitAtSlot(String slot){
+		this.kitsToBuild--;
 		if(!needsFixing){
 			debug("Executing DoStartBuildingKitAtSlot("+slot+")");
 			KitConfig newKitConfig = new KitConfig();

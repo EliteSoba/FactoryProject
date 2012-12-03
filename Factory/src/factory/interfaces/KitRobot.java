@@ -1,5 +1,7 @@
 package factory.interfaces;
 
+import factory.KitRobotAgent.KitAtInspection;
+
 public interface KitRobot {
 	public void msgComeMoveKitToInspectionSlot(String pos);
 	public void msgStandClear();
@@ -9,4 +11,5 @@ public interface KitRobot {
 	public void msgComeProcessAnalyzedKitAtInspectionSlot();
 	public void msgClearTheStandOff();
 	public void msgKitExported();
+	public KitAtInspection getAtInspection();
 }
