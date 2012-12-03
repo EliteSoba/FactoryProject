@@ -23,11 +23,13 @@ public class FeederAgent extends Agent implements Feeder {
 	public Vision vision;
 	public Gantry gantry;
 
+	public int feederNumber;
+
 	private final static int kOK_TO_PURGE_TIME = 7; 
 	private final static int kPICTURE_DELAY_TIME = 5;
 	private int diverterSpeed = kOK_TO_PURGE_TIME; // intial speed is in-sync with the purge timer
 
-	public int feederNumber;
+	public boolean hasASlowDiverter = false;
 	public boolean visionShouldTakePicture = true;
 	
 	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());
@@ -678,15 +680,22 @@ public class FeederAgent extends Agent implements Feeder {
 			}
 		}
 
-		// Switch the diverter basedon the speed of the diverter [v.2]
-		diverterTimerState = DiverterTimerState.TIMER_RUNNING;
-		slowDiverterTimer.schedule(new TimerTask(){
-			public void run() {
-				diverterTimerState = DiverterTimerState.TIMER_EXPIRED;
-				debug("Diverter slow timer has expired.");
-				stateChanged();
-			}
-		},(long) diverterSpeed * 1000); // switch the diverter after this many seconds
+		if (this.hasASlowDiverter) // Switch the diverter based on a timer
+		{
+			// Switch the diverter basedon the speed of the diverter [v.2]
+			diverterTimerState = DiverterTimerState.TIMER_RUNNING;
+			slowDiverterTimer.schedule(new TimerTask(){
+				public void run() {
+					diverterTimerState = DiverterTimerState.TIMER_EXPIRED;
+					debug("Diverter slow timer has expired.");
+					stateChanged();
+				}
+			},(long) diverterSpeed * 1000); // switch the diverter after this many seconds
+		}
+		else // Switch the diverter immediately
+		{
+			DoSwitchLane();
+		}
 		
 	}
 
@@ -713,6 +722,8 @@ public class FeederAgent extends Agent implements Feeder {
 			TargetLaneHasDesiredPart = false; // its null, so can't be the desired part
 
 
+		// First, switch the diverter if you need to.
+		switchDiverterIfNecessary(targetLane);
 		
 
 		/* SCENARIO #1: The very first part fed into the Feeder.
@@ -811,9 +822,9 @@ public class FeederAgent extends Agent implements Feeder {
 
 		MyLane targetLane = targetLaneOfPartRequest(deliveredPart);
 
-		// First, switch the diverter if you need to.
-		switchDiverterIfNecessary(targetLane);
-		
+//		// First, switch the diverter if you need to.
+//		switchDiverterIfNecessary(targetLane);
+
 		// Remove the part request, it is no longer needed
 		synchronized(requestedParts)
 		{
@@ -1389,6 +1400,15 @@ public class FeederAgent extends Agent implements Feeder {
 	/** Method called from the GUI setting the speed of the Diverter switching algorithm. **/
 	public void setDiverterSpeed(int num)
 	{
+		if (num == 0)
+		{
+			this.hasASlowDiverter = false;
+		}
+		else
+		{
+			this.hasASlowDiverter = true;
+		}
+		
 		this.diverterSpeed = (num + kOK_TO_PURGE_TIME); // the delay only takes effect after the ok_to_purge_time timer
 	}
 
