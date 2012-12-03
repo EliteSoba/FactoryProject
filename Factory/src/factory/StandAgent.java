@@ -202,6 +202,12 @@ public class StandAgent extends Agent implements Stand {
 			   return true;
 			}
 			
+			if(topSlot.state  == MySlotState.NEEDS_FIXING || bottomSlot.state  == MySlotState.NEEDS_FIXING) {
+				DoProcessBadKit();
+				return true;
+			}
+			
+			
 			/**
 			 * If there is a Kit in the Inspection Slot that hasn't been analyzed, then ask Vision to do so 
 			 */
@@ -236,10 +242,7 @@ public class StandAgent extends Agent implements Stand {
 			/**
 			 * If there is a kit that needs fixing, then fix it.
 			 */
-			if(topSlot.state  == MySlotState.NEEDS_FIXING || bottomSlot.state  == MySlotState.NEEDS_FIXING) {
-				DoProcessBadKit();
-				return true;
-			}
+			
 			
 			/**
 			 * If there is a completed kit and the stand is not being used
