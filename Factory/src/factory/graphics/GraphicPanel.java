@@ -1170,6 +1170,13 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			lane[laneIndex].changeBottomLaneAmplitude(amplitude);
 		sendMessage("fa cnf " + laneIndex);
 	}
+	//AMPLITUDE WITH NO CONF
+	public void GUIsetLaneAmplitude(int laneIndex, int lanenum, int amplitude) {
+		if (lanenum == 0)
+			lane[laneIndex].changeTopLaneAmplitude(amplitude);
+		else
+			lane[laneIndex].changeBottomLaneAmplitude(amplitude);
+	}
 	
 	public void drawString(String s)
 	{

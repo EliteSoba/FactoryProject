@@ -74,7 +74,7 @@ public class MasterControl {
             "ruininspectionkit","badparts","lanejam","slowdiverter","jamtoplane","jambottomlane","unjamtoplane",
             "unjambottomlane", "lanespeed", "laneamplitude", "lanepower", "feederpower", "dumptopnest", "dumpbottomnest",
             "missingparts", "newpartputinlane", "partremovedfromlane", "partremovedfromnest", "partlost",
-            "diverterspeed"
+            "diverterspeed", "guilaneamplitude"
 
     );
 
