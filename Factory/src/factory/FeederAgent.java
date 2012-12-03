@@ -652,7 +652,6 @@ public class FeederAgent extends Agent implements Feeder {
 		
 		la.state = MyLaneState.EMPTY;
 		
-		this.msgLaneNeedsPart(la.part, la.lane); // now refill with more parts 
 
 	}
 
