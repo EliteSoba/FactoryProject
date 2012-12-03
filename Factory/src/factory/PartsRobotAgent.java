@@ -501,9 +501,14 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		// Animation of Moving to the Nest
 
 
-		
+
+		debug("#########");
 		synchronized (this.nests.get(nest).nest.getParts()) {
+			debug("" +  this.nests.get(nest).nest);
+			debug("" +  this.nests.get(nest).nest.getParts().size());
 			for (int i = 0; i < this.nests.get(nest).nest.getParts().size(); i++) {
+
+				
 				Part p = this.nests.get(nest).nest.getParts().get(i);
 
 				if (p.isGoodPart) {
@@ -513,6 +518,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 				}
 			}
 		}
+		debug("#########");
 		
 		// Update Position
 		switch(nest){

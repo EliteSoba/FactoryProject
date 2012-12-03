@@ -53,7 +53,8 @@ public class LaneAgent extends Agent implements Lane {
 	/** MESSAGES **/
 	public void msgPartAddedToLane(Part part) {
 		debug("RECEIVED: msgPartAddedToLane().");
-		laneParts.add(numberOfPartsInLane, part); // adds part to the index = numberOfPartsInNest
+		laneParts.add(part); // adds part to the index = numberOfPartsInNest
+		debug("SIZE: " + laneParts.size());
 		numberOfPartsInLane++;
 		stateChanged();
 	}
@@ -268,6 +269,12 @@ public class LaneAgent extends Agent implements Lane {
 //	}
 
 
+
+	protected void debug(String msg) {
+		if(true) {
+			print(msg, null);
+		}
+	}
 
 
 }
