@@ -35,6 +35,9 @@ public class FactoryProductionManager extends Client {
 
 	FactoryProdManPanel buttons;
 	FactoryProductionPanel animation;
+	
+	ArrayList<Integer> laneSpeeds; // stores speeds of each lane
+	ArrayList<Integer> laneAmplitudes; // stores amplitudes of each lane
 
 	public FactoryProductionManager() {
 		super(Client.Type.fpm);
@@ -43,6 +46,13 @@ public class FactoryProductionManager extends Client {
 		animation = new FactoryProductionPanel(this);
 
 		setInterface();
+		
+		laneSpeeds = new ArrayList<Integer>();
+		laneAmplitudes = new ArrayList<Integer>(); 
+		for (int i = 0; i < 8; i++){    // presets lane speeds and amplitudes
+			laneSpeeds.add(2);  
+			laneAmplitudes.add(2);
+		}
 
 		partsList = new HashMap<String,Part>(); //Local version
 		kitConfigList = new HashMap<String,KitConfig>(); //Local version
@@ -471,5 +481,21 @@ public class FactoryProductionManager extends Client {
 		return affectedKits;
 
 	}		
+	
+	public void setLaneSpeed(int laneNumber, int speed){
+		laneSpeeds.set(laneNumber, speed);
+	}
+
+	public void setLaneAmplitude(int laneNumber, int amplitude){
+		laneAmplitudes.set(laneNumber, amplitude);
+	}
+
+	public int getLaneSpeed(int laneNumber){
+		return laneSpeeds.get(laneNumber-1);
+	}
+
+	public int getLaneAmplitude(int laneNumber){
+		return laneAmplitudes.get(laneNumber-1);
+	}
 
 }
