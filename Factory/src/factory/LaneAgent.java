@@ -64,6 +64,8 @@ public class LaneAgent extends Agent implements Lane {
 		{
 			synchronized(laneParts)
 			{
+				this.myNest.msgPartAddedToNest(laneParts.get(0));
+
 				laneParts.remove(0); // remove the first part in the list aka the one closest to the nest
 			}
 
@@ -145,11 +147,6 @@ public class LaneAgent extends Agent implements Lane {
 			increaseAmplitude();
 			return true;
 		}
-		if (nestState == NestState.AMPLITUDE_WAS_INCREASED)
-		{
-			tellFeederAmplitudeWasIncreased();
-			return true;
-		}
 
 
 		return false;
@@ -192,10 +189,7 @@ public class LaneAgent extends Agent implements Lane {
 		stateChanged();
 	}
 	
-	public void tellFeederAmplitudeWasIncreased() 
-	{
-		myFeeder.msgLaneHasIncreasedItsAmplitude(this);
-	}
+
 
 	public void askFeederToSendParts(MyPart part) { 
 		debug("asking feeder to send parts of type " + part.pt.name + ".");

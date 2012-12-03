@@ -20,5 +20,5 @@ public interface Nest {
 	
 	void setBeingUsed(boolean val);
 	void msgPartRemovedFromNest(String partName);
-	
+	void msgPartAddedToNest(Part part);
 }

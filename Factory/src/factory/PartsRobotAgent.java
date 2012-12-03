@@ -499,8 +499,27 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		debug("Executing DoPickUpPartFromNest("+nest+")");
 
 		// Animation of Moving to the Nest
+<<<<<<< HEAD
 		DoAnimationMovePartsRobotToNestAndGrabPart(nest, this.nests.get(nest).partCoordinate);
 
+=======
+		
+		debug("###########");
+		debug("###########");
+		debug("###########");
+		for(int i = 0; i < nests.size(); i++){
+			if(this.nests.get(i).nest != null){
+				debug(i + " "+this.nests.get(i).nest + " "+this.nests.get(i).nest.getParts().size());
+			}
+		}
+		
+		debug("###########");
+		debug("###########");
+		debug("###########");
+		
+		
+		System.exit(0);
+>>>>>>> Non Norms DEBBUGING TIME!
 		for(int i = 0; i < this.nests.get(nest).nest.getParts().size();i++){
 			Part p = this.nests.get(nest).nest.getParts().get(i);
 			if(p.isGoodPart){
@@ -508,7 +527,10 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 				DoAnimationMovePartsRobotToNestAndGrabPart(nest, i);
 				break;
 			}
+<<<<<<< HEAD
 
+=======
+>>>>>>> Non Norms DEBBUGING TIME!
 		}
 
 		// Update Position
@@ -1207,4 +1229,12 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 
 		return countNeeded > 0; 
 	}
+
+	protected void debug(String msg) {
+		if(true) {
+			print(msg, null);
+		}
+	}
+
+	
 }
