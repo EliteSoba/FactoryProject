@@ -210,11 +210,11 @@ public class FeederAgent extends Agent implements Feeder {
 			{
 				topLane.jamState = JamState.MIGHT_BE_JAMMED;
 			}
-			else if (topLane.laneMightBeJammedMessageCount > 1) // Increasing the amplitude (which breaks any lane jams) did not work.
-			{
-				// the only other possibility is that the diverter switching algorithm is incorrect
-				bottomLane.hasMixedParts = true;
-			}
+//			else if (topLane.laneMightBeJammedMessageCount > 1) // Increasing the amplitude (which breaks any lane jams) did not work.
+//			{
+//				// the only other possibility is that the diverter switching algorithm is incorrect
+//				bottomLane.hasMixedParts = true;
+//			}
 		}
 		else if (nestNumber == 1) 
 		{
@@ -224,11 +224,11 @@ public class FeederAgent extends Agent implements Feeder {
 			{
 				bottomLane.jamState = JamState.MIGHT_BE_JAMMED;
 			}
-			else if (bottomLane.laneMightBeJammedMessageCount > 1) // Increasing the amplitude (which breaks any lane jams) did not work.
-			{
-				// the only other possibility is that the diverter switching algorithm is incorrect
-				topLane.hasMixedParts = true;
-			}		
+//			else if (bottomLane.laneMightBeJammedMessageCount > 1) // Increasing the amplitude (which breaks any lane jams) did not work.
+//			{
+//				// the only other possibility is that the diverter switching algorithm is incorrect
+//				topLane.hasMixedParts = true;
+//			}		
 		}
 
 
@@ -242,6 +242,7 @@ public class FeederAgent extends Agent implements Feeder {
 	 * */
 	public void msgNestHasMixedParts(int nestNumber)
 	{
+		debug("RECEIVED: msgNestHasMixedParts("+nestNumber+")");
 		if (nestNumber == 0)
 		{
 			topLane.hasMixedParts = true;
