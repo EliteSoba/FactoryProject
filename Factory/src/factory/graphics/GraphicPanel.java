@@ -38,9 +38,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected GraphicLaneManager [] lane;
 	
 	// CAMERA
-	protected int flashCounter;
 	protected int flashFeederIndex;
-	protected static Image flashImage;
 	protected ArrayList<Image> scanAnimation;
 	protected int scanAnimationCounter;
 	protected int scanAnimationSpeed;
@@ -250,26 +248,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void moveGantryRobotToFeederForDropoff(int feederIndex)
 	{
-		// Error checking code has temporarily(?) been commented out as requested by Alfonso
-		//if(lane[feederIndex].hasBin())
-		//{
-			//System.err.println("Can't dropoff: feeder " + feederIndex + " (0-based index) already has a bin!");
-			//gantryRobotArrivedAtFeederForDropoff();
-		//}
-		//else if(!gantryRobot.hasBin())
-		//{
-			//System.err.println("Can't dropoff: gantry robot does not have a bin!");
-			//gantryRobotArrivedAtFeederForDropoff();
-		//}
-		//else
-		//{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(3);
 			gantryRobot.setDestinationFeeder(feederIndex);
 			gantryRobot.setDestination(lane[feederIndex].feederX+125, lane[feederIndex].feederY+5,180);
 		}
-			//gantryRobotArrivedAtFeederForDropoff();
-		//}
 	}
 	
 	/**
@@ -279,20 +262,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void moveGantryRobotToFeederForPickup(int feederIndex)
 	{
-		// Error checking
-		//if(!lane[feederIndex].hasBin())
-		//{
-		//	System.err.println("Can't pickup: no bin at feeder " + feederIndex + " (0-based index)!");
-		//	gantryRobotArrivedAtFeederForPickup();
-		//}
-		//else
-		//{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(5);
 			gantryRobot.setDestinationFeeder(feederIndex);
 			gantryRobot.setDestination(lane[feederIndex].feederX+125, lane[feederIndex].feederY+5,180);
 		}
-		//}
 	}
 	
 	/**TODO: Parts Robot and Nest methods*/
@@ -1079,9 +1053,6 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 				int flashX = nests.get(flashFeederIndex*2).getX()-16;
 				int flashY = nests.get(flashFeederIndex*2).getY()-8;
 				g.drawImage(scanAnimation.get(scanAnimationCounter/scanAnimationSpeed), flashX, flashY, null);
-				//flashX = nests.get(flashFeederIndex*2+1).getX()-20;
-				//flashY = nests.get(flashFeederIndex*2+1).getY()-12;
-				//g.drawImage(flashImage, flashX, flashY, null);
 				scanAnimationCounter ++;
 				if(scanAnimationCounter/scanAnimationSpeed >= 15)
 				{
