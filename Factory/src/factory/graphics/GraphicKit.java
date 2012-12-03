@@ -43,7 +43,7 @@ public class GraphicKit {
 	 */
 	public void paint(Graphics g) {
 		if (direction == 4 || direction == 6) {
-			g.setColor(new Color(241, 198, 67));
+			g.setColor(new Color(202, 202, 202));
 			g.fillRect(x, y, width, height);
 			g.setColor(Color.black);
 			g.drawRect(x, y, width, height);
@@ -54,7 +54,7 @@ public class GraphicKit {
 			g.drawLine(x+width/2, y, x+width/2, y+height);
 		}
 		else if (direction == 2 || direction == 8) {
-			g.setColor(new Color(241, 198, 67));
+			g.setColor(new Color(202, 202, 202));
 			g.fillRect(x, y, height, width);
 			g.setColor(Color.black);
 			g.drawRect(x, y, height, width);
