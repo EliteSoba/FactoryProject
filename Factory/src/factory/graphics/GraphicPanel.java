@@ -24,7 +24,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public int WIDTH, HEIGHT;
 	public static final Image TILE_IMAGE = Toolkit.getDefaultToolkit().getImage("Images/Tiles/floorTilePortal.jpg");
 	public static final int TILE_SIZE = 128;
-	public static final int DELAY = 20;
+	public static final int DELAY = 70;
 	
 	protected Client am; //The Client that holds this
 	

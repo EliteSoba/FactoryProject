@@ -132,20 +132,20 @@ public class GraphicKittingRobot {
 		
 		switch (direction) {
 		case 2:			// up
-			kit.setX(x+23);
-			kit.setY(y);
+			kit.setX(x+25);
+			kit.setY(y-10);
 			break;
 		case 4:		// left
-			kit.setX(x-30);
-			kit.setY(y+23);
+			kit.setX(x-20);
+			kit.setY(y+25);
 			break;
 		case 6:		// right
 			kit.setX(x+100);
-			kit.setY(y+23);
+			kit.setY(y+25);
 			break;
 		case 8:
-			kit.setX(x+23);
-			kit.setY(y+84);
+			kit.setX(x+25);
+			kit.setY(y+100);
 			break;
 		}
 		
@@ -222,7 +222,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveFromBelt(int v) {
-		return moveTo(beltX+25, beltY+270, v);
+		return moveTo(beltX+25, beltY+275, v);
 	}
 	
 	/**
@@ -255,7 +255,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveToStation1(int v) {
-		return moveTo(stationX-90, stationY, v);
+		return moveTo(stationX-85, stationY-10, v);
 	}
 	
 	/**
@@ -264,7 +264,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveToStation2(int v) {
-		return moveTo(stationX-90, stationY+95, v);
+		return moveTo(stationX-85, stationY+85, v);
 	}
 	
 	/**
@@ -273,7 +273,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveToCheck(int v) {
-		return moveTo(stationX-70, stationY+190, v);
+		return moveTo(stationX-85, stationY+180, v);
 	}
 	
 	/**
@@ -282,7 +282,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveToTrash(int v) {
-		return moveTo(stationX-70, stationY+295, v);
+		return moveTo(stationX-80, stationY+285, v);
 	}
 	
 	/**

@@ -104,7 +104,7 @@ public class GraphicConveyorBelt {
 		kitOut = kit;
 		if (kitOut == null)
 			return;
-		kitOut.move(x+(width-40)/2, y+305);
+		kitOut.move(x+(width-40)/2, y+300);
 	}
 	
 	/**
@@ -149,9 +149,9 @@ public class GraphicConveyorBelt {
 		
 		//Moves the incoming kit along a path
 		if (kitin()) {
-			if (kitIn.getY() <= y+300)
+			if (kitIn.getY() <= y+295)
 				kitIn.moveY(v);
-			if (kitIn.getY() > y+300) {
+			if (kitIn.getY() > y+295) {
 				//Kit import complete
 				if (!pickUp)
 					GP.newEmptyKitDone(); //Messages GraphicPanel about task completion 
