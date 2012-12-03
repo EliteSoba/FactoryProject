@@ -14,11 +14,17 @@ package factory.swing;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import factory.managers.*;
+import factory.swing.LaneManPanel.LaneNonNormPanel;
+import factory.swing.LaneManPanel.LaneNonNormPanel.SliderDetection;
 
 
 public class FactoryProdManPanel extends JPanel implements ActionListener {
@@ -38,8 +44,12 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 	JTable table; // table to house production schedule
 	JButton stopFactory; // terminate all factory operations - close program
 
+	LaneNonNormPanel nonnormativePanel; // nonnormative controls
+	
 	public FactoryProdManPanel(FactoryProductionManager fpm) { 
 		factoryProductionManager = fpm;
+		nonnormativePanel = new LaneNonNormPanel();
+		
 		newOrderPanel = new JPanel();
 		kitNameBox = new JComboBox();
 		kitNameBox.setPreferredSize(new Dimension(225,25));
@@ -132,6 +142,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		tabContainer = new JTabbedPane();
 		tabContainer.addTab("New Order",newOrderPanel);
 		tabContainer.addTab("Schedule",schedulePanel);
+		tabContainer.addTab("Non-Normative",nonnormativePanel);
 		tabContainer.setPreferredSize(new Dimension(290,710));
 		add(tabContainer);
 	}
@@ -221,4 +232,242 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 		messageBox.append(msg + "\n");
 		messageBox.setCaretPosition(messageBox.getDocument().getLength());
 	}
+	
+	
+	public class LaneNonNormPanel extends JPanel implements ActionListener { // Panel containing non-normative case controls
+		//labels
+		JLabel badPartsLabel; 
+		JLabel diverterSpeedLabel;
+
+		// selectors
+		JComboBox laneBoxList;
+		JComboBox feederBoxList;
+
+		// containers
+		JPanel laneContainer;
+		JPanel feederContainer;
+
+		// components / controls
+		JButton laneJamButton; // initiates non-normative 2.2: Lane Jam
+		JButton diverterButton; // initiates non-normative 2.6: slower diverter
+		JButton badPartsButton; // initiates non-normative 3.1:
+		JButton blockingRobotButton; // initiates non-normative 3.
+		JTextArea messageBox;
+		JSlider badPartsPercentage;
+		int badPartsPercentageMin;
+		int badPartsPercentageMax;
+		JSlider diverterSpeed;
+		int diverterSpeedMin;
+		int diverterSpeedMax;
+
+		public LaneNonNormPanel() { // constructor
+			
+			badPartsLabel = new JLabel("% Bad Parts");
+			laneJamButton = new JButton("Lane Jam");
+			diverterButton = new JButton("Diverter Too Slow");
+			badPartsButton = new JButton("Bad Parts in Feeder");
+			blockingRobotButton = new JButton("Robot Blocking Camera");
+			diverterSpeedLabel = new JLabel("Diverter Speed");
+			messageBox = new JTextArea("Actions...\n");
+			messageBox.setLineWrap(true);
+			badPartsPercentageMin = 0;
+			badPartsPercentageMax = 100;
+			badPartsPercentage = new JSlider(badPartsPercentageMin, badPartsPercentageMax);
+			
+			// hash table for bad parts percentage slider for easy access
+			Hashtable labelTable = new Hashtable();
+			for(int i = 0; i <=100; i+=25){
+				labelTable.put( new Integer( i ), new JLabel(i + "%") );
+			}
+			badPartsPercentage.setLabelTable( labelTable );
+			badPartsPercentage.setMinorTickSpacing(5);
+			badPartsPercentage.setMajorTickSpacing(25);
+			badPartsPercentage.setPaintTicks(true);
+			badPartsPercentage.setSnapToTicks(true);
+			badPartsPercentage.setPaintLabels(true);
+			badPartsPercentage.setValue(0);
+			
+			diverterSpeedMin = 0;
+			diverterSpeedMax = 20;
+			diverterSpeed = new JSlider(diverterSpeedMin, diverterSpeedMax);
+			labelTable = new Hashtable();
+			labelTable.put( new Integer(diverterSpeedMin), new JLabel("Slow") );
+			labelTable.put( new Integer(diverterSpeedMax), new JLabel("Fast"));
+			diverterSpeed.setLabelTable( labelTable );
+			diverterSpeed.setMinorTickSpacing(1);
+			diverterSpeed.setMajorTickSpacing(5);
+			diverterSpeed.setPaintTicks(true);
+			diverterSpeed.setSnapToTicks(true);
+			diverterSpeed.setPaintLabels(true);
+			diverterSpeed.setValue(diverterSpeedMax);
+			diverterSpeed.addChangeListener(new SliderDetection());
+			laneJamButton.addActionListener(this);
+			diverterButton.addActionListener(this);
+			badPartsButton.addActionListener(this);
+			blockingRobotButton.addActionListener(this);
+
+			laneJamButton.setPreferredSize(new Dimension(200,25));
+			diverterButton.setPreferredSize(new Dimension(200,25));
+			badPartsButton.setPreferredSize(new Dimension(200,25));
+			blockingRobotButton.setPreferredSize(new Dimension(200,25));
+
+			setLayout(new FlowLayout());
+			Box boxContainer = Box.createVerticalBox();
+			laneBoxList = new JComboBox();
+			for (int i = 1; i < 9;i++) {
+				laneBoxList.addItem("Lane "+i);
+			}
+			laneBoxList.setSelectedIndex(0);
+			feederBoxList = new JComboBox();
+			for (int i = 1; i < 5; i++) {
+				feederBoxList.addItem("Feeder "+i);
+			}
+
+			feederBoxList.setPreferredSize(new Dimension(200,25));
+			laneBoxList.setPreferredSize(new Dimension(200,25));
+			laneContainer = new JPanel();
+			feederContainer = new JPanel();
+
+
+			laneContainer.setPreferredSize(new Dimension(250,120));
+			feederContainer.setPreferredSize(new Dimension(250,330));
+			
+			laneContainer.setLayout(new GridBagLayout());
+			feederContainer.setLayout(new GridBagLayout());
+			
+			GridBagConstraints c = new GridBagConstraints();
+			
+			TitledBorder title = BorderFactory.createTitledBorder("Lanes / Nests");
+			laneContainer.setBorder(title);	
+
+			title = BorderFactory.createTitledBorder("Feeders");
+			feederContainer.setBorder(title);
+			c.gridx = 0;
+			c.gridy = 0;
+			laneContainer.add(laneBoxList,c);
+			c.gridy = 1;
+			c.insets = new Insets(10,0,0,0);
+			laneContainer.add(laneJamButton,c);
+			//laneContainer.add(diverterButton);
+			
+			c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 0;
+			feederContainer.add(feederBoxList,c);
+			c.gridy = 1;
+			c.insets = new Insets(30,0,0,0);
+			feederContainer.add(badPartsLabel,c);
+			c.insets = new Insets(0,0,0,0);
+			c.gridy = 2;
+			feederContainer.add(badPartsPercentage,c);
+			c.gridy = 3;
+			c.insets = new Insets(3,0,0,0);
+			feederContainer.add(badPartsButton,c);
+			//feederContainer.add(blockingRobotButton);
+			c.insets = new Insets(30,0,0,0);
+			c.gridy = 4;
+			feederContainer.add(diverterSpeedLabel,c);
+			c.insets = new Insets(0,0,0,0);
+			c.gridy = 5;
+			feederContainer.add(diverterSpeed,c);
+			//boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
+			JLabel label = new JLabel("Non-Normative Cases");
+			label.setAlignmentX(Component.CENTER_ALIGNMENT);
+			boxContainer.add(label);
+			//boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
+			//boxContainer.add(laneBoxList);
+			boxContainer.add(Box.createRigidArea(new Dimension(0,20)));
+			boxContainer.add(laneContainer);
+			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
+			boxContainer.add(feederContainer);
+			boxContainer.add(Box.createRigidArea(new Dimension(0,10)));
+			JScrollPane scrollPane = new JScrollPane(messageBox);
+			scrollPane.setPreferredSize(new Dimension(200,100));
+			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+			boxContainer.add(scrollPane);
+			add(boxContainer);
+		}
+
+		public void actionPerformed(ActionEvent ae) {
+			if (ae.getSource() == laneJamButton) {
+				messageBox.append("Lane jam initated in " + laneBoxList.getSelectedItem() + ".\n");
+				messageBox.setCaretPosition(messageBox.getDocument().getLength());
+				int lanenum = laneBoxList.getSelectedIndex();
+				String set = "fpm va cmd missingparts " + lanenum/2 + " " + lanenum%2;
+				try {
+					factoryProductionManager.sendCommand(set);
+					
+					if (lanenum%2 == 0)
+						factoryProductionManager.sendCommand("fpm lm cmd jamtoplane " + lanenum/2);
+					else
+						factoryProductionManager.sendCommand("fpm lm cmd jambottomlane " + lanenum/2);
+				} catch (Exception e) {
+					System.out.println("An error occurred trying to initiate non-normative case: lane jam.");
+				} 
+			} else if (ae.getSource() == diverterButton) {
+				messageBox.append("Diverter was too slow switching to " + laneBoxList.getSelectedItem() + ".\n");
+				messageBox.setCaretPosition(messageBox.getDocument().getLength());
+				int feedernum = feederBoxList.getSelectedIndex();
+				String set = "fpm va cmd missingparts " + feedernum + " -1";
+				try {
+					factoryProductionManager.sendCommand(set);
+					//TODO: missingparts command appends a nest # (0-7), but slowdiverter is feeder-based (0-3).
+					//Figure out a way to determine how to do this.
+					factoryProductionManager.sendCommand("fpm fa cmd slowdiverter " + feedernum);
+				} catch (Exception e) {
+					System.out.println("An error occurred trying initiate non-normative case: slow diverter change.");
+				} 
+			} else if (ae.getSource() == badPartsButton) {
+				messageBox.append("Bad parts found in " + laneBoxList.getSelectedItem() + "'s nest.\n");
+				messageBox.setCaretPosition(messageBox.getDocument().getLength());
+				int feedernum = feederBoxList.getSelectedIndex();
+				String set = "fpm lm cmd badparts " + feedernum + " "+ badPartsPercentage.getValue();
+				try {
+					factoryProductionManager.sendCommand(set);
+				} catch (Exception e) {
+					System.out.println("An error occurred trying initiate non-normative case: bad parts in nest.");
+				} 
+			} else if (ae.getSource() == blockingRobotButton) {
+				messageBox.append("A robot is blocking the camera at " + laneBoxList.getSelectedItem() + "'s nest.\n");
+				messageBox.setCaretPosition(messageBox.getDocument().getLength());
+				int lanenum = laneBoxList.getSelectedIndex();
+				String set = "fpm va cmd blockingrobot " + lanenum;
+				try {
+					factoryProductionManager.sendCommand(set);
+				} catch (Exception e) {
+					System.out.println("An error occurred trying to initiate non-normative case: robot blocking camera.");
+				} 
+			}
+
+		}
+		
+		public class SliderDetection implements ChangeListener{
+
+			@Override
+			public void stateChanged(ChangeEvent ce) {
+				// TODO Auto-generated method stub
+				JSlider source = (JSlider) ce.getSource();
+				if(source == diverterSpeed){
+					if (!source.getValueIsAdjusting()) {
+						int speed = (int)source.getValue();
+						// send amplitude to server
+						int feederNumber = (Integer)feederBoxList.getSelectedIndex();
+						String set = "fpm fa set diverterspeed " + (feederNumber) + " " + (diverterSpeedMax-speed);
+						try {
+							factoryProductionManager.sendCommand(set);
+							factoryProductionManager.sendCommand("fpm fa set diverterspeed " + feederNumber + " " + (speed));
+						} catch (Exception e) {
+							System.out.println("An error occurred trying to send message to change lane amplitude.");
+						} 
+						System.out.println("Feeder : " + feederNumber + " going at " + speed);
+					}
+				}
+						
+			}
+
+		}
+		
+
+	}	
 }

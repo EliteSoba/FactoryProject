@@ -22,6 +22,7 @@ import factory.graphics.GraphicBin;
 import factory.graphics.GraphicItem;
 import factory.graphics.GraphicPanel;
 import factory.graphics.FactoryProductionPanel;
+import factory.graphics.LanePanel;
 import factory.swing.FactoryProdManPanel;
 import factory.Part;
 import factory.KitConfig;
@@ -35,6 +36,9 @@ public class FactoryProductionManager extends Client {
 
 	FactoryProdManPanel buttons;
 	FactoryProductionPanel animation;
+	
+	ArrayList<Integer> laneSpeeds; // stores speeds of each lane
+	ArrayList<Integer> laneAmplitudes; // stores amplitudes of each lane
 
 	public FactoryProductionManager() {
 		super(Client.Type.fpm);
@@ -43,6 +47,13 @@ public class FactoryProductionManager extends Client {
 		animation = new FactoryProductionPanel(this);
 
 		setInterface();
+		
+		laneSpeeds = new ArrayList<Integer>();
+		laneAmplitudes = new ArrayList<Integer>(); 
+		for (int i = 0; i < 8; i++){    // presets lane speeds and amplitudes
+			laneSpeeds.add(2);  
+			laneAmplitudes.add(2);
+		}
 
 		partsList = new HashMap<String,Part>(); //Local version
 		kitConfigList = new HashMap<String,KitConfig>(); //Local version
@@ -360,11 +371,12 @@ public class FactoryProductionManager extends Client {
 			}else if (identifier.equals("laneamplitude")){
 				int laneNumber = Integer.valueOf(pCmd.get(2));
 				int amplitude = Integer.valueOf(pCmd.get(3));
-				if(laneNumber % 2 == 0)
-					((FactoryProductionPanel) graphics).getLane(laneNumber/2).changeTopLaneAmplitude(amplitude);
-				else
-					((FactoryProductionPanel) graphics).getLane(laneNumber/2).changeBottomLaneAmplitude(amplitude);
+				((FactoryProductionPanel) graphics).setLaneAmplitude(laneNumber/2, laneNumber%2, amplitude);
 				// call graphics function to change amplitude
+			}else if (identifier.equals("guilaneamplitude")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int amplitude = Integer.valueOf(pCmd.get(3));
+				((FactoryProductionPanel) graphics).GUIsetLaneAmplitude(laneNumber/2, laneNumber%2, amplitude);
 			}else if (identifier.equals("lanepower")){
 				int laneNumber = Integer.valueOf(pCmd.get(3));
 				
@@ -471,5 +483,21 @@ public class FactoryProductionManager extends Client {
 		return affectedKits;
 
 	}		
+	
+	public void setLaneSpeed(int laneNumber, int speed){
+		laneSpeeds.set(laneNumber, speed);
+	}
+
+	public void setLaneAmplitude(int laneNumber, int amplitude){
+		laneAmplitudes.set(laneNumber, amplitude);
+	}
+
+	public int getLaneSpeed(int laneNumber){
+		return laneSpeeds.get(laneNumber-1);
+	}
+
+	public int getLaneAmplitude(int laneNumber){
+		return laneAmplitudes.get(laneNumber-1);
+	}
 
 }

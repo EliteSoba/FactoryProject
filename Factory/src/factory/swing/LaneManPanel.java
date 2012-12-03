@@ -297,7 +297,7 @@ public class LaneManPanel extends JPanel{
 						int amplitude = (int)source.getValue();
 						// send amplitude to server
 						int lanenum = (Integer)laneSelect.getSelectedItem();
-						String set = "lm lm set laneamplitude " + (lanenum-1) + " " + amplitude;
+						String set = "lm lm set guilaneamplitude " + (lanenum-1) + " " + amplitude;
 						try {
 							laneManager.sendCommand(set);
 						} catch (Exception e) {
