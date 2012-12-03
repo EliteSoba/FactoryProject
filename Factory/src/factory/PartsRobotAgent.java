@@ -167,11 +167,11 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		for(int a=0; a < brokenPartsList.size(); a++){
 			for(int b=0; b < currentKitConfiguration.listOfParts.size(); b++){
 				if(brokenPartsList.get(a).equals(currentKitConfiguration.listOfParts.get(b).name)){
-					fixedKitConfig.listOfParts.add(new Part(this.currentKitConfiguration.listOfParts.get(a).name, 
-							this.currentKitConfiguration.listOfParts.get(a).id, 
-							this.currentKitConfiguration.listOfParts.get(a).description, 
-							this.currentKitConfiguration.listOfParts.get(a).imagePath, 
-							this.currentKitConfiguration.listOfParts.get(a).nestStabilizationTime));
+					fixedKitConfig.listOfParts.add(new Part(this.currentKitConfiguration.listOfParts.get(b).name, 
+							this.currentKitConfiguration.listOfParts.get(b).id, 
+							this.currentKitConfiguration.listOfParts.get(b).description, 
+							this.currentKitConfiguration.listOfParts.get(b).imagePath, 
+							this.currentKitConfiguration.listOfParts.get(b).nestStabilizationTime));
 				}
 			}
 		}
