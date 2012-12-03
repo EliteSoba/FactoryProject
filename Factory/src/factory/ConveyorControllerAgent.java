@@ -10,6 +10,7 @@ import agent.Agent;
 public class ConveyorControllerAgent extends Agent implements ConveyorController {
 	////Data	
 	Conveyor conveyor;
+	public boolean initialStartUp = true;
 	public enum Conveyor_State { WANTS_EMPTY_KIT, EMPTY_KIT_SENDING, NO_ACTION };
 	public Conveyor_State conveyor_state = Conveyor_State.NO_ACTION;
 	
@@ -52,6 +53,16 @@ public class ConveyorControllerAgent extends Agent implements ConveyorController
 		//Creates a random time that it will take for the empty kit to make it to the kitting cell
 		int delivery_time = (int) (1000 + (Math.random()*2000)); //Random time it will take for the empty kit to make it to the cell
 		debug("executing sendEmptyKit().  The empty kit should arrive at the conveyor in "+(delivery_time/1000)+" seconds.");
+		
+		if (initialStartUp) {
+			try {
+			    Thread.sleep(5000);
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
+			initialStartUp = false;
+		}
+		
 		timer.schedule(new TimerTask(){
 		    public void run(){
 		    	//After this timer, the graphics needs to play the new kit animation and then after tell the ConveyorAgent about the new empty kit
