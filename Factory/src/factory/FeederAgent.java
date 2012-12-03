@@ -597,7 +597,7 @@ public class FeederAgent extends Agent implements Feeder {
 	private void takePicture() {
 		if (this.requestedParts.size() == 0)
 		{
-			debug("sending nests are ready for picture = ("+topLane.lane.getNest().getPart().name+","+bottomLane.lane.getNest().getPart().name+")");
+			debug("sending nests are ready for picture = ("+topLane.lane.getNest().getPart()+","+bottomLane.lane.getNest().getPart()+")");
 			vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this); // send the message to the vision
 		}
 		visionShouldTakePicture = false; // pic was taken	
