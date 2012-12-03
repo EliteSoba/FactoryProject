@@ -110,6 +110,7 @@ public class StandAgent extends Agent implements Stand {
 	//TODO added this to force kit inspection to fail.  This will be called each time a part is dropped
 	public void msgForceKitInspectionToFail(String brokenPart){
 		forceFail = true;
+		
 		brokenPartsList.add(brokenPart);
 	}
 	
@@ -407,6 +408,8 @@ public class StandAgent extends Agent implements Stand {
 		kitRobot.msgComeMoveKitToInspectionSlot(slot.name);
 		slot.state = MySlotState.MOVING_KIT_TO_INSPECTION;                   
 	}
+	
+	//TODO added this method
 	/**
 	 * Method that tells the Vision to take picture of the kit
 	 */
@@ -417,6 +420,7 @@ public class StandAgent extends Agent implements Stand {
 			forceFail = false;
 		}
 		vision.msgAnalyzeKitAtInspection(inspectionSlot.kit);
+		//remove parts here?
 	   	inspectionSlot.state = MySlotState.ANALYZING_KIT; 
 	   	stateChanged();
 	}   
