@@ -515,11 +515,11 @@ public class FeederAgent extends Agent implements Feeder {
 	{
 		if (topLane == la)
 		{
-			debug("Unjamming top lane.");
+			debug("action Unjamming top lane.");
 		}
 		else
 		{
-			debug("Unjamming bottom lane.");
+			debug("action Unjamming bottom lane.");
 		}
 
 		la.jamState = JamState.NO_LONGER_JAMMED;
@@ -1176,7 +1176,7 @@ public class FeederAgent extends Agent implements Feeder {
 		
 		if (debugMode == false)
 		{
-			server.command(this,"fa lm cmd setlaneamplitude " + (feederNumber+laneNum) + " " + 8); // 0-7lane# 1-8amplitude
+			server.command(this,"fa lm set laneamplitude " + (feederNumber+laneNum) + " " + 8); // 0-7lane# 1-8amplitude
 			debug("Feeder " + feederNumber + " started feeding.");
 			try {
 				animation.acquire();
