@@ -367,6 +367,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void dumpNest(int nestIndex, boolean isTop) {
 		if (isLaneManager || isFactoryProductionManager) {
 			nests.get(nestIndex*2 + (isTop ? 0 : 1)).clearItems();
+			sendMessage("fa cnf " + nestIndex);
 		}
 	}
 	
@@ -758,6 +759,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 					partsRobot.addItem(nests.get(partsRobot.getDestinationNest()).popItemAt(partsRobot.getItemIndex()));
 				partsRobot.setState(0);
 				partsRobotArrivedAtNest();
+				System.out.println("akjhdfkjasdkjfasd");
 			}
 			else if(partsRobot.getState() == 4)	// partsRobot has arrived at kitting station
 			{
@@ -846,6 +848,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			lane[nestNum / 2].lane1Jam = true;
 		else
 			lane[nestNum / 2].lane2Jam = true;
+		
 	}
 	
 	/**
