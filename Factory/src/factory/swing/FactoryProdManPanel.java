@@ -292,7 +292,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			badPartsPercentage.setValue(0);
 			
 			diverterSpeedMin = 0;
-			diverterSpeedMax = 20;
+			diverterSpeedMax = 5;
 			diverterSpeed = new JSlider(diverterSpeedMin, diverterSpeedMax);
 			labelTable = new Hashtable();
 			labelTable.put( new Integer(diverterSpeedMin), new JLabel("Slow") );
