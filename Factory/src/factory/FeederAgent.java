@@ -26,7 +26,7 @@ public class FeederAgent extends Agent implements Feeder {
 	public int feederNumber;
 
 	private final static int kOK_TO_PURGE_TIME = 7; 
-	private final static int kPICTURE_DELAY_TIME = 5;
+	private final static int kPICTURE_DELAY_TIME = 3;
 	private int diverterSpeed = kOK_TO_PURGE_TIME; // intial speed is in-sync with the purge timer
 
 	public boolean hasASlowDiverter = false;
@@ -488,8 +488,6 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 
-
-
 	/** ACTIONS **/
 	private void laneHasMixedParts(MyLane la) {
 		
@@ -526,7 +524,7 @@ public class FeederAgent extends Agent implements Feeder {
 		
 		DoIncreaseLaneAmplitude(la); // increase lane amplitude to dislodge the jammed object
 		DoUnjamLane(la); // if the lane was jammed, this will unjam it
-		
+		DoResetLaneAmplitude(la); // and turn the amplitude back down to a normal amplitude
 	}
 
 //	private void laneIsNoLongerJammed(MyLane la)
@@ -599,7 +597,7 @@ public class FeederAgent extends Agent implements Feeder {
 	private void takePicture() {
 		if (this.requestedParts.size() == 0)
 		{
-			debug("Feeder sends msgMyNestsReadyForPicture() to vision.");
+			debug("sending nests are ready for picture = ("+topLane.lane.getNest().getPart().name+","+bottomLane.lane.getNest().getPart().name+")");
 			vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this); // send the message to the vision
 		}
 		visionShouldTakePicture = false; // pic was taken	
@@ -1204,7 +1202,7 @@ public class FeederAgent extends Agent implements Feeder {
 			
 		if (debugMode == false)
 		{
-			server.command(this,"fa lm cmd setlaneamplitude " + feederNumber+laneNum0or1 + " " + 2); // 0-7lane# 1-8amplitude
+			server.command(this,"fa lm set laneamplitude " + feederNumber+laneNum0or1 + " " + 2); // 0-7lane# 1-8amplitude
 			debug("Feeder " + feederNumber + " started feeding.");
 			try {
 				animation.acquire();
