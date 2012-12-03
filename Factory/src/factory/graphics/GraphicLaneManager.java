@@ -391,7 +391,7 @@ public class GraphicLaneManager {
 					lane1Items.get(j).setVX(vXTop);
 				}
 			}
-
+			
 			if (lane1Items.size() == 0) {
 				lane1PurgeOn = false; // This is where the purge ends
 				lane1QueueTaken.clear();
@@ -448,11 +448,11 @@ public class GraphicLaneManager {
 							i--;
 						}
 					}
-					if (lane1Items.size() == 0) {
-						lane1PurgeOn = false; // This is where the purge ends
-						lane1QueueTaken.clear();
-						graphicPanel.purgeTopLaneDone(laneManagerID);
-					}
+				}
+				if (lane1Items.size() == 0) {
+					lane1PurgeOn = false; // This is where the purge ends
+					lane1QueueTaken.clear();
+					graphicPanel.purgeTopLaneDone(laneManagerID);
 				}
 			}
 		} // end of purge statements
@@ -709,11 +709,11 @@ public class GraphicLaneManager {
 							i--;
 						}
 					}
-					if (lane2Items.size() == 0) {
-						lane2PurgeOn = false; // This is where the purge ends
-						lane2QueueTaken.clear();
-						graphicPanel.purgeBottomLaneDone(laneManagerID);
-					}
+				}
+				if (lane2Items.size() == 0) {
+					lane2PurgeOn = false; // This is where the purge ends
+					lane2QueueTaken.clear();
+					graphicPanel.purgeBottomLaneDone(laneManagerID);
 				}
 			}
 		} // end of purge statements
