@@ -388,6 +388,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stateChanged();
 	}
 	
+	//TODO check to see if there is a way to prevent an automatic kit to be put in empty slot
 	public void moveToInspectionSpot(String pos) {
 		//method for KitRobot moving a kit to the inspection slot
 		//Can assume that has exclusive access to the Stand during this
@@ -413,9 +414,9 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			debug("Animation moveKitFromSlotToInspection() was completed");
 			
 			stand.setSlotKit("inspectionSlot", stand.getSlotKit(pos));
-			stand.setSlotKit(pos, null);
+			stand.setSlotKit(pos, null); //TODO why is this null?
 			stand.setSlotState("inspectionSlot", MySlotState.KIT_JUST_PLACED_AT_INSPECTION);
-			stand.setSlotState(pos, MySlotState.EMPTY);	
+			stand.setSlotState(pos, MySlotState.EMPTY);	//TODO change MySlotState.EMPTY to MySlotState.PENDING?
 		}
 		if (pos.equals("bottomSlot")) {
 			actions.remove(StandInfo.NEED_INSPECTION_BOTTOM);
@@ -478,4 +479,9 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public void setConveyor(Conveyor c) {
 		this.conveyor = c;
 	}
+	
+	public KitAtInspection getAtInspection(){
+		return this.atInspection;
+	}
+	
 }

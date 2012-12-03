@@ -3,6 +3,7 @@ package factory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import factory.KitRobotAgent.KitAtInspection;
 
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
@@ -16,7 +17,8 @@ public class StandAgent extends Agent implements Stand {
 	/** DATA **/
 
 	public enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
-	public enum MySlotState { EMPTY, EMPTY_KIT_REQUESTED, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION, KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT, NEEDS_FIXING };
+	public enum MySlotState { EMPTY, EMPTY_KIT_REQUESTED, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION,
+		KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT, NEEDS_FIXING };
 	
 	//TODO added this to force failure inspection
 	public boolean forceFail = false;
@@ -276,7 +278,8 @@ public class StandAgent extends Agent implements Stand {
 			 * If there is an empty kit at the conveyor and there is a place to put it, ask the Kit Robot to fetch it
 			 * as long as the stand is not being used.
 			 */
-			if (state == StandAgentState.FREE && (topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY)) {
+			//TODO add check for checking atInspection != EMPTY
+			if (state == StandAgentState.FREE && (topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY) && inspectionSlot.state.equals(MySlotState.EMPTY)) {
 			   DoAskKitRobotToGetEmptyKit();
 			   return true;
 			}       
