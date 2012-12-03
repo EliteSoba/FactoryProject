@@ -53,7 +53,7 @@ public class NestAgent extends Agent implements Nest {
 	
 	public void msgPartAddedToNest(Part part) {
 		debug("RECEIVED: msgPartAddedToNest(" + part.name + ").");
-		nestParts.add(numberOfPartsInNest, part); // adds part to the index = numberOfPartsInNest
+		nestParts.add(part); // adds part to the index = numberOfPartsInNest
 		numberOfPartsInNest++;
 		stateChanged();
 	}
@@ -186,6 +186,12 @@ public class NestAgent extends Agent implements Nest {
 		this.beingUsed = val;
 	}
 	
+
+	protected void debug(String msg) {
+		if(true) {
+			print(msg, null);
+		}
+	}
 
 }
 

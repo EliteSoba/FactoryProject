@@ -79,14 +79,13 @@ public class VisionAgent extends Agent implements Vision {
 
 	public void msgMyNestsReadyForPicture(Nest nestOne, Nest nestTwo, Feeder feeder) {
 		if(nestOne.getPart() != null && nestTwo.getPart() !=null){
-			debug("msgMyNestsReadyForPicture("+nestOne.getPart().name+","+nestTwo.getPart().name+")");
-
+			debug("received msgMyNestsReadyForPicture("+nestOne.getPart().name+","+nestTwo.getPart().name+")");
+			pictureRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
 		}
 		else {
-			debug("msgMyNestsReadyForPicture(null,null)");
+			debug("received msgMyNestsReadyForPicture(null,null)");
 
 		}
-		pictureRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
 		this.stateChanged();
 	}
 
@@ -114,7 +113,6 @@ public class VisionAgent extends Agent implements Vision {
 
 		synchronized (pictureRequests) {
 			for (PictureRequest pr : pictureRequests) {
-
 				if (pr.state == PictureRequestState.PARTS_ROBOT_CLEAR) {
 					Nest one = this.nests.get(this.nests.indexOf(pr.nestOne));
 					Nest two = this.nests.get(this.nests.indexOf(pr.nestTwo));
@@ -127,7 +125,7 @@ public class VisionAgent extends Agent implements Vision {
 			}
 			for (PictureRequest pr : pictureRequests) {
 				if (pr.state == PictureRequestState.NESTS_READY) {
-					processPictureRequest(pr);
+					checkLineOfSight(pr);
 					return true;
 				}
 			}
@@ -146,13 +144,6 @@ public class VisionAgent extends Agent implements Vision {
 /** 									ACTIONS 									 **/
 /** ================================================================================ **/
 
-	private void processPictureRequest(PictureRequest pr){
-
-		
-		
-		// Check that all parts in the nest match the nests match
-	}
-	
 	private void inspectKit(KitPicRequest k) {
 
 		try{
@@ -208,68 +199,80 @@ public class VisionAgent extends Agent implements Vision {
 			// Check all other scenarios
 			
 
-			// Both nests are unused, just ignore picture request
+			// Both nests are unused, ignore
 			if(pr.nestOneState == 0 && pr.nestTwoState == 0 ){
-				pictureRequests.remove(pr);
-				return;
 			}
 			// Unused+Unstable => ignore
-			if(pr.nestOneState == 0 && pr.nestTwoState == 1 ){
-				pictureRequests.remove(pr);
-				return;
+			else if(pr.nestOneState == 0 && pr.nestTwoState == 1 ){
 			}
 			// Unused+Jammed => report Jammed nest 2
-			if(pr.nestOneState == 0 && pr.nestTwoState == 2 ){
+			else if(pr.nestOneState == 0 && pr.nestTwoState == 2 ){
 				sendMessageToFeederAboutJam(pr.nestTwo);
-				pictureRequests.remove(pr);
-				return;
 			}
 			// Unused+OK => grab Part nest 2
-			if(pr.nestOneState == 0 && pr.nestTwoState == 3 ){
+			else if(pr.nestOneState == 0 && pr.nestTwoState == 3 ){
 				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
-				pictureRequests.remove(pr);
-				return;
 			}
 			
 			// Unstable+Unused => ignore
-			if(pr.nestOneState == 1 && pr.nestTwoState == 0 ){
-				pictureRequests.remove(pr);
-				return;
+			else if(pr.nestOneState == 1 && pr.nestTwoState == 0 ){
 			}
 			// Unstable+Unstable => ignore
-			if(pr.nestOneState == 1 && pr.nestTwoState == 1 ){
-				pictureRequests.remove(pr);
-				return;
+			else if(pr.nestOneState == 1 && pr.nestTwoState == 1 ){
 			}
 			// Unstable+Jammed => report Jammed nest 2
-			if(pr.nestOneState == 1 && pr.nestTwoState == 2 ){
+			else if(pr.nestOneState == 1 && pr.nestTwoState == 2 ){
 				sendMessageToFeederAboutJam(pr.nestTwo);
-				pictureRequests.remove(pr);
-				return;
 			}
 			// Unstable+OK => grab PART nest 2
-			if(pr.nestOneState == 1 && pr.nestTwoState == 3 ){
-				// REPORT
-				pictureRequests.remove(pr);
-				return;
+			else if(pr.nestOneState == 1 && pr.nestTwoState == 3 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
 			}
 			
+
 			
-			
-			
-			
-			
-			
-			
-			if(true) {
-				partsRobot.msgHereArePartCoordinatesForNest(pr.nestOne, pr.nestOne.getPart(), r.nextInt(9));
+			// Jammed+Unused => ignore
+			else if(pr.nestOneState == 2 && pr.nestTwoState == 0 ){
+				sendMessageToFeederAboutJam(pr.nestOne);
 			}
-
-			if(true) {
-
-				partsRobot.msgHereArePartCoordinatesForNest(pr.nestTwo, pr.nestTwo.getPart(), r.nextInt(9));
+			// Jammed+Unstable => ignore
+			else if(pr.nestOneState == 2 && pr.nestTwoState == 1 ){
+				sendMessageToFeederAboutJam(pr.nestOne);
 			}
+			// Jammed+Jammed => report Jammed nest 2
+			else if(pr.nestOneState == 2 && pr.nestTwoState == 2 ){
+				sendMessageToFeederAboutJam(pr.nestOne);
+				sendMessageToFeederAboutJam(pr.nestTwo);
+			}
+			// Jammed+OK => grab PART nest 2
+			else if(pr.nestOneState == 2 && pr.nestTwoState == 3 ){
+				sendMessageToFeederAboutJam(pr.nestOne);
+				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
+			}
+			
 
+			
+			// OK+Unused => ignore
+			else if(pr.nestOneState == 3 && pr.nestTwoState == 0 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestOne);
+			}
+			// OK+Unstable => ignore
+			else if(pr.nestOneState == 3 && pr.nestTwoState == 1 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestOne);
+			}
+			// OK+Jammed => report Jammed nest 2
+			else if(pr.nestOneState == 3 && pr.nestTwoState == 2 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestOne);
+				sendMessageToFeederAboutJam(pr.nestTwo);
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 3 && pr.nestTwoState == 3 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestOne);
+				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
+			}
+			
+
+			pictureRequests.remove(pr);;
 			pictureAllowed.release();
 			stateChanged();
 		}
@@ -386,5 +389,12 @@ public class VisionAgent extends Agent implements Vision {
 		this.partsRobot = pr;
 	}
 
+	protected void debug(String msg) {
+		if(true) {
+			print(msg, null);
+		}
+	}
+
+	
 
 }
