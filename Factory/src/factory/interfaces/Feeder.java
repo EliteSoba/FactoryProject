@@ -24,4 +24,6 @@ public interface Feeder {
 
 	public void msgNestHasDeStabilized(Lane lane);
 
+	public void msgNestHasMixedParts(int nestNumber0or1);
+	
 }

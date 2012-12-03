@@ -51,6 +51,14 @@ public class LaneAgent extends Agent implements Lane {
 
 
 	/** MESSAGES **/
+	public void msgDumpYourNest()
+	{
+		debug("RECEIVED: msgDumpYourNest");
+		myNest.msgDump();
+		
+		stateChanged();
+	}
+	
 	public void msgPartAddedToLane(Part part) {
 		debug("RECEIVED: msgPartAddedToLane().");
 		laneParts.add(part); // adds part to the index = numberOfPartsInNest
@@ -106,7 +114,13 @@ public class LaneAgent extends Agent implements Lane {
 	}
 
 	public void msgPurge() {
-		debug("received msgPurge()");
+		synchronized(laneParts)
+		{
+			laneParts.clear();
+		}
+		
+		debug("LANE HAS CLEARED.");
+		
 		stateChanged();
 	}
 

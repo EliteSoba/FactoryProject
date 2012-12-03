@@ -78,13 +78,17 @@ public class VisionAgent extends Agent implements Vision {
 	}
 
 	public void msgMyNestsReadyForPicture(Nest nestOne, Nest nestTwo, Feeder feeder) {
-		if(nestOne.getPart() != null && nestTwo.getPart() !=null){
-			debug("received msgMyNestsReadyForPicture("+nestOne.getPart().name+","+nestTwo.getPart().name+")");
-			pictureRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
-		}
-		else {
+		synchronized (pictureRequests) {
+			if (nestOne.getPart() != null && nestTwo.getPart() != null) {
+				debug("received msgMyNestsReadyForPicture("
+						+ nestOne.getPart().name + "," + nestTwo.getPart().name
+						+ ")");
+				pictureRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
+			} else {
 
-			debug("received msgMyNestsReadyForPicture("+ nestOne.getPart()+","+ nestTwo.getPart()+")");
+				debug("received msgMyNestsReadyForPicture(" + nestOne.getPart()
+						+ "," + nestTwo.getPart() + ")");
+			}
 		}
 		this.stateChanged();
 	}
@@ -191,7 +195,12 @@ public class VisionAgent extends Agent implements Vision {
 			
 			pr.nestOneState = calculateNestState(pr.nestOne);
 			pr.nestTwoState = calculateNestState(pr.nestTwo);
-			
+
+			debug("######################################");
+			debug("######### PICTURE TAKEN #############");
+			debug("State One: " + pr.nestOneState);
+			debug("State Two: " + pr.nestTwoState);
+			debug("######################################");
 			// Check that nests do not contain mixed parts
 			
 			// If all bad parts
@@ -218,8 +227,6 @@ public class VisionAgent extends Agent implements Vision {
 					sendMessageToFeederAboutBadNest(pr.nestTwo);
 				}
 			}
-			
-			// Check all other scenarios
 			
 			
 			// Both nests are unused, ignore
@@ -272,6 +279,10 @@ public class VisionAgent extends Agent implements Vision {
 				sendMessageToFeederAboutJam(pr.nestOne);
 				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
 			}
+			// Jammed+OK => grab PART nest 2
+			else if(pr.nestOneState == 2 && pr.nestTwoState == 9 ){
+				sendMessageToFeederAboutJam(pr.nestOne);
+			}
 			
 
 			
@@ -292,6 +303,40 @@ public class VisionAgent extends Agent implements Vision {
 			else if(pr.nestOneState == 3 && pr.nestTwoState == 3 ){
 				tellPartsRobotToGrabPartFromNest(pr.nestOne);
 				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 3 && pr.nestTwoState == 9 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestOne);
+			}
+			
+
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 9 && pr.nestTwoState == 2 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 9 && pr.nestTwoState == 3){
+				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 9 && pr.nestTwoState == 9){
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 1 && pr.nestTwoState == 9){
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 9 && pr.nestTwoState == 1){
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 2 && pr.nestTwoState == 9){
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 9 && pr.nestTwoState == 2){
+			}
+			
+			else {
+				debug(""+pr.nestOneState+" -- "+pr.nestTwoState);
+				System.exit(0);
 			}
 			
 
@@ -341,6 +386,10 @@ public class VisionAgent extends Agent implements Vision {
 /** ================================================================================ **/
 
 	public void tellPartsRobotToGrabPartFromNest(Nest n){
+
+		debug("##################################");
+		debug("Executing tellPartsRobotToGrabPartFromNest("+n.getPart().name+") => Parts: "+ n.getParts().size());
+		debug("######################################");
 		if(n.getParts().size() > 0){
 			partsRobot.msgGrabGoodPartFromNest(n, n.getPart());
 		}
@@ -349,6 +398,26 @@ public class VisionAgent extends Agent implements Vision {
 	private int calculateNestState(Nest nest){
 		// Get index of nest to use the arrays to store the number of jams etc.
 		int nestIndex = this.nests.indexOf(nest);
+		
+		boolean pure = true;
+		for(Part p : nest.getParts()){
+			if(!nest.getPart().name.equals(p.name)){
+				pure = false;
+
+				debug("######### MIXED #############");
+				debug(nest.getPart().name + " != " + p.name + " Nest size:" + nest.getParts().size());
+				debug("######################################");
+				for(Part pt : nest.getParts()){
+					debug(pt.name);
+				}
+				break;
+			}
+		}
+		if(!pure && nest.getParts().size() > 0){
+			
+			sendMessageToFeederAboutMixedParts(nest);
+			return 9;
+		}
 		
 		// Check if the nest is not used
 		if(!nest.isBeingUsed()) {
@@ -359,7 +428,6 @@ public class VisionAgent extends Agent implements Vision {
 		// If the nest is unstable
 		else if(nest.getState() == NestState.UNSTABLE) {
 			nestJammedWaiting[nestIndex] = 0;
-			return 1; // Nest is unstable
 		}
 
 		// if nest is empty
@@ -387,23 +455,76 @@ public class VisionAgent extends Agent implements Vision {
 		int index = this.nests.indexOf(n);
 		
 		if(n.getParts().size() == 0 && n.getLane().getParts().size() == 0){
+
+			debug("######### NEED PART #############");
+			debug("NEST: "+n+" PART: "+n.getPart().name);
+			debug("######################################");
 			n.msgYouNeedPart(n.getPart());
 		}
 		switch(index){
-			case 0: feeder_zero.msgLaneMightBeJammed(0); break;
-			case 1: feeder_zero.msgLaneMightBeJammed(1); break;
-			case 2: feeder_one.msgLaneMightBeJammed(0); break;
-			case 3: feeder_one.msgLaneMightBeJammed(1); break;
-			case 4: feeder_two.msgLaneMightBeJammed(0); break;
-			case 5: feeder_two.msgLaneMightBeJammed(1); break;
-			case 6: feeder_three.msgLaneMightBeJammed(0); break;
-			case 7: feeder_three.msgLaneMightBeJammed(1); break;
+			case 0: feeder_zero.msgLaneMightBeJammed(0);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 0 PART:");
+			debug("######################################");
+			 break;
+			case 1: feeder_zero.msgLaneMightBeJammed(1);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 0 PART:");
+			debug("######################################");
+			 break;
+			case 2: feeder_one.msgLaneMightBeJammed(0);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 1 PART:");
+			debug("######################################");
+			 break;
+			case 3: feeder_one.msgLaneMightBeJammed(1);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 1 PART:");
+			debug("######################################");
+			 break;
+			case 4: feeder_two.msgLaneMightBeJammed(0);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 2 PART:");
+			debug("######################################");
+			 break;
+			case 5: feeder_two.msgLaneMightBeJammed(1);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 2 PART:");
+			debug("######################################");
+			 break;
+			case 6: feeder_three.msgLaneMightBeJammed(0);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 3 PART:");
+			debug("######################################");
+			 break;
+			case 7: feeder_three.msgLaneMightBeJammed(1);
+			debug("######### JAMMED #############");
+			debug("FEEDER: 3 PART:");
+			debug("#####################################");
+			 break;
 		}
+		
 	}
 
+	public void sendMessageToFeederAboutMixedParts(Nest n){
+		int index = this.nests.indexOf(n);
+		
+		switch(index){
+			case 0: feeder_zero.msgNestHasMixedParts(0); break;
+			case 1: feeder_zero.msgNestHasMixedParts(1); break;
+			case 2: feeder_one.msgNestHasMixedParts(0); break;
+			case 3: feeder_one.msgNestHasMixedParts(1); break;
+			case 4: feeder_two.msgNestHasMixedParts(0); break;
+			case 5: feeder_two.msgNestHasMixedParts(1); break;
+			case 6: feeder_three.msgNestHasMixedParts(0); break;
+			case 7: feeder_three.msgNestHasMixedParts(1); break;
+		}
+	}
+	
 	public void sendMessageToFeederAboutBadNest(Nest n){
 		
 		int index = this.nests.indexOf(n);
+
 		debug("################################");
 		debug("        BAD NEST("+index+")      ");
 		debug("################################");
@@ -416,6 +537,12 @@ public class VisionAgent extends Agent implements Vision {
 			case 5: feeder_two.msgBadNest(1); break;
 			case 6: feeder_three.msgBadNest(0); break;
 			case 7: feeder_three.msgBadNest(1); break;
+		}
+		if(n.getParts().size() + n.getLane().getParts().size() < 6){
+			debug("################################");
+			debug("        MORE PARTS      ");
+			debug("################################");
+			n.msgYouNeedPart(n.getPart());
 		}
 	}
 

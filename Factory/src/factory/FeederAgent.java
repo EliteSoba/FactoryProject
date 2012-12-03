@@ -10,6 +10,7 @@ import agent.Agent;
 import factory.interfaces.Feeder;
 import factory.interfaces.Gantry;
 import factory.interfaces.Lane;
+import factory.interfaces.Nest;
 import factory.interfaces.Vision;
 import factory.masterControl.MasterControl;
 import factory.test.mock.EventLog;
@@ -30,6 +31,7 @@ public class FeederAgent extends Agent implements Feeder {
 	private int diverterSpeed = kOK_TO_PURGE_TIME; // intial speed is in-sync with the purge timer
 
 	public boolean hasASlowDiverter = false;
+	public boolean diverterSpeedWasReset = false;
 	public boolean visionShouldTakePicture = true;
 	
 	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());
@@ -197,39 +199,61 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  v.2
 	 * */
 	public void msgLaneMightBeJammed(int nestNumber) {
-		debug("received msgEmptyNest(" + nestNumber + ")");
+		debug("received msgLaneMightBeJammed(" + nestNumber + ")");
 
 		
 		if (nestNumber == 0) 
 		{
 			topLane.laneMightBeJammedMessageCount++;
 
-			if (topLane.laneMightBeJammedMessageCount == 1) // There might be a jam -> the lane needs to increase its amplitude to dislodge the jammed part.
+			if (topLane.laneMightBeJammedMessageCount == 2) // There might be a jam -> the lane needs to increase its amplitude to dislodge the jammed part.
 			{
 				topLane.jamState = JamState.MIGHT_BE_JAMMED;
+				topLane.laneMightBeJammedMessageCount = 0;
 			}
-			else if (topLane.laneMightBeJammedMessageCount > 1) // Increasing the amplitude (which breaks any lane jams) did not work.
-			{
-				// the only other possibility is that the diverter switching algorithm is incorrect
-				bottomLane.hasMixedParts = true;
-			}
+//			else if (topLane.laneMightBeJammedMessageCount > 1) // Increasing the amplitude (which breaks any lane jams) did not work.
+//			{
+//				// the only other possibility is that the diverter switching algorithm is incorrect
+//				bottomLane.hasMixedParts = true;
+//			}
 		}
 		else if (nestNumber == 1) 
 		{
 			bottomLane.laneMightBeJammedMessageCount++;
 
-			if (bottomLane.laneMightBeJammedMessageCount == 1) // There might be a jam -> the lane needs to increase its amplitude to dislodge the jammed part.
+			if (bottomLane.laneMightBeJammedMessageCount == 2) // There might be a jam -> the lane needs to increase its amplitude to dislodge the jammed part.
 			{
 				bottomLane.jamState = JamState.MIGHT_BE_JAMMED;
+				bottomLane.laneMightBeJammedMessageCount = 0;
 			}
-			else if (bottomLane.laneMightBeJammedMessageCount > 1) // Increasing the amplitude (which breaks any lane jams) did not work.
-			{
-				// the only other possibility is that the diverter switching algorithm is incorrect
-				topLane.hasMixedParts = true;
-			}		
+//			else if (bottomLane.laneMightBeJammedMessageCount > 1) // Increasing the amplitude (which breaks any lane jams) did not work.
+//			{
+//				// the only other possibility is that the diverter switching algorithm is incorrect
+//				topLane.hasMixedParts = true;
+//			}		
 		}
 
 
+		stateChanged();
+	}
+	
+	
+	/**
+	 *  The vision sends this message notifying the Feeder that one of its nests has heterogenous parts.
+	 *  v.2
+	 * */
+	public void msgNestHasMixedParts(int nestNumber)
+	{
+		debug("RECEIVED: msgNestHasMixedParts("+nestNumber+")");
+		if (nestNumber == 0)
+		{
+			topLane.hasMixedParts = true;
+		}
+		else if (nestNumber == 1)
+		{
+			bottomLane.hasMixedParts = true;
+		}
+		
 		stateChanged();
 	}
 
@@ -360,15 +384,21 @@ public class FeederAgent extends Agent implements Feeder {
 			return true;
 		}
 		
-		if (diverterTimerState == DiverterTimerState.TIMER_EXPIRED)
+		if (diverterTimerState == DiverterTimerState.TIMER_EXPIRED && this.hasASlowDiverter)
 		{
+			debug("TIMER EXPIRED -> SWITCH LANE");
 			DoSwitchLane();
 			diverterTimerState = DiverterTimerState.TIMER_OFF;
-			//slowDiverterTimer.cancel(); // we don't want this timer to keep running
-			//slowDiverterTimer.purge();
 			return true;
 		}
 		
+		if (diverterSpeedWasReset && diverterTimerState == DiverterTimerState.TIMER_RUNNING)
+		{
+			DoSwitchLane(); // this is to fix a problem that disabled us from correcting the slow diverter once it occured
+			diverterSpeedWasReset = false;
+			diverterTimerState = DiverterTimerState.TIMER_EXPIRED; // force the timer to stop.
+			return true;
+		}
 
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
 		{
@@ -431,13 +461,13 @@ public class FeederAgent extends Agent implements Feeder {
 		
 		if (topLane.hasMixedParts)
 		{
-			laneHasMixedParts(topLane);
+			nestHasMixedParts(topLane);
 			return true;
 		}
 		
 		if (bottomLane.hasMixedParts)
 		{
-			laneHasMixedParts(bottomLane);
+			nestHasMixedParts(bottomLane);
 			return true;
 		}
 		
@@ -489,6 +519,47 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** ACTIONS **/
+	private void nestHasMixedParts(MyLane la)
+	{
+		la.hasMixedParts = false;
+		
+		// purge the lane with the mixed parts
+		if (topLane == la)
+		{
+			DoPurgeTopLane();
+			clearLaneParts(la);
+			clearNestParts(la);
+		}
+		else if (bottomLane == la)
+		{
+			DoPurgeBottomLane();
+			clearLaneParts(la);
+			clearNestParts(la);
+		}
+	}
+	
+	private void clearNestParts(MyLane la)
+	{
+		synchronized(la.lane.getNest().getParts())
+		{
+			la.lane.getNest().getParts().clear();
+		}
+		
+		debug("********** CALLED CLEAR NEST PARTS on " + la.lane.getNest().getPart().name +  "========= SIZE = " +la.lane.getNest().getParts().size());
+	}
+	
+	private void clearLaneParts(MyLane la) {
+		//la.lane.msgPurge();
+		synchronized(la.lane.getParts())
+		{
+			la.lane.getParts().clear();
+		}
+		
+		
+		debug("========= called clear LANE parts on " + la.part.name +  "========= SIZE = " +la.lane.getParts().size());
+
+	}
+	
 	private void laneHasMixedParts(MyLane la) {
 		
 		// Get more parts for the other lane because it is
@@ -496,17 +567,21 @@ public class FeederAgent extends Agent implements Feeder {
 		this.msgLaneNeedsPart(la.part, la.lane); 
 		la.jamState = JamState.NO_LONGER_JAMMED;
 		la.laneMightBeJammedMessageCount = 0; // reset the count because we have reached the end of this logic checking and handled it.
-
+		
+		la.hasMixedParts = false;
+		
 		// purge the lane with the mixed parts
 		if (topLane == la)
 		{
 			DoPurgeTopLane();
+			clearLaneParts(la);
 		}
 		else if (bottomLane == la)
 		{
 			DoPurgeBottomLane();
+			clearLaneParts(la);
 		}
-		
+				
 	}
 	
 	private void unjamLane(MyLane la)
@@ -640,17 +715,20 @@ public class FeederAgent extends Agent implements Feeder {
 
 		debug("Action: dump the "+ laneStr + "'s nest.");
 
-			
+		
 		if (la == topLane)
 		{
 			DoDumpTopNest(); 
+			clearNestParts(la);
 		}
 		else if (la == bottomLane)
 		{
 			DoDumpBottomNest(); 
+			clearNestParts(la);
 		}
 		
 		la.state = MyLaneState.EMPTY;
+		
 
 	}
 
@@ -680,6 +758,7 @@ public class FeederAgent extends Agent implements Feeder {
 				}
 				else // Switch the diverter immediately
 				{
+					debug("SWITCH DIVERTER IMMEDIATELY");
 					DoSwitchLane();
 				}
 			}
@@ -702,6 +781,7 @@ public class FeederAgent extends Agent implements Feeder {
 				}
 				else // Switch the diverter immediately
 				{
+					debug("SWITCH DIVERTER IMMEDIATELY");
 					DoSwitchLane();
 				}
 			}
@@ -1045,22 +1125,26 @@ public class FeederAgent extends Agent implements Feeder {
 
 	}
 
-	private void purgeLane(MyLane myLane){
-		myLane.state = MyLaneState.PURGING; // The lane is now purging		
+	private void purgeLane(MyLane la){
+		la.state = MyLaneState.PURGING; // The lane is now purging		
 
 		DoStopFeeding(); // before you can purge the lane you must stop feeding to it.
 
 		// Call the purge lane animation for the appropriate lane
-		if (myLane == topLane)
+		if (la == topLane)
 		{
 			DoPurgeTopLane();
+			clearLaneParts(topLane);
+			clearNestParts(topLane);
 		}
-		else if (myLane == bottomLane)
+		else if (la == bottomLane)
 		{
 			DoPurgeBottomLane();
+			clearLaneParts(bottomLane);
+			clearNestParts(bottomLane);
 		}
 
-		myLane.state = MyLaneState.EMPTY; // we have received a message from the animation telling us that the lane has been purged
+		la.state = MyLaneState.EMPTY; // we have received a message from the animation telling us that the lane has been purged
 
 		//myLane.lane.msgPurge(); // tell the lane to purge (v.2 if needed)
 
@@ -1171,7 +1255,7 @@ public class FeederAgent extends Agent implements Feeder {
 		
 		if (debugMode == false)
 		{
-			server.command(this,"fa lm set laneamplitude " + (feederNumber+laneNum) + " " + 8); // 0-7lane# 1-8amplitude
+			server.command(this,"fa lm set laneamplitude " + ((2*feederNumber)+laneNum) + " " + 8); // 0-7lane# 1-8amplitude
 			debug("Feeder " + feederNumber + " set lane amplitude.");
 			try {
 				animation.acquire();
@@ -1415,11 +1499,13 @@ public class FeederAgent extends Agent implements Feeder {
 		if (num == 0)
 		{
 			this.hasASlowDiverter = false;
+			diverterSpeedWasReset = true;
 		}
 		else
 		{
 			this.hasASlowDiverter = true;
 		}
+		
 		
 		this.diverterSpeed = (num + kOK_TO_PURGE_TIME); // the delay only takes effect after the ok_to_purge_time timer
 	}
