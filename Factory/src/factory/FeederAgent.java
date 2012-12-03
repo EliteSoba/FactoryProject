@@ -199,16 +199,17 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  v.2
 	 * */
 	public void msgLaneMightBeJammed(int nestNumber) {
-		debug("received msgEmptyNest(" + nestNumber + ")");
+		debug("received msgLaneMightBeJammed(" + nestNumber + ")");
 
 		
 		if (nestNumber == 0) 
 		{
 			topLane.laneMightBeJammedMessageCount++;
 
-			if (topLane.laneMightBeJammedMessageCount == 1) // There might be a jam -> the lane needs to increase its amplitude to dislodge the jammed part.
+			if (topLane.laneMightBeJammedMessageCount == 2) // There might be a jam -> the lane needs to increase its amplitude to dislodge the jammed part.
 			{
 				topLane.jamState = JamState.MIGHT_BE_JAMMED;
+				topLane.laneMightBeJammedMessageCount = 0;
 			}
 //			else if (topLane.laneMightBeJammedMessageCount > 1) // Increasing the amplitude (which breaks any lane jams) did not work.
 //			{
@@ -220,9 +221,10 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			bottomLane.laneMightBeJammedMessageCount++;
 
-			if (bottomLane.laneMightBeJammedMessageCount == 1) // There might be a jam -> the lane needs to increase its amplitude to dislodge the jammed part.
+			if (bottomLane.laneMightBeJammedMessageCount == 2) // There might be a jam -> the lane needs to increase its amplitude to dislodge the jammed part.
 			{
 				bottomLane.jamState = JamState.MIGHT_BE_JAMMED;
+				bottomLane.laneMightBeJammedMessageCount = 0;
 			}
 //			else if (bottomLane.laneMightBeJammedMessageCount > 1) // Increasing the amplitude (which breaks any lane jams) did not work.
 //			{
