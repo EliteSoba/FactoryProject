@@ -1,6 +1,8 @@
 package factory.graphics;
 
 import java.awt.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 /**
@@ -48,6 +50,10 @@ public class GraphicKittingRobot {
 	/**The slot in the Kit Station the Kit Robot is going to*/
 	private int stationTarget;
 	
+	protected ArrayList<Image> kitRobotAnimation;
+	protected int kitRobotAnimationCounter;
+	protected int kitRobotAnimationSpeed;
+	
 	/**
 	 * Creates a Kit Robot at the given x and y coordinates
 	 * @param GP The GraphicPanel for intercomponent communication
@@ -87,6 +93,10 @@ public class GraphicKittingRobot {
 		stationTarget = 0;
 		
 		KITISBROKED_8C = null;
+		
+		kitRobotAnimation = GraphicAnimation.loadAnimationFromFolder("Images/kitRobot/", 0, ".png");
+		kitRobotAnimationCounter = 0;
+		kitRobotAnimationSpeed = 2;
 	}
 	
 	/**
@@ -94,7 +104,21 @@ public class GraphicKittingRobot {
 	 * @param g The specified graphics window
 	 */
 	public void paint(Graphics g) {
-		g.drawImage(robot[direction].getImage(), x, y, null);
+		int angle = 0;
+		switch (direction) {
+		case 2: angle = 270; break;
+		case 4: angle = 180; break;
+		case 6: angle = 0; break;
+		case 8: angle = 90;break;
+		}
+		Graphics2D g2 = (Graphics2D)g.create();
+		g2.rotate(Math.toRadians(angle),x+65,y+65);
+		g2.drawImage(kitRobotAnimation.get(kitRobotAnimationCounter/kitRobotAnimationSpeed),x,y,null);
+		kitRobotAnimationCounter ++;
+		if(kitRobotAnimationCounter/kitRobotAnimationSpeed >= kitRobotAnimation.size())
+			kitRobotAnimationCounter = 0;
+		g2.dispose();
+		//g.drawImage(robot[direction].getImage(), x, y, null);
 		drawKit(g);
 	}
 	
@@ -107,21 +131,21 @@ public class GraphicKittingRobot {
 			return;
 		
 		switch (direction) {
-		case 2:
-			kit.setX(x+16);
-			kit.setY(y+74);
+		case 2:			// up
+			kit.setX(x+23);
+			kit.setY(y);
 			break;
-		case 4:
-			kit.setX(x);
-			kit.setY(y+16);
+		case 4:		// left
+			kit.setX(x-30);
+			kit.setY(y+23);
 			break;
-		case 6:
-			kit.setX(x+74);
-			kit.setY(y+16);
+		case 6:		// right
+			kit.setX(x+100);
+			kit.setY(y+23);
 			break;
 		case 8:
-			kit.setX(x+16);
-			kit.setY(y);
+			kit.setX(x+23);
+			kit.setY(y+84);
 			break;
 		}
 		
@@ -198,7 +222,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveFromBelt(int v) {
-		return moveTo(beltX+5, beltY+290, v);
+		return moveTo(beltX+25, beltY+270, v);
 	}
 	
 	/**
@@ -231,7 +255,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveToStation1(int v) {
-		return moveTo(stationX-70, stationY, v);
+		return moveTo(stationX-90, stationY, v);
 	}
 	
 	/**
@@ -240,7 +264,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveToStation2(int v) {
-		return moveTo(stationX-70, stationY+95, v);
+		return moveTo(stationX-90, stationY+95, v);
 	}
 	
 	/**
@@ -376,8 +400,8 @@ public class GraphicKittingRobot {
 		}
 		
 		//Returns to original horizontal position
-		else
-			moveToStartX(v);
+//		else
+//			moveToStartX(v);
 	}
 	
 	//The following are all getters and setters
@@ -398,7 +422,7 @@ public class GraphicKittingRobot {
 	 */
 	public void moveY(int v) {
 		y += v;
-		direction = v > 0 ? 2 : 8;
+		direction = v > 0 ? 8 : 2;
 		if (kitted())
 			kit.setDirection(direction);
 	}

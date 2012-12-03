@@ -306,8 +306,8 @@ public class LaneManPanel extends JPanel{
 		JComboBox feederBoxList;
 
 		// containers
-		JPanel partsMissingContainer;
-		JPanel partsBadContainer;
+		JPanel laneContainer;
+		JPanel feederContainer;
 
 		// components / controls
 		JButton laneJamButton; // initiates non-normative 2.2: Lane Jam
@@ -386,39 +386,62 @@ public class LaneManPanel extends JPanel{
 			}
 
 			feederBoxList.setPreferredSize(new Dimension(200,25));
-			partsMissingContainer = new JPanel();
-			partsBadContainer = new JPanel();
+			laneBoxList.setPreferredSize(new Dimension(200,25));
+			laneContainer = new JPanel();
+			feederContainer = new JPanel();
 
 
-			partsMissingContainer.setPreferredSize(new Dimension(250,150));
-			partsBadContainer.setPreferredSize(new Dimension(250,210));
-
-			TitledBorder title = BorderFactory.createTitledBorder("Missing Parts in Nest");
-			partsMissingContainer.setBorder(title);	
-
-			title = BorderFactory.createTitledBorder("No Good Parts in Nest");
-			partsBadContainer.setBorder(title);
-
-			partsMissingContainer.add(laneJamButton);
-			//partsMissingContainer.add(diverterButton);
-			partsMissingContainer.add(diverterSpeedLabel);
-			partsMissingContainer.add(diverterSpeed);
+			laneContainer.setPreferredSize(new Dimension(250,120));
+			feederContainer.setPreferredSize(new Dimension(250,330));
 			
-			partsBadContainer.add(feederBoxList);
-			partsBadContainer.add(badPartsLabel);
-			partsBadContainer.add(badPartsPercentage);
-			partsBadContainer.add(badPartsButton);
-			partsBadContainer.add(blockingRobotButton);
-			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
+			laneContainer.setLayout(new GridBagLayout());
+			feederContainer.setLayout(new GridBagLayout());
+			
+			GridBagConstraints c = new GridBagConstraints();
+			
+			TitledBorder title = BorderFactory.createTitledBorder("Lanes / Nests");
+			laneContainer.setBorder(title);	
+
+			title = BorderFactory.createTitledBorder("Feeders");
+			feederContainer.setBorder(title);
+			c.gridx = 0;
+			c.gridy = 0;
+			laneContainer.add(laneBoxList,c);
+			c.gridy = 1;
+			c.insets = new Insets(10,0,0,0);
+			laneContainer.add(laneJamButton,c);
+			//laneContainer.add(diverterButton);
+			
+			c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 0;
+			feederContainer.add(feederBoxList,c);
+			c.gridy = 1;
+			c.insets = new Insets(30,0,0,0);
+			feederContainer.add(badPartsLabel,c);
+			c.insets = new Insets(0,0,0,0);
+			c.gridy = 2;
+			feederContainer.add(badPartsPercentage,c);
+			c.gridy = 3;
+			c.insets = new Insets(3,0,0,0);
+			feederContainer.add(badPartsButton,c);
+			//feederContainer.add(blockingRobotButton);
+			c.insets = new Insets(30,0,0,0);
+			c.gridy = 4;
+			feederContainer.add(diverterSpeedLabel,c);
+			c.insets = new Insets(0,0,0,0);
+			c.gridy = 5;
+			feederContainer.add(diverterSpeed,c);
+			//boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
 			JLabel label = new JLabel("Non-Normative Cases");
 			label.setAlignmentX(Component.CENTER_ALIGNMENT);
 			boxContainer.add(label);
+			//boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
+			//boxContainer.add(laneBoxList);
+			boxContainer.add(Box.createRigidArea(new Dimension(0,20)));
+			boxContainer.add(laneContainer);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
-			boxContainer.add(laneBoxList);
-			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
-			boxContainer.add(partsMissingContainer);
-			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
-			boxContainer.add(partsBadContainer);
+			boxContainer.add(feederContainer);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,10)));
 			JScrollPane scrollPane = new JScrollPane(messageBox);
 			scrollPane.setPreferredSize(new Dimension(200,100));
