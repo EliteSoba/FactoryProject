@@ -160,7 +160,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		}
 		
 		for (int z=0; z<currentKitConfiguration.listOfParts.size(); z++){
-			print("debug currentKitConfig listOfParts Part: " + z + ": " + this.currentKitConfiguration.listOfParts.get(z));
+			print("debug currentKitConfig listOfParts Part: " + z + ": " + this.currentKitConfiguration.listOfParts.get(z).name);
 		}
 		
 		KitConfig fixedKitConfig = new KitConfig();
