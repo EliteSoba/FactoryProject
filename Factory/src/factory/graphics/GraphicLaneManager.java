@@ -433,7 +433,7 @@ public class GraphicLaneManager {
 					if (lane1Items.get(i).getVX() == vXTop) {
 						if (lane1Items.get(i).getSuccessfullyTransferred()) {
 							//TODO: Send the message
-							graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane1Items.get(i).getName() + (lane1Items.get(i).getIsBad()?" 0":" 1"));
+							graphicPanel.sendMessage("la cmd newpartputinlane " + 2*laneManagerID + " " + lane1Items.get(i).getName() + (lane1Items.get(i).getIsBad()?" 0":" 1"));
 							lane1Items.get(i).setSuccessfullyTransferred(false);
 						}
 						if (vibrationCount % 4 == 1) { // Vibration up and down every 2 paint calls
@@ -567,7 +567,7 @@ public class GraphicLaneManager {
 				if (lane1Items.get(i).getVX() == vXTop) {
 					if (lane1Items.get(i).getSuccessfullyTransferred()) {
 						//TODO: Send the message
-						graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane1Items.get(i).getName() + (lane1Items.get(i).getIsBad()?" 0":" 1"));
+						graphicPanel.sendMessage("la cmd newpartputinlane " + 2*laneManagerID + " " + lane1Items.get(i).getName() + (lane1Items.get(i).getIsBad()?" 0":" 1"));
 						lane1Items.get(i).setSuccessfullyTransferred(false);
 					}
 					if (vibrationCount % 4 == 1) { // Vibration up and down every 2 paint calls
@@ -692,7 +692,7 @@ public class GraphicLaneManager {
 					if (lane2Items.get(i).getVX() == vXBottom) {
 						if (lane2Items.get(i).getSuccessfullyTransferred()) {
 							//TODO: Send the message
-							graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane2Items.get(i).getName() + (lane2Items.get(i).getIsBad()?" 0":" 1"));
+							graphicPanel.sendMessage("la cmd newpartputinlane " + (2*laneManagerID+1) + " " + lane2Items.get(i).getName() + (lane2Items.get(i).getIsBad()?" 0":" 1"));
 							lane2Items.get(i).setSuccessfullyTransferred(false);
 						}
 						if (vibrationCount % 4 == 1) { // Vibration up and down every 2 paint calls
@@ -814,7 +814,7 @@ public class GraphicLaneManager {
 				if (lane2Items.get(i).getVX() == vXBottom) {
 					if (lane2Items.get(i).getSuccessfullyTransferred()) {
 						//TODO: Send the message
-						graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane2Items.get(i).getName() + (lane2Items.get(i).getIsBad()?" 0":" 1"));
+						graphicPanel.sendMessage("la cmd newpartputinlane " + (2*laneManagerID+1) + " " + lane2Items.get(i).getName() + (lane2Items.get(i).getIsBad()?" 0":" 1"));
 						lane2Items.get(i).setSuccessfullyTransferred(false);
 					}
 					if (vibrationCount % 4 == 1) { // Vibration up and down every 2 paint calls
@@ -918,7 +918,7 @@ public class GraphicLaneManager {
 						else{
 							if (lane1Items.get(i).getSuccessfullyTransferred()) {
 								//TODO: Send the message
-								graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane1Items.get(i).getName() + (lane1Items.get(i).getIsBad()?" 0":" 1"));
+								graphicPanel.sendMessage("la cmd newpartputinlane " + (2*laneManagerID) + " " + lane1Items.get(i).getName() + (lane1Items.get(i).getIsBad()?" 0":" 1"));
 								lane1Items.get(i).setSuccessfullyTransferred(false);
 							}
 						}
@@ -1015,7 +1015,7 @@ public class GraphicLaneManager {
 						else{
 							if (lane2Items.get(i).getSuccessfullyTransferred()) {
 								//TODO: Send the message
-								graphicPanel.sendMessage("la cmd newpartputinlane " + laneManagerID + " " + lane2Items.get(i).getName() + (lane2Items.get(i).getIsBad()?" 0":" 1"));
+								graphicPanel.sendMessage("la cmd newpartputinlane " + (2*laneManagerID+1) + " " + lane2Items.get(i).getName() + (lane2Items.get(i).getIsBad()?" 0":" 1"));
 								lane2Items.get(i).setSuccessfullyTransferred(false);
 							}
 						}
