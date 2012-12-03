@@ -460,7 +460,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 						String set = "fpm fa set diverterspeed " + (feederNumber) + " " + (diverterSpeedMax-speed);
 						try {
 							factoryProductionManager.sendCommand(set);
-							factoryProductionManager.sendCommand("fpm fa set diverterspeed " + feederNumber + " " + (speed));
+							factoryProductionManager.sendCommand("fpm fpm set diverterspeed " + feederNumber + " " + (speed));
 						} catch (Exception e) {
 							System.out.println("An error occurred trying to send message to change lane amplitude.");
 						} 

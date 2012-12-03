@@ -195,24 +195,30 @@ public class VisionAgent extends Agent implements Vision {
 			// Check that nests do not contain mixed parts
 			
 			// If all bad parts
-			boolean anyGood = false;
-			for(Part p : pr.nestOne.getParts()){
-				if(p.isGoodPart){
-					anyGood = true;
+			if(pr.nestOne.getParts().size() > 0){
+				boolean anyGood = false;
+				for(Part p : pr.nestOne.getParts()){
+					if(p.isGoodPart){
+						anyGood = true;
+					}
+				}
+				if(!anyGood){
+					sendMessageToFeederAboutBadNest(pr.nestOne);
 				}
 			}
-			if(!anyGood){
-				sendMessageToFeederAboutBadNest(pr.nestOne);
-			}
-			 anyGood = false;
-			for(Part p : pr.nestTwo.getParts()){
-				if(p.isGoodPart){
-					anyGood = true;
+			
+			if(pr.nestTwo.getParts().size() > 0){
+				boolean anyGood = false;
+				for(Part p : pr.nestTwo.getParts()){
+					if(p.isGoodPart){
+						anyGood = true;
+					}
+				}
+				if(!anyGood){
+					sendMessageToFeederAboutBadNest(pr.nestTwo);
 				}
 			}
-			if(!anyGood){
-				sendMessageToFeederAboutBadNest(pr.nestTwo);
-			}
+			
 			// Check all other scenarios
 			
 			
@@ -398,8 +404,11 @@ public class VisionAgent extends Agent implements Vision {
 	public void sendMessageToFeederAboutBadNest(Nest n){
 		
 		int index = this.nests.indexOf(n);
+		if(n.getParts().size() + n.getLane().getParts().size() < 6){
+			n.msgYouNeedPart(n.getPart());
+		}
 		debug("################################");
-		debug("             BAD NEST           ");
+		debug("        BAD NEST("+index+")      ");
 		debug("################################");
 		switch(index){
 			case 0: feeder_zero.msgBadNest(0); break;
