@@ -758,6 +758,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void setBadProbability(int feederNum, int probability) {
 		lane[feederNum].setBadProbability(probability);
+		drawString("The probability that bad parts will");
+		drawString("emerge from Feeder " + (feederNum+1) + " is " + probability + " Percent");
 	}
 	
 	
