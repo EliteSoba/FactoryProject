@@ -499,38 +499,38 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		debug("Executing DoPickUpPartFromNest("+nest+")");
 
 		// Animation of Moving to the Nest
-<<<<<<< HEAD
-		DoAnimationMovePartsRobotToNestAndGrabPart(nest, this.nests.get(nest).partCoordinate);
 
-=======
+		debug("###########");
+		debug("###########");
+		debug("###########");
+
+		debug(""+this.nests.get(nest).nest.getParts().size());
 		
 		debug("###########");
 		debug("###########");
 		debug("###########");
-		for(int i = 0; i < nests.size(); i++){
-			if(this.nests.get(i).nest != null){
-				debug(i + " "+this.nests.get(i).nest + " "+this.nests.get(i).nest.getParts().size());
-			}
-		}
-		
-		debug("###########");
-		debug("###########");
-		debug("###########");
-		
-		
-		System.exit(0);
->>>>>>> Non Norms DEBBUGING TIME!
 		for(int i = 0; i < this.nests.get(nest).nest.getParts().size();i++){
 			Part p = this.nests.get(nest).nest.getParts().get(i);
+			debug("###########");
+			debug("###########");
+			debug("###########");
+
+			debug(""+p);
+			debug(""+p.isGoodPart);
+			
+			debug("###########");
+			debug("###########");
+			debug("###########");
 			if(p.isGoodPart){
 				this.nests.get(nest).nest.getParts().remove(i);
 				DoAnimationMovePartsRobotToNestAndGrabPart(nest, i);
+
+			
+				
+				
+				System.exit(0);
 				break;
 			}
-<<<<<<< HEAD
-
-=======
->>>>>>> Non Norms DEBBUGING TIME!
 		}
 
 		// Update Position
