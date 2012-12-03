@@ -525,15 +525,15 @@ public class FeederAgent extends Agent implements Feeder {
 		// purge the lane with the mixed parts
 		if (topLane == la)
 		{
+			DoPurgeTopLane();
 			clearLaneParts(la);
 			clearNestParts(la);
-			DoPurgeTopLane();
 		}
 		else if (bottomLane == la)
 		{
+			DoPurgeBottomLane();
 			clearLaneParts(la);
 			clearNestParts(la);
-			DoPurgeBottomLane();
 		}
 	}
 	
@@ -571,13 +571,13 @@ public class FeederAgent extends Agent implements Feeder {
 		// purge the lane with the mixed parts
 		if (topLane == la)
 		{
-			clearLaneParts(la);
 			DoPurgeTopLane();
+			clearLaneParts(la);
 		}
 		else if (bottomLane == la)
 		{
-			clearLaneParts(la);
 			DoPurgeBottomLane();
+			clearLaneParts(la);
 		}
 				
 	}
@@ -1131,13 +1131,13 @@ public class FeederAgent extends Agent implements Feeder {
 		// Call the purge lane animation for the appropriate lane
 		if (la == topLane)
 		{
-			clearLaneParts(topLane);
 			DoPurgeTopLane();
+			clearLaneParts(topLane);
 		}
 		else if (la == bottomLane)
 		{
-			clearLaneParts(bottomLane);
 			DoPurgeBottomLane();
+			clearLaneParts(bottomLane);
 		}
 
 		la.state = MyLaneState.EMPTY; // we have received a message from the animation telling us that the lane has been purged
