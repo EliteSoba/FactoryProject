@@ -321,6 +321,18 @@ public class VisionAgent extends Agent implements Vision {
 			// OK+OK => grab PART nest 2
 			else if(pr.nestOneState == 9 && pr.nestTwoState == 9){
 			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 1 && pr.nestTwoState == 9){
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 9 && pr.nestTwoState == 1){
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 2 && pr.nestTwoState == 9){
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 9 && pr.nestTwoState == 2){
+			}
 			
 			else {
 				debug(""+pr.nestOneState+" -- "+pr.nestTwoState);
@@ -416,7 +428,6 @@ public class VisionAgent extends Agent implements Vision {
 		// If the nest is unstable
 		else if(nest.getState() == NestState.UNSTABLE) {
 			nestJammedWaiting[nestIndex] = 0;
-			return 1; // Nest is unstable
 		}
 
 		// if nest is empty
