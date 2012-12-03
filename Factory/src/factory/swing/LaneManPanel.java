@@ -361,7 +361,7 @@ public class LaneManPanel extends JPanel{
 			diverterSpeed.setPaintTicks(true);
 			diverterSpeed.setSnapToTicks(true);
 			diverterSpeed.setPaintLabels(true);
-			diverterSpeed.setValue(0);
+			diverterSpeed.setValue(diverterSpeedMax);
 			diverterSpeed.addChangeListener(new SliderDetection());
 			laneJamButton.addActionListener(this);
 			diverterButton.addActionListener(this);
