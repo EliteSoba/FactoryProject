@@ -26,6 +26,7 @@ public class GraphicLaneManager {
 	ImageIcon divergeLaneIcon;
 	ImageIcon feederIcon;
 	ImageIcon divergerLightOffImage, divergerLightOnImage;
+	
 	GraphicBin bin;
 
 	// Bin coordinates
@@ -221,39 +222,28 @@ public class GraphicLaneManager {
 		// horizontal
 		Graphics2D g3 = (Graphics2D) g.create();
 		// vertical
-		/*
-		g3.rotate(Math.toRadians(90), lane_xPos + 210, lane_yPos + 20);
-		g3.drawImage(new ImageIcon("Images/lane/" + laneAnimationCounter1
-				/ laneAnimationSpeed + ".png").getImage(), lane_xPos + 250,
-				lane_yPos - 25, 40, 40, null);
-		g3.dispose();
-		 */
-		/*
-		g2.drawImage(new ImageIcon("Images/lane/" + laneAnimationCounter1
-				/ laneAnimationSpeed + ".png").getImage(), lane_xPos + 75,
-				lane_yPos + 20, 180, 40, null);
-		g2.drawImage(new ImageIcon("Images/lane/" + laneAnimationCounter2
-				/ laneAnimationSpeed + ".png").getImage(), lane_xPos + 75,
-				lane_yPos + 100, 180, 40, null);
-		 */
 		int lane1AnimationSpeed = 9-lane1Speed;
 		int lane2AnimationSpeed = 9-lane2Speed;
 		//System.out.println(laneAnimationCounter1/lane1AnimationSpeed);
+		// Draws parts and diverger lane
 		g2.drawImage(new ImageIcon("Images/lane/"+laneAnimationCounter1/lane1AnimationSpeed+".png").getImage(),lane_xPos+75,lane_yPos+20,180,40,null);
 		g2.drawImage(new ImageIcon("Images/lane/"+laneAnimationCounter2/lane2AnimationSpeed+".png").getImage(),lane_xPos+75,lane_yPos+100,180,40,null);
 		g2.drawImage(new ImageIcon("Images/divergerLane/"+laneAnimationCounter1/lane1AnimationSpeed+".png").getImage(),lane_xPos+210,lane_yPos+60,40,20,null);
 		g2.drawImage(new ImageIcon("Images/divergerLane/"+(6-laneAnimationCounter2/lane2AnimationSpeed)+".png").getImage(),lane_xPos+210,lane_yPos+80,40,20,null);
-
+		
+		// If lanes are on
 		if(lane1Start)
 			laneAnimationCounter1 ++;
 		if(lane2Start)
 			laneAnimationCounter2 ++;
-
+		
+		// Reset counters
 		if (laneAnimationCounter1 >= lane1AnimationSpeed*7) // 7 = number of images
 			laneAnimationCounter1 = 0;
 		if (laneAnimationCounter2 >= lane2AnimationSpeed*7) // 7 = number of images
 			laneAnimationCounter2 = 0;
 
+		// Paint the items
 		for (int i = 0; i < lane1Items.size(); i++)
 			lane1Items.get(i).paint(g2);
 		for (int i = 0; i < lane2Items.size(); i++)
@@ -287,6 +277,7 @@ public class GraphicLaneManager {
 		divergerLightOnImage = new ImageIcon("Images/divergerLights/dLight" + divergerLightAnimationCounter + ".png");
 		g.drawImage(divergerLightOnImage.getImage(), feederX, dLightOnY, null);
 		g.drawImage(divergerLightOffImage.getImage(), feederX, dLightOffY, null);
+		// Animate up or animate down
 		if (divergerLightAnimationCounter == 20)
 			divergerLightAnimationCountUp = false;
 		else if (divergerLightAnimationCounter == 0)

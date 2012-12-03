@@ -101,6 +101,7 @@ class GraphicNest extends GraphicAnimatedObject
 		items.remove(items.size()-1);					// remove last item
 		return lastItem;								// return last item
 	}
+	
 	/**
 	 * Gets an Item at the provided index and removes the Item
 	 * @param index The index of the Item being taken
@@ -113,6 +114,7 @@ class GraphicNest extends GraphicAnimatedObject
 		items.remove(index);
 		return returnedItem;
 	}
+	
 	/**
 	 * returns the size of the items in the nest
 	 * @return size of items in the nest

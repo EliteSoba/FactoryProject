@@ -32,9 +32,11 @@ public class GraphicConveyorBelt {
 	public static int width = 50;
 	/**The height of the Conveyor Belt*/
 	public static int height = 720;
-	public ArrayList<Image> conveyorBeltAnimationImages;
-	public int conveyorBeltAnimationCounter;
-	public int conveyorBeltAnimationSpeed;
+	
+	/** Animation for conveyor belt */
+	public ArrayList<Image> conveyorBeltAnimationImages;		// collection of images
+	public int conveyorBeltAnimationCounter;					// counter
+	public int conveyorBeltAnimationSpeed;						// animation speed
 	
 	/**
 	 * Creates a Conveyor Belt at the given x and y coordinates
@@ -63,18 +65,9 @@ public class GraphicConveyorBelt {
 	 * @param g The specified graphics window
 	 */
 	public void paint(Graphics g) {
-//		//Main belt
-//		g.setColor(new Color(47, 41, 32));
-//		g.fillRect(x, y, width, height);
-//		
-//		//Main belt animation
-//		g.setColor(new Color(224, 224, 205));
-//		for (int i = t; i < height; i += 50) {
-//			g.drawLine(x, i, x+width, i);
-//		}
-		
+		// Animates conveyor belt
 		g.drawImage(conveyorBeltAnimationImages.get(conveyorBeltAnimationCounter/conveyorBeltAnimationSpeed), 0, 0, null);
-		if(kitin() && !pickUp || kitout() && export)
+		if(kitin() && !pickUp || kitout() && export)		// only animates if the kit is moving
 		{
 			conveyorBeltAnimationCounter++;
 			if(conveyorBeltAnimationCounter >= conveyorBeltAnimationImages.size()*conveyorBeltAnimationSpeed)
