@@ -384,6 +384,7 @@ public class FeederAgent extends Agent implements Feeder {
 		
 		if (diverterTimerState == DiverterTimerState.TIMER_EXPIRED && this.hasASlowDiverter)
 		{
+			debug("TIMER EXPIRED -> SWITCH LANE");
 			DoSwitchLane();
 			diverterTimerState = DiverterTimerState.TIMER_OFF;
 			return true;
@@ -741,6 +742,7 @@ public class FeederAgent extends Agent implements Feeder {
 				}
 				else // Switch the diverter immediately
 				{
+					debug("SWITCH DIVERTER IMMEDIATELY");
 					DoSwitchLane();
 				}
 			}
@@ -763,6 +765,7 @@ public class FeederAgent extends Agent implements Feeder {
 				}
 				else // Switch the diverter immediately
 				{
+					debug("SWITCH DIVERTER IMMEDIATELY");
 					DoSwitchLane();
 				}
 			}
