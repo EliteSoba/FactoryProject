@@ -279,7 +279,7 @@ public class StandAgent extends Agent implements Stand {
 			 * as long as the stand is not being used.
 			 */
 			//TODO add check for checking atInspection != EMPTY
-			if (state == StandAgentState.FREE && (topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY) && inspectionSlot.state.equals(MySlotState.EMPTY)) {
+			if ((topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY) && inspectionSlot.state.equals(MySlotState.EMPTY)) {
 			   DoAskKitRobotToGetEmptyKit();
 			   return true;
 			}       
