@@ -191,7 +191,12 @@ public class VisionAgent extends Agent implements Vision {
 			
 			pr.nestOneState = calculateNestState(pr.nestOne);
 			pr.nestTwoState = calculateNestState(pr.nestTwo);
-			
+
+			debug("######################################");
+			debug("######### PICTURE TAKEN #############");
+			debug("State One: " + pr.nestOneState);
+			debug("State Two: " + pr.nestTwoState);
+			debug("######################################");
 			// Check that nests do not contain mixed parts
 			
 			// If all bad parts
@@ -341,6 +346,10 @@ public class VisionAgent extends Agent implements Vision {
 /** ================================================================================ **/
 
 	public void tellPartsRobotToGrabPartFromNest(Nest n){
+
+		debug("##################################");
+		debug("Executing tellPartsRobotToGrabPartFromNest("+n.getPart().name+") => Parts: "+ n.getParts().size());
+		debug("######################################");
 		if(n.getParts().size() > 0){
 			partsRobot.msgGrabGoodPartFromNest(n, n.getPart());
 		}
@@ -404,9 +413,7 @@ public class VisionAgent extends Agent implements Vision {
 	public void sendMessageToFeederAboutBadNest(Nest n){
 		
 		int index = this.nests.indexOf(n);
-		if(n.getParts().size() + n.getLane().getParts().size() < 6){
-			n.msgYouNeedPart(n.getPart());
-		}
+
 		debug("################################");
 		debug("        BAD NEST("+index+")      ");
 		debug("################################");
@@ -419,6 +426,12 @@ public class VisionAgent extends Agent implements Vision {
 			case 5: feeder_two.msgBadNest(1); break;
 			case 6: feeder_three.msgBadNest(0); break;
 			case 7: feeder_three.msgBadNest(1); break;
+		}
+		if(n.getParts().size() + n.getLane().getParts().size() < 6){
+			debug("################################");
+			debug("        MORE PARTS      ");
+			debug("################################");
+			n.msgYouNeedPart(n.getPart());
 		}
 	}
 
