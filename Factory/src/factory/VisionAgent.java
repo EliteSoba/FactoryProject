@@ -392,9 +392,12 @@ public class VisionAgent extends Agent implements Vision {
 			if(!nest.getPart().name.equals(p.name)){
 				pure = false;
 
-				debug("######### JAMMED #############");
+				debug("######### MIXED #############");
 				debug(nest.getPart().name + " != " + p.name + " Nest size:" + nest.getParts().size());
 				debug("######################################");
+				for(Part pt : nest.getParts()){
+					debug(pt.name);
+				}
 				break;
 			}
 		}
