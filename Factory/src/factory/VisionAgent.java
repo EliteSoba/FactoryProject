@@ -404,6 +404,9 @@ public class VisionAgent extends Agent implements Vision {
 	public void sendMessageToFeederAboutBadNest(Nest n){
 		
 		int index = this.nests.indexOf(n);
+		if(n.getParts().size() + n.getLane().getParts().size() < 6){
+			n.msgYouNeedPart(n.getPart());
+		}
 		debug("################################");
 		debug("        BAD NEST("+index+")      ");
 		debug("################################");
