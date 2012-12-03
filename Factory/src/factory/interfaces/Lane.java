@@ -30,6 +30,8 @@ public boolean hasMixedParts();
 
 public void msgPartAddedToLane(Part part);
 
+public void msgDumpYourNest();
+
 public List<Part> getParts();
 
 //public void msgFeedingParts(int numParts);

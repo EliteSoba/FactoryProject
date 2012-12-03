@@ -41,8 +41,16 @@ public class NestAgent extends Agent implements Nest {
 	
 
 	/** MESSAGES **/
-	
-	
+
+	public void msgDump() {
+		synchronized(nestParts)
+		{
+			nestParts.clear();
+		}
+		debug("NEST HAS CLEARED.");
+		
+		stateChanged();
+	}
 	
 	public void msgYouNeedPart(Part part) {
 		debug("received msgYouNeedPart("+part.name+").");
@@ -189,6 +197,7 @@ public class NestAgent extends Agent implements Nest {
 			print(msg, null);
 		}
 	}
+
 
 }
 

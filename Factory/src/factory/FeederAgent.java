@@ -10,6 +10,7 @@ import agent.Agent;
 import factory.interfaces.Feeder;
 import factory.interfaces.Gantry;
 import factory.interfaces.Lane;
+import factory.interfaces.Nest;
 import factory.interfaces.Vision;
 import factory.masterControl.MasterControl;
 import factory.test.mock.EventLog;
@@ -520,12 +521,25 @@ public class FeederAgent extends Agent implements Feeder {
 		// purge the lane with the mixed parts
 		if (topLane == la)
 		{
+			clearLaneParts(la);
+			clearNestParts(la);
 			DoPurgeTopLane();
 		}
 		else if (bottomLane == la)
 		{
+			clearLaneParts(la);
+			clearNestParts(la);
 			DoPurgeBottomLane();
 		}
+	}
+	
+	private void clearNestParts(MyLane la)
+	{
+		la.lane.msgDumpYourNest();
+	}
+	
+	private void clearLaneParts(MyLane la) {
+		la.lane.msgPurge();
 	}
 	
 	private void laneHasMixedParts(MyLane la) {
@@ -541,10 +555,12 @@ public class FeederAgent extends Agent implements Feeder {
 		// purge the lane with the mixed parts
 		if (topLane == la)
 		{
+			clearLaneParts(la);
 			DoPurgeTopLane();
 		}
 		else if (bottomLane == la)
 		{
+			clearLaneParts(la);
 			DoPurgeBottomLane();
 		}
 				
@@ -684,10 +700,12 @@ public class FeederAgent extends Agent implements Feeder {
 		
 		if (la == topLane)
 		{
+			clearNestParts(la);
 			DoDumpTopNest(); 
 		}
 		else if (la == bottomLane)
 		{
+			clearNestParts(la);
 			DoDumpBottomNest(); 
 		}
 		
@@ -1087,22 +1105,24 @@ public class FeederAgent extends Agent implements Feeder {
 
 	}
 
-	private void purgeLane(MyLane myLane){
-		myLane.state = MyLaneState.PURGING; // The lane is now purging		
+	private void purgeLane(MyLane la){
+		la.state = MyLaneState.PURGING; // The lane is now purging		
 
 		DoStopFeeding(); // before you can purge the lane you must stop feeding to it.
 
 		// Call the purge lane animation for the appropriate lane
-		if (myLane == topLane)
+		if (la == topLane)
 		{
+			clearLaneParts(topLane);
 			DoPurgeTopLane();
 		}
-		else if (myLane == bottomLane)
+		else if (la == bottomLane)
 		{
+			clearLaneParts(bottomLane);
 			DoPurgeBottomLane();
 		}
 
-		myLane.state = MyLaneState.EMPTY; // we have received a message from the animation telling us that the lane has been purged
+		la.state = MyLaneState.EMPTY; // we have received a message from the animation telling us that the lane has been purged
 
 		//myLane.lane.msgPurge(); // tell the lane to purge (v.2 if needed)
 
