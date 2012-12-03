@@ -24,7 +24,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public int WIDTH, HEIGHT;
 	public static final Image TILE_IMAGE = Toolkit.getDefaultToolkit().getImage("Images/Tiles/floorTilePortal.jpg");
 	public static final int TILE_SIZE = 128;
-	public static final int DELAY = 70;
+	public static final int DELAY = 20;
 	
 	protected Client am; //The Client that holds this
 	
@@ -1036,7 +1036,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			}
 		}
 		if(isFactoryProductionManager)
-			g.drawImage(new ImageIcon("Images/Tiles/floorTileAperture.png").getImage(),320,320,TILE_SIZE,TILE_SIZE,null);
+			g.drawImage(new ImageIcon("Images/Tiles/floorTileHashtags.png").getImage(),320,320,TILE_SIZE,TILE_SIZE,null);
 		//g.setColor(new Color(200, 200, 200));
 		//g.fillRect(0, 0, getWidth(), getHeight());
 		
