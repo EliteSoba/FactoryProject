@@ -13,7 +13,7 @@ import factory.Part;
 /**
  * @author Minh la
  *         <p>
- *         <b>{@code GraphicLaneManager.java}</b> (50x720) <br>
+ *         <b>{@code GraphicLaneManager.java}</b> (160x345) <br>
  *         This creates and processes the Lane Manager, As well as the lanes,
  *         nests, feeders, items, and bins
  */
