@@ -296,14 +296,20 @@ public class LaneManPanel extends JPanel{
 
 	}
 
-	public class LaneNonNormPanel extends JPanel implements ActionListener {
-		
-		JLabel badPartsLabel;
+	public class LaneNonNormPanel extends JPanel implements ActionListener { // Panel containing non-normative case controls
+		//labels
+		JLabel badPartsLabel; 
 		JLabel diverterSpeedLabel;
+
+		// selectors
 		JComboBox laneBoxList;
 		JComboBox feederBoxList;
+
+		// containers
 		JPanel partsMissingContainer;
 		JPanel partsBadContainer;
+
+		// components / controls
 		JButton laneJamButton;
 		JButton diverterButton;
 		JButton badPartsButton;
@@ -316,12 +322,12 @@ public class LaneManPanel extends JPanel{
 		int diverterSpeedMin;
 		int diverterSpeedMax;
 
-		public LaneNonNormPanel() {
+		public LaneNonNormPanel() { // constructor
 			
 			badPartsLabel = new JLabel("% Bad Parts");
 			laneJamButton = new JButton("Lane Jam");
 			diverterButton = new JButton("Diverter Too Slow");
-			badPartsButton = new JButton("Bad Parts in Nest");
+			badPartsButton = new JButton("Bad Parts in Feeder");
 			blockingRobotButton = new JButton("Robot Blocking Camera");
 			diverterSpeedLabel = new JLabel("Diverter Speed");
 			messageBox = new JTextArea("Actions...\n");
@@ -342,11 +348,11 @@ public class LaneManPanel extends JPanel{
 			badPartsPercentage.setValue(0);
 			
 			diverterSpeedMin = 0;
-			diverterSpeedMax = 5;
+			diverterSpeedMax = 12;
 			diverterSpeed = new JSlider(diverterSpeedMin, diverterSpeedMax);
 			labelTable = new Hashtable();
-			labelTable.put( new Integer( 0 ), new JLabel("Slow") );
-			labelTable.put( new Integer( 5 ), new JLabel("Fast"));
+			labelTable.put( new Integer(diverterSpeedMin), new JLabel("Slow") );
+			labelTable.put( new Integer(diverterSpeedMax), new JLabel("Fast"));
 			diverterSpeed.setLabelTable( labelTable );
 			diverterSpeed.setMinorTickSpacing(1);
 			diverterSpeed.setMajorTickSpacing(5);
@@ -394,6 +400,7 @@ public class LaneManPanel extends JPanel{
 			partsMissingContainer.add(diverterSpeedLabel);
 			partsMissingContainer.add(diverterSpeed);
 			
+			partsBadContainer.add(feederBoxList);
 			partsBadContainer.add(badPartsLabel);
 			partsBadContainer.add(badPartsPercentage);
 			partsBadContainer.add(badPartsButton);
@@ -405,7 +412,6 @@ public class LaneManPanel extends JPanel{
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
 			boxContainer.add(laneBoxList);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
-			boxContainer.add(feederBoxList);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
 			boxContainer.add(partsMissingContainer);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
