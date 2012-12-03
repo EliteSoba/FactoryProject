@@ -191,30 +191,38 @@ public class VisionAgent extends Agent implements Vision {
 			
 			pr.nestOneState = calculateNestState(pr.nestOne);
 			pr.nestTwoState = calculateNestState(pr.nestTwo);
-
-			debug("#######################################################################################");
-			debug("################################# TAKING PICTURE ######################################");
-			debug("#######################################################################################");
 			
-			debug("Nest One State: "+pr.nestOneState);
-			debug("Nest One Two: "+pr.nestTwoState);
-
-			debug("#######################################################################################");
-			debug("################################# TAKING PICTURE ######################################");
-			debug("#######################################################################################");
 			// Check that nests do not contain mixed parts
 			
-			
+			// If all bad parts
+			boolean anyGood = false;
+			for(Part p : pr.nestOne.getParts()){
+				if(p.isGoodPart){
+					anyGood = true;
+				}
+			}
+			if(!anyGood){
+				sendMessageToFeederAboutBadNest(pr.nestOne);
+			}
+			 anyGood = false;
+			for(Part p : pr.nestTwo.getParts()){
+				if(p.isGoodPart){
+					anyGood = true;
+				}
+			}
+			if(!anyGood){
+				sendMessageToFeederAboutBadNest(pr.nestTwo);
+			}
 			// Check all other scenarios
 			
-
+			
 			// Both nests are unused, ignore
 			if(pr.nestOneState == 0 && pr.nestTwoState == 0 ){
 			}
 			// Unused+Unstable => ignore
 			else if(pr.nestOneState == 0 && pr.nestTwoState == 1 ){
 			}
-			// Unused+Jammed => report Jammed nest 2
+			// Unused+f => report Jammed nest 2
 			else if(pr.nestOneState == 0 && pr.nestTwoState == 2 ){
 				sendMessageToFeederAboutJam(pr.nestTwo);
 			}
@@ -372,6 +380,9 @@ public class VisionAgent extends Agent implements Vision {
 		
 		int index = this.nests.indexOf(n);
 		
+		if(n.getParts().size() == 0 && n.getLane().getParts().size() == 0){
+			n.msgYouNeedPart(n.getPart());
+		}
 		switch(index){
 			case 0: feeder_zero.msgLaneMightBeJammed(0); break;
 			case 1: feeder_zero.msgLaneMightBeJammed(1); break;
@@ -381,6 +392,24 @@ public class VisionAgent extends Agent implements Vision {
 			case 5: feeder_two.msgLaneMightBeJammed(1); break;
 			case 6: feeder_three.msgLaneMightBeJammed(0); break;
 			case 7: feeder_three.msgLaneMightBeJammed(1); break;
+		}
+	}
+
+	public void sendMessageToFeederAboutBadNest(Nest n){
+		
+		int index = this.nests.indexOf(n);
+		debug("################################");
+		debug("             BAD NEST           ");
+		debug("################################");
+		switch(index){
+			case 0: feeder_zero.msgBadNest(0); break;
+			case 1: feeder_zero.msgBadNest(1); break;
+			case 2: feeder_one.msgBadNest(0); break;
+			case 3: feeder_one.msgBadNest(1); break;
+			case 4: feeder_two.msgBadNest(0); break;
+			case 5: feeder_two.msgBadNest(1); break;
+			case 6: feeder_three.msgBadNest(0); break;
+			case 7: feeder_three.msgBadNest(1); break;
 		}
 	}
 
