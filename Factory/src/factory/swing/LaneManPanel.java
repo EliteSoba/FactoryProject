@@ -312,22 +312,18 @@ public class LaneManPanel extends JPanel{
 		// components / controls
 		JButton laneJamButton; // initiates non-normative 2.2: Lane Jam
 		JButton diverterButton; // initiates non-normative 2.6: slower diverter
-		JButton badPartsButton; // initiates non-normative 3.1: no good parts found in nest
-		JButton blockingRobotButton; // initiates non-normative 3.6 robot blocking camera
-		JTextArea messageBox; // prints messages (actions selected)
-		JSlider badPartsPercentage; // % of bad parts in nest (3.1) selector
-
-		// limits for sliders
+		JButton badPartsButton; // initiates non-normative 3.1:
+		JButton blockingRobotButton; // initiates non-normative 3.
+		JTextArea messageBox;
+		JSlider badPartsPercentage;
 		int badPartsPercentageMin;
 		int badPartsPercentageMax;
 		JSlider diverterSpeed;
 		int diverterSpeedMin;
 		int diverterSpeedMax;
 
-		// constructor
-		public LaneNonNormPanel() {
+		public LaneNonNormPanel() { // constructor
 			
-			// initializing variables
 			badPartsLabel = new JLabel("% Bad Parts");
 			laneJamButton = new JButton("Lane Jam");
 			diverterButton = new JButton("Diverter Too Slow");

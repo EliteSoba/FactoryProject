@@ -287,13 +287,14 @@ public class KitAssemblyManager extends Client {
 			System.out.println(error);
 		}
 		else if(action.equals("mcs")){
-			try {
+			   try {
 				this.server.close();
+				connected = false;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.exit(0);
-		}
+			   this.quit();
+		   }
 		else 
 			System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 

@@ -175,13 +175,14 @@ else if(action.equals("cnf")){
 	
 }
           else if(action.equals("mcs")){
-			   try {
-					this.server.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				   System.exit(0);
-			   }
+   		   try {
+   			this.server.close();
+   			connected = false;
+   		} catch (IOException e) {
+   			e.printStackTrace();
+   		}
+   		   this.quit();
+   	   }
  else 
      System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 }
