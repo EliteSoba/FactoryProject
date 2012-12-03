@@ -554,6 +554,7 @@ public class FeederAgent extends Agent implements Feeder {
 			la.lane.getParts().clear();
 		}
 		
+		
 		debug("========= called clear LANE parts on " + la.part.name +  "========= SIZE = " +la.lane.getParts().size());
 
 	}
@@ -1133,11 +1134,13 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			DoPurgeTopLane();
 			clearLaneParts(topLane);
+			clearNestParts(topLane);
 		}
 		else if (la == bottomLane)
 		{
 			DoPurgeBottomLane();
 			clearLaneParts(bottomLane);
+			clearNestParts(bottomLane);
 		}
 
 		la.state = MyLaneState.EMPTY; // we have received a message from the animation telling us that the lane has been purged
