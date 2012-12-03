@@ -191,8 +191,17 @@ public class VisionAgent extends Agent implements Vision {
 			
 			pr.nestOneState = calculateNestState(pr.nestOne);
 			pr.nestTwoState = calculateNestState(pr.nestTwo);
-			
 
+			debug("#######################################################################################");
+			debug("################################# TAKING PICTURE ######################################");
+			debug("#######################################################################################");
+			
+			debug("Nest One State: "+pr.nestOneState);
+			debug("Nest One Two: "+pr.nestTwoState);
+
+			debug("#######################################################################################");
+			debug("################################# TAKING PICTURE ######################################");
+			debug("#######################################################################################");
 			// Check that nests do not contain mixed parts
 			
 			
@@ -318,7 +327,9 @@ public class VisionAgent extends Agent implements Vision {
 /** ================================================================================ **/
 
 	public void tellPartsRobotToGrabPartFromNest(Nest n){
-		partsRobot.msgGrabGoodPartFromNest(n, n.getPart());
+		if(n.getParts().size() > 0){
+			partsRobot.msgGrabGoodPartFromNest(n, n.getPart());
+		}
 	}
 	
 	private int calculateNestState(Nest nest){

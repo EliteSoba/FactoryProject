@@ -29,6 +29,8 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	// Configuration of Kit we are currently producing
 	public KitConfig currentKitConfiguration;
 
+	// int to keep track of number of kits built
+	public int kitsToBuild;
 	// Kits to keep track of kits in slots
 	public KitConfig topSlot;
 	public KitConfig bottomSlot;
@@ -364,7 +366,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			boolean present = false;
 
 			for(int j = 0; j < currentKitConfiguration.listOfParts.size(); j++){
-				if(nests.get(j).part != null && nests.get(j).part.name == currentKitConfiguration.listOfParts.get(i).name ){
+				if(nests.get(j).part != null && i < currentKitConfiguration.listOfParts.size()  && nests.get(j).part.name == currentKitConfiguration.listOfParts.get(i).name ){
 					present = true;
 				}
 			}
@@ -798,7 +800,10 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 * Animation that moves the PartsRobot to the nest and grab a part
 	 */
 	public void DoAnimationMovePartsRobotToNestAndGrabPart(int nest, int coordinate){
-		debug("Executing DoAnimationMovePartsRobotToNestAndGrabPart("+nest+")");
+		debug("Executing DoAnimationMovePartsRobotToNestAndGrabPart("+nest+","+coordinate+")");
+		debug("Nest Size: "+this.nests.get(nest).nest.getParts().size());
+		debug("Part at Coordinate: "+this.nests.get(nest).nest.getParts().get(coordinate));
+		
 		server.command(this,"pra fpm cmd movetonest " + nest + " " + coordinate);
 		try {
 			animation.acquire();
