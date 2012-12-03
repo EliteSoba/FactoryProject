@@ -200,11 +200,12 @@ public class LaneManager extends Client {
 			}else if (identifier.equals("laneamplitude")){
 				int laneNumber = Integer.valueOf(pCmd.get(2));
 				int amplitude = Integer.valueOf(pCmd.get(3));
-				if(laneNumber % 2 == 0)
-					((LanePanel) graphics).getLane(laneNumber/2).changeTopLaneAmplitude(amplitude);
-				else
-					((LanePanel) graphics).getLane(laneNumber/2).changeBottomLaneAmplitude(amplitude);
+				((LanePanel) graphics).setLaneAmplitude(laneNumber/2, laneNumber%2, amplitude);
 				// call graphics function to change amplitude
+			}else if (identifier.equals("guilaneamplitude")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int amplitude = Integer.valueOf(pCmd.get(3));
+				((LanePanel) graphics).GUIsetLaneAmplitude(laneNumber/2, laneNumber%2, amplitude);
 			}else if (identifier.equals("lanepower")){
 				int laneNumber = Integer.valueOf(pCmd.get(3));
 				

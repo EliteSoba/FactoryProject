@@ -22,6 +22,7 @@ import factory.graphics.GraphicBin;
 import factory.graphics.GraphicItem;
 import factory.graphics.GraphicPanel;
 import factory.graphics.FactoryProductionPanel;
+import factory.graphics.LanePanel;
 import factory.swing.FactoryProdManPanel;
 import factory.Part;
 import factory.KitConfig;
@@ -370,11 +371,12 @@ public class FactoryProductionManager extends Client {
 			}else if (identifier.equals("laneamplitude")){
 				int laneNumber = Integer.valueOf(pCmd.get(2));
 				int amplitude = Integer.valueOf(pCmd.get(3));
-				if(laneNumber % 2 == 0)
-					((FactoryProductionPanel) graphics).getLane(laneNumber/2).changeTopLaneAmplitude(amplitude);
-				else
-					((FactoryProductionPanel) graphics).getLane(laneNumber/2).changeBottomLaneAmplitude(amplitude);
+				((LanePanel) graphics).GUIsetLaneAmplitude(laneNumber/2, laneNumber%2, amplitude);
 				// call graphics function to change amplitude
+			}else if (identifier.equals("guilaneamplitude")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int amplitude = Integer.valueOf(pCmd.get(3));
+				((FactoryProductionPanel) graphics).GUIsetLaneAmplitude(laneNumber/2, laneNumber%2, amplitude);
 			}else if (identifier.equals("lanepower")){
 				int laneNumber = Integer.valueOf(pCmd.get(3));
 				
