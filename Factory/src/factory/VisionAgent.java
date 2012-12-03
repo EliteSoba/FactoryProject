@@ -83,8 +83,8 @@ public class VisionAgent extends Agent implements Vision {
 			pictureRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
 		}
 		else {
-			debug("received msgMyNestsReadyForPicture(null,null)");
 
+			debug("received msgMyNestsReadyForPicture("+ nestOne.getPart()+","+ nestTwo.getPart()+")");
 		}
 		this.stateChanged();
 	}
@@ -354,7 +354,8 @@ public class VisionAgent extends Agent implements Vision {
 			if (nest.getParts().size() == 0) {
 
 				nestJammedWaiting[nestIndex]++;
-				if (nestJammedWaiting[nestIndex] > 3) {
+				if (nestJammedWaiting[nestIndex] > 1) {
+					nestJammedWaiting[nestIndex] =0;
 					return 2; //JAMMED
 				}
 				return 3; //OK
