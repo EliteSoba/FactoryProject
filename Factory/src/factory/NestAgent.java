@@ -53,24 +53,21 @@ public class NestAgent extends Agent implements Nest {
 	
 	public void msgPartAddedToNest(Part part) {
 		debug("RECEIVED: msgPartAddedToNest(" + part.name + ").");
-		nestParts.add(part); // adds part to the index = numberOfPartsInNest
-		numberOfPartsInNest++;
+		
+		synchronized(nestParts)
+		{
+			nestParts.add(part); // adds part to the index = numberOfPartsInNest
+			numberOfPartsInNest++;
+
+			debug("SIZE: " + nestParts.size());
+		}
 		stateChanged();
 	}
 	
 	public void msgPartRemovedFromNest(String partName) {
 		debug("RECEIVED: msgPartRemovedFromNest(" + partName + ").");
 		
-		synchronized(nestParts)
-		{
-			for (Part p : nestParts)
-			{
-				if (p.name.equals(partName))
-				{
-					nestParts.remove(p);
-				}
-			}
-		}
+	
 		
 		numberOfPartsInNest--;
 		stateChanged();

@@ -500,39 +500,20 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 
 		// Animation of Moving to the Nest
 
-		debug("###########");
-		debug("###########");
-		debug("###########");
 
-		debug(""+this.nests.get(nest).nest.getParts().size());
 		
-		debug("###########");
-		debug("###########");
-		debug("###########");
-		for(int i = 0; i < this.nests.get(nest).nest.getParts().size();i++){
-			Part p = this.nests.get(nest).nest.getParts().get(i);
-			debug("###########");
-			debug("###########");
-			debug("###########");
+		synchronized (this.nests.get(nest).nest.getParts()) {
+			for (int i = 0; i < this.nests.get(nest).nest.getParts().size(); i++) {
+				Part p = this.nests.get(nest).nest.getParts().get(i);
 
-			debug(""+p);
-			debug(""+p.isGoodPart);
-			
-			debug("###########");
-			debug("###########");
-			debug("###########");
-			if(p.isGoodPart){
-				this.nests.get(nest).nest.getParts().remove(i);
-				DoAnimationMovePartsRobotToNestAndGrabPart(nest, i);
-
-			
-				
-				
-				System.exit(0);
-				break;
+				if (p.isGoodPart) {
+					DoAnimationMovePartsRobotToNestAndGrabPart(nest, i);
+					this.nests.get(nest).nest.getParts().remove(i);
+					break;
+				}
 			}
 		}
-
+		
 		// Update Position
 		switch(nest){
 		case 0:
@@ -579,6 +560,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		this.nests.get(nest).partsTaken++;
 		this.nests.get(nest).state = NestState.DOING_NOTHING;
 		this.nests.get(nest).partCoordinate = -1;
+		debug("Done Executing DoPickUpPartFromNest("+nest+")");
 	}
 
 	/**

@@ -338,18 +338,20 @@ public class VisionAgent extends Agent implements Vision {
 		}
 
 		// if nest is empty
-		if(nest.getParts().size() == 0) {
-			
-			nestJammedWaiting[nestIndex]++;
-			if(nestJammedWaiting[nestIndex] > 3) {
-				return 2; //JAMMED
+		
+		synchronized (nest.getParts()) {
+			if (nest.getParts().size() == 0) {
+
+				nestJammedWaiting[nestIndex]++;
+				if (nestJammedWaiting[nestIndex] > 3) {
+					return 2; //JAMMED
+				}
+				return 3; //OK
+
+			} else {
+				nestJammedWaiting[nestIndex] = 0;
+				return 3; // OK
 			}
-			return 3; //OK
-			
-		}
-		else {
-			nestJammedWaiting[nestIndex] = 0;
-			return 3; // OK
 		}
 		
 	}
