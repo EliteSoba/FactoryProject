@@ -310,11 +310,11 @@ public class LaneManPanel extends JPanel{
 		JPanel partsBadContainer;
 
 		// components / controls
-		JButton laneJamButton;
-		JButton diverterButton;
-		JButton badPartsButton;
-		JButton blockingRobotButton;
-		JTextArea messageBox;
+		JButton laneJamButton; // initiates non-normative 2.2: Lane Jam
+		JButton diverterButton; // initiates non-normative 2.6: slower diverter
+		JButton badPartsButton; // initiates non-normative 3.1:
+		JButton blockingRobotButton; // initiates non-normative 3.
+d		JTextArea messageBox;
 		JSlider badPartsPercentage;
 		int badPartsPercentageMin;
 		int badPartsPercentageMax;
@@ -485,7 +485,7 @@ public class LaneManPanel extends JPanel{
 						int speed = (int)source.getValue();
 						// send amplitude to server
 						int feederNumber = (Integer)feederBoxList.getSelectedIndex();
-						String set = "lm fa set diverterspeed " + (feederNumber) + " " + speed;
+						String set = "lm fa set diverterspeed " + (feederNumber) + " " + (12-speed);
 						try {
 							laneManager.sendCommand(set);
 						} catch (Exception e) {
