@@ -236,7 +236,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			
 			Kit temp = stand.getSlotKit("inspectionSlot");
 			temp.state = KitState.INCOMPLETE;
-			
+			temp.forceFail = false;
 			stand.setSlotKit(pos, temp);
 			stand.setSlotState(pos, MySlotState.NEEDS_FIXING);
 			stand.setSlotKit("inspectionSlot", null);
