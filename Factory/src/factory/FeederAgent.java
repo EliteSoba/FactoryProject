@@ -392,10 +392,11 @@ public class FeederAgent extends Agent implements Feeder {
 			return true;
 		}
 		
-		if (diverterSpeedWasReset)
+		if (diverterSpeedWasReset && diverterTimerState == DiverterTimerState.TIMER_RUNNING)
 		{
-		//	DoSwitchLane(); // this is to fix a problem that disabled us from correcting the slow diverter once it occured
+			DoSwitchLane(); // this is to fix a problem that disabled us from correcting the slow diverter once it occured
 			diverterSpeedWasReset = false;
+			diverterTimerState = DiverterTimerState.TIMER_EXPIRED; // force the timer to stop.
 			return true;
 		}
 
