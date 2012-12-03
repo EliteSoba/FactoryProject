@@ -45,6 +45,10 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	// Nests
 	public List<MyNest> nests = Collections.synchronizedList(new ArrayList<MyNest>());
 
+	//TODO added this
+	// Boolean to indicate if kit needs fixing
+	public boolean needsFixing = false;
+	
 	// Agents
 	public FCS fcs;
 	public Vision vision;
@@ -141,6 +145,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	/**
 	 * Message that is received from the Stand and tells us which kit to fix
 	 */
+	//TODO added this
 	public void msgFixKitAtSlot(String slot, List<String> brokenPartsList) {
 		debug("Received msgFixKitAtSlot("+slot+")");
 		KitConfig fixedKitConfig = new KitConfig();
@@ -172,7 +177,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 				this.stand.getSlotKit("bottomSlot").parts.remove(bottomSlot.listOfParts.get(j));
 			}
 		}
-		
+		needsFixing = true;
 		this.stateChanged();
 	}
 
@@ -427,8 +432,9 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	/**
 	 * Action to start producing a Kit in Slot
 	 */
+	//TODO edited this... added the if statements
 	public void DoStartBuildingKitAtSlot(String slot){
-		if(true){
+		if(!needsFixing){
 			debug("Executing DoStartBuildingKitAtSlot("+slot+")");
 			KitConfig newKitConfig = new KitConfig();
 			newKitConfig.kitName = this.currentKitConfiguration.kitName;
@@ -446,7 +452,8 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			}
 		}
 		else{
-			topSlot.listOfParts.add(e)
+			this.bottomSlotState = SlotState.BUILDING;
+			needsFixing = false;
 		}
 	}
 
