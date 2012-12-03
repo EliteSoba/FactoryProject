@@ -144,12 +144,12 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				return true;
 			}
 			
-			if (actions.contains(StandInfo.NEED_INSPECTION_TOP) && (inspectionAreaClear == 1)) {
+			if (actions.contains(StandInfo.NEED_INSPECTION_TOP) && (atInspection.equals(KitAtInspection.EMPTY))) {
 				moveToInspectionSpot("topSlot");
 				return true;
 			}
 			
-			if (actions.contains(StandInfo.NEED_INSPECTION_BOTTOM) && (inspectionAreaClear == 1)) {
+			if (actions.contains(StandInfo.NEED_INSPECTION_BOTTOM) && (atInspection.equals(KitAtInspection.EMPTY))) {
 				moveToInspectionSpot("bottomSlot");
 				return true;
 			}
@@ -279,7 +279,6 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		actions.remove(StandInfo.KIT_GOOD);
 		
 		atInspection = KitAtInspection.EMPTY;
-		
 		debug("Kit exported, telling the Stand it is done");
 		stand.msgKitRobotNoLongerUsingStand();
 	}
