@@ -30,6 +30,7 @@ public class FeederAgent extends Agent implements Feeder {
 	private int diverterSpeed = kOK_TO_PURGE_TIME; // intial speed is in-sync with the purge timer
 
 	public boolean hasASlowDiverter = false;
+	public boolean diverterSpeedWasReset = false;
 	public boolean visionShouldTakePicture = true;
 	
 	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());
@@ -232,6 +233,25 @@ public class FeederAgent extends Agent implements Feeder {
 
 		stateChanged();
 	}
+	
+	
+	/**
+	 *  The vision sends this message notifying the Feeder that one of its nests has heterogenous parts.
+	 *  v.2
+	 * */
+	public void msgNestHasMixedParts(int nestNumber)
+	{
+		if (nestNumber == 0)
+		{
+			topLane.hasMixedParts = true;
+		}
+		else if (nestNumber == 1)
+		{
+			bottomLane.hasMixedParts = true;
+		}
+		
+		stateChanged();
+	}
 
 //	/** 
 //	 * The lane sends this message after it has waited a sufficient amount of time
@@ -360,15 +380,19 @@ public class FeederAgent extends Agent implements Feeder {
 			return true;
 		}
 		
-		if (diverterTimerState == DiverterTimerState.TIMER_EXPIRED)
+		if (diverterTimerState == DiverterTimerState.TIMER_EXPIRED && this.hasASlowDiverter)
 		{
 			DoSwitchLane();
 			diverterTimerState = DiverterTimerState.TIMER_OFF;
-			//slowDiverterTimer.cancel(); // we don't want this timer to keep running
-			//slowDiverterTimer.purge();
 			return true;
 		}
 		
+		if (diverterSpeedWasReset)
+		{
+		//	DoSwitchLane(); // this is to fix a problem that disabled us from correcting the slow diverter once it occured
+			diverterSpeedWasReset = false;
+			return true;
+		}
 
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
 		{
@@ -431,13 +455,13 @@ public class FeederAgent extends Agent implements Feeder {
 		
 		if (topLane.hasMixedParts)
 		{
-			laneHasMixedParts(topLane);
+			nestHasMixedParts(topLane);
 			return true;
 		}
 		
 		if (bottomLane.hasMixedParts)
 		{
-			laneHasMixedParts(bottomLane);
+			nestHasMixedParts(bottomLane);
 			return true;
 		}
 		
@@ -489,14 +513,10 @@ public class FeederAgent extends Agent implements Feeder {
 
 
 	/** ACTIONS **/
-	private void laneHasMixedParts(MyLane la) {
+	private void nestHasMixedParts(MyLane la)
+	{
+		la.hasMixedParts = false;
 		
-		// Get more parts for the other lane because it is
-		// lacking in parts - its parts were fed to the wrong lane		
-		this.msgLaneNeedsPart(la.part, la.lane); 
-		la.jamState = JamState.NO_LONGER_JAMMED;
-		la.laneMightBeJammedMessageCount = 0; // reset the count because we have reached the end of this logic checking and handled it.
-
 		// purge the lane with the mixed parts
 		if (topLane == la)
 		{
@@ -506,7 +526,28 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			DoPurgeBottomLane();
 		}
+	}
+	
+	private void laneHasMixedParts(MyLane la) {
 		
+		// Get more parts for the other lane because it is
+		// lacking in parts - its parts were fed to the wrong lane		
+		this.msgLaneNeedsPart(la.part, la.lane); 
+		la.jamState = JamState.NO_LONGER_JAMMED;
+		la.laneMightBeJammedMessageCount = 0; // reset the count because we have reached the end of this logic checking and handled it.
+		
+		la.hasMixedParts = false;
+		
+		// purge the lane with the mixed parts
+		if (topLane == la)
+		{
+			DoPurgeTopLane();
+		}
+		else if (bottomLane == la)
+		{
+			DoPurgeBottomLane();
+		}
+				
 	}
 	
 	private void unjamLane(MyLane la)
@@ -1416,11 +1457,13 @@ public class FeederAgent extends Agent implements Feeder {
 		if (num == 0)
 		{
 			this.hasASlowDiverter = false;
+			diverterSpeedWasReset = true;
 		}
 		else
 		{
 			this.hasASlowDiverter = true;
 		}
+		
 		
 		this.diverterSpeed = (num + kOK_TO_PURGE_TIME); // the delay only takes effect after the ok_to_purge_time timer
 	}
