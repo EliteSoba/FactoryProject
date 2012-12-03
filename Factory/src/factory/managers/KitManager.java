@@ -26,7 +26,7 @@ public class KitManager extends Client implements WindowListener{
 	private HashMap<String,Part> partsList;
 
 	public KitManager() {
-		super(Client.Type.km, null, null);
+		super(Client.Type.km);
 		loadData();
 		UI = new KitManPanel(this);
 
@@ -41,6 +41,7 @@ public class KitManager extends Client implements WindowListener{
 
 		add(UI, BorderLayout.LINE_END);
 		pack();
+		this.setTitle("Kit Manager");
 		setVisible(true);
 	}
 
@@ -162,12 +163,13 @@ public class KitManager extends Client implements WindowListener{
 		}
 		else if(action.equals("mcs")){
 			   try {
-					this.server.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				   System.exit(0);
-			   }
+				this.server.close();
+				connected = false;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			   this.quit();
+		   }
 		else 
 			System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 

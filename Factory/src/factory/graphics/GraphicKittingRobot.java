@@ -1,6 +1,8 @@
 package factory.graphics;
 
 import java.awt.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 /**
@@ -32,6 +34,8 @@ public class GraphicKittingRobot {
 	private int stationY;
 	/**The Kit the Kit Robot is Holding*/
 	private GraphicKit kit;
+	/**For v2, The parts you want to be lost*/
+	private String KITISBROKED_8C;
 	/**The different directional images to display for the Kit Robot*/
 	ImageIcon robot[];
 	/**The GraphicPanel for intercomponent communication*/
@@ -42,9 +46,13 @@ public class GraphicKittingRobot {
 	GraphicKittingStation station;
 
 	/**Booleans to determine what pathing the Kit Robot is taking*/
-	private boolean fromBelt, toStation, toBelt, toCheck, checkKit, fromCheck, purgeInspectionKit, toDump, purgeKit;
+	private boolean fromBelt, toStation, toBelt, toCheck, checkKit, fromCheck, purgeInspectionKit, toDump, purgeKit, reCheck, reSlot;
 	/**The slot in the Kit Station the Kit Robot is going to*/
 	private int stationTarget;
+	
+	protected ArrayList<Image> kitRobotAnimation;
+	protected int kitRobotAnimationCounter;
+	protected int kitRobotAnimationSpeed;
 	
 	/**
 	 * Creates a Kit Robot at the given x and y coordinates
@@ -80,7 +88,15 @@ public class GraphicKittingRobot {
 		purgeInspectionKit = false;
 		purgeKit = false;
 		toDump = false;
+		reCheck = false;
+		reSlot = false;
 		stationTarget = 0;
+		
+		KITISBROKED_8C = null;
+		
+		kitRobotAnimation = GraphicAnimation.loadAnimationFromFolder("Images/kitRobot/", 0, ".png");
+		kitRobotAnimationCounter = 0;
+		kitRobotAnimationSpeed = 2;
 	}
 	
 	/**
@@ -88,7 +104,21 @@ public class GraphicKittingRobot {
 	 * @param g The specified graphics window
 	 */
 	public void paint(Graphics g) {
-		g.drawImage(robot[direction].getImage(), x, y, null);
+		int angle = 0;
+		switch (direction) {
+		case 2: angle = 270; break;
+		case 4: angle = 180; break;
+		case 6: angle = 0; break;
+		case 8: angle = 90;break;
+		}
+		Graphics2D g2 = (Graphics2D)g.create();
+		g2.rotate(Math.toRadians(angle),x+65,y+65);
+		g2.drawImage(kitRobotAnimation.get(kitRobotAnimationCounter/kitRobotAnimationSpeed),x,y,null);
+		kitRobotAnimationCounter ++;
+		if(kitRobotAnimationCounter/kitRobotAnimationSpeed >= kitRobotAnimation.size())
+			kitRobotAnimationCounter = 0;
+		g2.dispose();
+		//g.drawImage(robot[direction].getImage(), x, y, null);
 		drawKit(g);
 	}
 	
@@ -101,21 +131,21 @@ public class GraphicKittingRobot {
 			return;
 		
 		switch (direction) {
-		case 2:
-			kit.setX(x+16);
-			kit.setY(y+74);
+		case 2:			// up
+			kit.setX(x+25);
+			kit.setY(y-10);
 			break;
-		case 4:
-			kit.setX(x);
-			kit.setY(y+16);
+		case 4:		// left
+			kit.setX(x-20);
+			kit.setY(y+25);
 			break;
-		case 6:
-			kit.setX(x+74);
-			kit.setY(y+16);
+		case 6:		// right
+			kit.setX(x+100);
+			kit.setY(y+25);
 			break;
 		case 8:
-			kit.setX(x+16);
-			kit.setY(y);
+			kit.setX(x+25);
+			kit.setY(y+100);
 			break;
 		}
 		
@@ -192,7 +222,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveFromBelt(int v) {
-		return moveTo(beltX+5, beltY+290, v);
+		return moveTo(beltX+25, beltY+275, v);
 	}
 	
 	/**
@@ -225,7 +255,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveToStation1(int v) {
-		return moveTo(stationX-70, stationY-5, v);
+		return moveTo(stationX-85, stationY-10, v);
 	}
 	
 	/**
@@ -234,7 +264,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveToStation2(int v) {
-		return moveTo(stationX-70, stationY+95, v);
+		return moveTo(stationX-85, stationY+85, v);
 	}
 	
 	/**
@@ -243,7 +273,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveToCheck(int v) {
-		return moveTo(stationX-70, stationY+195, v);
+		return moveTo(stationX-85, stationY+180, v);
 	}
 	
 	/**
@@ -252,7 +282,7 @@ public class GraphicKittingRobot {
 	 * @return {@code true} when the Kit Robot has arrived; {@code false} otherwise
 	 */
 	public boolean moveToTrash(int v) {
-		return moveTo(stationX-70, stationY+305, v);
+		return moveTo(stationX-80, stationY+285, v);
 	}
 	
 	/**
@@ -297,6 +327,16 @@ public class GraphicKittingRobot {
 		else if (toCheck) {
 			if (moveToCheck(v)) {
 				toCheck = false;
+				if (KITISBROKED_8C != null) {
+					for (int i = 0; i < KITISBROKED_8C.length(); i++) {
+						if (KITISBROKED_8C.charAt(i) == '1') {
+							//TODO: Send message to someone with name of each lost item
+							GP.sendMessage("sa cmd partlost " + kit.getItem(i).getName());
+							kit.setItem(i, null);
+						}
+					}
+					KITISBROKED_8C = null;
+				}
 				station.addCheck(unkit());
 				GP.moveKitToInspectionDone();
 			}
@@ -343,6 +383,22 @@ public class GraphicKittingRobot {
 			}
 		}
 		
+		//From Inspection Station back to Kit Station
+		else if (reCheck) {
+			if (moveToCheck(v)) {
+				reCheck = false;
+				setKit(station.popCheck());
+				reSlot = true;
+			}
+		}
+		else if (reSlot) {
+			if (moveToStation(v, stationTarget)) {
+				reSlot = false;
+				station.addKit(unkit(), stationTarget);
+				GP.moveKitFromInspectionBackToStationDone();
+			}
+		}
+		
 		//Returns to original horizontal position
 		else
 			moveToStartX(v);
@@ -366,7 +422,7 @@ public class GraphicKittingRobot {
 	 */
 	public void moveY(int v) {
 		y += v;
-		direction = v > 0 ? 2 : 8;
+		direction = v > 0 ? 8 : 2;
 		if (kitted())
 			kit.setDirection(direction);
 	}
@@ -511,7 +567,7 @@ public class GraphicKittingRobot {
 	}
 	/**
 	 * Sets if the Kit Robot is going to the Inspection Station
-	 * @param fromBelt If the Kit Robot is going to the Inspection Station
+	 * @param fromCheck If the Kit Robot is going to the Inspection Station
 	 */
 	public void setFromCheck(boolean fromCheck) {
 		this.fromCheck = fromCheck;
@@ -525,14 +581,22 @@ public class GraphicKittingRobot {
 	}
 	/**
 	 * Sets if the Kit Robot is going to the Inspection Station
-	 * @param fromBelt If the Kit Robot is going to the Inspection Station
+	 * @param checkKit If the Kit Robot is going to the Inspection Station
 	 */
 	public void setCheckKit(boolean checkKit) {
 		this.checkKit = checkKit;
 	}
+	/**
+	 * Sets if the Kit Robot is going to the Dump
+	 * @param purgeKit If the Kit Robot is going to the Dump
+	 */
 	public void setPurgeKit(boolean purgeKit) {
 		this.purgeKit = purgeKit;
 	}
+	/**
+	 * Checks if the Kit Robot is going to the Dump
+	 * @return {@code true} if the Kit Robot is going to the Dump; {@code false} otherwise
+	 */
 	public boolean getPurgeKit() {
 		return purgeKit;
 	}
@@ -545,10 +609,24 @@ public class GraphicKittingRobot {
 	}
 	/**
 	 * Sets if the Kit Robot is going to the Dump Station
-	 * @param fromBelt If the Kit Robot is going to the Dump Station
+	 * @param purgeInspectionKit If the Kit Robot is going to the Dump Station
 	 */
 	public void setPurgeInspectionKit(boolean purgeInspectionKit) {
 		this.purgeInspectionKit = purgeInspectionKit;
+	}
+	/**
+	 * Checks if the Kit Robot is going to reload the station with the Kit in the Inspection Station
+	 * @return {@code true} if the Kit Robot is going to reload the station with the Kit in the Inspection Station; {@code false} otherwise
+	 */
+	public boolean getReCheck() {
+		return reCheck;
+	}
+	/**
+	 * Sets if the Kit Robot is going to reload with the Kit in the Inspection Station
+	 * @param reCheck If the Kit Robot is going to reload with the Kit in the Inspection Station
+	 */
+	public void setReCheck(boolean reCheck) {
+		this.reCheck = reCheck;
 	}
 	/**
 	 * Gets the slot in the Kit Station the Kit Robot is going to
@@ -563,6 +641,14 @@ public class GraphicKittingRobot {
 	 */
 	public void setStationTarget(int stationTarget) {
 		this.stationTarget = stationTarget;
+	}
+	
+	/**
+	 * Chooses which parts to drop in a binary string
+	 * @param breakString The binary string of the parts to drop
+	 */
+	public void breakNextKit(String breakString) {
+		KITISBROKED_8C = breakString;
 	}
 	
 }

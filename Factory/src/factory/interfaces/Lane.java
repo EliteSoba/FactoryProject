@@ -1,5 +1,8 @@
 package factory.interfaces;
 
+
+import java.util.List;
+
 import factory.Part;
 
 
@@ -22,6 +25,12 @@ public void msgNestNeedsPart(Part pt);
 public void msgNestHasStabilized();
 
 public void msgNestHasDestabilized();
+
+public boolean hasMixedParts();
+
+public void msgPartAddedToLane(Part part);
+
+public List<Part> getParts();
 
 //public void msgFeedingParts(int numParts);
 //

@@ -1,4 +1,4 @@
-//Contributors: Ben Mayeux,Stephanie Reagle, Joey Huang, Tobias Lee, Ryan Cleary
+//Contributors: Ben Mayeux,Stephanie Reagle, Joey Huang, Tobias Lee, Ryan Cleary, Marc Mendiola
 //CS 200
 
 // Last edited: 11/18/12 4:51pm by Joey Huang
@@ -21,6 +21,8 @@ import factory.graphics.FactoryProductionPanel;
 import factory.graphics.GraphicBin;
 import factory.graphics.GraphicItem;
 import factory.graphics.GraphicPanel;
+import factory.graphics.FactoryProductionPanel;
+import factory.graphics.LanePanel;
 import factory.swing.FactoryProdManPanel;
 import factory.Part;
 import factory.KitConfig;
@@ -34,14 +36,24 @@ public class FactoryProductionManager extends Client {
 
 	FactoryProdManPanel buttons;
 	FactoryProductionPanel animation;
+	
+	ArrayList<Integer> laneSpeeds; // stores speeds of each lane
+	ArrayList<Integer> laneAmplitudes; // stores amplitudes of each lane
 
 	public FactoryProductionManager() {
-		super(Client.Type.fpm, null, null);
+		super(Client.Type.fpm);
 
 		buttons = new FactoryProdManPanel(this);
 		animation = new FactoryProductionPanel(this);
 
 		setInterface();
+		
+		laneSpeeds = new ArrayList<Integer>();
+		laneAmplitudes = new ArrayList<Integer>(); 
+		for (int i = 0; i < 8; i++){    // presets lane speeds and amplitudes
+			laneSpeeds.add(2);  
+			laneAmplitudes.add(2);
+		}
 
 		partsList = new HashMap<String,Part>(); //Local version
 		kitConfigList = new HashMap<String,KitConfig>(); //Local version
@@ -61,6 +73,7 @@ public class FactoryProductionManager extends Client {
 
 		add(UI, BorderLayout.LINE_END);
 		pack();
+		this.setTitle("Factory Production Manager");
 		setVisible(true);
 	}
 
@@ -107,6 +120,38 @@ public class FactoryProductionManager extends Client {
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).purgeBottomLane(feederSlot);
+			}
+			else if (identifier.equals("jamtoplane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).jamTopLane(feederSlot);
+			}
+			else if (identifier.equals("jambottomlane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).jamBottomLane(feederSlot);
+			}
+			else if (identifier.equals("unjamtoplane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).unjamTopLane(feederSlot);
+			}
+			else if (identifier.equals("unjambottomlane"))
+			{
+				int feederSlot = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).unjamBottomLane(feederSlot);
+			}
+			else if (identifier.equals("dumptopnest"))
+			{
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).dumpNest(nestIndex, true);
+				((FactoryProductionPanel) graphics).sendMessage("Nest " + 2*nestIndex + " is being Dumped!");
+			}
+			else if (identifier.equals("dumpbottomnest"))
+			{
+				int nestIndex = Integer.valueOf(pCmd.get(2));
+				((FactoryProductionPanel) graphics).dumpNest(nestIndex, false);
+				((FactoryProductionPanel) graphics).sendMessage("Nest " + (2*nestIndex+1) + " is being Dumped!");
 			}
 
 			// Commands from GantryAgent:
@@ -182,10 +227,26 @@ public class FactoryProductionManager extends Client {
 					((FactoryProductionPanel) graphics).dumpKitAtInspection();
 				}
 			}
+			else if (identifier.equals("movekitback")) {
+				if (pCmd.get(2).equals("topSlot")) {
+					((FactoryProductionPanel) graphics).moveKitFromInspectionBackToStation(0);
+				} else if (pCmd.get(2).equals("bottomSlot")) {
+					((FactoryProductionPanel) graphics).moveKitFromInspectionBackToStation(1);
+				}
+			}
 
 			// Commands from ConveyorAgent
 			else if (identifier.equals("exportkitfromcell")) {
 				((FactoryProductionPanel) graphics).exportKit();
+			}
+
+			// Commands from StandAgent
+			else if (identifier.equals("ruininspectionkit")) {
+				((FactoryProductionPanel) graphics).dropParts(pCmd.get(2));
+			}
+			// Commands from FCSAgent
+			else if (identifier.equals("kitexported")){
+				((FactoryProdManPanel) UI).kitProduced();
 			}
 
 			// Commands from ConveyorControllerAgent
@@ -198,13 +259,19 @@ public class FactoryProductionManager extends Client {
 				int nestIndex = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).cameraFlash(nestIndex);
 			}
-			
+
 			else if (identifier.equals("takepictureofinspection")) {
 				((FactoryProductionPanel) graphics).takePictureOfInspectionSlot();
 			}
 
 
 			//Swing Receive Commands
+			// commands from lane manager
+			else if (identifier.equals("badparts")) {
+				int feederIndex = Integer.valueOf(pCmd.get(2));
+				int badPercent = Integer.valueOf(pCmd.get(3));
+				((FactoryProductionPanel) graphics).setBadProbability(feederIndex, badPercent);
+			}
 			// commands from kit manager
 			else if (identifier.equals("addkitname")) {		// add new kit configuration to kit configuration list
 				KitConfig newKit = new KitConfig(pCmd.get(2));
@@ -240,6 +307,9 @@ public class FactoryProductionManager extends Client {
 				}
 				((FactoryProdManPanel)UI).removePart(pCmd.get(2),affectedKits);
 			}
+			else if (identifier.equals("kitexported")) { // updates number of kits produced for schedule
+				((FactoryProdManPanel) UI).kitProduced();
+			}
 		}
 
 		else if(action.equals("req")){
@@ -258,19 +328,6 @@ public class FactoryProductionManager extends Client {
 					kit.listOfParts.add(partsList.get(partName));
 				}
 			}
-			else if (identifier.equals("kitsproduced")) { // updates number of kits produced for schedule
-				((FactoryProdManPanel) UI).kitProduced();
-			}
-			else if (identifier.equals("bintype")) { //Sets the bin for the LM
-				int feederNum = Integer.valueOf(pCmd.get(2));
-				GraphicBin bin = new GraphicBin(new Part(pCmd.get(3)));
-				((GraphicPanel) graphics).setFeederBin(feederNum, bin);
-			}
-			else if (identifier.equals("itemtype")) {
-				int kitNum = Integer.valueOf(pCmd.get(2));
-				GraphicItem item = new GraphicItem(-40, 0, pCmd.get(3));
-				((GraphicPanel) graphics).setKitItem(kitNum, item);
-			}
 			else if (identifier.equals("partconfig")) {
 				Part part = partsList.get(pCmd.get(2));
 				part.name = pCmd.get(2);
@@ -279,8 +336,73 @@ public class FactoryProductionManager extends Client {
 				part.nestStabilizationTime = Integer.parseInt(pCmd.get(5));
 				part.description = pCmd.get(6);
 
-			
+
 				System.out.println(partsList.get(pCmd.get(2)));
+			}
+			else if (identifier.equals("lanejam")) {
+				int lanenum = Integer.parseInt(pCmd.get(2));
+				lanenum = lanenum+1;
+				((FactoryProdManPanel)UI).addMessage("A lane jam has occurred in lane " + lanenum + ".");
+			}
+			else if (identifier.equals("slowdiverter")) {
+				int feedernum = Integer.parseInt(pCmd.get(2));
+				feedernum = feedernum+1;
+				((FactoryProdManPanel)UI).addMessage("The diverter at feeder " + feedernum + " switched over late.");
+				((FactoryProductionPanel) graphics).drawString("The Diverter of Feeder " + feedernum + " is slow!");
+			}
+			else if (identifier.equals("diverterspeed")) {
+				int feedernum = Integer.valueOf(pCmd.get(2));
+				int diverterSpeed = Integer.valueOf(pCmd.get(3));
+				feedernum += 1;
+				((FactoryProductionPanel) graphics).drawString("The Diverter Speed of Feeder " + feedernum);
+				((FactoryProductionPanel) graphics).drawString("has been set to " + diverterSpeed);
+			}
+
+			// command from lane manager
+			else if (identifier.equals("lanespeed")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int speed = Integer.valueOf(pCmd.get(3));
+				if(laneNumber % 2 == 0)
+					((FactoryProductionPanel) graphics).getLane(laneNumber/2).changeTopLaneSpeed(speed);
+				else
+					((FactoryProductionPanel) graphics).getLane(laneNumber/2).changeBottomLaneSpeed(speed);
+				// call graphics function to change speed
+
+			}else if (identifier.equals("laneamplitude")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int amplitude = Integer.valueOf(pCmd.get(3));
+				((FactoryProductionPanel) graphics).setLaneAmplitude(laneNumber/2, laneNumber%2, amplitude);
+				// call graphics function to change amplitude
+			}else if (identifier.equals("guilaneamplitude")){
+				int laneNumber = Integer.valueOf(pCmd.get(2));
+				int amplitude = Integer.valueOf(pCmd.get(3));
+				((FactoryProductionPanel) graphics).GUIsetLaneAmplitude(laneNumber/2, laneNumber%2, amplitude);
+			}else if (identifier.equals("lanepower")){
+				int laneNumber = Integer.valueOf(pCmd.get(3));
+				
+				if(pCmd.get(2).equals("on")){
+					if(laneNumber % 2 == 0){
+						((FactoryProductionPanel) graphics).startTopLane(laneNumber/2);
+					}else{
+
+						((FactoryProductionPanel) graphics).startBottomLane(laneNumber/2);
+					}
+				}else if(pCmd.get(2).equals("off")){
+					if(laneNumber % 2 == 0){
+						((FactoryProductionPanel) graphics).stopTopLane(laneNumber/2);
+					}else{
+
+						((FactoryProductionPanel) graphics).stopBottomLane(laneNumber/2);
+					}
+				}
+			}else if (identifier.equals("feederpower")){
+				int feederNumber = Integer.valueOf(pCmd.get(3));
+				
+				if(pCmd.get(2).equals("on")){
+					((FactoryProductionPanel) graphics).startFeeder(feederNumber);
+				}else if(pCmd.get(2).equals("off")){
+					((FactoryProductionPanel) graphics).stopFeeder(feederNumber);
+				}
 			}
 		}
 
@@ -361,5 +483,21 @@ public class FactoryProductionManager extends Client {
 		return affectedKits;
 
 	}		
+	
+	public void setLaneSpeed(int laneNumber, int speed){
+		laneSpeeds.set(laneNumber, speed);
+	}
+
+	public void setLaneAmplitude(int laneNumber, int amplitude){
+		laneAmplitudes.set(laneNumber, amplitude);
+	}
+
+	public int getLaneSpeed(int laneNumber){
+		return laneSpeeds.get(laneNumber-1);
+	}
+
+	public int getLaneAmplitude(int laneNumber){
+		return laneAmplitudes.get(laneNumber-1);
+	}
 
 }

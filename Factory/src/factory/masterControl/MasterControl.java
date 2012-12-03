@@ -53,7 +53,7 @@ public class MasterControl {
     TreeMap<String, Agent> agentTreeMap;
 	TreeMap<String, PartHandler> partHandlers; 
 	TreeMap<String, Boolean> partOccupied;
-    TreeMap<List<String>, List<String>> multiCmdDsts;
+    HashMap<List<String>, List<String>> multiCmdDsts;
 
     // Lists of Known Clients, Agents, CommandTypes, and supported Commands
 
@@ -69,14 +69,19 @@ public class MasterControl {
 			"getnewbin", "bringbin", "putinspectionkitonconveyor", "putemptykitatslot",
             "movekittoinspectionslot", "dumpkitatslot", "exportkitfromcell", "emptykitenterscell",
             "partconfig", "putpartinkit", "movetostand", "droppartsrobotsitems", "movetonest",
-            "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection"
+            "movetocenter", "nestdestabilized", "neststabilized", "takepictureofnest", "takepictureofinspection",
+            "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported",
+            "ruininspectionkit","badparts","lanejam","slowdiverter","jamtoplane","jambottomlane","unjamtoplane",
+            "unjambottomlane", "lanespeed", "laneamplitude", "lanepower", "feederpower", "dumptopnest", "dumpbottomnest",
+            "missingparts", "newpartputinlane", "partremovedfromlane", "partremovedfromnest", "partlost",
+            "diverterspeed", "guilaneamplitude"
 
     );
 
 
 	// Lists of Commands with Multi Destinations and Lists of Destinations associated with those Commands
 
-	private static final List<String> multiCmd_1 = Arrays.asList("purgefeeder", "purgetoplane", "purgebottomlane");
+	private static final List<String> multiCmd_1 = Arrays.asList("purgefeeder"/*, "purgetoplane", "purgebottomlane"*/);
     private static final List<String> multiCmdDst_1 = Arrays.asList("gm", "lm");
     private static final List<List<String>> multiCmds = Arrays.asList(multiCmd_1);
 
@@ -94,7 +99,7 @@ public class MasterControl {
 		laneAgentTreeMap = new TreeMap<String, LaneAgent>();
 		nestAgentTreeMap = new TreeMap<String, NestAgent>();
         partHandlerList = new ArrayList<PartHandler>();
-        multiCmdDsts = new TreeMap<List<String>, List<String>>();
+        multiCmdDsts = new HashMap<List<String>, List<String>>();
 
 
 
@@ -168,11 +173,16 @@ public class MasterControl {
 		l3b.setNest(n3b);   
 		
 		// Instantiate the Feeders
-		f0 = new FeederAgent("f0",0,l0t,l0b,gantry,vision,this);
-		f1 = new FeederAgent("f1",1,l1t,l1b,gantry,vision,this);
-		f2 = new FeederAgent("f2",2,l2t,l2b,gantry,vision,this);
-		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,vision,this);
+		f0 = new FeederAgent("f0",0,l0t,l0b,gantry,vision,this,false,true);
+		f1 = new FeederAgent("f1",1,l1t,l1b,gantry,vision,this,false,false);
+		f2 = new FeederAgent("f2",2,l2t,l2b,gantry,vision,this,false,false);
+		f3 = new FeederAgent("f3",3,l3t,l3b,gantry,vision,this,false,false);
 		feederAgents = Arrays.asList(f0, f1, f2, f3);
+		
+		vision.setFeeder(f0, 0);
+		vision.setFeeder(f1, 1);
+		vision.setFeeder(f2, 2);
+		vision.setFeeder(f3, 3);
 
 		// Set the Lane's Feeders
 		l0t.setFeeder(f0);
@@ -323,7 +333,7 @@ public class MasterControl {
 	// parseDst is called by Clients and Agents and determines whether to
 	// call methods locally to Agents, or to send them through to a Client
 
-	public boolean command(String cmd){
+	public boolean command(Agent a, String cmd){
 		// Split into array
 		// Figure out destination
 		// Call either agentCmd() or clientCmd()
@@ -334,12 +344,7 @@ public class MasterControl {
 
 
 		if(clients.contains(parsedCommand.get(1))){
-            if(parsedCommand.get(1).equals("multi")){
-                return clientCmd(parsedCommand);
-            } else {
-                return clientCmd(parsedCommand);
-            }
-
+            return clientCmd(a, parsedCommand);
 		} else if(agents.contains(parsedCommand.get(1))) {
 			return agentCmd(parsedCommand);
 		} else if(parsedCommand.get(1).equals("mcs")) {
@@ -371,6 +376,8 @@ public class MasterControl {
 
 	}
 
+
+
 	// command sent to agent or agents
 	// agentCmd is the giant parser that figures out
 	// what method to call on what agent.
@@ -386,14 +393,14 @@ public class MasterControl {
 		// 3 = Cmd OR if cnf, this would be optional identifier
 		// 4+ = Parameters
 
-		System.out.print("agentCmd() = ");
-		for (String c : cmd)
-		{
-			System.out.print(c + " ");
-		}
-
-        System.out.println();
-
+//		System.out.print("agentCmd() = ");
+//		for (String c : cmd)
+//		{
+//			System.out.print(c + " ");
+//		}
+//
+//        System.out.println();
+        /**TODO: Location of Agent commands*/
 		if(cmd.get(2).equals("cnf")){
 
 			if(agentTreeMap.containsKey(cmd.get(1))){
@@ -460,6 +467,16 @@ public class MasterControl {
 
 					((FCSAgent) destination).editKitRecipe(oldkitname, kitname, partname1, partname2, partname3, partname4, 
 							partname5, partname6, partname7, partname8);
+				}
+			}
+			else if (cmd.get(1).equals("fa")) {
+				
+				int feederNum = Integer.valueOf(cmd.get(4));
+				destination = feederAgents.get(feederNum);
+				
+				if (cmd.get(3).equals("diverterspeed")) {
+					int diverterSpeed = Integer.valueOf(cmd.get(5));
+					((FeederAgent) destination).setDiverterSpeed(diverterSpeed);
 				}
 			}
 
@@ -535,10 +552,28 @@ public class MasterControl {
 				}
 			}//End FCSAgent Commands
 
+			//StandAgent Commands:
+            else if (cmd.get(1).equals("sa"))
+            {
+            	destination = agentTreeMap.get(cmd.get(1));
+				if (cmd.get(3).equals("kitdropparts")){
+					String failString = cmd.get(4);
+					//((StandAgent) destination).msgForceKitInspectionToFail();
+					command( stand, "sa kam cmd ruininspectionkit " + failString);
+				}
+				else if (cmd.get(3).equals("partlost")) {
+					String partName = cmd.get(4);
+					((StandAgent) destination).msgForceKitInspectionToFail(partName);
+				}
+			}//End StandAgent Commands
+
 			// FeederAgent Commands:
 			else if (cmd.get(1).equals("fa"))
 			{
-
+				destination = feederAgents.get(Integer.parseInt(cmd.get(4)));
+				if (cmd.get(3).equals("slowdiverter")) {
+					((FeederAgent) destination).msgBreakDiverterAlgorithm();
+				}
 			}//End FeederAgent Commands
 
             // NestAgent Commands:
@@ -553,7 +588,52 @@ public class MasterControl {
                 else if(cmd.get(3).equals("nestdestabilized")){
                     ((NestAgent) destination).msgNestHasDestabilized();
                 }
+                else if (cmd.get(3).equals("partremovedfromnest")) {
+                	String nameOfPart = cmd.get(5);
+                	((NestAgent) destination).msgPartRemovedFromNest(nameOfPart);
+                }
             }//End NestAgent Commands
+
+            else if (cmd.get(1).equals("va")) {
+            	destination = agentTreeMap.get(cmd.get(1));
+            	/*if(cmd.get(3).equals("badparts")){
+            		int nestnum = Integer.parseInt(cmd.get(4));
+            		((VisionAgent) destination).msgNoGoodPartsFound(nestnum);
+            	}
+            	else if (cmd.get(3).equals("lanejam")) {
+            		int lanenum = Integer.parseInt(cmd.get(4));
+            		((VisionAgent) destination).msgLaneJammed(lanenum);
+            	}
+            	else if (cmd.get(3).equals("slowdiverter")) {
+            		int feedernum = Integer.parseInt(cmd.get(4));
+            		// ((VisionAgent) destination).msgSlowDiverter(feedernum);
+            	}*/
+            	if (cmd.get(3).equals("missingparts")) {
+            		int feederNum = Integer.parseInt(cmd.get(4));
+            		int nestNum = Integer.parseInt(cmd.get(5));
+            		//((VisionAgent) destination).msgNoGoodPartsFound(feederNum, nestNum);
+            	}
+            } // End VisionAgent Commands
+			
+			//LaneAgent Commands:
+            else if (cmd.get(1).equals("la")) {
+            	int lanenum = Integer.valueOf(cmd.get(4));
+            	destination = laneAgentTreeMap.get("l"+lanenum/2+(lanenum%2==0?"t":"b"));
+            	
+            	if (cmd.get(3).equals("newpartputinlane")) {
+            		int laneNum = Integer.valueOf(cmd.get(4));
+            		String partName = cmd.get(5);
+            		int condition = Integer.valueOf(cmd.get(6)); //1 = good, 0 = bad
+            		Part part = new Part(partName,999,"desc","imgpath",3);
+            		part.isGoodPart = (condition == 1);
+            		((LaneAgent) destination).msgPartAddedToLane(part); // Note: we are not really using any of these fields except part name.  stabilization time is handlded elsewhere
+            	}
+            	else if (cmd.get(3).equals("partremovedfromlane")) {
+            		int laneNum = Integer.valueOf(cmd.get(4));
+            		((LaneAgent) destination).msgPartRemovedFromLane();
+            	}
+            }
+			
 		}
 
 
@@ -567,7 +647,7 @@ public class MasterControl {
 	// and then sends it.
 
 
-	public boolean clientCmd(ArrayList<String> cmd){	
+	public boolean clientCmd(Agent srcAgent, ArrayList<String> cmd){
 		String s = checkClientCmd(cmd);
 		System.out.println(s);
 		String a = cmd.get(0); // Source
@@ -586,21 +666,25 @@ public class MasterControl {
 		for(int i = 3; i < cmd.size(); i++){  // Command ... put command into string form
 			d+= cmd.get(i)+" ";
 		}
+
+        int reqConfirmations = 0;
         PartHandler fpmPH = null;
         if(partHandlers.containsKey("fpm")){
             fpmPH = determinePH("fpm");
+            reqConfirmations++;
         }
 
 		String fullCmd = envelopeCmd(c, d);
 
-		System.out.println("Server received ... "+cmd+" from "+a);
-		System.out.println("Server is about to send ... "+fullCmd);
+//		System.out.println("Server received ... "+cmd+" from "+a);
+//		System.out.println("Server is about to send ... "+fullCmd);
 
 		if(b.equals("multi")){
 			ArrayList<PartHandler> destinations = getDestinations(cmd.get(3));
 			if(destinations == null){
 				return false;
 			} else {
+                reqConfirmations += destinations.size();
 				for(PartHandler x : destinations){
                     if(partHandlerList.contains(x)){
                         if(!sendCmd(x, fullCmd)){
@@ -613,14 +697,22 @@ public class MasterControl {
                         return false;
                     }
                 }
-				return true;
-			}
-        }
+                //Set number of confirmations
+                if(srcAgent != null){
+                	srcAgent.setRequiredConfirmations(reqConfirmations);
+                }
 
-		if(b.equals("fpm")){
+                return true;
+			}
+        } else if(b.equals("fpm")){
             if(fpmPH != null){
                 return sendCmd(fpmPH, fullCmd);
             }
+            //Set number of confirmations
+            if(srcAgent != null){
+            	srcAgent.setRequiredConfirmations(reqConfirmations);
+            }
+
             return false;
         } else {
             if(fpmPH != null){
@@ -629,8 +721,14 @@ public class MasterControl {
                 }
             }
             PartHandler destinationPH = determinePH(b);
+            reqConfirmations++;
             if(partHandlerList.contains(destinationPH)){
-                return sendCmd(destinationPH, fullCmd);
+                boolean returnval = sendCmd(destinationPH, fullCmd);
+                //Set number of confirmations
+                if(srcAgent != null){
+                	srcAgent.setRequiredConfirmations(reqConfirmations);
+                }
+                return returnval;
             } else {
                 return false;
             }
@@ -647,7 +745,8 @@ public class MasterControl {
         for(List<String> l : multiCmds){
             if(l.contains(myCmd)){
                 ArrayList<PartHandler> returnAL = new ArrayList<PartHandler>();
-                for(String dst : multiCmdDsts.get(l)){
+                List<String> destinations = multiCmdDsts.get(l);
+                for(String dst : destinations){
                     if(partHandlers.containsKey(dst)){
                         returnAL.add(partHandlers.get(dst));
                     }
@@ -713,11 +812,14 @@ public class MasterControl {
             return false;
 
         }
+        
+        /*
         if(pCmd.get(0).equals(pCmd.get(1))){
             System.out.println("source and Destination cannot be the same");
             return false;
 
         }
+        */
         if(!cmdTypes.contains(pCmd.get(2))){
             System.out.println("commandtype is not valid commandtype");
             return false;
@@ -748,9 +850,9 @@ public class MasterControl {
 
 		// Check that the source != the destination
 
-		if(pCmd.get(0).equals(pCmd.get(1))){
+		/*if(pCmd.get(0).equals(pCmd.get(1))){
 			return "source and Destination cannot be the same";
-		}
+		}*/
 
 		// Check that the destination is not currently busy
         if(partOccupied.containsKey(pCmd.get(1))){
@@ -832,103 +934,9 @@ public class MasterControl {
         }
 
         MasterControl mc = new MasterControl(debug);
-
         //This pauses for ~5 seconds to allow for the FactoryProductionManager to load up
         long timeToQuit = System.currentTimeMillis() + 5000;
-        while (System.currentTimeMillis() < timeToQuit);
-
-       
-
-
-//        mc.n0b.msgYouNeedPart(p2);
-//        mc.n0t.msgYouNeedPart(p0);
-
-//        mc.n1t.msgYouNeedPart(p1);
-//        mc.n1b.msgYouNeedPart(p3);
-//        
-//        mc.n2t.msgYouNeedPart(p2);
-//        mc.n2b.msgYouNeedPart(p4);
-        
-//        mc.n2t.msgYouNeedPart(p2);
-//        mc.n2b.msgYouNeedPart(p4);
-//
-//        mc.n2t.msgYouNeedPart(p2);
-//        mc.n2b.msgYouNeedPart(p4);
-
-        
-//        mc.n3t.msgYouNeedPart(p0);
-//        mc.n3b.msgYouNeedPart(p4);
-        
-        
-//        mc.n1t.msgYouNeedPart(p1);
-//
-//        mc.n1b.msgYouNeedPart(p1);
-
-        //mc.n0b.msgYouNeedPart(p3);
-      //  mc.partsRobot.msgMakeKit(firstKit);
-      		
-      		//mc.n0b.msgYouNeedPart(p3);
-
-//      		
-//      		
-//      		mc.n1t.msgYouNeedPart(p2);
-//      		mc.n1b.msgYouNeedPart(p3);
-//      		
-//      		mc.n2t.msgYouNeedPart(p4);
-//      		mc.n2b.msgYouNeedPart(p5);
-      		
-      
-		
-		
-//		mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
-//
-//		mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
-//		
-//		// TESTING PARTSROBOT:
-//		KitConfig kc = new KitConfig();
-//		kc.listOfParts = partList;
-//		mc.partsRobot.topSlot = kc; // stand TOP SLOT position
-//
-//		mc.partsRobot.msgHereArePartCoordinatesForNest(mc.n0t,p0,0);
-		
-		
-		// partsRobot.armOne,partsRobot.armTwo //instances of part object, must be instantiated
-		
-		
-		
-		
-//				mc.f0.msgLaneNeedsPart(p0,mc.l0t); //eye to top
-//		
-//				mc.f0.msgLaneNeedsPart(p2,mc.l0b); //shoe to bottom
-//		
-//				mc.f0.msgLaneNeedsPart(p4,mc.l0t); //sword to top
-//		
-//				mc.f0.msgLaneNeedsPart(p5,mc.l0b); //tentacle to bottom
-//		
-
-
-		//mc.f1.msgLaneNeedsPart(p0,mc.l1t); //eye to top
-
-		//mc.f1.msgLaneNeedsPart(p1,mc.l1b); //eye to bottom
-
-		//mc.n1t.msgPartsRobotGrabbingPartFromNest(0); // parts robot grabs part	
-		
-		
-		//		
-		//		
-		//
-		//		mc.f2.msgLaneNeedsPart(p0,mc.l2t); //eye to top
-		//
-		//		mc.f2.msgLaneNeedsPart(p2,mc.l2b); //shoe to bottom
-		//
-		//		mc.f2.msgLaneNeedsPart(p4,mc.l2t); //sword to top
-
-
-
-		//		mc.f0.msgLaneNeedsPart(p0, mc.l0t);		
-		// should make the gantry go get a bin of parts
-		// should call DoSwitchLane() and then DoStartFeeding()
-		 
+        while (System.currentTimeMillis() < timeToQuit);		 
 		 
 	}
 

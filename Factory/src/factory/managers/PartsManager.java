@@ -19,7 +19,7 @@ public class PartsManager extends Client implements WindowListener{
 	public HashMap<String, Part> parts;  // parts list
 
 	public PartsManager() {
-		super(Client.Type.pm, null, null);
+		super(Client.Type.pm);
 		
 		parts = new HashMap<String, Part>();
 		loadData();
@@ -41,6 +41,7 @@ public class PartsManager extends Client implements WindowListener{
 		pack();
 		this.setSize(460,600);
 		this.setResizable(false);
+		this.setTitle("Parts Manager");
 		setVisible(true);
 	}
 	
@@ -174,13 +175,14 @@ else if(action.equals("cnf")){
 	
 }
           else if(action.equals("mcs")){
-			   try {
-					this.server.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				   System.exit(0);
-			   }
+   		   try {
+   			this.server.close();
+   			connected = false;
+   		} catch (IOException e) {
+   			e.printStackTrace();
+   		}
+   		   this.quit();
+   	   }
  else 
      System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");
 }

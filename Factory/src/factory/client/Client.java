@@ -40,12 +40,13 @@ public abstract class Client extends JFrame implements ActionListener {
 	public String currentCommand; //current command string from server
 	public ArrayList<String> parsedCommand; //current command parsed into strings
 	// Timer updater; //repaints graphics
-	boolean connected;
+	protected boolean connected;
+	String fun = "PEOPLECEPTION!!!";
 	
 	
 	Runnable independentInput = new Runnable(){
 		public void run(){
-			while(true){
+			for(;;){
 //				System.out.println("1");
 				if(connected)
 				try {
@@ -59,13 +60,13 @@ public abstract class Client extends JFrame implements ActionListener {
 		}//end run
 	}; //end independentInput
 	
-	public Client(Type t, JPanel buttons, JPanel Animation){
+	public Client(Type t){//, JPanel buttons, JPanel Animation){
 		
 		connected = false;
 		type = t;
-		UI = buttons;
+		//UI = buttons;
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		graphics = Animation;
+		//graphics = Animation;
 		connect(); //connects to server
 		System.out.println(connected);
 		//updater = new Timer(1000/30, this); //sets timer to update graphics
@@ -74,6 +75,8 @@ public abstract class Client extends JFrame implements ActionListener {
 		Thread inputThread = new Thread(independentInput);
 		inputThread.start();
 		this.addWindowListener(new WindowCloser(this));
+		if(t != Type.fpm)
+			this.setDefaultCloseOperation(HIDE_ON_CLOSE);
 		
 		
 	}
@@ -91,12 +94,14 @@ public abstract class Client extends JFrame implements ActionListener {
 			if(reply.equals("connected")){
 				connected = true;
 			}
+			
 			System.out.println("connected to server!");
 			System.out.println("waiting for agents to start...");
 			input.readLine();
 			System.out.println("Factory Started....yo!");
 		} catch (Exception e) {
 			System.out.println("Host unavailable");
+			VERY_DISAMBIGUOUS_FUNCTION();
 		} 	
 	}
 	
@@ -141,10 +146,13 @@ public abstract class Client extends JFrame implements ActionListener {
 	
 		public void windowClosing(WindowEvent e) {
 			
-			if(client.type == Type.fpm && connected == true)
+			if(client.type == Type.fpm && connected == true){
 				client.sendCommand("fpm mcs cmd stopfactory");
 				
 			client.quit();
+			}
+			else
+				client.close();
 		}
 
 		
@@ -191,10 +199,23 @@ public abstract class Client extends JFrame implements ActionListener {
 			//never executes but wont compile w/o
 		}}
 	System.out.println("window closed");
+	
 		if(type == Type.fpm || connected == false)
 			System.exit(0);
 	}
-    
+    public void close() {
+		
+		
+	}
+
+	public void VERY_DISAMBIGUOUS_FUNCTION()
+    {
+    	functionWithinAFunction();
+    }
+   
+    public void functionWithinAFunction(){
+    	System.out.println(fun);
+    }
     
 }
 

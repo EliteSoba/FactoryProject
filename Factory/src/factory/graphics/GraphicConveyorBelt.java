@@ -1,12 +1,12 @@
 package factory.graphics;
 
 import java.awt.*;
-import javax.swing.*;
+import java.util.ArrayList;
 
 /**
  * @author Tobias Lee <p>
  * <b>{@code GraphicConveyorBelt.java}</b> (50x720) <br>
- * This displays and animates the conveyer belts,
+ * This displays and animates the conveyor belts,
  * as well as any kits entering/exiting the factory (1 of each)
  */
 
@@ -33,6 +33,11 @@ public class GraphicConveyorBelt {
 	/**The height of the Conveyor Belt*/
 	public static int height = 720;
 	
+	/** Animation for conveyor belt */
+	public ArrayList<Image> conveyorBeltAnimationImages;		// collection of images
+	public int conveyorBeltAnimationCounter;					// counter
+	public int conveyorBeltAnimationSpeed;						// animation speed
+	
 	/**
 	 * Creates a Conveyor Belt at the given x and y coordinates
 	 * @param x The initial x coordinate of the Conveyor Belt
@@ -48,6 +53,11 @@ public class GraphicConveyorBelt {
 		kitOut = null;
 		export = false;
 		this.GP = GP;
+		
+		conveyorBeltAnimationImages = GraphicAnimation.loadAnimationFromFolder("Images/conveyorBelt/", 0, ".png");
+		//System.out.println(conveyorBeltAnimationImages.size());
+		conveyorBeltAnimationCounter = 0;
+		conveyorBeltAnimationSpeed = 5;
 	}
 	
 	/**
@@ -55,14 +65,13 @@ public class GraphicConveyorBelt {
 	 * @param g The specified graphics window
 	 */
 	public void paint(Graphics g) {
-		//Main belt
-		g.setColor(new Color(47, 41, 32));
-		g.fillRect(x, y, width, height);
-		
-		//Main belt animation
-		g.setColor(new Color(224, 224, 205));
-		for (int i = t; i < height; i += 50) {
-			g.drawLine(x, i, x+width, i);
+		// Animates conveyor belt
+		g.drawImage(conveyorBeltAnimationImages.get(conveyorBeltAnimationCounter/conveyorBeltAnimationSpeed), 0, 0, null);
+		if(kitin() && !pickUp || kitout() && export)		// only animates if the kit is moving
+		{
+			conveyorBeltAnimationCounter++;
+			if(conveyorBeltAnimationCounter >= conveyorBeltAnimationImages.size()*conveyorBeltAnimationSpeed)
+				conveyorBeltAnimationCounter = 0;
 		}
 		
 		//Draws the kit moving into the factory
@@ -88,12 +97,12 @@ public class GraphicConveyorBelt {
 		kitOut = kit;
 		if (kitOut == null)
 			return;
-		kitOut.move(x+(width-40)/2, y+305);
+		kitOut.move(x+(width-40)/2, y+300);
 	}
 	
 	/**
 	 * Moves a Kit ready to be exported out of the factory
-	 * @see factory.graphics.GraphicConveyorBelt.outKit
+	 * @see #outKit(GraphicKit)
 	 */
 	public void exportKit() {
 		if (kitout())
@@ -133,9 +142,9 @@ public class GraphicConveyorBelt {
 		
 		//Moves the incoming kit along a path
 		if (kitin()) {
-			if (kitIn.getY() <= y+300)
+			if (kitIn.getY() <= y+295)
 				kitIn.moveY(v);
-			if (kitIn.getY() > y+300) {
+			if (kitIn.getY() > y+295) {
 				//Kit import complete
 				if (!pickUp)
 					GP.newEmptyKitDone(); //Messages GraphicPanel about task completion 

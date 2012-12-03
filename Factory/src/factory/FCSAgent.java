@@ -15,7 +15,7 @@ import java.util.*;
 //import factory.KitConfig.MyPart;
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
-import factory.test.mock.MockGantry;
+//import factory.test.mock.MockGantry;
 
 public class FCSAgent extends Agent implements FCS{
 
@@ -75,11 +75,13 @@ public class FCSAgent extends Agent implements FCS{
 	 */
 	public void msgProduceKit(int quantity, String kitName) {
 		debug("Got message to produce Kit");
-		KitConfig recipe = new KitConfig();
-		recipe = kitRecipes.get(kitName);
-		recipe.quantity = quantity;
-		recipe.kitName = kitName;
-		orders.add(recipe);
+		synchronized(this.orders){
+			KitConfig recipe = new KitConfig();
+			recipe = kitRecipes.get(kitName);
+			recipe.quantity = quantity;
+			recipe.kitName = kitName;
+			orders.add(recipe);
+		}
 		stateChanged();
 	}
 
@@ -89,7 +91,10 @@ public class FCSAgent extends Agent implements FCS{
 	 * @param kit This is the kit that was just exported
 	 */
 	public void msgKitIsExported(Kit kit){
-		kitsExportedCount++;
+		if(this.state == KitProductionState.PRODUCING){
+			kitsExportedCount++;
+			server.command(this,"fcsa fpm cmd kitexported");
+		}
 		stateChanged();
 	}
 
@@ -97,26 +102,28 @@ public class FCSAgent extends Agent implements FCS{
 	// *** SCHEDULER ***
 	public boolean pickAndExecuteAnAction() {
 
-		//if the order is finished, start producing next kit
-		if (this.state == KitProductionState.FINISHED){
-			startProducingNextKit();
-			return true;
-		}
-
-
-		//if the number of kits exported is greater than or equal to the quantity of the order, state should be finished
-		if(!orders.isEmpty()){
-			if(kitsExportedCount >= orders.peek().quantity){
-				finishKits();
+		synchronized(this.state){
+			//if the order is finished, start producing next kit
+			if (this.state == KitProductionState.FINISHED){
+				startProducingNextKit();
 				return true;
 			}
 		}
-		//if there is a kit pending and the order list isn't empty, then send an order to parts robot
-		if (this.state == KitProductionState.PENDING && !orders.isEmpty()){
-			sendKitConfigToPartRobot();
-			return true;
-		}
+		synchronized(orders){
 
+			//if the number of kits exported is greater than or equal to the quantity of the order, state should be finished
+			if(!orders.isEmpty()){
+				if(kitsExportedCount >= orders.peek().quantity /*&& this.state == KitProductionState.PRODUCING*/){
+					finishKits();
+					return true;
+				}
+			}
+			//if there is a kit pending and the order list isn't empty, then send an order to parts robot
+			if (this.state == KitProductionState.PENDING && !orders.isEmpty()){
+				sendKitConfigToPartRobot();
+				return true;
+			}
+		}
 
 		return false;
 	}
@@ -128,7 +135,7 @@ public class FCSAgent extends Agent implements FCS{
 	 */
 	private void finishKits() {
 		this.state = KitProductionState.FINISHED;
-		stateChanged();
+		
 	}
 	/**
 	 * Passes down the new Kit Configuration to the PartsRobot Agent
@@ -138,8 +145,8 @@ public class FCSAgent extends Agent implements FCS{
 		/**THIS IS TEMPORARY, //TODO for now send message to gantry instead of parts robot to test swing->agent->animation**/
 		//		this.gantry.msgFeederNeedsPart(partsList.get("Shoe"), this.masterControl.f0); //comment this out for unit testing
 		this.partsRobot.msgMakeKit(orders.peek()); //TODO uncomment this for v1 implementation
+		debug("Sent msgMakeKit to partsRobot.  Number of orders in queue: " + orders.size() + " (KIT: " + orders.peek().kitName+")");
 		this.state = KitProductionState.PRODUCING;
-		stateChanged();
 	}
 
 	/**
@@ -150,9 +157,9 @@ public class FCSAgent extends Agent implements FCS{
 		kitsExportedCount = 0;
 		if (orders.isEmpty()){
 			partsRobot.msgNoMoreOrders();
+			debug("Sent msgNoMoreOrders to partsRobot");
 		}
 		this.state = KitProductionState.PENDING;
-		stateChanged();
 	}
 
 	// *** OTHER METHODS ***

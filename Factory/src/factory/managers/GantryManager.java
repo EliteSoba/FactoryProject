@@ -19,7 +19,7 @@ public class GantryManager extends Client {
 	GantryRobotPanel animation;
 	
 	public GantryManager() {
-		super(Client.Type.gm, null, null);
+		super(Client.Type.gm);
 		
 		buttons = new GantryManPanel();
 		buttons.setManager(this);
@@ -40,6 +40,7 @@ public class GantryManager extends Client {
 		
 		//add(UI, BorderLayout.LINE_END);
 		pack();
+		this.setTitle("Gantry Manager");
 		setVisible(true);
 	}
 
@@ -169,10 +170,11 @@ public class GantryManager extends Client {
 	   else if(action.equals("mcs")){
 		   try {
 			this.server.close();
+			connected = false;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		   System.exit(0);
+		   this.quit();
 	   }
 		else 
    		   System.out.println("Stuff is FU with the server...\n(string does not contain a command type)");

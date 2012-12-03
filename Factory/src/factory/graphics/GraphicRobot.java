@@ -88,8 +88,8 @@ public class GraphicRobot extends GraphicAnimatedObject
 					else
 						x += dx;
 					i = movementCheckingOrders.length;
-					break;
 				}
+				break;
 			case 1 : 				// move up
 				if(y > fy)
 				{
@@ -100,8 +100,8 @@ public class GraphicRobot extends GraphicAnimatedObject
 					else
 						y -= dy;
 					i = movementCheckingOrders.length;
-					break;
 				}
+				break;
 			case 2 : 				// move left
 				if(x > fx)
 				{
@@ -112,8 +112,8 @@ public class GraphicRobot extends GraphicAnimatedObject
 					else
 						x -= dx;
 					i = movementCheckingOrders.length;
-					break;
 				}
+				break;
 			case 3 : 				// move down
 				if(y < fy)
 				{
@@ -124,7 +124,6 @@ public class GraphicRobot extends GraphicAnimatedObject
 					else
 						y += dy;
 					i = movementCheckingOrders.length;
-					break;
 				}
 			}
 		}

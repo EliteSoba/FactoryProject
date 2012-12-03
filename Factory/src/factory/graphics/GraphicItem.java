@@ -23,12 +23,18 @@ public class GraphicItem {
 	private String imagePath;
 	/**The Item's image*/
 	private ImageIcon image;
+	private static final Image BAD_ITEM_IMAGE = new ImageIcon("Images/badItemX.png").getImage();
 	/**The number of horizontal steps down the Lane*/
 	private int stepX;
 	/**The number of vertical steps down the Lane*/
 	private int stepY;
 	/**Whether or not this Item goes to the top or bottom Lane of a Lane pair*/
 	private boolean divergeUp;
+	private boolean isBad;
+	/**Whether the item is in queue or not**/
+	private boolean inQueue;
+	/**whether the item has not been deleted through crashing**/
+	private boolean successfullyTransferred;
 	
 	/**
 	 * Creates an Item with the given image at the given x and y coordinates
@@ -48,6 +54,8 @@ public class GraphicItem {
 		stepX = 20;
 		stepY = 5;
 		divergeUp = false;
+		successfullyTransferred = true;
+		isBad = false;
 	}
 	
 	/**
@@ -150,6 +158,8 @@ public class GraphicItem {
 	 */
 	public void paint(Graphics g) {
 		g.drawImage(image.getImage(), x, y, null);
+		if(isBad)
+			g.drawImage(BAD_ITEM_IMAGE, x, y, null);
 	}
 	
 	/**
@@ -160,6 +170,8 @@ public class GraphicItem {
 	 */
 	public void paint(Graphics g, int x, int y) {
 		g.drawImage(image.getImage(), x, y, null);
+		if(isBad)
+			g.drawImage(BAD_ITEM_IMAGE, x, y, null);
 	}
 	
 	/**
@@ -209,6 +221,14 @@ public class GraphicItem {
 	public boolean getDivergeUp() {
 		return divergeUp;
 	}
+
+	public void setInQueue(boolean queue) {
+		inQueue = queue;
+	}
+	
+	public boolean getInQueue() {
+		return inQueue;
+	}
 	
 	/**
 	 * Gets the image of the Item
@@ -224,6 +244,46 @@ public class GraphicItem {
 	 */
 	public String getImagePath() {
 		return imagePath;
+	}
+	
+	/**
+	 * Sets whether or not the Item is bad
+	 * @param bad If the item is bad
+	 */
+	public void setIsBad(boolean bad) {
+		isBad = bad;
+	}
+	
+	/**
+	 * Gets if the Item is bad or not
+	 * @return {@code true} if the Item is bad; {@code false} otherwise
+	 */
+	public boolean getIsBad() {
+		return isBad;
+	}
+	
+	/**
+	 * Gets if the Item was successfully transferred into the Lane
+	 * @return {@code true} if the Item was successfully transferred to the Lane; {@code false} otherwise
+	 */
+	public boolean getSuccessfullyTransferred() {
+		return successfullyTransferred;
+	}
+	
+	/**
+	 * Sets if the Item was successfully transferred into the Lane or not
+	 * @param sT Whether or not the Item was/will be successfully transferred
+	 */
+	public void setSuccessfullyTransferred(boolean sT) {
+		successfullyTransferred = sT;
+	}
+	
+	/**
+	 * Gets the name of the Item derived from its Image path
+	 * @return The name of the Item derived from its Image path
+	 */
+	public String getName() {
+		return imagePath.substring(imagePath.indexOf("/")+1, imagePath.indexOf("."));
 	}
 	
 }

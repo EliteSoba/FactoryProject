@@ -9,112 +9,129 @@ import java.util.concurrent.Semaphore;
 
 import factory.Kit.KitState;
 import factory.interfaces.*;
+import factory.interfaces.Nest.NestState;
 import factory.masterControl.MasterControl;
 
 public class VisionAgent extends Agent implements Vision {
+
+	public enum kitPictureRequeststate { NEED_TO_INSPECT, INSPECTED }
+	public enum PictureRequestState { NESTS_READY, ANALYZED, ASKED_PARTS_ROBOT, PARTS_ROBOT_CLEAR, PICTURE_TAKEN }
+
+	public ArrayList<PictureRequest> pictureRequests = new ArrayList<PictureRequest>(); 
+	public ArrayList<KitPicRequest> kitPictureRequests = new ArrayList<KitPicRequest>();     
 	
-	enum KitPicRequestState { NEED_TO_INSPECT, INSPECTED }
-	public enum InspectionResults { PASSED, FAILED }
-	enum PictureRequestState { NESTS_READY, ASKED_PARTS_ROBOT, PARTS_ROBOT_CLEAR, PICTURE_TAKEN }
+	public PartsRobot partsRobot;
+	public Stand stand;
+	public Random r = new Random();
 	
-	ArrayList<PictureRequest> picRequests = new ArrayList<PictureRequest>(); 
-	ArrayList<KitPicRequest> kitPicRequests = new ArrayList<KitPicRequest>();     
-	PartsRobot partsRobot;
-	Stand stand;
-	Random r = new Random();
-	Semaphore pictureAllowed = new Semaphore(1);
+	public Semaphore pictureAllowed = new Semaphore(1);
+	
+	public ArrayList<Nest> nests;
+
+	public int[] nestJammedWaiting = new int[8];
+	
+	public Feeder feeder_zero;
+	public Feeder feeder_one;
+	public Feeder feeder_two;
+	public Feeder feeder_three;
 	
 	public VisionAgent(PartsRobot partsRobot, Stand stand, MasterControl mc){
 		super(mc);
 		this.partsRobot = partsRobot;
 		this.stand = stand;
 	}
-	
-	class KitPicRequest {
-	      
-	      KitPicRequestState state;
-	      InspectionResults inspectionResults;
-	      
-	      public KitPicRequest(KitPicRequestState kprs) { 
-	    	  state = kprs;
-	    	}
-	   }
 
-	class PictureRequest {
-	      
-	      Nest nestOne;
-	      Nest nestTwo;
-	      PictureRequestState state;
-	      Feeder feeder;
+	public class KitPicRequest {
 
-	      public PictureRequest(Nest nestOne, Nest nestTwo, Feeder feeder){
-	            this.state = PictureRequestState.NESTS_READY;
-	            this.nestOne = nestOne;
-	            this.nestTwo = nestTwo;
-	            this.feeder = feeder;
-	      }
-	   } 
+		public kitPictureRequeststate state;
+		public boolean forceFail = false;
 
-
-	
-	
-	// *** MESSAGES ***
-	public void inspectKitStand() {
-		kitPicRequests.add(new KitPicRequest(KitPicRequestState.NEED_TO_INSPECT));
-		this.stateChanged();
+		public KitPicRequest(boolean forceFail) { 
+			state = kitPictureRequeststate.NEED_TO_INSPECT;
+			this.forceFail = forceFail;
+		}
 	}
-	
+
+	public class PictureRequest {
+
+		public Nest nestOne;
+		public Nest nestTwo;
+		public int nestOneState = 0;
+		public int nestTwoState = 0;
+		public PictureRequestState state;
+		public Feeder feeder;
+
+		public PictureRequest(Nest nestOne, Nest nestTwo, Feeder feeder){
+			this.state = PictureRequestState.NESTS_READY;
+			this.nestOne = nestOne;
+			this.nestTwo = nestTwo;
+			this.feeder = feeder;
+		}
+	} 
+
+/** ================================================================================ **/
+/** 									MESSAGES 									 **/
+/** ================================================================================ **/
+
+	public void msgNewNestConfig(ArrayList<Nest> nests){
+		this.nests = nests;
+	}
+
 	public void msgMyNestsReadyForPicture(Nest nestOne, Nest nestTwo, Feeder feeder) {
-		debug("msgMyNestsReadyForPicture("+nestOne.getPart().name+","+nestTwo.getPart().name+")");
-		picRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
-		this.stateChanged();
-	}
-		
-	public void msgVisionClearForPictureInNests(Nest nestOne, Nest nestTwo) {
-		for( PictureRequest pr: picRequests) {
-		   if(pr.nestOne == nestOne && pr.nestTwo == nestTwo){
-		      pr.state = PictureRequestState.PARTS_ROBOT_CLEAR;
-		   }
+		if(nestOne.getPart() != null && nestTwo.getPart() !=null){
+			debug("received msgMyNestsReadyForPicture("+nestOne.getPart().name+","+nestTwo.getPart().name+")");
+			pictureRequests.add(new PictureRequest(nestOne, nestTwo, feeder));
+		}
+		else {
+
+			debug("received msgMyNestsReadyForPicture("+ nestOne.getPart()+","+ nestTwo.getPart()+")");
 		}
 		this.stateChanged();
 	}
-	
-	
-	//the following message existed in the wiki, but the parameter is different.  It takes a timer rather than feeder
-//Yeah, that was my fault.  It is no longer needed.
-	//	@Override
-//	public void msgMyNestsReadyForPicture(Nest nest, Nest nest2, TimerTask timerTask) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-	
-	
+
+	public void msgVisionClearForPictureInNests(Nest nestOne, Nest nestTwo) {
+		for( PictureRequest pr: pictureRequests) {
+			if(pr.nestOne == nestOne && pr.nestTwo == nestTwo){
+				pr.state = PictureRequestState.PARTS_ROBOT_CLEAR;
+			}
+		}
+		this.stateChanged();
+	}
+
 	public void msgAnalyzeKitAtInspection(Kit kit) {
 		debug("Received msgAnalyzeKitAtInspection() from the kit robot.");
-		kitPicRequests.add(new KitPicRequest(KitPicRequestState.NEED_TO_INSPECT));
+		kitPictureRequests.add(new KitPicRequest(kit.forceFail));
 		stateChanged();
 	}
-	
-	
-	// *** SCHEDULER ***
+
+
+/** ================================================================================ **/
+/** 									SCHEDULER 									 **/
+/** ================================================================================ **/
+
 	public boolean pickAndExecuteAnAction() {
-		
-		for(PictureRequest pr: picRequests){
-			if(pr.state == PictureRequestState.PARTS_ROBOT_CLEAR){
-				takePicture(pr);
-				return true;
+
+		synchronized (pictureRequests) {
+			for (PictureRequest pr : pictureRequests) {
+				if (pr.state == PictureRequestState.PARTS_ROBOT_CLEAR) {
+					Nest one = this.nests.get(this.nests.indexOf(pr.nestOne));
+					Nest two = this.nests.get(this.nests.indexOf(pr.nestTwo));
+
+					if (one.getPart().name == pr.nestOne.getPart().name && two.getPart().name == pr.nestTwo.getPart().name) {
+						takePicture(pr);
+					}
+					return true;
+				}
+			}
+			for (PictureRequest pr : pictureRequests) {
+				if (pr.state == PictureRequestState.NESTS_READY) {
+					checkLineOfSight(pr);
+					return true;
+				}
 			}
 		}
-		
-		for(PictureRequest pr: picRequests){
-			if(pr.state == PictureRequestState.NESTS_READY){
-				checkLineOfSight(pr);
-				return true;
-			}
-		}
-		
-		for(KitPicRequest k: kitPicRequests){
-			if(k.state == KitPicRequestState.NEED_TO_INSPECT){
+		for(KitPicRequest k: kitPictureRequests){
+			if(k.state == kitPictureRequeststate.NEED_TO_INSPECT){
 				inspectKit(k);
 				return true;
 			}
@@ -122,88 +139,311 @@ public class VisionAgent extends Agent implements Vision {
 
 		return false;
 	}
-		
-	// *** ACTIONS ***
+
+/** ================================================================================ **/
+/** 									ACTIONS 									 **/
+/** ================================================================================ **/
+
 	private void inspectKit(KitPicRequest k) {
 
 		try{
 			pictureAllowed.acquire();
 		}
 		catch(Exception ex){
-			
+
 		}
 
+		DoAnimationTakePictureOfInstpectionSlot();
 		
-		DoTakePicture();
-	
-	   int randomNum = r.nextInt(11);
-	   if(randomNum < 4)
-		   stand.msgResultsOfKitAtInspection(KitState.PASSED_INSPECTION);
-	   else
-		   stand.msgResultsOfKitAtInspection(KitState.PASSED_INSPECTION);
-		   
-	   pictureAllowed.release();
+		if (k.forceFail == true)
+			stand.msgResultsOfKitAtInspection(KitState.FAILED_INSPECTION);
+		else
+			stand.msgResultsOfKitAtInspection(KitState.PASSED_INSPECTION);
+		/*
+		int randomNum = r.nextInt(11);
+		if(randomNum < 4)
+			stand.msgResultsOfKitAtInspection(KitState.PASSED_INSPECTION);
+		else
+			stand.msgResultsOfKitAtInspection(KitState.PASSED_INSPECTION);
+			*/
 
-	   k.state = KitPicRequestState.INSPECTED;
+		pictureAllowed.release();
+
+		k.state = kitPictureRequeststate.INSPECTED;
 	}
-	
-	
+
 	private void takePicture(PictureRequest pr){
 		try{
+			// Get permission to take picture
 			pictureAllowed.acquire();
-		    int randomNumberOne = r.nextInt(3);
-		    int randomNumberTwo = r.nextInt(3);
-		    DoAnimationTakePictureOfNest(pr.nestOne);
-		   
-		    partsRobot.msgPictureTaken(pr.nestOne, pr.nestTwo);
-		   if(true) {
-		      partsRobot.msgHereArePartCoordinatesForNest(pr.nestOne, pr.nestOne.getPart(), r.nextInt(9));
-		   }
-
-		   if(true) {
-		      
-		      partsRobot.msgHereArePartCoordinatesForNest(pr.nestTwo, pr.nestTwo.getPart(), r.nextInt(9));
-		   }
-		   
-		   picRequests.remove(pr);
-		   pictureAllowed.release();
-		   stateChanged();
-			}
-			catch(Exception ex){}
-		}
-
-		private void DoTakePicture() {
-			debug("Executing DoTakePicture()");
-			server.command("va kam cmd takepictureofinspection");
-			try {
-				animation.acquire();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			// Take picture
+			DoAnimationTakePictureOfNest(pr.nestOne);
+			// Take PR that picture was taken
+			partsRobot.msgPictureTaken(pr.nestOne, pr.nestTwo);
+			
+			// Process 'picture'
+			
+			// If the nests are null, then just return
+			if(this.nests == null || !this.nests.contains(pr.nestOne) || !this.nests.contains(pr.nestTwo)){
+				pictureRequests.remove(pr);
+				return;
 			}
 			
+			pr.nestOneState = calculateNestState(pr.nestOne);
+			pr.nestTwoState = calculateNestState(pr.nestTwo);
 			
-		}
-		private void DoAnimationTakePictureOfNest(Nest nest) {
+			// Check that nests do not contain mixed parts
 			
-			debug("Executing DoAnimationTakePicture()");
-			server.command("va lm cmd takepictureofnest " + nest.getPosition()/2);
-			try {
-				animation.acquire();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			// If all bad parts
+			if(pr.nestOne.getParts().size() > 0){
+				boolean anyGood = false;
+				for(Part p : pr.nestOne.getParts()){
+					if(p.isGoodPart){
+						anyGood = true;
+					}
+				}
+				if(!anyGood){
+					sendMessageToFeederAboutBadNest(pr.nestOne);
+				}
 			}
 			
+			if(pr.nestTwo.getParts().size() > 0){
+				boolean anyGood = false;
+				for(Part p : pr.nestTwo.getParts()){
+					if(p.isGoodPart){
+						anyGood = true;
+					}
+				}
+				if(!anyGood){
+					sendMessageToFeederAboutBadNest(pr.nestTwo);
+				}
+			}
+			
+			// Check all other scenarios
+			
+			
+			// Both nests are unused, ignore
+			if(pr.nestOneState == 0 && pr.nestTwoState == 0 ){
+			}
+			// Unused+Unstable => ignore
+			else if(pr.nestOneState == 0 && pr.nestTwoState == 1 ){
+			}
+			// Unused+f => report Jammed nest 2
+			else if(pr.nestOneState == 0 && pr.nestTwoState == 2 ){
+				sendMessageToFeederAboutJam(pr.nestTwo);
+			}
+			// Unused+OK => grab Part nest 2
+			else if(pr.nestOneState == 0 && pr.nestTwoState == 3 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
+			}
+			
+			// Unstable+Unused => ignore
+			else if(pr.nestOneState == 1 && pr.nestTwoState == 0 ){
+			}
+			// Unstable+Unstable => ignore
+			else if(pr.nestOneState == 1 && pr.nestTwoState == 1 ){
+			}
+			// Unstable+Jammed => report Jammed nest 2
+			else if(pr.nestOneState == 1 && pr.nestTwoState == 2 ){
+				sendMessageToFeederAboutJam(pr.nestTwo);
+			}
+			// Unstable+OK => grab PART nest 2
+			else if(pr.nestOneState == 1 && pr.nestTwoState == 3 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
+			}
+			
+
+			
+			// Jammed+Unused => ignore
+			else if(pr.nestOneState == 2 && pr.nestTwoState == 0 ){
+				sendMessageToFeederAboutJam(pr.nestOne);
+			}
+			// Jammed+Unstable => ignore
+			else if(pr.nestOneState == 2 && pr.nestTwoState == 1 ){
+				sendMessageToFeederAboutJam(pr.nestOne);
+			}
+			// Jammed+Jammed => report Jammed nest 2
+			else if(pr.nestOneState == 2 && pr.nestTwoState == 2 ){
+				sendMessageToFeederAboutJam(pr.nestOne);
+				sendMessageToFeederAboutJam(pr.nestTwo);
+			}
+			// Jammed+OK => grab PART nest 2
+			else if(pr.nestOneState == 2 && pr.nestTwoState == 3 ){
+				sendMessageToFeederAboutJam(pr.nestOne);
+				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
+			}
+			
+
+			
+			// OK+Unused => ignore
+			else if(pr.nestOneState == 3 && pr.nestTwoState == 0 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestOne);
+			}
+			// OK+Unstable => ignore
+			else if(pr.nestOneState == 3 && pr.nestTwoState == 1 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestOne);
+			}
+			// OK+Jammed => report Jammed nest 2
+			else if(pr.nestOneState == 3 && pr.nestTwoState == 2 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestOne);
+				sendMessageToFeederAboutJam(pr.nestTwo);
+			}
+			// OK+OK => grab PART nest 2
+			else if(pr.nestOneState == 3 && pr.nestTwoState == 3 ){
+				tellPartsRobotToGrabPartFromNest(pr.nestOne);
+				tellPartsRobotToGrabPartFromNest(pr.nestTwo);
+			}
+			
+
+			pictureRequests.remove(pr);;
+			pictureAllowed.release();
+			stateChanged();
 		}
-		private void checkLineOfSight(PictureRequest pr){
-			debug("Executing checkLineOfSight()");
-		   partsRobot.msgClearLineOfSight(pr.nestOne, pr.nestTwo);
-		   pr.state = PictureRequestState.ASKED_PARTS_ROBOT;
+		catch(Exception ex){}
+	}
+
+	private void checkLineOfSight(PictureRequest pr){
+		debug("Executing checkLineOfSight()");
+		partsRobot.msgClearLineOfSight(pr.nestOne, pr.nestTwo);
+		pr.state = PictureRequestState.ASKED_PARTS_ROBOT;
+	}
+
+/** ================================================================================ **/
+/** 									ANIMATIONS 									 **/
+/** ================================================================================ **/
+	
+	private void DoAnimationTakePictureOfInstpectionSlot() {
+		debug("Executing DoAnimationTakePictureOfInstpectionSlot()");
+		server.command(this,"va kam cmd takepictureofinspection");
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 
+
+	}
+	
+	private void DoAnimationTakePictureOfNest(Nest nest) {
+
+		debug("Executing DoAnimationTakePicture()");
+		server.command(this,"va lm cmd takepictureofnest " + nest.getPosition()/2);
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+/** ================================================================================ **/
+/** 									HELPERS 									 **/
+/** ================================================================================ **/
+
+	public void tellPartsRobotToGrabPartFromNest(Nest n){
+		if(n.getParts().size() > 0){
+			partsRobot.msgGrabGoodPartFromNest(n, n.getPart());
+		}
+	}
+	
+	private int calculateNestState(Nest nest){
+		// Get index of nest to use the arrays to store the number of jams etc.
+		int nestIndex = this.nests.indexOf(nest);
+		
+		// Check if the nest is not used
+		if(!nest.isBeingUsed()) {
+			nestJammedWaiting[nestIndex] = 0;
+			return 0; // Nest is unused
+		}
+		
+		// If the nest is unstable
+		else if(nest.getState() == NestState.UNSTABLE) {
+			nestJammedWaiting[nestIndex] = 0;
+			return 1; // Nest is unstable
+		}
+
+		// if nest is empty
+		
+		synchronized (nest.getParts()) {
+			if (nest.getParts().size() == 0) {
+
+				nestJammedWaiting[nestIndex]++;
+				if (nestJammedWaiting[nestIndex] > 1) {
+					nestJammedWaiting[nestIndex] =0;
+					return 2; //JAMMED
+				}
+				return 3; //OK
+
+			} else {
+				nestJammedWaiting[nestIndex] = 0;
+				return 3; // OK
+			}
+		}
+		
+	}
+	
+	public void sendMessageToFeederAboutJam(Nest n){
+		
+		int index = this.nests.indexOf(n);
+		
+		if(n.getParts().size() == 0 && n.getLane().getParts().size() == 0){
+			n.msgYouNeedPart(n.getPart());
+		}
+		switch(index){
+			case 0: feeder_zero.msgLaneMightBeJammed(0); break;
+			case 1: feeder_zero.msgLaneMightBeJammed(1); break;
+			case 2: feeder_one.msgLaneMightBeJammed(0); break;
+			case 3: feeder_one.msgLaneMightBeJammed(1); break;
+			case 4: feeder_two.msgLaneMightBeJammed(0); break;
+			case 5: feeder_two.msgLaneMightBeJammed(1); break;
+			case 6: feeder_three.msgLaneMightBeJammed(0); break;
+			case 7: feeder_three.msgLaneMightBeJammed(1); break;
+		}
+	}
+
+	public void sendMessageToFeederAboutBadNest(Nest n){
+		
+		int index = this.nests.indexOf(n);
+		debug("################################");
+		debug("        BAD NEST("+index+")      ");
+		debug("################################");
+		switch(index){
+			case 0: feeder_zero.msgBadNest(0); break;
+			case 1: feeder_zero.msgBadNest(1); break;
+			case 2: feeder_one.msgBadNest(0); break;
+			case 3: feeder_one.msgBadNest(1); break;
+			case 4: feeder_two.msgBadNest(0); break;
+			case 5: feeder_two.msgBadNest(1); break;
+			case 6: feeder_three.msgBadNest(0); break;
+			case 7: feeder_three.msgBadNest(1); break;
+		}
+	}
+
+	public void setFeeder(Feeder feeder, int feederNum){
+		if (feederNum == 0){
+			this.feeder_zero = feeder;
+		}
+		if (feederNum == 1){
+			this.feeder_one = feeder;
+		}
+		if (feederNum == 2){
+			this.feeder_two = feeder;
+		}
+		if (feederNum == 3){
+			this.feeder_three = feeder;
+		}
+	}
+
+	public void setPartsRobot(PartsRobot pr) {
+		this.partsRobot = pr;
+	}
+
+	protected void debug(String msg) {
+		if(true) {
+			print(msg, null);
+		}
+	}
 
 	
-	
-		public void setPartsRobot(PartsRobot pr) {
-			this.partsRobot = pr;
-		}
+
 }

@@ -1,17 +1,30 @@
 package factory;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import factory.KitRobotAgent.KitAtInspection;
+
 import factory.interfaces.*;
 import factory.masterControl.MasterControl;
 import agent.Agent;
 import factory.Kit;
 import factory.Kit.KitState;
+import factory.KitRobotAgent.StandInfo;
 
 public class StandAgent extends Agent implements Stand {
 	
 	/** DATA **/
 
 	public enum StandAgentState { FREE, KIT_ROBOT, PARTS_ROBOT }
-	public enum MySlotState { EMPTY, EMPTY_KIT_REQUESTED, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION, KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT}
+	public enum MySlotState { EMPTY, EMPTY_KIT_REQUESTED, EMPTY_KIT_JUST_PLACED, BUILDING_KIT, MOVING_KIT_TO_INSPECTION,
+		KIT_JUST_PLACED_AT_INSPECTION, ANALYZING_KIT, KIT_ANALYZED, PROCESSING_ANALYZED_KIT, NEEDS_FIXING };
+	
+	//TODO added this to force failure inspection
+	public boolean forceFail = false;
+	
+	//TODO added list of parts needed for repair
+	public List<String> brokenPartsList = Collections.synchronizedList(new ArrayList<String>());
 	
 	public enum KitRobotState { WANTS_ACCESS, NO_ACCESS };
 
@@ -38,6 +51,7 @@ public class StandAgent extends Agent implements Stand {
 		public String name;
 		public Kit kit;
 		public MySlotState state;
+	
 	
 		public MySlot(String name){
 			this.state = MySlotState.EMPTY;
@@ -94,6 +108,13 @@ public class StandAgent extends Agent implements Stand {
 	}
 	
 	/** MESSAGES **/
+	
+	//TODO added this to force kit inspection to fail.  This will be called each time a part is dropped
+	public void msgForceKitInspectionToFail(String brokenPart){
+		forceFail = true;
+		
+		brokenPartsList.add(brokenPart);
+	}
 	
 	/**
 	 * Message that is Received from the conveyor when it brought an empty kit
@@ -181,6 +202,12 @@ public class StandAgent extends Agent implements Stand {
 			   return true;
 			}
 			
+			if(topSlot.state  == MySlotState.NEEDS_FIXING || bottomSlot.state  == MySlotState.NEEDS_FIXING) {
+				DoProcessBadKit();
+				return true;
+			}
+			
+			
 			/**
 			 * If there is a Kit in the Inspection Slot that hasn't been analyzed, then ask Vision to do so 
 			 */
@@ -192,7 +219,7 @@ public class StandAgent extends Agent implements Stand {
 			/**
 			 * If there is a Kit in the Inspection Slot that has been analyzed, then ask KitRobot to process it 
 			 */
-			if (state == StandAgentState.FREE && inspectionSlot.state == MySlotState.KIT_ANALYZED) {
+			if (state == StandAgentState.FREE && inspectionSlot.state == MySlotState.KIT_ANALYZED && this.kr_state != KitRobotState.WANTS_ACCESS) {
 				DoProcessAnalyzedKit();
 				return true;
 			}
@@ -209,16 +236,24 @@ public class StandAgent extends Agent implements Stand {
 				DoProcessEmptyBinFromConveyor();
 				return true;
 			}
+			
+			//TODO in scheduler, check top and bottom slot for NEEDS_FIXING in order to figure out 
+			//which parts need to be fixed
+			/**
+			 * If there is a kit that needs fixing, then fix it.
+			 */
+			
+			
 			/**
 			 * If there is a completed kit and the stand is not being used
 			 */
 			if (state == StandAgentState.FREE && topSlot.kit != null && topSlot.kit.state == KitState.COMPLETE 
-					&& topSlot.state == MySlotState.BUILDING_KIT && inspectionSlot.state == MySlotState.EMPTY) {
+					&& topSlot.state == MySlotState.BUILDING_KIT && inspectionSlot.state == MySlotState.EMPTY && needToClearStand!=true && this.kr_state != KitRobotState.WANTS_ACCESS) {
 			   DoTellKitRobotToMoveKitToInspectionSlot(topSlot);
 			   return true;
 			}
 			if (state == StandAgentState.FREE && bottomSlot.kit != null && bottomSlot.kit.state == KitState.COMPLETE 
-					&& bottomSlot.state == MySlotState.BUILDING_KIT && inspectionSlot.state == MySlotState.EMPTY) {
+					&& bottomSlot.state == MySlotState.BUILDING_KIT && inspectionSlot.state == MySlotState.EMPTY && needToClearStand!=true && this.kr_state != KitRobotState.WANTS_ACCESS) {
 			   DoTellKitRobotToMoveKitToInspectionSlot(bottomSlot);
 			   return true;
 			}
@@ -246,7 +281,8 @@ public class StandAgent extends Agent implements Stand {
 			 * If there is an empty kit at the conveyor and there is a place to put it, ask the Kit Robot to fetch it
 			 * as long as the stand is not being used.
 			 */
-			if (state == StandAgentState.FREE && (topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY)) {
+			//TODO add check for checking atInspection != EMPTY
+			if ((topSlot.state == MySlotState.EMPTY || bottomSlot.state == MySlotState.EMPTY) && inspectionSlot.state.equals(MySlotState.EMPTY)) {
 			   DoAskKitRobotToGetEmptyKit();
 			   return true;
 			}       
@@ -311,9 +347,26 @@ public class StandAgent extends Agent implements Stand {
 		else {
 			// Throw Exception
 		}
-	   
 	}
 	
+	//TODO added this
+	/**
+	 * Method that places the bin that needs fixing in the right slot
+	 */
+	private void DoProcessBadKit(){
+		debug("Executing DoProcessBadKit()");
+
+		if(topSlot.state  == MySlotState.NEEDS_FIXING) {
+			DoTellPartsRobotToFixKitAtSlot(topSlot);
+		}
+		else if(bottomSlot.state  == MySlotState.NEEDS_FIXING) {
+			DoTellPartsRobotToFixKitAtSlot(bottomSlot);
+		}
+		else {
+			// Throw Exception
+		}
+	}
+		
 	/**
 	 * Method that tells the PartsRobot to build Kit
 	 */
@@ -321,7 +374,23 @@ public class StandAgent extends Agent implements Stand {
 		debug("Executing DoTellPartsRobotToBuildKitAtSlot("+slot.name+")");
 		partsRobot.msgBuildKitAtSlot(slot.name);
 		slot.state = MySlotState.BUILDING_KIT;
-	} 
+	}
+
+	//TODO Added this
+	/**
+	 * Method that tells the PartsRobot to fix Kit at slot
+	 */
+	private void DoTellPartsRobotToFixKitAtSlot(MySlot slot){
+		debug("Executing DoTellPartsRobotToFixKitAtSlot("+slot.name+")");
+		debug("LIST OF PARTS NEEDED FOR BROKEN KIT:");
+		for (int i=0; i < brokenPartsList.size(); i++){
+			debug("Part " + i + ": " + brokenPartsList.get(i));
+		}
+		
+		partsRobot.msgFixKitAtSlot(slot.name, brokenPartsList);
+		brokenPartsList.clear();
+		slot.state = MySlotState.BUILDING_KIT;
+	}
 	
 	/**
 	 * Method that tells the PartsRobot to deliver parts
@@ -346,12 +415,19 @@ public class StandAgent extends Agent implements Stand {
 		kitRobot.msgComeMoveKitToInspectionSlot(slot.name);
 		slot.state = MySlotState.MOVING_KIT_TO_INSPECTION;                   
 	}
+	
+	//TODO added this method
 	/**
 	 * Method that tells the Vision to take picture of the kit
 	 */
 	private void DoAskVisionToInspectKit() {
 		debug("Executing DoAskVisionToInspectKit()");
+		if(forceFail){
+			inspectionSlot.kit.forceFail = true;
+			forceFail = false;
+		}
 		vision.msgAnalyzeKitAtInspection(inspectionSlot.kit);
+		//remove parts here?
 	   	inspectionSlot.state = MySlotState.ANALYZING_KIT; 
 	   	stateChanged();
 	}   
@@ -360,13 +436,13 @@ public class StandAgent extends Agent implements Stand {
 	 * Method that tells the KitRobot to process the Kit
 	 */
 	private void DoProcessAnalyzedKit() {
-		debug("Executing DoProcessAnalyzedKit()");
+		debug("Executing DoProcessAnalyzedKit() -- " + this.state + " kr: " + KitRobotState.WANTS_ACCESS);
 		kitRobot.msgComeProcessAnalyzedKitAtInspectionSlot();
 		inspectionSlot.state = MySlotState.PROCESSING_ANALYZED_KIT;                    
 	}
 	
 	public void DoTellKitRobotToClearStand(){
-		debug("Executing DoTellKitRobotToClearStand()");
+		debug("Executing DoTellKitRobotToClearStand() -- " + this.state + " kr: " + KitRobotState.WANTS_ACCESS);
 		kitRobot.msgClearTheStandOff();
 		this.needToClearStand = false;
 	}

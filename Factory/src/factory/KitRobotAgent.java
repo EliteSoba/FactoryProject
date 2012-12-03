@@ -23,9 +23,10 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	int inspectionAreaClear = 1; //0 = not clear, 1 = clear, -1 = need to find out	starting at empty
 	public ConveyorStatus conveyor_state = ConveyorStatus.EMPTY;
 	public List<StandInfo> actions = Collections.synchronizedList(new ArrayList<StandInfo>());
+	public KitAtInspection atInspection = KitAtInspection.EMPTY;
 	
 	boolean isUnitTesting = false; 
-	
+	public enum KitAtInspection { TOP, BOTTOM, EMPTY };
 	public enum ConveyorStatus {EMPTY, GETTING_KIT, EMPTY_KIT, COMPLETED_KIT};
 	public enum StandInfo { NEED_EMPTY_TOP, NEED_EMPTY_BOTTOM, NEED_INSPECTION_TOP, NEED_INSPECTION_BOTTOM, INSPECTION_SLOT_DONE, KIT_GOOD, KIT_BAD, CLEAR_OFF_UNFINISHED_KITS };
 	
@@ -47,10 +48,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	}
 	
 	public void msgClearTheStandOff() {
-		/**
-		 * Telling the KitRobot to dump any Kits that are not yet completed.
-		 * the kits that are are already in need of inspection or in the inspectionSlot will not be disturbed
-		 */
+		debug("Receieved msgClearTheStandOff(), now knows to clear off the stand");
 		if (!actions.contains(StandInfo.CLEAR_OFF_UNFINISHED_KITS)) {
 			actions.add(StandInfo.CLEAR_OFF_UNFINISHED_KITS);
 		}
@@ -121,17 +119,17 @@ public class KitRobotAgent extends Agent implements KitRobot {
 
 		synchronized(actions){
 			if (actions.contains(StandInfo.KIT_BAD)) {
-				dumpKit();
-				return true;
-			}
-			
-			if (actions.contains(StandInfo.KIT_GOOD) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
-				exportKit();
+				putKitBackToFix();
 				return true;
 			}
 			
 			if (actions.contains(StandInfo.CLEAR_OFF_UNFINISHED_KITS)) {
 				clearOffStand();
+				return true;
+			}
+			
+			if (actions.contains(StandInfo.KIT_GOOD) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
+				exportKit();
 				return true;
 			}
 			
@@ -160,8 +158,6 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				processKitAtInspection(); 
 				return true;
 			}
-			
-			
 			
 			
 			if ((actions.contains(StandInfo.NEED_EMPTY_TOP) || actions.contains(StandInfo.NEED_EMPTY_BOTTOM)) && conveyor_state.equals(ConveyorStatus.EMPTY)) {
@@ -198,7 +194,9 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				actions.remove(StandInfo.INSPECTION_SLOT_DONE);
 				stand.msgKitRobotNoLongerUsingStand();
 			}
-		} else {
+		}
+		//TODO this is where kit inspection fails.  figure out why it removes all parts rather than just bad parts
+		else {
 			//kit failed inspection
 			debug("KitRobot sees that the kit failed inspection");
 			if (!actions.contains(StandInfo.KIT_GOOD) && !actions.contains(StandInfo.KIT_BAD)) {
@@ -206,9 +204,8 @@ public class KitRobotAgent extends Agent implements KitRobot {
 				actions.remove(StandInfo.INSPECTION_SLOT_DONE);
 			}
 		}
-		stateChanged();
 	}
-	
+	/*
 	public void dumpKit() {
 		//action for dumping a bad kit
 		debug("KitRobot dumping bad kit");
@@ -223,8 +220,31 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stand.setSlotState("inspectionSlot", MySlotState.EMPTY);
 		actions.remove(StandInfo.KIT_BAD);
 		stand.msgKitRobotNoLongerUsingStand();
+	}
+	*/
+	
+	public void putKitBackToFix() {
+		//action for moving a kit back to the slot it came from to add in missing parts
+		debug("KitRobot is putting back the kit that failed inspection.");
 		
-		stateChanged();
+		if (atInspection.equals(KitAtInspection.TOP) || atInspection.equals(KitAtInspection.BOTTOM)) {
+			String pos;
+			if (atInspection.equals(KitAtInspection.TOP)) { pos = "topSlot"; } else { pos = "bottomSlot"; }
+			if (!isUnitTesting) {
+				DoPutKitBack(pos);
+			}
+			stand.setSlotKit(pos, stand.getSlotKit("inspectionSlot"));
+			stand.setSlotState(pos, MySlotState.NEEDS_FIXING);
+			stand.setSlotKit("inspectionSlot", null);
+			stand.setSlotState("inspectionSlot", MySlotState.EMPTY);
+			actions.remove(StandInfo.KIT_BAD);
+			atInspection = KitAtInspection.EMPTY;
+			stand.msgKitRobotNoLongerUsingStand();
+		} else {
+			//shouldn't have been called
+			debug("putKitBackToFix() was called when atInspection = EMPTY");
+			stand.msgKitRobotNoLongerUsingStand();
+		}
 	}
 	
 	public void exportKit() {
@@ -251,9 +271,11 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stand.setSlotState("inspectionSlot", MySlotState.EMPTY);
 		conveyor_state = ConveyorStatus.COMPLETED_KIT;
 		actions.remove(StandInfo.KIT_GOOD);
-		stand.msgKitRobotNoLongerUsingStand();
 		
-		stateChanged();
+		atInspection = KitAtInspection.EMPTY;
+		
+		debug("Kit exported, telling the Stand it is done");
+		stand.msgKitRobotNoLongerUsingStand();
 	}
 	
 	public void putEmptyKitOnStand(String pos) {
@@ -304,6 +326,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		 * KitRobot will dump any Kits that are not yet completed.
 		 * the kits that are are already in need of inspection or in the inspectionSlot will not be disturbed
 		 */
+		
 		stand.msgKitRobotWantsStandAccess();
 		
 		if (!isUnitTesting) {
@@ -316,7 +339,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		}
 		
 		if (stand.getSlotKit("topSlot") != null) {
-			if (stand.getSlotKit("topSlot").state.equals(KitState.INCOMPLETE)) {
+			if (stand.getSlotKit("topSlot").parts.size() != 0) {
 				//do animation of dumping topSlot
 				if (!isUnitTesting) {
 					DoDumpKitAtSlot("topSlot");
@@ -326,13 +349,27 @@ public class KitRobotAgent extends Agent implements KitRobot {
 			}
 		}
 		if (stand.getSlotKit("bottomSlot") != null) {
-			if (stand.getSlotKit("bottomSlot").state.equals(KitState.INCOMPLETE)) {
+			if (stand.getSlotKit("bottomSlot").parts.size() != 0) {
 				//do animation of dumping bottomSlot
 				if (!isUnitTesting) {
 					DoDumpKitAtSlot("bottomSlot");
 				}
 				stand.setSlotKit("bottomSlot", null);
 				stand.setSlotState("bottomSlot", MySlotState.EMPTY);
+				if (actions.contains(StandInfo.NEED_INSPECTION_BOTTOM)) {
+					actions.remove(StandInfo.NEED_INSPECTION_BOTTOM);
+				}
+			}
+		}
+		
+		if (stand.getSlotKit("inspectionSlot") != null) {
+			if (!isUnitTesting) {
+				DoDumpKitAtSlot("inspectionSlot");
+				stand.setSlotKit("inspectionSlot", null);
+				stand.setSlotState("inspectionSlot", MySlotState.EMPTY);
+				if (actions.contains(StandInfo.NEED_INSPECTION_TOP)) {
+					actions.remove(StandInfo.NEED_INSPECTION_TOP);
+				}
 			}
 		}
 		
@@ -351,6 +388,7 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		stateChanged();
 	}
 	
+	//TODO check to see if there is a way to prevent an automatic kit to be put in empty slot
 	public void moveToInspectionSpot(String pos) {
 		//method for KitRobot moving a kit to the inspection slot
 		//Can assume that has exclusive access to the Stand during this
@@ -367,23 +405,27 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		
 		debug("Executing moveToInspectionSpot for the" + pos);
 		
-		if (!isUnitTesting) {
-			DoMoveKitToInspection(pos);
+		if (stand.getSlotKit(pos) != null) {
+		
+			if (!isUnitTesting) {
+				DoMoveKitToInspection(pos);
+			}
+			
+			debug("Animation moveKitFromSlotToInspection() was completed");
+			
+			stand.setSlotKit("inspectionSlot", stand.getSlotKit(pos));
+			stand.setSlotKit(pos, null); //TODO why is this null?
+			stand.setSlotState("inspectionSlot", MySlotState.KIT_JUST_PLACED_AT_INSPECTION);
+			stand.setSlotState(pos, MySlotState.EMPTY);	//TODO change MySlotState.EMPTY to MySlotState.PENDING?
 		}
-		
-		debug("Animation moveKitFromSlotToInspection() was completed");
-		
-		stand.setSlotKit("inspectionSlot", stand.getSlotKit(pos));
-		stand.setSlotKit(pos, null);
-		stand.setSlotState("inspectionSlot", MySlotState.KIT_JUST_PLACED_AT_INSPECTION);
-		stand.setSlotState(pos, MySlotState.EMPTY);
-		
-		
 		if (pos.equals("bottomSlot")) {
 			actions.remove(StandInfo.NEED_INSPECTION_BOTTOM);
+			atInspection = KitAtInspection.BOTTOM;
 		} else if (pos.equals("topSlot")) {
 			actions.remove(StandInfo.NEED_INSPECTION_TOP);
+			atInspection = KitAtInspection.TOP;
 		}
+		
 		stand.msgKitRobotNoLongerUsingStand();
 		
 		stateChanged();
@@ -401,28 +443,34 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	
 	private void DoMoveInspectedKitToConveyor() {
 		debug("doing moveInspectedKitToConveyor");
-		server.command("kra kam cmd putinspectionkitonconveyor");
+		server.command(this,"kra kam cmd putinspectionkitonconveyor");
 		waitForAnimation();
 	}
 	
 	private void DoPutEmptyKitAt(String pos) {
 		debug("doing PutEmptyKitAt Animation for the "+ pos);
-		server.command("kra kam cmd putemptykitatslot "+pos);
+		server.command(this,"kra kam cmd putemptykitatslot "+pos);
 		waitForAnimation();
 	}
 	
 	private void DoMoveKitToInspection(String pos) {
 		debug("doing MoveKitToInspection Animation.  moving the kit at the "+pos+" to the inspectionSlot");
-		server.command("kra kam cmd movekittoinspectionslot " + pos);
+		server.command(this,"kra kam cmd movekittoinspectionslot " + pos);
 		waitForAnimation();
 	}
 	
 	private void DoDumpKitAtSlot(String pos) {
 		debug("doing DoDumpKitAtSlot Animation.  dumping the kit at "+pos);
-		server.command("kra kam cmd dumpkitatslot "+pos);
+		server.command(this,"kra kam cmd dumpkitatslot "+pos);
 		waitForAnimation();
 	}
 	
+	private void DoPutKitBack(String pos) {
+		debug("doing DoPutKitBack Animation. putting the kit back at "+pos);
+		server.command(this,"kra kam cmd movekitback "+pos);
+		waitForAnimation();
+		
+	}
 	////Hacks / MISC
 	public void setStand(Stand s) {
 		this.stand = s;
@@ -431,4 +479,9 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public void setConveyor(Conveyor c) {
 		this.conveyor = c;
 	}
+	
+	public KitAtInspection getAtInspection(){
+		return this.atInspection;
+	}
+	
 }

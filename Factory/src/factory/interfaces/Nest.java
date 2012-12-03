@@ -1,18 +1,24 @@
 package factory.interfaces;
 
+import java.util.List;
+
 import factory.Part;
 
 public interface Nest {
+	public enum NestState { STABLE, UNSTABLE}
 
-	Part part = null; //temporary.  later, will need to implement a getPart();
-	String nestName = "";
-	void msgDump();
+	
 	String getNestName();
 	Part getPart();
 
+	boolean isBeingUsed();
+	List<Part> getParts();
+	NestState getState();
+	Lane getLane();
 	int getPosition();
 	void msgYouNeedPart(Part part);
 	
-//	void msgPartsRobotGrabbingPartFromNest(int coordinate);
-//	void msgFeedingParts(int numParts);
+	void setBeingUsed(boolean val);
+	void msgPartRemovedFromNest(String partName);
+	void msgPartAddedToNest(Part part);
 }

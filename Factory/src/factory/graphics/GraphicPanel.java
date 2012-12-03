@@ -4,6 +4,8 @@ import java.awt.*;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -20,12 +22,13 @@ import factory.client.*;
 public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	public int WIDTH, HEIGHT;
-	public static final Image TILE_IMAGE = Toolkit.getDefaultToolkit().getImage("Images/Tiles/floorTileXGrill.png");
+	public static final Image TILE_IMAGE = Toolkit.getDefaultToolkit().getImage("Images/tiles/floorTilePortal.jpg");
 	public static final int TILE_SIZE = 128;
-	public static final int DELAY = 40;
+	public static final int DELAY = 1;
 	
 	protected Client am; //The Client that holds this
 	
+	// Checks for which managers to instantiate objects for
 	protected boolean isLaneManager;
 	protected boolean isGantryRobotManager;
 	protected boolean isKitAssemblyManager;
@@ -35,9 +38,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	protected GraphicLaneManager [] lane;
 	
 	// CAMERA
-	protected int flashCounter;
 	protected int flashFeederIndex;
-	protected static Image flashImage;
+	protected ArrayList<Image> scanAnimation;
+	protected int scanAnimationCounter;
+	protected int scanAnimationSpeed;
 	
 	// KIT MANAGER
 	protected GraphicConveyorBelt belt; //The conveyer belt
@@ -51,12 +55,19 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	// GANTRY
 	protected GraphicGantryRobot gantryRobot;
 	
+	// MESSAGES
+	protected ArrayList<String> messageList;
+	protected Font messageFont;
+	protected int messageCounter;
+	private static int MAX_MESSAGES = 5;
+	
 	protected GraphicItem transferringItem;
 	
 	public GraphicPanel(/*int offset/**/) {
 		WIDTH = 1100;
 		HEIGHT = 720;
 		am = null;
+		messageList = new ArrayList<String>();
 		/*lane = null;
 		belt = null;
 		station = null;
@@ -70,7 +81,17 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		isKitAssemblyManager = false;
 		isFactoryProductionManager = false;*/
 		
-		flashImage = Toolkit.getDefaultToolkit().getImage("Images/cameraFlash3x3.png");
+		//flashImage = Toolkit.getDefaultToolkit().getImage("Images/cameraFlash3x3.png");
+		scanAnimation = GraphicAnimation.loadAnimationFromFolder("Images/scanFlash/", 0, ".png");
+		scanAnimationCounter = -1;
+		scanAnimationSpeed = 3;
+		try {
+			messageFont = Font.createFont(Font.TRUETYPE_FONT,new File("Fonts/digitalism.ttf"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		messageCounter = -1;
 		transferringItem = null;
 		
 		/*belt = new GraphicConveyorBelt(0-offset, 0, this);
@@ -97,7 +118,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**TODO: Kit Assembly Methods*/
 	/**
 	 * Adds a Kit into the Factory via Conveyor Belt
-	 * @see newEmptyKitDone()
+	 * @see #newEmptyKitDone()
 	 */
 	public void newEmptyKit() {
 		//if (!belt.kitin())
@@ -108,7 +129,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Sends Kit Robot to pick up a Kit from the Conveyor Belt and move to the designated slot in the Kit Station
 	 * @param target The targeted slot in the Kit Station
-	 * @see moveEmptyKitToSlotDone()
+	 * @see #moveEmptyKitToSlotDone()
 	 */
 	public void moveEmptyKitToSlot(int target) {
 		//if (belt.pickUp() && !kitRobot.kitted() && station.getKit(target) == null) {
@@ -121,7 +142,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Sends Kit Robot to move a Kit from the designated slot in the Kit Station to the Inspection Station
 	 * @param target The targeted slot in the Kit Station
-	 * @see moveKitToInspectionDone()
+	 * @see #moveKitToInspectionDone()
 	 */
 	public void moveKitToInspection(int target) {
 		//if (!kitRobot.kitted() && station.getKit(target) != null) {
@@ -133,7 +154,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Takes a picture of the Kit in the Inspection Station
-	 * @see takePictureOfInspectionDone()
+	 * @see #takePictureOfInspectionDone()
 	 */
 	public void takePictureOfInspectionSlot() {
 		//if (station.hasCheck())
@@ -144,7 +165,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Dumps the Kit at the designated slot in the Kit Station
 	 * @param target The targeted slot in the Kit Station
-	 * @see dumpKitAtInspectionDone()
+	 * @see #dumpKitAtInspectionDone()
 	 */
 	public void dumpKitAtSlot(int target) {
 		if (isKitAssemblyManager || isFactoryProductionManager) {
@@ -155,7 +176,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Dumps the Kit in the Inspection Station
-	 * @see dumpKitAtInspectionDone()
+	 * @see #dumpKitAtInspectionDone()
 	 */
 	public void dumpKitAtInspection() {
 		//if (!kitRobot.kitted() && station.getCheck() != null)
@@ -165,7 +186,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Moves the Kit in the Inspection Station to the Conveyor Belt
-	 * @see moveKitFromInspectionToConveyorDone()
+	 * @see #moveKitFromInspectionToConveyorDone()
 	 */
 	public void moveKitFromInspectionToConveyor() {
 		//if (station.getCheck() != null && !kitRobot.kitted())
@@ -174,90 +195,89 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	/**
+	 * Moves the Kit in the Inspection Station back to the designated slot in the Kit Station
+	 * @param target The designated slot in the Kit Station
+	 * @see #moveKitFromInspectionBackToStationDone()
+	 */
+	public void moveKitFromInspectionBackToStation(int target) {
+		if (isKitAssemblyManager || isFactoryProductionManager) {
+			kitRobot.setReCheck(true);
+			kitRobot.setStationTarget(target);
+		}
+	}
+	
+	/**
 	 * Sends a Kit out of the Factory via Conveyor Belt
-	 * @see exportKitDone()
+	 * @see #exportKitDone()
 	 */
 	public void exportKit() {
 		if (isKitAssemblyManager || isFactoryProductionManager)
 			belt.exportKit();
 	}
 	
+	/**
+	 * Drops the requested Items from the next Inspected Kit
+	 * @param dropped The Binary String delineating the parts to drop
+	 */
+	public void dropParts(String dropped) {
+		if (isKitAssemblyManager || isFactoryProductionManager)
+			kitRobot.breakNextKit(dropped);
+		if (isFactoryProductionManager)
+			drawString("Kit Inspection Failure Imminent!");
+	}
+	
 	/**TODO: Gantry Robot methods*/
 	/**
 	 * Moves Gantry Robot to pick up a Bin with the provided image
 	 * @param path The image path to the desired Part image
-	 * @see gantryRobotArrivedAtPickup()
+	 * @see #gantryRobotArrivedAtPickup()
 	 */
 	public void moveGantryRobotToPickup(String path)
 	{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(1);
 			gantryRobot.setPartPath(path);
-			gantryRobot.setDestination(WIDTH-100,-100,0);
+			gantryRobot.setDestination(WIDTH-140,-125,0);
 		}
 	}
 	
 	/**
 	 * Moves Gantry Robot to the designated Feeder to drop off Bin
 	 * @param feederIndex The designated Feeder
-	 * @see gantryRobotArrivedAtFeederForDropoff()
+	 * @see #gantryRobotArrivedAtFeederForDropoff()
 	 */
 	public void moveGantryRobotToFeederForDropoff(int feederIndex)
 	{
-		// Error checking code has temporarily(?) been commented out as requested by Alfonso
-		//if(lane[feederIndex].hasBin())
-		//{
-			//System.err.println("Can't dropoff: feeder " + feederIndex + " (0-based index) already has a bin!");
-			//gantryRobotArrivedAtFeederForDropoff();
-		//}
-		//else if(!gantryRobot.hasBin())
-		//{
-			//System.err.println("Can't dropoff: gantry robot does not have a bin!");
-			//gantryRobotArrivedAtFeederForDropoff();
-		//}
-		//else
-		//{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(3);
 			gantryRobot.setDestinationFeeder(feederIndex);
-			gantryRobot.setDestination(lane[feederIndex].feederX+115, lane[feederIndex].feederY+15,180);
+			gantryRobot.setDestination(lane[feederIndex].feederX+125, lane[feederIndex].feederY+5,180);
 		}
-			//gantryRobotArrivedAtFeederForDropoff();
-		//}
 	}
 	
 	/**
 	 * Moves Gantry Robot to the designated Feeder to pick up a purged Bin
 	 * @param feederIndex The designated Feeder
-	 * @see gantryRobotArrivedAtFeederForPickup()
+	 * @see #gantryRobotArrivedAtFeederForPickup()
 	 */
 	public void moveGantryRobotToFeederForPickup(int feederIndex)
 	{
-		// Error checking
-		//if(!lane[feederIndex].hasBin())
-		//{
-		//	System.err.println("Can't pickup: no bin at feeder " + feederIndex + " (0-based index)!");
-		//	gantryRobotArrivedAtFeederForPickup();
-		//}
-		//else
-		//{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(5);
 			gantryRobot.setDestinationFeeder(feederIndex);
-			gantryRobot.setDestination(lane[feederIndex].feederX+115, lane[feederIndex].feederY+15,180);
+			gantryRobot.setDestination(lane[feederIndex].feederX+125, lane[feederIndex].feederY+5,180);
 		}
-		//}
 	}
 	
 	/**TODO: Parts Robot and Nest methods*/
 	/**
 	 * Takes a picture of the designated Lane pair
 	 * @param nestIndex The designated Lane pair
-	 * @see cameraFlashDone()
+	 * @see #cameraFlashDone()
 	 */
 	public void cameraFlash(int nestIndex) {
 		if (isLaneManager || isFactoryProductionManager) {
-			flashCounter = 10;
+			scanAnimationCounter = 0;
 			flashFeederIndex = nestIndex;
 		}
 	}
@@ -267,7 +287,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * Moves Parts Robot to the designated Nest to pick up Part
 	 * @param nestIndex The designated Nest
 	 * @deprecated Use movePartsRobotToNest(int nestIndex, int itemIndex) instead
-	 * @see partsRobotArrivedAtNest()
+	 * @see #partsRobotArrivedAtNest()
 	 */
 	public void movePartsRobotToNest(int nestIndex) {
 		if (isFactoryProductionManager) {
@@ -282,14 +302,14 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * Moves Parts Robot to the designated Nest to pick up the Part at the given index
 	 * @param nestIndex The designated Nest
 	 * @param itemIndex The designated Part
-	 * @see partsRobotArrivedAtNest()
+	 * @see #partsRobotArrivedAtNest()
 	 */
 	public void movePartsRobotToNest(int nestIndex, int itemIndex) {
 		if (isFactoryProductionManager) {
 			partsRobot.setItemIndex(itemIndex);
 			partsRobot.setState(1);
 			partsRobot.adjustShift(5);
-			partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-10,nests.get(nestIndex).getY()-15,0);
+			partsRobot.setDestination(nests.get(nestIndex).getX()-nests.get(nestIndex).getImageWidth()-60,nests.get(nestIndex).getY()-15,0);
 			partsRobot.setDestinationNest(nestIndex);
 		}
 	}
@@ -297,7 +317,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Moves Parts Robot to the designated slot in the Kit Station
 	 * @param kitIndex The designated slot in the Kit Station
-	 * @see partsRobotArrivedAtStation()
+	 * @see #partsRobotArrivedAtStation()
 	 */
 	public void movePartsRobotToStation(int kitIndex) {
 		if (isFactoryProductionManager) {
@@ -320,18 +340,18 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Moves Parts Robot to the center of the Factory
-	 * @see partsRobotArrivedAtCenter()
+	 * @see #partsRobotArrivedAtCenter()
 	 */
 	public void movePartsRobotToCenter() {
 		if (isFactoryProductionManager) {
 			partsRobot.setState(5);
-			partsRobot.setDestination(WIDTH/2-200, HEIGHT/2,0);
+			partsRobot.setDestination(340,335,0);
 		}
 	}
 	
 	/**
 	 * Drops whatever items the Parts Robot is holding
-	 * @see dropPartsRobotsItemsDone()
+	 * @see #dropPartsRobotsItemsDone()
 	 */
 	public void dropPartsRobotsItems() {
 		if (isFactoryProductionManager)
@@ -339,43 +359,78 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		dropPartsRobotsItemsDone();
 	}
 	
+	/**
+	 * Dumps the Items at the given Nest
+	 * @param nestIndex The given Nest Pair
+	 * @param isTop If the Nest to be purged is on the Top or the Bottom
+	 */
+	public void dumpNest(int nestIndex, boolean isTop) {
+		if (isLaneManager || isFactoryProductionManager) {
+			nests.get(nestIndex*2 + (isTop ? 0 : 1)).clearItems();
+			sendMessage("fa cnf " + nestIndex);
+		}
+	}
+	
 	/**TODO: Lane methods*/
 	/**
 	 * Begins feeding the designated Feeder
 	 * @param feederNum The designated Feeder
-	 * @see feedLaneDone(int feederNum) 
+	 * @see #feedLaneDone(int feederNum) 
 	 */
 	public void feedFeeder(int feederNum) {
 		//if(!lane[feederNum].lane1PurgeOn){	//If purging is on, cannot feed!
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].bin.getBinItems().clear();
+			if(lane[feederNum].divergeUp){
+				//lane[feederNum].changeTopLaneSpeed(1);			//resets laneSpeed to 1. Change to panel's slide bar
+				//lane[feederNum].changeTopLaneAmplitude(2);		//resets amplitude to 2
+			}
+			else{
+				//lane[feederNum].changeBottomLaneSpeed(1);		//resets laneSpeed to 1. Change to panel's slide bar
+				//lane[feederNum].changeTopLaneAmplitude(2);		//resets amplitude to 2
+			}
 			for(int i = 0; i < lane[feederNum].bin.binSize;i++){		//unlimited items
 				lane[feederNum].bin.binItems.add(new GraphicItem(-40, 0, "Images/"+lane[feederNum].bin.partName+".png"));
 			}
 			if(lane[feederNum].hasBin() && lane[feederNum].bin.getBinItems().size() > 0){
-				lane[feederNum].laneStart = true;
+				if(lane[feederNum].divergeUp)
+					lane[feederNum].lane1Start = true;
+				else
+					lane[feederNum].lane2Start = true;
 				lane[feederNum].feederOn = true;
 			}
 		}
 	}
 	
 	/**
-	 * Begins feeding the designated Lane
+	 * Begins feeding the designated Lane.<br>
+	 * Divide laneNum by 2
 	 * @param laneNum The designated Lane
 	 * @deprecated Use feedFeeder(int feederNum) instead
-	 * @see feedLaneDone(int feederNum) Divide laneNum by 2
+	 * @see #feedLaneDone(int feederNum)
 	 */
 	public void feedLane(int laneNum){ //FEEDS THE LANE! Lane 0-7
 		//if(!lane[(laneNum) / 2].lane1PurgeOn){	//If purging is on, cannot feed!
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[laneNum / 2].bin.getBinItems().clear();
+			if(lane[laneNum / 2].divergeUp){
+				//lane[laneNum / 2].changeTopLaneSpeed(1);			//resets laneSpeed to 1. Change to panel's slide bar
+				//lane[laneNum / 2].changeTopLaneAmplitude(2);		//resets amplitude to 2
+			}
+			else{
+				//lane[laneNum / 2].changeBottomLaneSpeed(1);		//resets laneSpeed to 1. Change to panel's slide bar
+				//lane[laneNum / 2].changeTopLaneAmplitude(2);		//resets amplitude to 2
+			}
 			for(int i = 0; i < lane[laneNum / 2].bin.binSize;i++){		//unlimited items
 				lane[laneNum / 2].bin.binItems.add(new GraphicItem(-40, 0, "Images/"+lane[laneNum / 2].bin.partName+".png"));
 			}
 			
 			if(lane[(laneNum) / 2].hasBin() && lane[(laneNum) / 2].bin.getBinItems().size() > 0){
-				lane[(laneNum) / 2].laneStart = true;
 				lane[(laneNum) / 2].divergeUp = ((laneNum) % 2 == 0);
+				if(lane[(laneNum) / 2].divergeUp)
+					lane[(laneNum) / 2].lane1Start = true;
+				else
+					lane[(laneNum) / 2].lane2Start = true;
 				lane[(laneNum) / 2].feederOn = true;
 			}
 		}
@@ -389,7 +444,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void startLane(int laneNum){
 		if (isLaneManager || isFactoryProductionManager) {
-			lane[(laneNum) / 2].laneStart = true;
+			if(lane[(laneNum) / 2].divergeUp)
+				lane[(laneNum) / 2].lane1Start = true;
+			else
+				lane[(laneNum) / 2].lane2Start = true;
 		}
 	}
 	
@@ -424,12 +482,16 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 */
 	public void stopLane(int laneNum){
 		if (isLaneManager || isFactoryProductionManager)
-			lane[(laneNum) / 2].laneStart = false;
+			if(lane[(laneNum) / 2].divergeUp)
+				lane[(laneNum) / 2].lane1Start = false;
+			else
+				lane[(laneNum) / 2].lane2Start = false;
 	}
 	
 	/**
 	 * Starts up the designated Feeder
 	 * @param feederNum The designated Feeder
+	 * @see #startFeederDone(int)
 	 */
 	public void turnFeederOn(int feederNum){
 		if (isLaneManager || isFactoryProductionManager) {
@@ -441,11 +503,32 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Turns off the designated Feeder
 	 * @param feederNum The designated Feeder
+	 * @see #stopFeederDone(int)
 	 */
 	public void turnFeederOff(int feederNum){
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].feederOn = false;
 			stopFeederDone(feederNum);
+		}
+	}
+	
+	/**
+	 * Turns designated Feeder on - No confirmation
+	 * @param feederNum The designated Feeder
+	 */
+	public void startFeeder(int feederNum) {
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].feederOn = true;
+		}
+	}
+	
+	/**
+	 * Turns designated Feeder off - No confirmation
+	 * @param feederNum The designated Feeder
+	 */
+	public void stopFeeder(int feederNum) {
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].feederOn = false;
 		}
 	}
 	
@@ -457,9 +540,9 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		// The following 2 lines were causing the bin to disappear, which is undesirable	
 //		lane[(feederNum)].bin = null;
 //		lane[(feederNum)].binExists = false;
-		if (isLaneManager || isFactoryProductionManager) {
+		if (isGantryRobotManager || isLaneManager || isFactoryProductionManager) {
 			lane[(feederNum)].purgeFeeder();
-			purgeFeederDone(feederNum); // send the confirmation
+			//purgeFeederDone(feederNum); // send the confirmation //Done inside GraphicLaneManager
 		}
 	}
 	
@@ -471,7 +554,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].lane1PurgeOn = true;
 			lane[feederNum].feederOn = false;
-			lane[feederNum].laneStart = true;
+			lane[feederNum].lane1Start = true;
 		}
 	}
 	
@@ -483,9 +566,184 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].lane2PurgeOn = true;
 			lane[feederNum].feederOn = false;
-			lane[feederNum].laneStart = true;
+			lane[feederNum].lane2Start = true;
 		}
 	}
+	
+	/**
+	 * Jams the top lane. All items stops behind the first item.
+	 * @param feederNum The designated feeder, 0-3
+	 */
+	public void jamTopLane(int feederNum){
+		lane[feederNum].lane1Jam = true;
+		drawString("Lane " + (2*feederNum+1) + " is being Jammed!");
+	}
+	
+	/**
+	 * Unjams the top lane. Return back to normal.
+	 * @param feederNum The designated feeder, 0-3
+	 */
+	public void unjamTopLane(int feederNum){
+//		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane1Speed + 1);
+//		if(lane[feederNum].lane1Speed > 8)	//laneSpeed max is 8
+//			lane[feederNum].changeTopLaneSpeed(8);
+//		lane[feederNum].vibrationAmplitudeTop += 1;
+//		if(lane[feederNum].vibrationAmplitudeTop > 8)		//vibration amplitude max is 8
+//			lane[feederNum].vibrationAmplitudeTop = 8;
+		lane[feederNum].lane1Jam = false;
+		sendMessage("fa cnf " + feederNum);
+		drawString("Lane " + (2*feederNum+1) + " has been Unjammed!");
+	}
+	
+	/**
+	 * Jams the bottom lane. All items stops behind the first item.
+	 * @param feederNum The designated feeder, 0-3
+	 */
+	public void jamBottomLane(int feederNum){
+		lane[feederNum].lane2Jam = true;
+		drawString("Lane " + (2*feederNum+2) + " is being Jammed!");
+	}
+	
+	/**
+	 * Unjams the bottom lane. Return back to normal.
+	 * @param feederNum The designated feeder, 0-3
+	 */
+	public void unjamBottomLane(int feederNum){
+//		lane[feederNum].changeBottomLaneSpeed(lane[feederNum].lane2Speed + 1);
+//		if(lane[feederNum].lane2Speed > 8)	//laneSpeed max is 8
+//			lane[feederNum].changeBottomLaneSpeed(8);
+//		lane[feederNum].vibrationAmplitudeBottom += 1;
+//		if(lane[feederNum].vibrationAmplitudeBottom > 8)		//vibration amplitude max is 8
+//			lane[feederNum].vibrationAmplitudeBottom = 8;
+		lane[feederNum].lane2Jam = false;
+		sendMessage("fa cnf " + feederNum);
+		drawString("Lane " + (2*feederNum+2) + " has been Unjammed!");
+	}
+	
+	/**
+	 * Stops the Top Lane of the given Lane Pair
+	 * @param feederNum The relevant Lane Pair
+	 */
+	public void stopTopLane(int feederNum){
+		lane[feederNum].lane1Start = false;
+	}
+
+	/**
+	 * Starts the Top Lane of the given Lane Pair
+	 * @param feederNum The relevant Lane Pair
+	 */
+	public void startTopLane(int feederNum){
+		lane[feederNum].lane1Start = true;
+	}
+
+	/**
+	 * Stop the Bottom Lane of the given Lane Pair
+	 * @param feederNum The relevant Lane Pair
+	 */
+	public void stopBottomLane(int feederNum){
+		lane[feederNum].lane2Start = false;
+	}
+
+	/**
+	 * Starts the Bottom Lane of the given Lane Pair
+	 * @param feederNum The relevant Lane Pair
+	 */
+	public void startBottomLane(int feederNum){
+		lane[feederNum].lane2Start = true;
+	}
+	
+	/**
+	 * Increase top lane speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void increaseTopLaneSpeed(int feederNum){
+		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane1Speed + 1); //change top LaneSpeed
+		if( lane[feederNum].lane1Speed > 8)
+			lane[feederNum].lane1Speed = 8;
+	}
+	
+	/**
+	 * Decrease top lane speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	
+	public void decreaseTopLaneSpeed(int feederNum){
+		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane1Speed - 1); //change top LaneSpeed
+		if( lane[feederNum].lane1Speed < 1)
+			lane[feederNum].lane1Speed = 1;
+	}
+	
+	/**
+	 * Increase bottom lane speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void increaseBottomLaneSpeed(int feederNum){
+		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane2Speed + 1); //change bottom LaneSpeed
+		if( lane[feederNum].lane2Speed > 8)
+			lane[feederNum].lane2Speed = 8;
+	}
+	
+	/**
+	 * Decrease bottom lane speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void decreaseBottomLaneSpeed(int feederNum){
+		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane2Speed - 1); //change bottom LaneSpeed
+		if( lane[feederNum].lane2Speed < 1)
+			lane[feederNum].lane2Speed = 1;
+	}
+	
+	/**
+	 * increase the Top lane vibration speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void increaseTopLaneAmplitude(int feederNum){
+		lane[feederNum].vibrationAmplitudeTop++;
+		if(lane[feederNum].vibrationAmplitudeTop > 8)
+			lane[feederNum].vibrationAmplitudeTop = 8;
+	}
+	
+	/**
+	 * decrease the Top lane vibration speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void decreaseTopLaneAmplitude(int feederNum){
+		lane[feederNum].vibrationAmplitudeTop--;
+		if(lane[feederNum].vibrationAmplitudeTop < 1)
+			lane[feederNum].vibrationAmplitudeTop = 1;
+	}
+	
+	/**
+	 * increase the Bottom lane vibration speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void increaseBottomLaneAmplitude(int feederNum){
+		lane[feederNum].vibrationAmplitudeBottom++;		//change to bottom vibrationAmplitude
+		if(lane[feederNum].vibrationAmplitudeBottom > 8)
+			lane[feederNum].vibrationAmplitudeBottom = 8;
+	}
+	
+	/**
+	 * decrease the Bottom lane vibration speed by 1
+	 * @param feederNum the designated feeder, 1-4
+	 */
+	public void decreaseBottomLaneAmplitude(int feederNum){
+		lane[feederNum].vibrationAmplitudeBottom--;		//change to bottom vibrationAmplitude
+		if(lane[feederNum].vibrationAmplitudeBottom < 1)
+			lane[feederNum].vibrationAmplitudeBottom = 1;
+	}
+	
+	/**
+	 * Sets the probability that an Item fed into the given Lane will be bad
+	 * @param feederNum The given Lane
+	 * @param probability The probability that an Item will be bad
+	 */
+	public void setBadProbability(int feederNum, int probability) {
+		lane[feederNum].setBadProbability(probability);
+		drawString("The probability that bad parts will");
+		drawString("emerge from Feeder " + (feederNum+1) + " is " + probability + " Percent");
+	}
+	
 	
 	/**Movement methods*/
 	/**
@@ -501,6 +759,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 					partsRobot.addItem(nests.get(partsRobot.getDestinationNest()).popItemAt(partsRobot.getItemIndex()));
 				partsRobot.setState(0);
 				partsRobotArrivedAtNest();
+				System.out.println("akjhdfkjasdkjfasd");
 			}
 			else if(partsRobot.getState() == 4)	// partsRobot has arrived at kitting station
 			{
@@ -553,8 +812,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Sets the Bin for the specified feeder
-	 * @param feederNum
-	 * @param bin
+	 * @param feederNum The index of the Feeder
+	 * @param bin The Bin to be added
 	 */
 	public void setFeederBin(int feederNum, GraphicBin bin) {
 		lane[feederNum].setBin(bin);
@@ -562,25 +821,48 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	/**
 	 * Adds an Part to the specified Kit
-	 * @param kitNum
-	 * @param item
+	 * @param kitNum The index of the Kit
+	 * @param item The Item to be added
 	 */
 	public void setKitItem(int kitNum, GraphicItem item) {
 		station.addItem(item, kitNum);
 	}
 	
 	/**
+	 * Removes the Item at the given index from the given Nest
+	 * @param nestNum The index of the Nest
+	 * @param itemIndex The index of the Item
+	 */
+	public void popNestItem(int nestNum, int itemIndex) {
+		nests.get(nestNum).popItemAt(itemIndex);
+	}
+	
+	/**
+	 * Removes all the Items in the given Nest
+	 * Also jams the lane items
+	 * @param nestNum The index of the Nest
+	 */
+	public void purgeNest(int nestNum) {
+		nests.get(nestNum).clearItems();
+		if(nestNum % 2 == 0)
+			lane[nestNum / 2].lane1Jam = true;
+		else
+			lane[nestNum / 2].lane2Jam = true;
+		
+	}
+	
+	/**
 	 * Moves Parts down the Lanes
 	 */
 	public void moveLanes() {
-		if (isLaneManager || isFactoryProductionManager) {
+		if (isGantryRobotManager || isLaneManager || isFactoryProductionManager) {
 			for (int i = 0; i < lane.length; i++)
 				lane[i].moveLane();
 		}
 	}
 	
 	/**
-	 * Sends message to Server depending
+	 * Sends message to Server with variable source
 	 * @param command The command to send
 	 */
 	public void sendMessage(String command) {
@@ -591,7 +873,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isLaneManager)
 			message = "lm ";
 		else if (isGantryRobotManager)
-			message = "grm ";
+			message = "gm ";
 		else if (isKitAssemblyManager)
 			message = "kam ";
 		else if (isFactoryProductionManager)
@@ -629,6 +911,10 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void moveKitFromInspectionToConveyorDone() {
 		sendMessage("kra cnf");
 	}
+	
+	public void moveKitFromInspectionBackToStationDone() {
+		sendMessage("kra cnf");
+	}
 
 	public void exportKitDone() {
 		sendMessage("ca cnf");
@@ -643,7 +929,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 
 	public void gantryRobotArrivedAtFeederForDropoff() {
-		sendMessage("lm set " + gantryRobot.getDestinationFeeder() + " "+ lane[gantryRobot.getDestinationFeeder()].getBin().getPartName());
+		sendMessage("lm set loadpartatfeeder " + gantryRobot.getDestinationFeeder() + " "+ lane[gantryRobot.getDestinationFeeder()].getBin().getPartName());
 		sendMessage("ga cnf");
 	}
 
@@ -653,7 +939,11 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void partsRobotArrivedAtNest() {
-		sendMessage("pra cnf");
+		if (isFactoryProductionManager) {
+			sendMessage("lm set nestitemtaken " + partsRobot.getDestinationNest() + " " + partsRobot.getItemIndex());
+			//sendMessage("na cmd partremovedfromnest n" + (partsRobot.getDestinationNest()/2 + (partsRobot.getDestinationNest()%2==0?"t ":"b ")) + nests.get(partsRobot.getDestinationNest()).getItemAt(partsRobot.getItemIndex()).getName());
+			sendMessage("pra cnf");
+		}
 	}
 
 	public void partsRobotArrivedAtStation() {
@@ -669,8 +959,9 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	}
 	
 	public void partsRobotPopItemToCurrentKitDone() {
-		if (isFactoryProductionManager)
+		if (isFactoryProductionManager) {
 			sendMessage("kam set itemtype " + partsRobot.getDestinationKit() + " " + transferringItem.getImagePath());
+		}
 		sendMessage("pra cnf");
 	}
 
@@ -728,6 +1019,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 				g.drawImage(TILE_IMAGE, j, k, TILE_SIZE, TILE_SIZE, null);
 			}
 		}
+		if(isFactoryProductionManager)
+			g.drawImage(new ImageIcon("Images/tiles/floorTileHashtags.png").getImage(),320,320,TILE_SIZE,TILE_SIZE,null);
 		//g.setColor(new Color(200, 200, 200));
 		//g.fillRect(0, 0, getWidth(), getHeight());
 		
@@ -760,17 +1053,17 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		}
 		
 		if(isLaneManager || isFactoryProductionManager) {
-			if(flashCounter >= 0)
+			if(scanAnimationCounter != -1)
 			{
-				int flashX = nests.get(flashFeederIndex*2).getX()-20;
-				int flashY = nests.get(flashFeederIndex*2).getY()-12;
-				g.drawImage(flashImage, flashX, flashY, null);
-				flashX = nests.get(flashFeederIndex*2+1).getX()-20;
-				flashY = nests.get(flashFeederIndex*2+1).getY()-12;
-				g.drawImage(flashImage, flashX, flashY, null);
-				flashCounter --;
-				if(flashCounter == 1)
+				int flashX = nests.get(flashFeederIndex*2).getX()-16;
+				int flashY = nests.get(flashFeederIndex*2).getY()-8;
+				g.drawImage(scanAnimation.get(scanAnimationCounter/scanAnimationSpeed), flashX, flashY, null);
+				scanAnimationCounter ++;
+				if(scanAnimationCounter/scanAnimationSpeed >= 15)
+				{
+					scanAnimationCounter = -1;
 					cameraFlashDone();
+				}
 			}
 		}
 		
@@ -792,6 +1085,28 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 			
 			g4.dispose();
 		}
+		
+
+		// Draw messages
+		Graphics2D gs = (Graphics2D)g;
+		if(messageCounter > 0 && isFactoryProductionManager)
+		{
+			for(int i = 0; i < messageList.size(); i++)
+			{
+				Composite comp;
+				if(messageCounter > 300)
+					comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(400f-messageCounter)/125);
+				else
+					comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f);
+				gs.setComposite(comp);
+				gs.setFont(messageFont.deriveFont(24.0f));
+				gs.drawString(messageList.get(messageList.size()-i-1),80,(MAX_MESSAGES-i-1)*28+40);
+			}
+		}
+		if(messageCounter >= 400)
+			messageCounter = -1;
+		if(messageCounter > 0)
+			messageCounter ++;
 	}
 	
 	public boolean isKitAssemblyManager() {
@@ -816,5 +1131,35 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 			
 	}
-
+	// sets speed for specified lane
+	public void setLaneSpeedBottom(int laneIndex,int lanenum,int speed) {
+		lane[laneIndex].changeTopLaneSpeed(speed);
+	}
+	// sets speed for specified lane
+	public void setLaneSpeedTop(int laneIndex,int lanenum,int speed) {
+		lane[laneIndex].changeBottomLaneSpeed(speed);
+	}
+	// sets amplitude for specified lane
+	public void setLaneAmplitude(int laneIndex,int lanenum,int amplitude) {
+		if (lanenum == 0)
+			lane[laneIndex].changeTopLaneAmplitude(amplitude);
+		else
+			lane[laneIndex].changeBottomLaneAmplitude(amplitude);
+		sendMessage("fa cnf " + laneIndex);
+	}
+	//AMPLITUDE WITH NO CONF
+	public void GUIsetLaneAmplitude(int laneIndex, int lanenum, int amplitude) {
+		if (lanenum == 0)
+			lane[laneIndex].changeTopLaneAmplitude(amplitude);
+		else
+			lane[laneIndex].changeBottomLaneAmplitude(amplitude);
+	}
+	
+	public void drawString(String s)
+	{
+		if(messageList.size() == MAX_MESSAGES)
+			messageList.remove(0);
+		messageList.add(s);
+		messageCounter = 1;
+	}
 }

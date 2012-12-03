@@ -6,6 +6,11 @@ import javax.swing.*;
 
 import factory.Kit.KitState;
 
+/**
+ * @author Minh La, Tobias Lee, George Li
+ * @deprecated Only use for testing Graphics Methods.
+ */
+
 public class GraphicFactoryProductionManager extends JFrame {
 	
 	FactoryProductionPanel panel;
@@ -144,6 +149,46 @@ public class GraphicFactoryProductionManager extends JFrame {
 		panel.purgeBottomLane(feederNum);
 	}
 	
+	public void jamTopLane(int feederNum){
+		panel.jamTopLane(feederNum);
+	}
+	
+	public void unjamTopLane(int feederNum){
+		panel.unjamTopLane(feederNum);
+	}
+	
+	public void jamBottomLane(int feederNum){
+		panel.jamBottomLane(feederNum);
+	}
+	
+	public void setLaneAmplitudeTop(int feederNum){
+		panel.increaseTopLaneAmplitude(feederNum);
+	}
+	
+	public void setLaneSpeedTop(int feederNum){
+		panel.increaseTopLaneSpeed(feederNum);
+	}
+	
+	public void unjamBottomLane(int feederNum){
+		panel.unjamBottomLane(feederNum);
+	}
+	
+	public void stopTopLane(int feederNum){
+		panel.stopTopLane(feederNum);
+	}
+	
+	public void startTopLane(int feederNum){
+		panel.startTopLane(feederNum);
+	}
+	
+	public void stopBottomLane(int feederNum){
+		panel.stopBottomLane(feederNum);
+	}
+	
+	public void startBottomLane(int feederNum){
+		panel.startBottomLane(feederNum);
+	}
+	
 	public void getBin(String partName)
 	{
 		panel.moveGantryRobotToPickup(partName);
@@ -162,6 +207,19 @@ public class GraphicFactoryProductionManager extends JFrame {
 	public void takePictureFeeder1()
 	{
 		panel.cameraFlash(0);
+	}
+	
+	public void drawString(String s)
+	{
+		panel.drawString(s);
+	}
+	
+	public void startFeeder(int feederNum) {
+		panel.turnFeederOn(feederNum);
+	}
+	
+	public void stopFeeder(int feederNum) {
+		panel.turnFeederOff(feederNum);
 	}
 	
 	//Lane Manager Messages

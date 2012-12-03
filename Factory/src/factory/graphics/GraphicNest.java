@@ -4,9 +4,9 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 
 /**
- * @author Minh La, George Li <p>
+ * @author George Li <p>
  * <b>{@code GraphicNest.java}</b> (50x720) <br>
- * This creates a nest and an array of items in the nest,
+ * This creates a nest and an array of items in the nest is used to store the items.
  */
 
 class GraphicNest extends GraphicAnimatedObject
@@ -79,7 +79,7 @@ class GraphicNest extends GraphicAnimatedObject
 	 *returns if the nest has items or not. 
 	 *True - has items
 	 *False - empty 
-	 * @return
+	 * @return {@code true} if the Nest has Items; {@code false} otherwise
 	 */
 	public boolean hasItem()
 	{
@@ -101,6 +101,7 @@ class GraphicNest extends GraphicAnimatedObject
 		items.remove(items.size()-1);					// remove last item
 		return lastItem;								// return last item
 	}
+	
 	/**
 	 * Gets an Item at the provided index and removes the Item
 	 * @param index The index of the Item being taken
@@ -113,6 +114,7 @@ class GraphicNest extends GraphicAnimatedObject
 		items.remove(index);
 		return returnedItem;
 	}
+	
 	/**
 	 * returns the size of the items in the nest
 	 * @return size of items in the nest
