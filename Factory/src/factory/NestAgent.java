@@ -42,6 +42,8 @@ public class NestAgent extends Agent implements Nest {
 
 	/** MESSAGES **/
 	
+	
+	
 	public void msgYouNeedPart(Part part) {
 		debug("received msgYouNeedPart("+part.name+").");
 		this.currentPart = part;
