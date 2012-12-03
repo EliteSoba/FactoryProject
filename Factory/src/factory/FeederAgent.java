@@ -1213,7 +1213,7 @@ public class FeederAgent extends Agent implements Feeder {
 		
 		if (debugMode == false)
 		{
-			server.command(this,"fa lm set laneamplitude " + (feederNumber+laneNum) + " " + 8); // 0-7lane# 1-8amplitude
+			server.command(this,"fa lm set laneamplitude " + ((2*feederNumber)+laneNum) + " " + 8); // 0-7lane# 1-8amplitude
 			debug("Feeder " + feederNumber + " set lane amplitude.");
 			try {
 				animation.acquire();
