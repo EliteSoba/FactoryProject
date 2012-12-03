@@ -40,7 +40,7 @@ public abstract class Client extends JFrame implements ActionListener {
 	public String currentCommand; //current command string from server
 	public ArrayList<String> parsedCommand; //current command parsed into strings
 	// Timer updater; //repaints graphics
-	boolean connected;
+	protected boolean connected;
 	String fun = "PEOPLECEPTION!!!";
 	
 	
