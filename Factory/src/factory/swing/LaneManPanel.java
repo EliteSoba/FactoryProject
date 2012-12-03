@@ -382,12 +382,14 @@ public class LaneManPanel extends JPanel{
 			for (int i = 1; i < 5; i++) {
 				feederBoxList.addItem("Feeder "+i);
 			}
+
+			feederBoxList.setPreferredSize(new Dimension(200,25));
 			partsMissingContainer = new JPanel();
 			partsBadContainer = new JPanel();
 
 
-			partsMissingContainer.setPreferredSize(new Dimension(250,180));
-			partsBadContainer.setPreferredSize(new Dimension(250,180));
+			partsMissingContainer.setPreferredSize(new Dimension(250,150));
+			partsBadContainer.setPreferredSize(new Dimension(250,210));
 
 			TitledBorder title = BorderFactory.createTitledBorder("Missing Parts in Nest");
 			partsMissingContainer.setBorder(title);	
@@ -411,7 +413,6 @@ public class LaneManPanel extends JPanel{
 			boxContainer.add(label);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
 			boxContainer.add(laneBoxList);
-			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
 			boxContainer.add(partsMissingContainer);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
