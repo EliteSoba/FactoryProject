@@ -247,6 +247,8 @@ public class KitRobotAgent extends Agent implements KitRobot {
 		} else {
 			//shouldn't have been called
 			debug("putKitBackToFix() was called when atInspection = EMPTY");
+			actions.remove(StandInfo.KIT_BAD);
+			atInspection = KitAtInspection.EMPTY;
 			stand.msgKitRobotNoLongerUsingStand();
 		}
 	}
