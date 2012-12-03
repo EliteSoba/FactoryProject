@@ -615,6 +615,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 //		if(lane[feederNum].vibrationAmplitudeTop > 8)		//vibration amplitude max is 8
 //			lane[feederNum].vibrationAmplitudeTop = 8;
 		lane[feederNum].lane1Jam = false;
+		sendMessage("fa cnf " + feederNum);
 		drawString("Lane " + (2*feederNum+1) + " has been Unjammed!");
 	}
 	
@@ -639,6 +640,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 //		if(lane[feederNum].vibrationAmplitudeBottom > 8)		//vibration amplitude max is 8
 //			lane[feederNum].vibrationAmplitudeBottom = 8;
 		lane[feederNum].lane2Jam = false;
+		sendMessage("fa cnf " + feederNum);
 		drawString("Lane " + (2*feederNum+2) + " has been Unjammed!");
 	}
 	
