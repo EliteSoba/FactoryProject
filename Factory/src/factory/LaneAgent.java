@@ -276,5 +276,8 @@ public class LaneAgent extends Agent implements Lane {
 		}
 	}
 
+	public List<Part> getParts() {
+		return this.laneParts;
+	}
 
 }

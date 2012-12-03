@@ -342,6 +342,12 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	public void DoProcessNewKitConfiguration() {
 		debug("Executing DoProcessNewKitConfiguration()");
 
+		
+		// Ignore all pick up requests
+		for(MyNest n : this.nests){
+			n.state = NestState.DOING_NOTHING;
+		}
+
 		// set parts to corresponding nests - this algorithm won't replace lanes that are needed in the new one but already present in the old
 		List<Integer> newNeeded = new ArrayList<Integer>();
 		List<Integer> currentNotNeeded = new ArrayList<Integer>();
