@@ -49,6 +49,8 @@ public class NestAgent extends Agent implements Nest {
 		}
 		debug("NEST HAS CLEARED.");
 		
+		nestState = NestState.STABLE;
+		
 		stateChanged();
 	}
 	
