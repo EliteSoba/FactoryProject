@@ -81,13 +81,8 @@ public class NestAgent extends Agent implements Nest {
 	 * that its parts have stabilized after resettling.
 	 */
 	public void msgNestHasStabilized() {
-<<<<<<< HEAD
 		debug("RECEIVED: msgNestHasStabilized().");
-		nestState = NestState.HAS_STABILIZED;
-=======
-		//debug("NEST HAS STABILIZED");
 		nestState = NestState.STABLE;
->>>>>>> Vision non normatives
 		stateChanged();
 	}
 	
@@ -96,13 +91,8 @@ public class NestAgent extends Agent implements Nest {
 	 * parts have destabilized (become unstable!)
 	 */
 	public void msgNestHasDestabilized() {
-<<<<<<< HEAD
 		debug("RECEIVED: msgNestHasDestabilized().");
-		nestState = NestState.HAS_DESTABILIZED;
-=======
-		//debug("NEST HAS BECOME UNSTABLE");
 		nestState = NestState.UNSTABLE;
->>>>>>> Vision non normatives
 		stateChanged();
 	}
 	
@@ -172,38 +162,16 @@ public class NestAgent extends Agent implements Nest {
 
 	@Override
 	public boolean isBeingUsed() {
-<<<<<<< HEAD
-		// TODO Auto-generated method stub
-		return false;
-=======
 		return this.beingUsed;
->>>>>>> Vision non normatives
 	}
 
 	@Override
 	public List<Part> getParts() {
-<<<<<<< HEAD
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	
-	
-	
-	/** Overriding this for debugging purposes - print the Nest debug statements. */
-	protected void debug(String msg) {
-		if(true) {
-			print(msg, null);
-		}
-	}
-=======
 		return this.nestParts;
 	}
 
 	@Override
 	public NestState getState() {
-
 		return this.nestState;
 	}
 
@@ -211,10 +179,10 @@ public class NestAgent extends Agent implements Nest {
 	public Lane getLane() {
 		return this.myLane;
 	}
-
->>>>>>> Vision non normatives
 	
-
+	public void setBeingUsed(boolean val){
+		this.beingUsed = val;
+	}
 	
 
 }

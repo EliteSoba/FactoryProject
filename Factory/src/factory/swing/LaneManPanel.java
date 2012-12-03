@@ -296,13 +296,20 @@ public class LaneManPanel extends JPanel{
 
 	}
 
-	public class LaneNonNormPanel extends JPanel implements ActionListener {
-		
-		JLabel badPartsLabel;
+	public class LaneNonNormPanel extends JPanel implements ActionListener { // Panel containing non-normative case controls
+		//labels
+		JLabel badPartsLabel; 
+		JLabel diverterSpeedLabel;
+
+		// selectors
 		JComboBox laneBoxList;
 		JComboBox feederBoxList;
+
+		// containers
 		JPanel partsMissingContainer;
 		JPanel partsBadContainer;
+
+		// components / controls
 		JButton laneJamButton;
 		JButton diverterButton;
 		JButton badPartsButton;
@@ -311,14 +318,18 @@ public class LaneManPanel extends JPanel{
 		JSlider badPartsPercentage;
 		int badPartsPercentageMin;
 		int badPartsPercentageMax;
+		JSlider diverterSpeed;
+		int diverterSpeedMin;
+		int diverterSpeedMax;
 
-		public LaneNonNormPanel() {
+		public LaneNonNormPanel() { // constructor
 			
 			badPartsLabel = new JLabel("% Bad Parts");
 			laneJamButton = new JButton("Lane Jam");
 			diverterButton = new JButton("Diverter Too Slow");
-			badPartsButton = new JButton("Bad Parts in Nest");
+			badPartsButton = new JButton("Bad Parts in Feeder");
 			blockingRobotButton = new JButton("Robot Blocking Camera");
+			diverterSpeedLabel = new JLabel("Diverter Speed");
 			messageBox = new JTextArea("Actions...\n");
 			messageBox.setLineWrap(true);
 			badPartsPercentageMin = 0;
@@ -335,6 +346,21 @@ public class LaneManPanel extends JPanel{
 			badPartsPercentage.setSnapToTicks(true);
 			badPartsPercentage.setPaintLabels(true);
 			badPartsPercentage.setValue(0);
+			
+			diverterSpeedMin = 0;
+			diverterSpeedMax = 12;
+			diverterSpeed = new JSlider(diverterSpeedMin, diverterSpeedMax);
+			labelTable = new Hashtable();
+			labelTable.put( new Integer(diverterSpeedMin), new JLabel("Slow") );
+			labelTable.put( new Integer(diverterSpeedMax), new JLabel("Fast"));
+			diverterSpeed.setLabelTable( labelTable );
+			diverterSpeed.setMinorTickSpacing(1);
+			diverterSpeed.setMajorTickSpacing(5);
+			diverterSpeed.setPaintTicks(true);
+			diverterSpeed.setSnapToTicks(true);
+			diverterSpeed.setPaintLabels(true);
+			diverterSpeed.setValue(0);
+			diverterSpeed.addChangeListener(new SliderDetection());
 			laneJamButton.addActionListener(this);
 			diverterButton.addActionListener(this);
 			badPartsButton.addActionListener(this);
@@ -356,12 +382,14 @@ public class LaneManPanel extends JPanel{
 			for (int i = 1; i < 5; i++) {
 				feederBoxList.addItem("Feeder "+i);
 			}
+
+			feederBoxList.setPreferredSize(new Dimension(200,25));
 			partsMissingContainer = new JPanel();
 			partsBadContainer = new JPanel();
 
 
-			partsMissingContainer.setPreferredSize(new Dimension(250,180));
-			partsBadContainer.setPreferredSize(new Dimension(250,180));
+			partsMissingContainer.setPreferredSize(new Dimension(250,150));
+			partsBadContainer.setPreferredSize(new Dimension(250,210));
 
 			TitledBorder title = BorderFactory.createTitledBorder("Missing Parts in Nest");
 			partsMissingContainer.setBorder(title);	
@@ -370,8 +398,11 @@ public class LaneManPanel extends JPanel{
 			partsBadContainer.setBorder(title);
 
 			partsMissingContainer.add(laneJamButton);
-			partsMissingContainer.add(diverterButton);
+			//partsMissingContainer.add(diverterButton);
+			partsMissingContainer.add(diverterSpeedLabel);
+			partsMissingContainer.add(diverterSpeed);
 			
+			partsBadContainer.add(feederBoxList);
 			partsBadContainer.add(badPartsLabel);
 			partsBadContainer.add(badPartsPercentage);
 			partsBadContainer.add(badPartsButton);
@@ -382,8 +413,6 @@ public class LaneManPanel extends JPanel{
 			boxContainer.add(label);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
 			boxContainer.add(laneBoxList);
-			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
-			boxContainer.add(feederBoxList);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
 			boxContainer.add(partsMissingContainer);
 			boxContainer.add(Box.createRigidArea(new Dimension(0,30)));
@@ -441,6 +470,31 @@ public class LaneManPanel extends JPanel{
 				} catch (Exception e) {
 					System.out.println("An error occurred trying to initiate non-normative case: robot blocking camera.");
 				} 
+			}
+
+		}
+		
+		public class SliderDetection implements ChangeListener{
+
+			@Override
+			public void stateChanged(ChangeEvent ce) {
+				// TODO Auto-generated method stub
+				JSlider source = (JSlider) ce.getSource();
+				if(source == diverterSpeed){
+					if (!source.getValueIsAdjusting()) {
+						int speed = (int)source.getValue();
+						// send amplitude to server
+						int feederNumber = (Integer)feederBoxList.getSelectedIndex();
+						String set = "lm fa set diverterspeed " + (feederNumber) + " " + speed;
+						try {
+							laneManager.sendCommand(set);
+						} catch (Exception e) {
+							System.out.println("An error occurred trying to send message to change lane amplitude.");
+						} 
+						System.out.println("Feeder : " + feederNumber + "going at " + speed);
+					}
+				}
+						
 			}
 
 		}

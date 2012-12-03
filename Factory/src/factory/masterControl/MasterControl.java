@@ -73,7 +73,8 @@ public class MasterControl {
             "loadpartatfeeder", "nestitemtaken", "itemtype", "movekitback", "kitdropparts", "kitexported",
             "ruininspectionkit","badparts","lanejam","slowdiverter","jamtoplane","jambottomlane","unjamtoplane",
             "unjambottomlane", "lanespeed", "laneamplitude", "lanepower", "feederpower", "dumptopnest", "dumpbottomnest",
-            "missingparts", "newpartputinlane", "partremovedfromlane", "partremovedfromnest", "partlost"
+            "missingparts", "newpartputinlane", "partremovedfromlane", "partremovedfromnest", "partlost",
+            "diverterspeed"
 
     );
 
@@ -466,6 +467,16 @@ public class MasterControl {
 
 					((FCSAgent) destination).editKitRecipe(oldkitname, kitname, partname1, partname2, partname3, partname4, 
 							partname5, partname6, partname7, partname8);
+				}
+			}
+			else if (cmd.get(1).equals("fa")) {
+				
+				int feederNum = Integer.valueOf(cmd.get(4));
+				destination = feederAgents.get(feederNum);
+				
+				if (cmd.get(3).equals("diverterspeed")) {
+					int diverterSpeed = Integer.valueOf(cmd.get(5));
+					((FeederAgent) destination).setDiverterSpeed(diverterSpeed);
 				}
 			}
 

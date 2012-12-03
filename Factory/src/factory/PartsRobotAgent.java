@@ -300,11 +300,12 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		List<Integer> newNeeded = new ArrayList<Integer>();
 		List<Integer> currentNotNeeded = new ArrayList<Integer>();
 		
+		
 		// Check which new ones are not in the old config
 		for(int i = 0; i < currentKitConfiguration.listOfParts.size(); i++){
 			boolean present = false;
 			
-			for(int j = 0; j < nests.size() && !newNeeded.contains(i); j++){
+			for(int j = 0; j < nests.size(); j++){
 				
 				if(nests.get(j).part != null && nests.get(j).part.name == currentKitConfiguration.listOfParts.get(i).name ){
 					present = true;
@@ -320,7 +321,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		for(int i = 0; i < nests.size(); i++){
 			boolean present = false;
 			
-			for(int j = 0; j < currentKitConfiguration.listOfParts.size() && !currentNotNeeded.contains(i); j++){
+			for(int j = 0; j < currentKitConfiguration.listOfParts.size(); j++){
 				if(nests.get(j).part != null && nests.get(j).part.name == currentKitConfiguration.listOfParts.get(i).name ){
 					present = true;
 				}
@@ -330,12 +331,26 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 				currentNotNeeded.add(i);
 			}
 		} 
+		
+		
 		for(int i = 0; i < currentNotNeeded.size(); i++){
-			nests.get(currentNotNeeded.get(i)).part = currentKitConfiguration.listOfParts.get(newNeeded.get(i));
-			nests.get(currentNotNeeded.get(i)).partCoordinate = -1;
-			nests.get(currentNotNeeded.get(i)).nest.msgYouNeedPart(currentKitConfiguration.listOfParts.get(newNeeded.get(i)));
-			nests.get(currentNotNeeded.get(i)).state = NestState.DOING_NOTHING;
-			nests.get(currentNotNeeded.get(i)).partsTaken = 0;
+			if(i < newNeeded.size()){
+				nests.get(currentNotNeeded.get(i)).part = currentKitConfiguration.listOfParts.get(newNeeded.get(i));
+				nests.get(currentNotNeeded.get(i)).partCoordinate = -1;
+				nests.get(currentNotNeeded.get(i)).nest.msgYouNeedPart(currentKitConfiguration.listOfParts.get(newNeeded.get(i)));
+				nests.get(currentNotNeeded.get(i)).state = NestState.DOING_NOTHING;
+				nests.get(currentNotNeeded.get(i)).partsTaken = 0;
+				nests.get(currentNotNeeded.get(i)).nest.setBeingUsed(true);
+			}
+			else {
+				nests.get(currentNotNeeded.get(i)).part = null;
+				nests.get(currentNotNeeded.get(i)).partCoordinate = -1;
+				nests.get(currentNotNeeded.get(i)).state = NestState.DOING_NOTHING;
+				nests.get(currentNotNeeded.get(i)).partsTaken = 0;
+				nests.get(currentNotNeeded.get(i)).nest.setBeingUsed(false);
+			}
+			
+			
 		}
 		
 		
@@ -352,7 +367,6 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 		this.vision.msgNewNestConfig(nestsToVision);
 		
 		// Reset the slots to empty
-		
 		if(this.topSlotState == SlotState.BUILDING && this.stand.getSlotKit("topSlot") != null && this.stand.getSlotKit("topSlot").parts.size() != 0){
 			this.topSlot = null;
 			this.topSlotState = SlotState.EMPTY;

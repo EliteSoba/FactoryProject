@@ -22,7 +22,7 @@ import factory.client.*;
 public abstract class GraphicPanel extends JPanel implements ActionListener{
 	
 	public int WIDTH, HEIGHT;
-	public static final Image TILE_IMAGE = Toolkit.getDefaultToolkit().getImage("Images/Tiles/floorTileXGrill.png");
+	public static final Image TILE_IMAGE = Toolkit.getDefaultToolkit().getImage("Images/Tiles/floorTilePortal.jpg");
 	public static final int TILE_SIZE = 128;
 	public static final int DELAY = 20;
 	
@@ -234,7 +234,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(1);
 			gantryRobot.setPartPath(path);
-			gantryRobot.setDestination(WIDTH-100,-100,0);
+			gantryRobot.setDestination(WIDTH-140,-125,0);
 		}
 	}
 	
@@ -261,7 +261,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(3);
 			gantryRobot.setDestinationFeeder(feederIndex);
-			gantryRobot.setDestination(lane[feederIndex].feederX+115, lane[feederIndex].feederY+15,180);
+			gantryRobot.setDestination(lane[feederIndex].feederX+125, lane[feederIndex].feederY+5,180);
 		}
 			//gantryRobotArrivedAtFeederForDropoff();
 		//}
@@ -285,7 +285,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isGantryRobotManager || isFactoryProductionManager) {
 			gantryRobot.setState(5);
 			gantryRobot.setDestinationFeeder(feederIndex);
-			gantryRobot.setDestination(lane[feederIndex].feederX+115, lane[feederIndex].feederY+15,180);
+			gantryRobot.setDestination(lane[feederIndex].feederX+125, lane[feederIndex].feederY+5,180);
 		}
 		//}
 	}
@@ -366,7 +366,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void movePartsRobotToCenter() {
 		if (isFactoryProductionManager) {
 			partsRobot.setState(5);
-			partsRobot.setDestination(WIDTH/2-200, HEIGHT/2,0);
+			partsRobot.setDestination(340,335,0);
 		}
 	}
 	
@@ -511,22 +511,44 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	/**
 	 * Starts up the designated Feeder
 	 * @param feederNum The designated Feeder
+	 * @see #startFeederDone(int)
 	 */
 	public void turnFeederOn(int feederNum){
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].feederOn = true;
-			//startFeederDone(feederNum);
+			startFeederDone(feederNum);
 		}
 	}
 	
 	/**
 	 * Turns off the designated Feeder
 	 * @param feederNum The designated Feeder
+	 * @see #stopFeederDone(int)
 	 */
 	public void turnFeederOff(int feederNum){
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].feederOn = false;
-			//stopFeederDone(feederNum);
+			stopFeederDone(feederNum);
+		}
+	}
+	
+	/**
+	 * Turns designated Feeder on - No confirmation
+	 * @param feederNum The designated Feeder
+	 */
+	public void startFeeder(int feederNum) {
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].feederOn = true;
+		}
+	}
+	
+	/**
+	 * Turns designated Feeder off - No confirmation
+	 * @param feederNum The designated Feeder
+	 */
+	public void stopFeeder(int feederNum) {
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].feederOn = false;
 		}
 	}
 	
@@ -582,12 +604,12 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * @param feederNum The designated feeder, 0-3
 	 */
 	public void unjamTopLane(int feederNum){
-		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane1Speed + 1);
-		if(lane[feederNum].lane1Speed > 8)	//laneSpeed max is 8
-			lane[feederNum].changeTopLaneSpeed(8);
-		lane[feederNum].vibrationAmplitudeTop += 1;
-		if(lane[feederNum].vibrationAmplitudeTop > 8)		//vibration amplitude max is 8
-			lane[feederNum].vibrationAmplitudeTop = 8;
+//		lane[feederNum].changeTopLaneSpeed(lane[feederNum].lane1Speed + 1);
+//		if(lane[feederNum].lane1Speed > 8)	//laneSpeed max is 8
+//			lane[feederNum].changeTopLaneSpeed(8);
+//		lane[feederNum].vibrationAmplitudeTop += 1;
+//		if(lane[feederNum].vibrationAmplitudeTop > 8)		//vibration amplitude max is 8
+//			lane[feederNum].vibrationAmplitudeTop = 8;
 		lane[feederNum].lane1Jam = false;
 		drawString("Lane " + (2*feederNum+1) + " has been Unjammed!");
 	}
@@ -606,12 +628,12 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	 * @param feederNum The designated feeder, 0-3
 	 */
 	public void unjamBottomLane(int feederNum){
-		lane[feederNum].changeBottomLaneSpeed(lane[feederNum].lane2Speed + 1);
-		if(lane[feederNum].lane2Speed > 8)	//laneSpeed max is 8
-			lane[feederNum].changeBottomLaneSpeed(8);
-		lane[feederNum].vibrationAmplitudeBottom += 1;
-		if(lane[feederNum].vibrationAmplitudeBottom > 8)		//vibration amplitude max is 8
-			lane[feederNum].vibrationAmplitudeBottom = 8;
+//		lane[feederNum].changeBottomLaneSpeed(lane[feederNum].lane2Speed + 1);
+//		if(lane[feederNum].lane2Speed > 8)	//laneSpeed max is 8
+//			lane[feederNum].changeBottomLaneSpeed(8);
+//		lane[feederNum].vibrationAmplitudeBottom += 1;
+//		if(lane[feederNum].vibrationAmplitudeBottom > 8)		//vibration amplitude max is 8
+//			lane[feederNum].vibrationAmplitudeBottom = 8;
 		lane[feederNum].lane2Jam = false;
 		drawString("Lane " + (2*feederNum+2) + " has been Unjammed!");
 	}
@@ -973,13 +995,13 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		sendMessage("fa cnf " + feederNum);
 	}
 	
-	/*public void startFeederDone(int feederNum) {
+	public void startFeederDone(int feederNum) {
 		sendMessage("fa cnf " + feederNum);
 	}
 	
 	public void stopFeederDone(int feederNum) {
 		sendMessage("fa cnf " + feederNum);
-	}*/
+	}
 	
 	public void switchFeederLaneDone(int feederNum) {
 		sendMessage("fa cnf " + feederNum);
@@ -1011,6 +1033,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 				g.drawImage(TILE_IMAGE, j, k, TILE_SIZE, TILE_SIZE, null);
 			}
 		}
+		if(isFactoryProductionManager)
+			g.drawImage(new ImageIcon("Images/Tiles/floorTileAperture.png").getImage(),320,320,TILE_SIZE,TILE_SIZE,null);
 		//g.setColor(new Color(200, 200, 200));
 		//g.fillRect(0, 0, getWidth(), getHeight());
 		

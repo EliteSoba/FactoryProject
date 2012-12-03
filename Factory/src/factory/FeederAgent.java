@@ -30,8 +30,12 @@ public class FeederAgent extends Agent implements Feeder {
 	private final static int kNUM_PARTS_FED = 15;
 	private final static int kOK_TO_PURGE_TIME = 7; 
 	private final static int kPICTURE_DELAY_TIME = 5;
+	private int diverterSpeed = 0;
+
 	public int feederNumber;
 	public boolean visionShouldTakePicture = true;
+	public boolean hasASlowDiverter = false;
+	
 	public List<MyPartRequest> requestedParts = Collections.synchronizedList(new ArrayList<MyPartRequest>());
 
 	public boolean debugMode;
@@ -46,17 +50,21 @@ public class FeederAgent extends Agent implements Feeder {
 	//list of timers to indicate when it's OK to feed, when the feeder is empty, and when the part is resettled
 	public Timer okayToPurgeTimer = new Timer();
 	public Timer takePictureTimer = new Timer();
-	public Timer partResettleTimer = new Timer();
+	public Timer slowDiverterTimer = new Timer();
 	public boolean feederHasABinUnderneath = false; // no bin underneath the feeder initially
 
 	//enum for the feeder state
 	public enum FeederState { EMPTY, WAITING_FOR_PARTS, CONTAINS_PARTS, OK_TO_PURGE, SHOULD_START_FEEDING, IS_FEEDING }
 	public FeederState state = FeederState.EMPTY;
 
-	//enum for the diverter state
+	//enum for the diverter state (feed top or bottom lane)
 	public enum DiverterState { FEEDING_TOP, FEEDING_BOTTOM }
 	public DiverterState diverter = DiverterState.FEEDING_BOTTOM;
 
+	//enum for the diverter's error state
+	public enum DiverterTimerState { TIMER_OFF, TIMER_EXPIRED }
+	public DiverterTimerState diverterTimerState = DiverterTimerState.TIMER_OFF;
+	
 	//enum for part request state
 	public enum MyPartRequestState { NEEDED, ASKED_GANTRY, DELIVERED, PROCESSING }
 
@@ -272,6 +280,7 @@ public class FeederAgent extends Agent implements Feeder {
 	 *  It is the end of a chain of messages originally sent by the PartsRobot.
 	 */
 	public void msgLaneNeedsPart(Part part, Lane lane) {
+		debug("received msgLaneNeedsPart(" + part.name + ")");
 		//		MyLane targetLane = null;
 		//		
 		//		if (topLane.lane == lane)
@@ -330,13 +339,13 @@ public class FeederAgent extends Agent implements Feeder {
 			bottomLane.state = MyLaneState.BAD_NEST;
 		}
 
-		else if (nestNumber == -1) {
-			debug("received msgBadNest(currentNest)");
-			if (diverter == DiverterState.FEEDING_BOTTOM)
-				bottomLane.state = MyLaneState.BAD_NEST;
-			else
-				topLane.state = MyLaneState.BAD_NEST;
-		}
+//		else if (nestNumber == -1) {
+//			debug("received msgBadNest(currentNest)");
+//			if (diverter == DiverterState.FEEDING_BOTTOM)
+//				bottomLane.state = MyLaneState.BAD_NEST;
+//			else
+//				topLane.state = MyLaneState.BAD_NEST;
+//		}
 
 
 
@@ -347,13 +356,23 @@ public class FeederAgent extends Agent implements Feeder {
 	/** SCHEDULER **/
 	@Override
 	public boolean pickAndExecuteAnAction() {
-
+		
 		// Determine if the Nests need to be checked to see if they are ready for a picture
 		if (visionShouldTakePicture == true)
 		{
 			takePicture();
 			return true;
 		}
+		
+		if (diverterTimerState == DiverterTimerState.TIMER_EXPIRED)
+		{
+			DoSwitchLane();
+			diverterTimerState = DiverterTimerState.TIMER_OFF;
+			slowDiverterTimer.cancel(); // we don't want this timer to keep running
+			slowDiverterTimer.purge();
+			return true;
+		}
+		
 
 		if (state == FeederState.EMPTY || state == FeederState.OK_TO_PURGE)
 		{
@@ -497,7 +516,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 		la.jamState = JamState.TOLD_TO_INCREASE_AMPLITUDE;
 
-		DoIncreaseLaneAmplitude(la);
+		DoIncreaseLaneAmplitude(la); // increase lane amplitude to dislodge the jammed object
 		
 		la.lane.msgIncreaseAmplitude();
 	}
@@ -508,6 +527,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 		la.jamState = JamState.NO_LONGER_JAMMED;
 		DoUnjamLane(la);
+		//DoReset
 		//		myNestsHaveBeenChecked = false; // no longer used
 
 	}
@@ -640,19 +660,35 @@ public class FeederAgent extends Agent implements Feeder {
 	 */
 	private void switchDiverterIfNecessary(MyLane targetLane)
 	{
+		// Set the back-end logic to know which lane it should be feeding:
 		if (targetLane == topLane)
 		{
 			if (diverter == DiverterState.FEEDING_BOTTOM) {
 				diverter = DiverterState.FEEDING_TOP;
-				DoSwitchLane();  
 			}
 		}
 		else if (targetLane == bottomLane)
 		{
 			if (diverter == DiverterState.FEEDING_TOP) {
 				diverter = DiverterState.FEEDING_BOTTOM;
-				DoSwitchLane();  
 			}
+		}
+
+
+		
+		if (this.hasASlowDiverter) // if the diverter is slow, set the slow timer
+		{
+			slowDiverterTimer.schedule(new TimerTask(){
+				public void run() {
+					diverterTimerState = DiverterTimerState.TIMER_EXPIRED;
+					debug("Diverter slow timer has expired.");
+					stateChanged();
+				}
+			},(long) diverterSpeed * 1000); // switch the diverter after this many seconds
+		}
+		else // if its not slow, switch the diverter immediately 
+		{
+			DoSwitchLane(); 
 		}
 	}
 
@@ -679,10 +715,7 @@ public class FeederAgent extends Agent implements Feeder {
 			TargetLaneHasDesiredPart = false; // its null, so can't be the desired part
 
 
-		// First, switch the diverter if you need to.
-		switchDiverterIfNecessary(targetLane);
-
-
+		
 
 		/* SCENARIO #1: The very first part fed into the Feeder.
 		 * The Feeder is empty.
@@ -761,8 +794,11 @@ public class FeederAgent extends Agent implements Feeder {
 			debug("SCENARIO #6");
 			purgeFeeder();  
 			state = FeederState.WAITING_FOR_PARTS;
+			debug("1");
 			partRequested.state = MyPartRequestState.ASKED_GANTRY;
+			debug("2");
 			gantry.msgFeederNeedsPart(partRequested.pt, this);
+			debug("3");
 		}
 
 
@@ -777,6 +813,9 @@ public class FeederAgent extends Agent implements Feeder {
 
 		MyLane targetLane = targetLaneOfPartRequest(deliveredPart);
 
+		// First, switch the diverter if you need to.
+		switchDiverterIfNecessary(targetLane);
+		
 		// Remove the part request, it is no longer needed
 		synchronized(requestedParts)
 		{
@@ -923,9 +962,6 @@ public class FeederAgent extends Agent implements Feeder {
 		debug("partRequested.lane == bottomLane.lane is " + (bottomLane.lane == partRequested.lane));
 		debug("partRequested.pt.name = " + partRequested.pt.name);
 
-		log.add(new LoggedEvent(
-				"Action purgeIfNecessary()"));
-
 		boolean purging = false; // assume we won't be purging
 
 		// Check if Feeder needs to be purged
@@ -980,7 +1016,9 @@ public class FeederAgent extends Agent implements Feeder {
 	private void purgeFeeder(){
 
 		DoStopFeeding(); // Stop sending parts into the lane(s)
+		debug("1.1");
 		DoPurgeFeeder(); // Purge the feeder 
+		debug("1.2");
 
 		currentPart = null; // and the feeder no longer has a part in it, so its current part is null
 
@@ -1013,7 +1051,6 @@ public class FeederAgent extends Agent implements Feeder {
 		debug("processing feeder parts of type "+mpr.pt.name);
 
 		mpr.state = MyPartRequestState.PROCESSING; // the part request is being processed
-		log.add(new LoggedEvent("Action ProcessFeederParts()"));
 
 		// Remove the part request, it is no longer needed
 		synchronized(requestedParts)
@@ -1186,9 +1223,6 @@ public class FeederAgent extends Agent implements Feeder {
 
 	/** Animation that switches the lane that the Feeder is feeding to. */
 	private void DoSwitchLane() {
-		log.add(new LoggedEvent(
-				"Animation DoSwitchLane()"));
-
 		if (debugMode == false)
 		{
 			debug("switching lane");
@@ -1341,6 +1375,12 @@ public class FeederAgent extends Agent implements Feeder {
 	{
 		return this.feederNumber;
 	}
+	
+	/** Method called from the GUI setting the speed of the Diverter switching algorithm. **/
+	public void setDiverterSpeed(int num)
+	{
+		this.diverterSpeed = num;
+	}
 
 
 	/** Figures out what the target lane of the part request is and returns it. */	
@@ -1353,6 +1393,13 @@ public class FeederAgent extends Agent implements Feeder {
 			targetLane = bottomLane;
 
 		return targetLane;
+	}
+
+	
+	protected void debug(String msg) {
+		if(true) {
+			print(msg, null);
+		}
 	}
 
 

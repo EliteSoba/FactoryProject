@@ -104,7 +104,6 @@ public class LaneAgent extends Agent implements Lane {
 
 	public void msgPurge() {
 		debug("received msgPurge()");
-		myNest.msgDump();
 		stateChanged();
 	}
 
@@ -207,7 +206,6 @@ public class LaneAgent extends Agent implements Lane {
 	public void dumpNest() { 
 		debug("telling my nest it should dump.");
 		nestState = NestState.WAITING_FOR_DUMP_CONFIRMATION;
-		myNest.msgDump();
 		stateChanged();
 	}
 
@@ -261,13 +259,6 @@ public class LaneAgent extends Agent implements Lane {
 	}
 	
 	
-	/** Overriding this for debugging purposes - print the Lane debug statements. */
-	protected void debug(String msg) {
-		if(true) {
-			print(msg, null);
-		}
-	}
-
 //	@Override
 //	public void msgFeedingParts(int numParts) {
 //		debug("msgFeedingParts()");

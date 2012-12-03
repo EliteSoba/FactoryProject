@@ -18,12 +18,7 @@ public interface Nest {
 	int getPosition();
 	void msgYouNeedPart(Part part);
 	
-<<<<<<< HEAD
+	void setBeingUsed(boolean val);
 	void msgPartRemovedFromNest(String partName);
 	
-	
-//	void msgPartsRobotGrabbingPartFromNest(int coordinate);
-//	void msgFeedingParts(int numParts);
-=======
->>>>>>> Vision non normatives
 }
