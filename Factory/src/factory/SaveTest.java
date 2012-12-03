@@ -51,6 +51,18 @@ public class SaveTest {
 			newKitConfig.listOfParts.add(partsList.get("Eye"));
 			kitConfigList.put(newKitConfig.kitName,newKitConfig);
 			
+
+			newKitConfig = new KitConfig("Kit2");
+			newKitConfig.listOfParts.add(partsList.get("Body"));	
+			newKitConfig.listOfParts.add(partsList.get("Mouth"));
+			newKitConfig.listOfParts.add(partsList.get("Eye"));
+			newKitConfig.listOfParts.add(partsList.get("Eye"));
+			newKitConfig.listOfParts.add(partsList.get("Arm"));
+			newKitConfig.listOfParts.add(partsList.get("Arm"));
+			newKitConfig.listOfParts.add(partsList.get("Shoe"));
+			newKitConfig.listOfParts.add(partsList.get("Shoe"));
+			kitConfigList.put(newKitConfig.kitName,newKitConfig);
+			
 			newKitConfig = new KitConfig("CS200");
 			newKitConfig.listOfParts.add(partsList.get("Stephanie"));
 			newKitConfig.listOfParts.add(partsList.get("Mher"));	
@@ -68,17 +80,6 @@ public class SaveTest {
 			newKitConfig.listOfParts.add(partsList.get("Ryan"));
 			newKitConfig.listOfParts.add(partsList.get("Austin"));
 			kitConfigList.put(newKitConfig.kitName,newKitConfig);
-
-//			newKitConfig = new KitConfig("Kit2");
-//			newKitConfig.listOfParts.add(partsList.get("Body"));	
-//			newKitConfig.listOfParts.add(partsList.get("Mouth"));
-//			newKitConfig.listOfParts.add(partsList.get("Eye"));
-//			newKitConfig.listOfParts.add(partsList.get("Eye"));
-//			newKitConfig.listOfParts.add(partsList.get("Arm"));
-//			newKitConfig.listOfParts.add(partsList.get("Arm"));
-//			newKitConfig.listOfParts.add(partsList.get("Shoe"));
-//			newKitConfig.listOfParts.add(partsList.get("Shoe"));
-//			kitConfigList.put(newKitConfig.kitName,newKitConfig);
 
 //			newKitConfig = new KitConfig("Cthulhu");
 //			newKitConfig.listOfParts.add(partsList.get("Tentacle"));	
