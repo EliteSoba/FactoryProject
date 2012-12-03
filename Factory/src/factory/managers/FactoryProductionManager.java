@@ -339,6 +339,13 @@ public class FactoryProductionManager extends Client {
 				((FactoryProdManPanel)UI).addMessage("The diverter at feeder " + feedernum + " switched over late.");
 				((FactoryProductionPanel) graphics).drawString("The Diverter of Feeder " + feedernum + " is slow!");
 			}
+			else if (identifier.equals("diverterspeed")) {
+				int feedernum = Integer.valueOf(pCmd.get(2));
+				int diverterSpeed = Integer.valueOf(pCmd.get(3));
+				feedernum += 1;
+				((FactoryProductionPanel) graphics).drawString("The Diverter Speed of Feeder " + feedernum);
+				((FactoryProductionPanel) graphics).drawString("has been set to " + diverterSpeed);
+			}
 
 			// command from lane manager
 			else if (identifier.equals("lanespeed")){

@@ -492,13 +492,14 @@ public class LaneManPanel extends JPanel{
 						int speed = (int)source.getValue();
 						// send amplitude to server
 						int feederNumber = (Integer)feederBoxList.getSelectedIndex();
-						String set = "lm fa set diverterspeed " + (feederNumber) + " " + (12-speed);
+						String set = "lm fa set diverterspeed " + (feederNumber) + " " + (diverterSpeedMax-speed);
 						try {
 							laneManager.sendCommand(set);
+							laneManager.sendCommand("lm fpm set diverterspeed " + feederNumber + " " + (speed));
 						} catch (Exception e) {
 							System.out.println("An error occurred trying to send message to change lane amplitude.");
 						} 
-						System.out.println("Feeder : " + feederNumber + "going at " + speed);
+						System.out.println("Feeder : " + feederNumber + " going at " + speed);
 					}
 				}
 						
