@@ -366,7 +366,7 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 	public void movePartsRobotToCenter() {
 		if (isFactoryProductionManager) {
 			partsRobot.setState(5);
-			partsRobot.setDestination(WIDTH/2-200, HEIGHT/2,0);
+			partsRobot.setDestination(340,335,0);
 		}
 	}
 	
@@ -529,6 +529,26 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 		if (isLaneManager || isFactoryProductionManager) {
 			lane[feederNum].feederOn = false;
 			stopFeederDone(feederNum);
+		}
+	}
+	
+	/**
+	 * Turns designated Feeder on - No confirmation
+	 * @param feederNum The designated Feeder
+	 */
+	public void startFeeder(int feederNum) {
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].feederOn = true;
+		}
+	}
+	
+	/**
+	 * Turns designated Feeder off - No confirmation
+	 * @param feederNum The designated Feeder
+	 */
+	public void stopFeeder(int feederNum) {
+		if (isLaneManager || isFactoryProductionManager) {
+			lane[feederNum].feederOn = false;
 		}
 	}
 	
@@ -1013,7 +1033,8 @@ public abstract class GraphicPanel extends JPanel implements ActionListener{
 				g.drawImage(TILE_IMAGE, j, k, TILE_SIZE, TILE_SIZE, null);
 			}
 		}
-		g.drawImage(new ImageIcon("Images/Tiles/floorTileAperture.png").getImage(),320,512,TILE_SIZE,TILE_SIZE,null);
+		if(isFactoryProductionManager)
+			g.drawImage(new ImageIcon("Images/Tiles/floorTileAperture.png").getImage(),320,320,TILE_SIZE,TILE_SIZE,null);
 		//g.setColor(new Color(200, 200, 200));
 		//g.fillRect(0, 0, getWidth(), getHeight());
 		

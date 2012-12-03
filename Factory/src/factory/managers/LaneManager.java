@@ -103,7 +103,7 @@ public class LaneManager extends Client {
 			else if (identifier.equals("jambottomlane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				//((LanePanel) graphics).jamBottomLane(feederSlot);
+				((LanePanel) graphics).jamBottomLane(feederSlot);
 			}
 			else if (identifier.equals("unjamtoplane"))
 			{
@@ -113,17 +113,19 @@ public class LaneManager extends Client {
 			else if (identifier.equals("unjambottomlane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				//((LanePanel) graphics).unjamBottomLane(feederSlot);
+				((LanePanel) graphics).unjamBottomLane(feederSlot);
 			}
 			else if (identifier.equals("dumptopnest"))
 			{
 				int nestIndex = Integer.valueOf(pCmd.get(2));
 				((LanePanel) graphics).dumpNest(nestIndex, true);
+				((LanePanel) graphics).sendMessage("Nest " + 2*nestIndex + " is being Dumped!");
 			}
 			else if (identifier.equals("dumpbottomnest"))
 			{
 				int nestIndex = Integer.valueOf(pCmd.get(2));
 				((LanePanel) graphics).dumpNest(nestIndex, false);
+				((LanePanel) graphics).sendMessage("Nest " + (2*nestIndex+1) + " is being Dumped!");
 			}
 		
 			//Commands for speed and amplitude
@@ -225,9 +227,9 @@ public class LaneManager extends Client {
 				int feederNumber = Integer.valueOf(pCmd.get(3));
 				
 				if(pCmd.get(2).equals("on")){
-					((LanePanel) graphics).turnFeederOn(feederNumber);
+					((LanePanel) graphics).startFeeder(feederNumber);
 				}else if(pCmd.get(2).equals("off")){
-					((LanePanel) graphics).turnFeederOff(feederNumber);
+					((LanePanel) graphics).stopFeeder(feederNumber);
 				}
 			}
 
