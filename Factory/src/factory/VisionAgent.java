@@ -393,7 +393,7 @@ public class VisionAgent extends Agent implements Vision {
 				pure = false;
 
 				debug("######### JAMMED #############");
-				debug(nest.getPart().name + " != " + p.name);
+				debug(nest.getPart().name + " != " + p.name + " Nest size:" + nest.getParts().size());
 				debug("######################################");
 				break;
 			}
