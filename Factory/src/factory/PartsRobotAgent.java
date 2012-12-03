@@ -152,10 +152,21 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	//TODO added this
 	public void msgFixKitAtSlot(String slot, List<String> brokenPartsList) {
 		debug("Received msgFixKitAtSlot("+slot+")");
+		print("Received msgFixKitAtSlot("+slot+")");
+		print("KitConfigState is equal to: " + this.currentKitConfigurationState);
+		
+		for (int y=0; y<brokenPartsList.size(); y++){
+			print("debug brokenPartsList Part " + y + ": " + brokenPartsList.get(y));
+		}
+		
+		for (int z=0; z<currentKitConfiguration.listOfParts.size(); z++){
+			print("debug currentKitConfig listOfParts Part: " + z + ": " + this.currentKitConfiguration.listOfParts.get(z));
+		}
+		
 		KitConfig fixedKitConfig = new KitConfig();
 		for(int a=0; a < brokenPartsList.size(); a++){
 			for(int b=0; b < currentKitConfiguration.listOfParts.size(); b++){
-				if(brokenPartsList.get(a).equals(currentKitConfiguration.listOfParts.get(b))){
+				if(brokenPartsList.get(a).equals(currentKitConfiguration.listOfParts.get(b).name)){
 					fixedKitConfig.listOfParts.add(new Part(this.currentKitConfiguration.listOfParts.get(a).name, 
 							this.currentKitConfiguration.listOfParts.get(a).id, 
 							this.currentKitConfiguration.listOfParts.get(a).description, 
@@ -165,7 +176,13 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			}
 		}
 		//TODO bookmark to where I'm working
-
+		
+		print ("Size of fixedKitConfig list of parts: " + fixedKitConfig.listOfParts.size());
+		for (int x=0; x < fixedKitConfig.listOfParts.size(); x++){
+			print("Part " + x + ": " + fixedKitConfig.listOfParts.get(x).name);
+		}
+		
+		
 		if (slot.equals("topSlot")){
 			this.topSlotState = SlotState.BUILD_REQUESTED;
 			topSlot = fixedKitConfig;
@@ -182,6 +199,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			}
 		}
 		needsFixing = true;
+		this.kitsToBuild++;
 		this.stateChanged();
 	}
 
@@ -444,6 +462,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	 */
 	//TODO edited this... added the if statements
 	public void DoStartBuildingKitAtSlot(String slot){
+		print("Executing DoStartBuildingKitAtSlot()");
 		this.kitsToBuild--;
 		if(!needsFixing){
 			debug("Executing DoStartBuildingKitAtSlot("+slot+")");
@@ -463,6 +482,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			}
 		}
 		else{
+			print("INSIDE else for boolean needsFixing");
 			if(slot.equals("topSlot")){
 				this.topSlotState = SlotState.BUILDING;
 			}
