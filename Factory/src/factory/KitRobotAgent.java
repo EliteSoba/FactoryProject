@@ -226,14 +226,18 @@ public class KitRobotAgent extends Agent implements KitRobot {
 	public void putKitBackToFix() {
 		//action for moving a kit back to the slot it came from to add in missing parts
 		debug("KitRobot is putting back the kit that failed inspection.");
-		
+		print("KitRobot is putting back the kit that failed inspection.");
 		if (atInspection.equals(KitAtInspection.TOP) || atInspection.equals(KitAtInspection.BOTTOM)) {
 			String pos;
 			if (atInspection.equals(KitAtInspection.TOP)) { pos = "topSlot"; } else { pos = "bottomSlot"; }
 			if (!isUnitTesting) {
 				DoPutKitBack(pos);
 			}
-			stand.setSlotKit(pos, stand.getSlotKit("inspectionSlot"));
+			
+			Kit temp = stand.getSlotKit("inspectionSlot");
+			temp.state = KitState.INCOMPLETE;
+			
+			stand.setSlotKit(pos, temp);
 			stand.setSlotState(pos, MySlotState.NEEDS_FIXING);
 			stand.setSlotKit("inspectionSlot", null);
 			stand.setSlotState("inspectionSlot", MySlotState.EMPTY);
