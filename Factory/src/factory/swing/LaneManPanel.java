@@ -310,10 +310,10 @@ public class LaneManPanel extends JPanel{
 		JPanel partsBadContainer;
 
 		// components / controls
-		JButton laneJamButton;
-		JButton diverterButton;
-		JButton badPartsButton;
-		JButton blockingRobotButton;
+		JButton laneJamButton; // initiates non-normative 2.2: Lane Jam
+		JButton diverterButton; // initiates non-normative 2.6: slower diverter
+		JButton badPartsButton; // initiates non-normative 3.1:
+		JButton blockingRobotButton; // initiates non-normative 3.
 		JTextArea messageBox;
 		JSlider badPartsPercentage;
 		int badPartsPercentageMin;
@@ -335,6 +335,8 @@ public class LaneManPanel extends JPanel{
 			badPartsPercentageMin = 0;
 			badPartsPercentageMax = 100;
 			badPartsPercentage = new JSlider(badPartsPercentageMin, badPartsPercentageMax);
+			
+			// hash table for bad parts percentage slider for easy access
 			Hashtable labelTable = new Hashtable();
 			for(int i = 0; i <=100; i+=25){
 				labelTable.put( new Integer( i ), new JLabel(i + "%") );
@@ -348,7 +350,7 @@ public class LaneManPanel extends JPanel{
 			badPartsPercentage.setValue(0);
 			
 			diverterSpeedMin = 0;
-			diverterSpeedMax = 12;
+			diverterSpeedMax = 20;
 			diverterSpeed = new JSlider(diverterSpeedMin, diverterSpeedMax);
 			labelTable = new Hashtable();
 			labelTable.put( new Integer(diverterSpeedMin), new JLabel("Slow") );
@@ -434,6 +436,11 @@ public class LaneManPanel extends JPanel{
 				String set = "lm va cmd missingparts " + lanenum/2 + " " + lanenum%2;
 				try {
 					laneManager.sendCommand(set);
+					
+					if (lanenum%2 == 0)
+						laneManager.sendCommand("lm lm cmd jamtoplane " + lanenum/2);
+					else
+						laneManager.sendCommand("lm lm cmd jambottomlane " + lanenum/2);
 				} catch (Exception e) {
 					System.out.println("An error occurred trying to initiate non-normative case: lane jam.");
 				} 
@@ -485,13 +492,14 @@ public class LaneManPanel extends JPanel{
 						int speed = (int)source.getValue();
 						// send amplitude to server
 						int feederNumber = (Integer)feederBoxList.getSelectedIndex();
-						String set = "lm fa set diverterspeed " + (feederNumber) + " " + speed;
+						String set = "lm fa set diverterspeed " + (feederNumber) + " " + (diverterSpeedMax-speed);
 						try {
 							laneManager.sendCommand(set);
+							laneManager.sendCommand("lm fpm set diverterspeed " + feederNumber + " " + (speed));
 						} catch (Exception e) {
 							System.out.println("An error occurred trying to send message to change lane amplitude.");
 						} 
-						System.out.println("Feeder : " + feederNumber + "going at " + speed);
+						System.out.println("Feeder : " + feederNumber + " going at " + speed);
 					}
 				}
 						

@@ -29,7 +29,7 @@ public class LaneAgent extends Agent implements Lane {
 	//	public LaneState state = LaneState.NORMAL; 
 	public Nest myNest;
 	public Timer jamTimer = new Timer();
-	private static int kJAM_TIME = 4; // 4 seconds
+	private static int kJAM_TIME = 2; // 2 seconds
 	public int amplitude = 5;
 	public static int kMAX_AMPLITUDE = 20;
 	public enum NestState { NORMAL, HAS_STABILIZED, HAS_DESTABILIZED,
@@ -148,6 +148,7 @@ public class LaneAgent extends Agent implements Lane {
 		if (nestState == NestState.AMPLITUDE_WAS_INCREASED)
 		{
 			tellFeederAmplitudeWasIncreased();
+			return true;
 		}
 
 

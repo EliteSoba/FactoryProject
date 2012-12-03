@@ -4,9 +4,9 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 
 /**
- * @author Minh La, George Li <p>
+ * @author George Li <p>
  * <b>{@code GraphicNest.java}</b> (50x720) <br>
- * This creates a nest and an array of items in the nest,
+ * This creates a nest and an array of items in the nest is used to store the items.
  */
 
 class GraphicNest extends GraphicAnimatedObject

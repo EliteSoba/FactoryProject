@@ -24,6 +24,4 @@ public interface Feeder {
 
 	public void msgNestHasDeStabilized(Lane lane);
 
-	public void msgLaneHasIncreasedItsAmplitude(Lane la);
-
 }

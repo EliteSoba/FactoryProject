@@ -163,6 +163,9 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 			}
 		}
 		else if (ae.getSource() == stopFactory) { // message that initiates factory shutdown
+			factoryProductionManager.sendCommand("fpm mcs cmd stopfactory");
+			factoryProductionManager.quit();
+			/*
 			messageBox.append("Terminating all operations...\n");
 			messageBox.setCaretPosition(messageBox.getDocument().getLength());
 			String set = new String("");
@@ -173,6 +176,7 @@ public class FactoryProdManPanel extends JPanel implements ActionListener {
 				System.out.println("An error occurred trying to shut down factory");
 				e.printStackTrace();
 			}
+			*/
 		}
 	}
 

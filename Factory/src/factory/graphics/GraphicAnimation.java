@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
+// "Static" class for loading list of images from a specified folder 
 public enum GraphicAnimation
 {;
 	public static ArrayList<Image> loadAnimationFromFolder(String folderPath, int startingIndex, String fileExtension)
