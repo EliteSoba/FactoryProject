@@ -640,7 +640,7 @@ public class FeederAgent extends Agent implements Feeder {
 
 		debug("Action: dump the "+ laneStr + "'s nest.");
 
-			
+		
 		if (la == topLane)
 		{
 			DoDumpTopNest(); 
@@ -651,6 +651,8 @@ public class FeederAgent extends Agent implements Feeder {
 		}
 		
 		la.state = MyLaneState.EMPTY;
+		
+		this.msgLaneNeedsPart(la.part, la.lane); // now refill with more parts 
 
 	}
 
