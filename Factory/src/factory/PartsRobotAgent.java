@@ -48,7 +48,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 	//TODO added this
 	// Boolean to indicate if kit needs fixing
 	public boolean needsFixing = false;
-	
+
 	// Agents
 	public FCS fcs;
 	public Vision vision;
@@ -161,14 +161,14 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			}
 		}
 		//TODO bookmark to where I'm working
-		
+
 		if (slot.equals("topSlot")){
 			this.topSlotState = SlotState.BUILD_REQUESTED;
 			topSlot = fixedKitConfig;
 			for (int i=0; i < topSlot.listOfParts.size(); i++){
 				this.stand.getSlotKit("topSlot").parts.remove(topSlot.listOfParts.get(i));
 			}
-			
+
 		}
 		else {
 			this.bottomSlotState = SlotState.BUILD_REQUESTED;
@@ -452,7 +452,12 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 			}
 		}
 		else{
-			this.bottomSlotState = SlotState.BUILDING;
+			if(slot.equals("topSlot")){
+				this.topSlotState = SlotState.BUILDING;
+			}
+			else
+				this.bottomSlotState = SlotState.BUILDING;
+			
 			needsFixing = false;
 		}
 	}
@@ -495,7 +500,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 
 		// Animation of Moving to the Nest
 		DoAnimationMovePartsRobotToNestAndGrabPart(nest, this.nests.get(nest).partCoordinate);
-		
+
 		for(int i = 0; i < this.nests.get(nest).nest.getParts().size();i++){
 			Part p = this.nests.get(nest).nest.getParts().get(i);
 			if(p.isGoodPart){
@@ -503,7 +508,7 @@ public class PartsRobotAgent extends Agent implements PartsRobot {
 				DoAnimationMovePartsRobotToNestAndGrabPart(nest, i);
 				break;
 			}
-			
+
 		}
 
 		// Update Position
