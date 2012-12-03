@@ -597,7 +597,7 @@ public class FeederAgent extends Agent implements Feeder {
 	private void takePicture() {
 		if (this.requestedParts.size() == 0)
 		{
-			debug("sending nests are ready for picture = ("+topLane.lane.getNest().getPart()+","+bottomLane.lane.getNest().getPart()+")");
+			debug("sending nests are ready for picture = ("+topLane.lane.getNest()+","+bottomLane.lane.getNest()+")");
 			vision.msgMyNestsReadyForPicture(topLane.lane.getNest(), bottomLane.lane.getNest(), this); // send the message to the vision
 		}
 		visionShouldTakePicture = false; // pic was taken	
@@ -1175,7 +1175,7 @@ public class FeederAgent extends Agent implements Feeder {
 		if (debugMode == false)
 		{
 			server.command(this,"fa lm set laneamplitude " + (feederNumber+laneNum) + " " + 8); // 0-7lane# 1-8amplitude
-			debug("Feeder " + feederNumber + " started feeding.");
+			debug("Feeder " + feederNumber + " set lane amplitude.");
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
@@ -1203,7 +1203,7 @@ public class FeederAgent extends Agent implements Feeder {
 		if (debugMode == false)
 		{
 			server.command(this,"fa lm set laneamplitude " + feederNumber+laneNum0or1 + " " + 2); // 0-7lane# 1-8amplitude
-			debug("Feeder " + feederNumber + " started feeding.");
+			debug("Feeder " + feederNumber + " reset lane amplitude.");
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
