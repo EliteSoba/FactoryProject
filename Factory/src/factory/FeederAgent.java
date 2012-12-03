@@ -537,11 +537,23 @@ public class FeederAgent extends Agent implements Feeder {
 	
 	private void clearNestParts(MyLane la)
 	{
-		la.lane.msgDumpYourNest();
+		synchronized(la.lane.getNest().getParts())
+		{
+			la.lane.getNest().getParts().clear();
+		}
+		
+		debug("********** CALLED CLEAR NEST PARTS on " + la.lane.getNest().getPart().name +  "========= SIZE = " +la.lane.getNest().getParts().size());
 	}
 	
 	private void clearLaneParts(MyLane la) {
-		la.lane.msgPurge();
+		//la.lane.msgPurge();
+		synchronized(la.lane.getParts())
+		{
+			la.lane.getParts().clear();
+		}
+		
+		debug("========= called clear LANE parts on " + la.part.name +  "========= SIZE = " +la.lane.getParts().size());
+
 	}
 	
 	private void laneHasMixedParts(MyLane la) {
