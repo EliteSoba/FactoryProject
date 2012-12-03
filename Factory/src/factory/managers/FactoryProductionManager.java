@@ -118,7 +118,7 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("jambottomlane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				//((FactoryProductionPanel) graphics).jamBottomLane(feederSlot);
+				((FactoryProductionPanel) graphics).jamBottomLane(feederSlot);
 			}
 			else if (identifier.equals("unjamtoplane"))
 			{
@@ -128,17 +128,19 @@ public class FactoryProductionManager extends Client {
 			else if (identifier.equals("unjambottomlane"))
 			{
 				int feederSlot = Integer.valueOf(pCmd.get(2));
-				//((FactoryProductionPanel) graphics).unjamBottomLane(feederSlot);
+				((FactoryProductionPanel) graphics).unjamBottomLane(feederSlot);
 			}
 			else if (identifier.equals("dumptopnest"))
 			{
 				int nestIndex = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).dumpNest(nestIndex, true);
+				((FactoryProductionPanel) graphics).sendMessage("Nest " + 2*nestIndex + " is being Dumped!");
 			}
 			else if (identifier.equals("dumpbottomnest"))
 			{
 				int nestIndex = Integer.valueOf(pCmd.get(2));
 				((FactoryProductionPanel) graphics).dumpNest(nestIndex, false);
+				((FactoryProductionPanel) graphics).sendMessage("Nest " + (2*nestIndex+1) + " is being Dumped!");
 			}
 
 			// Commands from GantryAgent:
