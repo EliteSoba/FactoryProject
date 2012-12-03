@@ -380,6 +380,7 @@ public class StandAgent extends Agent implements Stand {
 		for (int i=0; i < brokenPartsList.size(); i++){
 			debug("Part " + i + ": " + brokenPartsList.get(i));
 		}
+		
 		partsRobot.msgFixKitAtSlot(slot.name, brokenPartsList);
 		brokenPartsList.clear();
 		slot.state = MySlotState.BUILDING_KIT;
