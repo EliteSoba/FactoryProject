@@ -19,9 +19,11 @@ import javax.swing.event.ChangeListener;
 
 
 public class LaneManPanel extends JPanel{
-
+	
+		// ID number
 	private static final long serialVersionUID = -4485912622490446254L;
 
+// not needed?
 	String [] stringLanes = { "1", "2", "3", "4", "5", "6", "7", "8"};
 	JComboBox lane = new JComboBox(stringLanes);
 	//ImageIcon red = new ImageIcon("red.png");
@@ -32,11 +34,14 @@ public class LaneManPanel extends JPanel{
 
 
 
-	LaneManager laneManager;
-	JTabbedPane tabbedPane; 
-	JPanel preferencesPanel;
-	LaneNonNormPanel nonnormativePanel;
 
+
+	LaneManager laneManager; // instance of lane manager this panel is contained in
+	JTabbedPane tabbedPane; 
+	JPanel preferencesPanel; // normative controls
+	LaneNonNormPanel nonnormativePanel; // nonnormative controls
+
+// constructor
 	public LaneManPanel(LaneManager l){
 		laneManager = l;
 
@@ -55,6 +60,7 @@ public class LaneManPanel extends JPanel{
 
 	}
 
+// not used?
 	public int getSelectedLane(){
 		return (Integer) lane.getSelectedItem();
 
@@ -62,9 +68,12 @@ public class LaneManPanel extends JPanel{
 
 
 
+// normative controls panel 
+// allows changing lane speed and amplitude, and lane/feeder power
 
 	public class LanePreferencesPanel extends JPanel implements ActionListener{
 
+		// labels
 		JLabel title;
 		JLabel laneLabel;
 		JLabel laneSpeedLabel;
@@ -72,23 +81,30 @@ public class LaneManPanel extends JPanel{
 		JLabel lanePowerLabel;
 		JLabel feederLabel;
 		JLabel feederPowerLabel;
+
+		//power switches
 		JButton laneOn;
 		JButton laneOff;
 		JButton feederOn;
 		JButton feederOff;
+
+		// sliders and selectors
 		JSlider laneSpeed;
 		JSlider laneAmplitude;
 		JComboBox laneSelect;
 		JComboBox feederSelect;
 
+		// containers
 		JPanel feederSection;
 		JPanel laneSection;
 
+		//limits
 		int speedMin;
 		int speedMax;
 		int amplitudeMin;
 		int amplitudeMax;
 
+		// constructor
 		public LanePreferencesPanel(){
 
 			speedMin = 1;
@@ -213,7 +229,7 @@ public class LaneManPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			// TODO Auto-generated method stub
-			if(ae.getSource() == laneOn){
+			if(ae.getSource() == laneOn){ // turn lane one
 				int lanenum = (Integer)laneSelect.getSelectedItem();
 				String set = "lm lm set lanepower on " + (lanenum-1);
 				try {
@@ -221,7 +237,7 @@ public class LaneManPanel extends JPanel{
 				} catch (Exception e) {
 					System.out.println("An error occurred trying to send message to power on lane " + lanenum + ".");
 				} 
-			}else if (ae.getSource() == laneOff){
+			}else if (ae.getSource() == laneOff){ // turn lane off
 				int lanenum = (Integer)laneSelect.getSelectedItem();
 				String set = "lm lm set lanepower off " + (lanenum-1);
 				try {
@@ -229,7 +245,7 @@ public class LaneManPanel extends JPanel{
 				} catch (Exception e) {
 					System.out.println("An error occurred trying to send message to power off lane " + lanenum + ".");
 				} 
-			}else if (ae.getSource() == feederOn){
+			}else if (ae.getSource() == feederOn){ // turn feeder on
 				int feedernum = (Integer)feederSelect.getSelectedItem();
 				String set = "lm lm set feederpower on " + (feedernum-1);
 				try {
@@ -237,7 +253,7 @@ public class LaneManPanel extends JPanel{
 				} catch (Exception e) {
 					System.out.println("An error occurred trying to send message to power on feeder " + feedernum + ".");
 				} 
-			}else if (ae.getSource() == feederOff){
+			}else if (ae.getSource() == feederOff){ // turn feeder off
 				int feedernum = (Integer)feederSelect.getSelectedItem();
 				String set = "lm lm set feederpower off " + (feedernum-1);
 				try {

@@ -40,7 +40,14 @@ public class SaveTest {
 
 			kitConfigList = new HashMap<String,KitConfig>();
 
-			KitConfig newKitConfig = new KitConfig("Mr.PotatoHead");
+			KitConfig newKitConfig = new KitConfig("TEST");
+			newKitConfig.listOfParts.add(partsList.get("David"));	
+			newKitConfig.listOfParts.add(partsList.get("Alfonso"));
+			newKitConfig.listOfParts.add(partsList.get("David"));	
+			newKitConfig.listOfParts.add(partsList.get("Alfonso"));
+			kitConfigList.put(newKitConfig.kitName,newKitConfig);
+
+			newKitConfig = new KitConfig("Mr.PotatoHead");
 			newKitConfig.listOfParts.add(partsList.get("Eye"));
 			newKitConfig.listOfParts.add(partsList.get("Body"));	
 			newKitConfig.listOfParts.add(partsList.get("Hat"));

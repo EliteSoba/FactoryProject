@@ -671,31 +671,48 @@ public class FeederAgent extends Agent implements Feeder {
 		{
 			if (diverter == DiverterState.FEEDING_BOTTOM) {
 				diverter = DiverterState.FEEDING_TOP;
+				if (this.hasASlowDiverter) // Switch the diverter based on a timer
+				{
+					// Switch the diverter basedon the speed of the diverter [v.2]
+					diverterTimerState = DiverterTimerState.TIMER_RUNNING;
+					slowDiverterTimer.schedule(new TimerTask(){
+						public void run() {
+							diverterTimerState = DiverterTimerState.TIMER_EXPIRED;
+							debug("Diverter slow timer has expired.");
+							stateChanged();
+						}
+					},(long) diverterSpeed * 1000); // switch the diverter after this many seconds
+				}
+				else // Switch the diverter immediately
+				{
+					DoSwitchLane();
+				}
 			}
 		}
 		else if (targetLane == bottomLane)
 		{
 			if (diverter == DiverterState.FEEDING_TOP) {
 				diverter = DiverterState.FEEDING_BOTTOM;
+				if (this.hasASlowDiverter) // Switch the diverter based on a timer
+				{
+					// Switch the diverter basedon the speed of the diverter [v.2]
+					diverterTimerState = DiverterTimerState.TIMER_RUNNING;
+					slowDiverterTimer.schedule(new TimerTask(){
+						public void run() {
+							diverterTimerState = DiverterTimerState.TIMER_EXPIRED;
+							debug("Diverter slow timer has expired.");
+							stateChanged();
+						}
+					},(long) diverterSpeed * 1000); // switch the diverter after this many seconds
+				}
+				else // Switch the diverter immediately
+				{
+					DoSwitchLane();
+				}
 			}
 		}
 
-		if (this.hasASlowDiverter) // Switch the diverter based on a timer
-		{
-			// Switch the diverter basedon the speed of the diverter [v.2]
-			diverterTimerState = DiverterTimerState.TIMER_RUNNING;
-			slowDiverterTimer.schedule(new TimerTask(){
-				public void run() {
-					diverterTimerState = DiverterTimerState.TIMER_EXPIRED;
-					debug("Diverter slow timer has expired.");
-					stateChanged();
-				}
-			},(long) diverterSpeed * 1000); // switch the diverter after this many seconds
-		}
-		else // Switch the diverter immediately
-		{
-			DoSwitchLane();
-		}
+		
 		
 	}
 
