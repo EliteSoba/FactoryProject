@@ -716,13 +716,13 @@ public class FeederAgent extends Agent implements Feeder {
 		
 		if (la == topLane)
 		{
-			clearNestParts(la);
 			DoDumpTopNest(); 
+			clearNestParts(la);
 		}
 		else if (la == bottomLane)
 		{
-			clearNestParts(la);
 			DoDumpBottomNest(); 
+			clearNestParts(la);
 		}
 		
 		la.state = MyLaneState.EMPTY;
